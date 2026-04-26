@@ -1,0 +1,97 @@
+/* ============================================================
+   터미널 — 미니멀 출력창 (실행 결과 표시 전용)
+   ============================================================ */
+
+.terminal {
+  background: #1a1a1a;
+  border-radius: 0 0 8px 8px;
+  overflow: hidden;
+  margin-top: -1px;       /* editor-block과 자연스럽게 이어짐 */
+  border: 1px solid var(--border-strong);
+  border-top: none;
+}
+
+/* editor-block 바로 다음에 오는 .terminal은 살짝 분리 (스타일 강조) */
+.editor-block + .terminal {
+  margin-top: 8px;
+  border-radius: 6px;
+  border-top: 1px solid var(--border-strong);
+}
+
+.terminal-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 7px 14px;
+  background: #232320;
+  border-bottom: 1px solid #2d2d2a;
+}
+.terminal-head .label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: #b4b4b0;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+.terminal-head .status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  color: #888880;
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 0.05em;
+}
+.terminal-head .status::before {
+  content: '';
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: #888;       /* 기본: 대기 (회색) */
+}
+/* 정상 종료 (녹색) */
+.terminal-head .status.ok::before { background: #4ec9b0; }
+/* 에러 발생 (빨강) */
+.terminal-head .status.err::before { background: #f48771; }
+/* 실행 중 (펄스) */
+.terminal-head .status.running::before {
+  background: #f4a040;
+  animation: pulse 1.4s infinite;
+}
+
+.terminal-body {
+  padding: 14px 16px;
+  font-family: 'JetBrains Mono', 'D2Coding', monospace;
+  font-size: 13px;
+  color: #d4d4d4;
+  line-height: 1.65;
+  white-space: pre-wrap;
+  word-break: break-word;
+  min-height: 60px;
+  max-height: 360px;
+  overflow-y: auto;
+}
+
+.terminal-body .placeholder {
+  color: #555;
+  font-style: italic;
+  font-size: 12px;
+}
+
+.terminal-body .err-line {
+  color: #f48771;
+}
+
+.terminal-body .info {
+  color: #888880;
+  font-size: 11px;
+  font-style: italic;
+}
+
+/* 출력 결과가 없을 때 안내 */
+.terminal-body.empty::before {
+  content: '실행 버튼을 눌러보세요';
+  color: #555;
+  font-style: italic;
+  font-size: 12px;
+}

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 시대, 최소한의 코딩 기초</title>
+<meta name="description" content="비전공자를 위한 4주 파이썬 강의 — AI 시대에 필요한 코딩 기초">
+
+<!-- 폰트 -->
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+
+<!-- CodeMirror 5 (코드 에디터) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+
+<!-- 강의 CSS -->
+<link rel="stylesheet" href="css/common.css">
+<link rel="stylesheet" href="css/sidebar.css">
+<link rel="stylesheet" href="css/editor.css">
+<link rel="stylesheet" href="css/terminal.css">
+</head>
+<body>
+
+<!-- 상단 헤더 -->
+<header class="topbar">
+  <div class="topbar-inner">
+    <button class="sidebar-btn" id="sidebar-toggle" aria-label="사이드바 열기/닫기">
+      <span class="hamburger"></span>
+    </button>
+
+    <a href="#week1" class="brand">
+      <span class="brand-mark">Py</span>
+      <span class="brand-text">AI 시대, 최소한의 코딩 기초</span>
+    </a>
+
+    <nav class="tabs" role="tablist">
+      <button class="tab" data-week="1" role="tab">1주차</button>
+      <button class="tab" data-week="2" role="tab">2주차</button>
+      <button class="tab" data-week="3" role="tab">3주차</button>
+      <button class="tab" data-week="4" role="tab">4주차</button>
+    </nav>
+
+    <button class="theme-btn" id="theme-toggle" aria-label="라이트/다크 전환">
+      <span class="theme-icon">🌙</span>
+    </button>
+  </div>
+</header>
+
+<!-- 사이드바 backdrop (모바일 overlay 모드용) -->
+<div class="sidebar-backdrop" id="sidebar-backdrop"></div>
+
+<!-- 본문 레이아웃: 사이드바 + main -->
+<div class="layout">
+
+  <!-- 좌측 사이드바 (탭별 섹션 목록) -->
+  <aside class="sidebar" id="sidebar" aria-label="섹션 목록">
+    <div class="sidebar-inner">
+      <div class="sidebar-head">
+        <span class="sidebar-week-label" id="sidebar-week-label">1주차</span>
+        <span class="sidebar-section-count" id="sidebar-section-count">— 섹션</span>
+      </div>
+      <nav class="section-nav" id="section-nav">
+        <!-- JS가 탭에 따라 동적으로 채움 -->
+      </nav>
+    </div>
+  </aside>
+
+  <!-- 메인 콘텐츠 영역 -->
+  <main class="content" id="content" tabindex="-1">
+    <!-- JS가 fetch로 content/weekN.html을 여기에 주입 -->
+    <div class="loading-screen" id="loading-screen">
+      <div class="loading-spinner"></div>
+      <p class="loading-text">강의를 불러오는 중…</p>
+    </div>
+  </main>
+
+</div>
+
+<!-- Pyodide 로딩 상태 (우하단 토스트) -->
+<div class="pyodide-status" id="pyodide-status">
+  <span class="pulse"></span>
+  <span class="text">파이썬 환경 준비 중…</span>
+</div>
+
+<!-- CodeMirror 5 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/python/python.min.js"></script>
+
+<!-- Pyodide -->
+<script src="https://cdn.jsdelivr.net/pyodide/v0.27.5/full/pyodide.js"></script>
+
+<!-- 강의 JS (순서 중요) -->
+<script src="js/sidebar.js"></script>
+<script src="js/editor.js"></script>
+<script src="js/pyodide-runner.js"></script>
+<script src="js/main.js"></script>
+
+</body>
+</html>

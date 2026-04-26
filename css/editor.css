@@ -1,0 +1,226 @@
+/* ============================================================
+   코드 에디터 — CodeMirror 5 + PyCharm Darcula 테마
+   ============================================================ */
+
+.editor-block {
+  margin: 28px 0;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  border: 1px solid #1a1a1a;
+}
+
+/* 파일 탭 바 */
+.editor-tab-bar {
+  background: #3c3f41;
+  padding: 0 4px;
+  border-bottom: 1px solid #1a1a1a;
+}
+.editor-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  color: #bababa;
+  padding: 8px 16px 8px 12px;
+  font-family: -apple-system, 'Segoe UI', sans-serif;
+  font-size: 12px;
+  border-bottom: 2px solid #4a88c7;
+}
+.editor-tab .py-icon {
+  display: inline-block;
+  width: 14px; height: 14px;
+  border-radius: 2px;
+  background: linear-gradient(135deg, #3776ab 50%, #ffd43b 50%);
+  flex-shrink: 0;
+}
+
+/* CodeMirror 컨테이너 */
+.editor-cm {
+  background: #2b2b2b;
+  font-family: 'JetBrains Mono', 'D2Coding', 'Consolas', monospace;
+}
+
+/* CodeMirror 5 PyCharm Darcula 커스텀 테마
+   ── color reference ──────────────────────
+   배경:        #2b2b2b
+   거터:        #313335
+   거터 보더:   #555555
+   본문/변수:   #a9b7c6
+   키워드:      #cc7832
+   함수명:      #ffc66d
+   문자열:      #6a8759
+   숫자:        #6897bb
+   주석:        #808080 (italic)
+   self/cls:    #94558d
+   ─────────────────────────────────────────── */
+
+.cm-s-pycharm-darcula.CodeMirror {
+  background: #2b2b2b;
+  color: #a9b7c6;
+  font-family: 'JetBrains Mono', 'D2Coding', 'Consolas', monospace;
+  font-size: 13.5px;
+  line-height: 1.7;
+  height: auto;
+}
+.cm-s-pycharm-darcula .CodeMirror-gutters {
+  background: #313335;
+  border-right: 1px solid #555;
+  color: #606366;
+}
+.cm-s-pycharm-darcula .CodeMirror-linenumber {
+  color: #606366;
+  padding: 0 8px 0 12px;
+}
+.cm-s-pycharm-darcula .CodeMirror-cursor {
+  border-left: 1.5px solid #a4a3a3;
+}
+.cm-s-pycharm-darcula div.CodeMirror-selected {
+  background: #214283;
+}
+.cm-s-pycharm-darcula .CodeMirror-line::selection,
+.cm-s-pycharm-darcula .CodeMirror-line > span::selection,
+.cm-s-pycharm-darcula .CodeMirror-line > span > span::selection {
+  background: #214283;
+}
+.cm-s-pycharm-darcula .CodeMirror-activeline-background {
+  background: #323232;
+}
+
+/* 토큰별 색상 (PyCharm Darcula 정확) */
+.cm-s-pycharm-darcula .cm-keyword     { color: #cc7832; font-weight: bold; }
+.cm-s-pycharm-darcula .cm-string      { color: #6a8759; }
+.cm-s-pycharm-darcula .cm-string-2    { color: #6a8759; }
+.cm-s-pycharm-darcula .cm-number      { color: #6897bb; }
+.cm-s-pycharm-darcula .cm-comment     { color: #808080; font-style: italic; }
+.cm-s-pycharm-darcula .cm-def         { color: #ffc66d; }       /* 함수 정의명 */
+.cm-s-pycharm-darcula .cm-builtin     { color: #ffc66d; }       /* print, len 등 */
+.cm-s-pycharm-darcula .cm-variable    { color: #a9b7c6; }       /* 일반 변수 = 본문색 */
+.cm-s-pycharm-darcula .cm-variable-2  { color: #a9b7c6; }
+.cm-s-pycharm-darcula .cm-variable-3  { color: #a9b7c6; }
+.cm-s-pycharm-darcula .cm-property    { color: #a9b7c6; }
+.cm-s-pycharm-darcula .cm-operator    { color: #a9b7c6; }
+.cm-s-pycharm-darcula .cm-punctuation { color: #a9b7c6; }
+.cm-s-pycharm-darcula .cm-bracket     { color: #a9b7c6; }
+.cm-s-pycharm-darcula .cm-tag         { color: #ffc66d; }
+.cm-s-pycharm-darcula .cm-atom        { color: #cc7832; }       /* True, False, None */
+.cm-s-pycharm-darcula .cm-meta        { color: #bbb529; }
+.cm-s-pycharm-darcula .cm-error       { color: #bc3f3c; }
+
+/* self / cls 강조 (CodeMirror 모드가 keyword로 분류 안 하면 cm-variable로 처리됨;
+   추가 hint를 위해 별도 클래스 줘도 됨 — JS에서 후처리하지 않음) */
+
+/* ============== 입력값 (input 미리 적기) ============== */
+.input-stdin {
+  background: var(--bg-soft);
+  border: 1px solid var(--border);
+  border-bottom: none;
+  border-radius: 8px 8px 0 0;
+  padding: 10px 14px 8px;
+}
+.input-stdin .label {
+  font-size: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--text-mute);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  font-weight: 600;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.input-stdin .label::before {
+  content: '';
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: #6897bb;
+}
+.input-stdin textarea {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--border-strong);
+  border-radius: 4px;
+  font-family: 'JetBrains Mono', 'D2Coding', monospace;
+  font-size: 12.5px;
+  color: var(--text);
+  padding: 6px 10px;
+  resize: vertical;
+  min-height: 40px;
+  max-height: 160px;
+  line-height: 1.5;
+}
+.input-stdin textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+.input-stdin .hint {
+  font-size: 11px;
+  color: var(--text-mute);
+  margin-top: 4px;
+  font-style: italic;
+}
+
+/* input-stdin이 있을 때 editor-block 위쪽 둥근 모서리 제거 */
+.input-stdin + .editor-block {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  margin-top: 0;
+}
+
+/* ============== 실행 바 (Run 버튼) ============== */
+.run-bar {
+  background: #3c3f41;
+  padding: 6px 10px 6px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid #1a1a1a;
+}
+.run-bar .left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: #888;
+}
+.run-bar .file-name {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.run-btn {
+  background: #4caf50;
+  color: white;
+  border: none;
+  padding: 5px 14px;
+  border-radius: 3px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: -apple-system, 'Segoe UI', sans-serif;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: background var(--t-fast), opacity var(--t-fast);
+}
+.run-btn:hover:not(:disabled) { background: #45a049; }
+.run-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.run-btn .play { font-size: 10px; }
+
+/* 키보드 단축키 안내 */
+.kbd-hint {
+  font-size: 10px;
+  color: #777;
+  font-family: 'JetBrains Mono', monospace;
+  margin-right: 8px;
+}
+.kbd {
+  background: #555;
+  color: #ddd;
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-size: 10px;
+  font-family: 'JetBrains Mono', monospace;
+}

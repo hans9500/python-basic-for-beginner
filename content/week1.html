@@ -1,0 +1,398 @@
+<!-- ============================================================
+     1주차 — 첫 걸음 (Phase A: s0 ~ s2)
+     검증: 컴퓨터 구조·프로그램 실행 설명은 표준 컴퓨터 구조 자료
+            (Patterson & Hennessy, CPython 공식 문서) 기반으로 작성
+     ============================================================ -->
+
+<div class="lesson-title">Week 1 · Lesson 1</div>
+<h1>컴퓨터, 파이썬, 그리고 첫 코드</h1>
+<p class="subtitle">
+  파이썬 코드를 한 줄도 쓰기 전에, AI 시대에 왜 코딩 기초가 필요한지부터
+  솔직하게 이야기합니다. 그리고 코드가 실행될 때 컴퓨터 안에서 무슨 일이
+  일어나는지 천천히 살펴봅니다.
+</p>
+
+<!-- ==================== s0: AI 시대에 파이썬을 왜? ==================== -->
+<section class="section" id="s0">
+  <div class="section-num">SECTION 00</div>
+  <h2>AI 시대에 파이썬을 왜?</h2>
+
+  <p>
+    Claude, ChatGPT, Gemini 같은 AI가 코드를 척척 만들어주는 시대입니다.
+    "그러면 코딩은 더 이상 안 배워도 되는 거 아니야?" 하는 생각이 자연스럽게 들죠.
+    네 가지만 짚어보겠습니다.
+  </p>
+
+  <h3>1. AI에게 정확히 시키려면 알아들을 줄 알아야 합니다</h3>
+  <p>
+    회사 직원에게 "더 빠르게 처리해주세요"라고만 하면 그 직원도 어디서 어떻게
+    빠르게 할지 모릅니다. "사진 로딩이 3초 걸리는데 1초로 줄여달라"고 해야
+    일이 진행되죠.
+  </p>
+  <p>
+    AI도 똑같습니다. "엑셀 자동화해줘"라고만 하면 흐릿한 답이 나옵니다.
+    <strong>"이 폴더의 모든 .xlsx 파일에서 B열의 합계를 구해서 새 파일에 정리해줘"</strong>처럼
+    구체적으로 말해야 정확한 코드가 나옵니다. 이런 지시를 만들려면 "파일이 뭔지",
+    "열이 뭔지", "합계 같은 처리 단위가 뭔지"를 어느 정도는 알아야 합니다.
+  </p>
+
+  <h3>2. AI는 자신감 있게 틀린 답을 줍니다</h3>
+  <p>
+    AI는 "이 코드는 정확합니다"라고 확신하며 틀린 답을 종종 줍니다.
+    코드가 안 돌아가는데도 "맞다"고 우기기도 합니다.
+  </p>
+  <p>
+    이걸 검증할 사람은 결국 본인입니다. <strong>기본 문법을 알면 코드를 한 번
+    훑어보고 "어, 이건 좀 이상한데?"를 알아챌 수 있습니다.</strong>
+    모르면 그냥 받아서 쓰다가 데이터가 망가지는 일도 생깁니다.
+  </p>
+
+  <h3>3. AI가 못 하는 일이 의외로 많습니다</h3>
+  <p>
+    AI는 사용자 컴퓨터에 직접 접근할 수 없습니다. "내 PC의 이 파일을 열어서
+    분석해줘"를 AI 혼자서는 못 합니다. 결국 <strong>AI가 만들어준 코드를
+    본인이 실행</strong>해야 합니다.
+  </p>
+  <p>
+    코드 한 줄을 어디에 어떻게 붙여넣고 실행하는지 — 이게 의외로 진입 장벽입니다.
+    이번 4주 강의의 목표가 그 진입 장벽을 함께 넘는 것입니다.
+  </p>
+
+  <h3>4. 자동화의 가치 — 한 번 짜두면 평생 일합니다</h3>
+  <p>
+    매주 같은 보고서 양식을 만드시나요? 매월 같은 정리를 반복하시나요?
+    이런 반복 업무는 코드 한 번 짜두면 <strong>버튼 한 번에 자동으로 처리</strong>됩니다.
+    엑셀 매크로보다 강력하고, 그 코드는 AI가 거의 다 만들어줍니다.
+    단, <strong>본인이 실행할 줄은 알아야 합니다.</strong>
+  </p>
+
+  <div class="callout">
+    <div class="label">한 줄 요약</div>
+    <p>
+      <strong>AI 시대에는 "AI에게 일을 시키는 사람"과 "AI가 일을 시키는 사람"이 나뉩니다.</strong>
+      코딩 기초를 아는 쪽이 전자입니다. 깊이 배우자는 게 아니라,
+      AI와 협력할 수 있을 만큼만 배우자는 게 이 강의의 목표입니다.
+    </p>
+  </div>
+</section>
+
+<!-- ==================== s1: 컴퓨터 안 들여다보기 ==================== -->
+<section class="section" id="s1">
+  <div class="section-num">SECTION 01</div>
+  <h2>컴퓨터 안 들여다보기</h2>
+
+  <p>
+    노트북, 데스크톱, 스마트폰 — 모양은 달라도 안에서 일하는 방식은 비슷합니다.
+    컴퓨터 안에는 GPU, 메인보드, 전원 공급장치 등 여러 부품이 있지만,
+    <strong>파이썬 코드가 실행될 때 가장 자주 등장하는 세 곳</strong>이 있습니다.
+    이번 강의 동안 계속 만나게 될 곳들이니, 먼저 익혀두고 가겠습니다.
+  </p>
+
+  <h3>CPU · 메모리 · 저장장치</h3>
+
+  <p>각각이 무엇을 하는지 사실대로 정리하겠습니다.</p>
+
+  <h4>CPU (중앙처리장치)</h4>
+  <p>
+    실제로 <strong>계산과 판단을 수행하는 부품</strong>입니다.
+    덧셈·뺄셈 같은 산술 연산, 두 값이 같은지 비교하기, 다음에 어떤 명령을
+    실행할지 정하기 같은 일을 합니다. 매우 빠르지만 — 1초에 수십억 번
+    명령을 처리합니다 — 자체적으로 데이터를 오래 보관하는 공간은 거의 없습니다.
+    값을 다루려면 메모리에서 읽어와야 하고, 결과를 보존하려면 다시 메모리에 써야 합니다.
+  </p>
+
+  <h4>메모리 (RAM, Random Access Memory)</h4>
+  <p>
+    <strong>지금 실행 중인 프로그램과 그 데이터가 머무는 곳</strong>입니다.
+    CPU가 즉시 접근 가능한 작업 공간이라고 생각하면 됩니다.
+    빠르지만 용량이 비교적 작고(보통 8~64GB),
+    <strong>전원이 꺼지면 내용이 사라집니다</strong>.
+  </p>
+
+  <h4>저장장치 (SSD/HDD)</h4>
+  <p>
+    <strong>모든 파일이 영구적으로 보관되는 곳</strong>입니다. 사진, 문서,
+    설치된 프로그램, 운영체제 — 전부 여기 있습니다. 메모리보다 용량이
+    훨씬 크지만(수백 GB ~ 수 TB), 읽고 쓰는 속도는 메모리보다 느립니다.
+    전원이 꺼져도 내용이 보존됩니다.
+  </p>
+
+  <div class="callout info">
+    <div class="label">왜 이렇게 나뉘어 있을까?</div>
+    <p>
+      "전부 빠르고 큰 거 하나로 만들면 안 돼?"라고 묻고 싶을 겁니다.
+      <strong>빠른 부품일수록 비싸고 용량이 작기 때문</strong>입니다.
+      그래서 역할을 나눠 협력하게 만드는 게 가장 효율적입니다 —
+      이걸 메모리 계층(memory hierarchy)이라고 부릅니다.
+    </p>
+  </div>
+
+  <h3>그림으로 보기</h3>
+
+  <div class="figure">
+    <svg viewBox="0 0 720 320" xmlns="http://www.w3.org/2000/svg" role="img"
+         aria-label="CPU, 메모리, 저장장치의 관계와 데이터 흐름 다이어그램">
+      <defs>
+        <linearGradient id="g-cpu" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#c1440e" stop-opacity="0.12"/>
+          <stop offset="1" stop-color="#c1440e" stop-opacity="0.04"/>
+        </linearGradient>
+        <linearGradient id="g-mem" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#3b6ea8" stop-opacity="0.14"/>
+          <stop offset="1" stop-color="#3b6ea8" stop-opacity="0.04"/>
+        </linearGradient>
+        <linearGradient id="g-disk" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#5c6e3a" stop-opacity="0.14"/>
+          <stop offset="1" stop-color="#5c6e3a" stop-opacity="0.04"/>
+        </linearGradient>
+        <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5"
+                markerWidth="7" markerHeight="7" orient="auto">
+          <path d="M0,0 L10,5 L0,10 z" fill="#888"/>
+        </marker>
+      </defs>
+
+      <!-- CPU -->
+      <rect x="60" y="60" width="160" height="180" rx="10"
+            fill="url(#g-cpu)" stroke="#c1440e" stroke-width="1.5"/>
+      <text x="140" y="92" text-anchor="middle" font-family="Pretendard, sans-serif"
+            font-size="13" font-weight="700" fill="#c1440e" letter-spacing="2">CPU</text>
+      <text x="140" y="114" text-anchor="middle" font-family="Pretendard, sans-serif"
+            font-size="14" font-weight="600" fill="#1a1a1a">중앙처리장치</text>
+      <rect x="92" y="138" width="96" height="72" rx="4"
+            fill="#1e1e1e" stroke="#c1440e" stroke-width="1"/>
+      <g font-family="JetBrains Mono, monospace" font-size="9" fill="#9cdcfe">
+        <text x="100" y="154">+ - × ÷</text>
+        <text x="100" y="170">if then</text>
+        <text x="100" y="186">loop ⟳</text>
+        <text x="100" y="202">compare</text>
+      </g>
+      <text x="140" y="228" text-anchor="middle" font-family="Pretendard, sans-serif"
+            font-size="11" fill="#666">계산 · 판단</text>
+
+      <!-- 메모리 -->
+      <rect x="280" y="60" width="160" height="180" rx="10"
+            fill="url(#g-mem)" stroke="#3b6ea8" stroke-width="1.5"/>
+      <text x="360" y="92" text-anchor="middle" font-family="Pretendard, sans-serif"
+            font-size="13" font-weight="700" fill="#3b6ea8" letter-spacing="2">MEMORY</text>
+      <text x="360" y="114" text-anchor="middle" font-family="Pretendard, sans-serif"
+            font-size="14" font-weight="600" fill="#1a1a1a">메모리 (RAM)</text>
+
+      <g font-family="JetBrains Mono, monospace" font-size="10">
+        <rect x="296" y="134" width="128" height="20" rx="3"
+              fill="#fff" stroke="#cfd8e6"/>
+        <text x="304" y="148" fill="#3b6ea8">x</text>
+        <text x="416" y="148" text-anchor="end" fill="#1a1a1a">10</text>
+        <rect x="296" y="160" width="128" height="20" rx="3"
+              fill="#fff" stroke="#cfd8e6"/>
+        <text x="304" y="174" fill="#3b6ea8">name</text>
+        <text x="416" y="174" text-anchor="end" fill="#1a1a1a">"홍길동"</text>
+        <rect x="296" y="186" width="128" height="20" rx="3"
+              fill="#fff" stroke="#cfd8e6"/>
+        <text x="304" y="200" fill="#3b6ea8">price</text>
+        <text x="416" y="200" text-anchor="end" fill="#1a1a1a">3000</text>
+      </g>
+      <text x="360" y="228" text-anchor="middle" font-family="Pretendard, sans-serif"
+            font-size="11" fill="#666">실행 중인 데이터</text>
+
+      <!-- 저장장치 -->
+      <rect x="500" y="60" width="160" height="180" rx="10"
+            fill="url(#g-disk)" stroke="#5c6e3a" stroke-width="1.5"/>
+      <text x="580" y="92" text-anchor="middle" font-family="Pretendard, sans-serif"
+            font-size="13" font-weight="700" fill="#5c6e3a" letter-spacing="2">STORAGE</text>
+      <text x="580" y="114" text-anchor="middle" font-family="Pretendard, sans-serif"
+            font-size="14" font-weight="600" fill="#1a1a1a">저장장치 (SSD)</text>
+
+      <g font-family="JetBrains Mono, monospace" font-size="10" fill="#1a1a1a">
+        <g transform="translate(516, 134)">
+          <rect width="14" height="18" rx="1" fill="#fff" stroke="#5c6e3a"/>
+          <path d="M10,0 L14,4 L10,4 Z" fill="#5c6e3a"/>
+          <text x="20" y="13">photo.jpg</text>
+        </g>
+        <g transform="translate(516, 160)">
+          <rect width="14" height="18" rx="1" fill="#fff" stroke="#5c6e3a"/>
+          <path d="M10,0 L14,4 L10,4 Z" fill="#5c6e3a"/>
+          <text x="20" y="13">report.docx</text>
+        </g>
+        <g transform="translate(516, 186)">
+          <rect width="14" height="18" rx="1" fill="#fff" stroke="#5c6e3a"/>
+          <path d="M10,0 L14,4 L10,4 Z" fill="#5c6e3a"/>
+          <text x="20" y="13">hello.py</text>
+        </g>
+      </g>
+      <text x="580" y="228" text-anchor="middle" font-family="Pretendard, sans-serif"
+            font-size="11" fill="#666">영구 보관된 파일</text>
+
+      <!-- 화살표 -->
+      <line x1="222" y1="150" x2="278" y2="150" stroke="#888" stroke-width="1.5"
+            marker-end="url(#arr)"/>
+      <line x1="278" y1="170" x2="222" y2="170" stroke="#888" stroke-width="1.5"
+            marker-end="url(#arr)"/>
+      <text x="250" y="142" text-anchor="middle" font-family="Pretendard, sans-serif"
+            font-size="10" fill="#666">읽기</text>
+      <text x="250" y="186" text-anchor="middle" font-family="Pretendard, sans-serif"
+            font-size="10" fill="#666">쓰기</text>
+
+      <line x1="442" y1="150" x2="498" y2="150" stroke="#888" stroke-width="1.5"
+            stroke-dasharray="4 3" marker-end="url(#arr)"/>
+      <line x1="498" y1="170" x2="442" y2="170" stroke="#888" stroke-width="1.5"
+            stroke-dasharray="4 3" marker-end="url(#arr)"/>
+      <text x="470" y="142" text-anchor="middle" font-family="Pretendard, sans-serif"
+            font-size="10" fill="#666">불러오기</text>
+      <text x="470" y="186" text-anchor="middle" font-family="Pretendard, sans-serif"
+            font-size="10" fill="#666">저장하기</text>
+
+      <!-- 속도/용량 라벨 -->
+      <g font-family="Pretendard, sans-serif" font-size="10" fill="#888">
+        <text x="140" y="266" text-anchor="middle" font-weight="600">매우 빠름</text>
+        <text x="140" y="282" text-anchor="middle">용량: 매우 작음</text>
+        <text x="360" y="266" text-anchor="middle" font-weight="600">빠름</text>
+        <text x="360" y="282" text-anchor="middle">8 ~ 64 GB</text>
+        <text x="580" y="266" text-anchor="middle" font-weight="600">상대적으로 느림</text>
+        <text x="580" y="282" text-anchor="middle">256 GB ~ 수 TB</text>
+      </g>
+    </svg>
+    <div class="caption">그림 1.1 — CPU·메모리·저장장치의 역할과 데이터 흐름</div>
+  </div>
+
+  <p>
+    그림에서 핵심은 <strong>화살표의 방향</strong>입니다.
+    CPU는 메모리하고만 직접 대화합니다. 저장장치의 파일을 다루고 싶으면
+    먼저 메모리로 불러와야 CPU가 작업할 수 있습니다.
+    "사진 열기"가 한순간이 아니라 잠깐 로딩이 걸리는 이유가 이것입니다 —
+    저장장치에서 메모리로 사진 데이터를 옮기는 시간이죠.
+  </p>
+
+  <div class="key-points">
+    <div class="title">이 섹션의 핵심</div>
+    <ul>
+      <li><strong>CPU</strong>는 계산과 판단을 하는 부품. 빠르지만 데이터는 거의 보관 못 함.</li>
+      <li><strong>메모리(RAM)</strong>는 지금 실행 중인 데이터가 머무는 작업 공간. 전원 끄면 사라짐.</li>
+      <li><strong>저장장치(SSD/HDD)</strong>는 파일이 영구 보관되는 큰 창고. 쓰려면 일단 메모리로 가져와야 함.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ==================== s2: 프로그램이 실행된다는 것 ==================== -->
+<section class="section" id="s2">
+  <div class="section-num">SECTION 02</div>
+  <h2>프로그램이 실행된다는 것</h2>
+
+  <p>
+    "더블클릭으로 프로그램을 실행한다" — 자주 쓰는 표현이지만,
+    실제로는 컴퓨터 안에서 여러 단계가 일어납니다. 천천히 따라가 보겠습니다.
+  </p>
+
+  <h3>3단계로 보는 프로그램 실행</h3>
+
+  <p>
+    여러분이 어떤 앱을 실행한다고 합시다. 그 순간 크게 세 가지 일이 일어납니다.
+  </p>
+
+  <h4>1단계 — 저장장치에서 메모리로 적재</h4>
+  <p>
+    프로그램은 평소에는 저장장치(SSD/HDD)에 파일로 잠자고 있습니다.
+    실행 버튼을 누르면 운영체제가 그 파일을 <strong>메모리로 복사</strong>합니다.
+    이게 "프로그램이 실행 중이다"의 시작입니다. 메모리에 올라가 있어야
+    CPU가 손댈 수 있으니까요.
+  </p>
+
+  <h4>2단계 — CPU가 명령을 한 줄씩 실행</h4>
+  <p>
+    메모리에 올라간 프로그램은 결국 <strong>"명령어들의 목록"</strong>입니다.
+    CPU는 그 목록의 첫 번째 명령부터 차례로 읽으며 실행합니다.
+    "메모리의 100번 자리 값과 200번 자리 값을 더해라", "그 결과가 0이면
+    300번 명령으로 점프해라" 같은 단순한 명령들의 연속입니다.
+  </p>
+
+  <h4>3단계 — 결과를 메모리에 쓰거나 화면으로 출력</h4>
+  <p>
+    명령을 실행한 결과는 다시 메모리에 저장되거나, 화면·스피커 같은
+    출력 장치로 흘러갑니다. 우리가 화면에서 보는 모든 것은 이 과정의 산물입니다.
+  </p>
+
+  <div class="callout info">
+    <div class="label">파이썬은 좀 다릅니다</div>
+    <p>
+      위 설명은 일반적인 프로그램(예: 컴파일된 C 프로그램) 기준입니다.
+      파이썬은 한 단계가 더 있습니다 — <strong>파이썬 인터프리터가 먼저
+      실행되고, 그 인터프리터가 우리가 작성한 .py 파일을 한 줄씩 통역</strong>합니다.
+      그래서 같은 코드도 컴퓨터마다 똑같이 동작합니다. 자세한 건 다음 섹션에서.
+    </p>
+  </div>
+
+  <h3>지금 이 강의 페이지도 마찬가지입니다</h3>
+
+  <p>
+    여러분이 지금 보고 있는 이 페이지도 같은 원리로 동작합니다.
+    브라우저 프로그램이 메모리에 올라와 있고, 그 안에서 또 파이썬 인터프리터가
+    동작하고 있습니다. 잠시 후 코드 실행 버튼을 누르면 진짜 파이썬이
+    돌아갑니다 — 별도 설치 없이.
+  </p>
+
+  <h3>첫 코드 실행</h3>
+
+  <p>
+    이제 진짜 파이썬 코드를 실행해보겠습니다.
+    아래 에디터에서 <strong>실행</strong> 버튼을 눌러보세요.
+    (파이썬 환경이 처음 로딩되는 데 잠깐 시간이 걸릴 수 있습니다.
+    우측 하단에서 진행 상태를 볼 수 있어요.)
+  </p>
+
+  <div class="editor-block">
+    <div class="editor-tab-bar">
+      <span class="editor-tab">
+        <span class="py-icon"></span>
+        hello.py
+      </span>
+    </div>
+    <textarea class="editor-source">print("Hello, Python")
+</textarea>
+    <div class="run-bar">
+      <span class="left">
+        <span class="file-name">📄 hello.py</span>
+      </span>
+      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+      <button class="run-btn"><span class="play">▶</span> Run</button>
+    </div>
+  </div>
+
+  <div class="terminal">
+    <div class="terminal-head">
+      <span class="label">실행 결과</span>
+      <span class="status">대기 중</span>
+    </div>
+    <div class="terminal-body empty"></div>
+  </div>
+
+  <p>
+    실행하셨나요? 화면에 <code class="inline">Hello, Python</code>이 나왔다면 성공입니다.
+    방금 무슨 일이 일어났는지 정리해보면:
+  </p>
+
+  <ol>
+    <li>여러분이 입력한 코드 <code class="inline">print("Hello, Python")</code>이 메모리에 있는 파이썬 인터프리터에 전달됩니다.</li>
+    <li>인터프리터가 이 한 줄을 해석해서 "<code class="inline">Hello, Python</code>이라는 문자열을 화면에 출력하라"는 명령으로 바꿉니다.</li>
+    <li>그 명령이 실행되어 결과가 아래 터미널에 나타납니다.</li>
+  </ol>
+
+  <p>
+    한번 코드를 살짝 바꿔보세요. <code class="inline">"Hello, Python"</code>을 다른 글자로
+    바꾸고 다시 실행하면 결과가 달라집니다. 이게 "내가 코드를 다루고 있다"는 첫 경험입니다.
+  </p>
+
+  <div class="key-points">
+    <div class="title">이 섹션의 핵심</div>
+    <ul>
+      <li>프로그램 실행 = <strong>저장장치 → 메모리 적재 → CPU가 명령 실행 → 결과 출력</strong>의 흐름.</li>
+      <li>모든 일은 <strong>메모리 위에서</strong> 일어납니다. CPU는 메모리하고만 직접 대화합니다.</li>
+      <li>파이썬은 인터프리터가 한 줄씩 통역하는 방식이라 컴퓨터마다 똑같이 동작합니다.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- 다음 섹션 안내 (Phase A 종료 표시) -->
+<div style="text-align:center; padding:48px 0 24px; border-top:1px dashed var(--border);
+            color:var(--text-mute); font-size:14px; margin-top:64px">
+  ⌁ Phase A 미리보기는 여기까지입니다 ⌁<br>
+  <span style="font-size:12px">검토 후 s3 ~ s9 그리고 시뮬레이터까지 이어서 작성합니다</span>
+</div>
