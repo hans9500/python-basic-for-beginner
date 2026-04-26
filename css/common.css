@@ -289,15 +289,7 @@ body { min-height: 100vh; }
   letter-spacing: -0.02em;
   margin: 64px 0 20px;
   padding-bottom: 12px;
-  border-bottom: 1px solid var(--border);
-  position: relative;
-}
-.content h2::after {
-  content: '';
-  position: absolute;
-  left: 0; bottom: -1px;
-  width: 32px; height: 2px;
-  background: var(--accent);
+  border-bottom: 2px solid var(--accent);
 }
 .content h3 {
   font-size: 19px;
@@ -434,6 +426,8 @@ body { min-height: 100vh; }
   border-radius: 12px;
   padding: 28px 24px 18px;
   margin: 32px 0;
+  /* SVG 내부에서 currentColor 쓰면 이 색상이 텍스트 색이 됨 */
+  color: var(--text);
 }
 .figure svg {
   display: block;
@@ -448,6 +442,14 @@ body { min-height: 100vh; }
   margin-top: 14px;
   font-style: italic;
 }
+
+/* SVG 안에서 사용할 클래스 (텍스트 색상) */
+.fig-text { fill: var(--text); }
+.fig-text-soft { fill: var(--text-soft); }
+.fig-text-mute { fill: var(--text-mute); }
+.fig-stroke { stroke: var(--text-soft); }
+.fig-bg-card { fill: var(--bg-card); }
+.fig-border { stroke: var(--border-strong); }
 
 /* ============== Pyodide 로딩 토스트 ============== */
 .pyodide-status {

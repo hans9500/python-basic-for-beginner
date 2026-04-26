@@ -1,15 +1,19 @@
 <!-- ============================================================
-     1주차 — 첫 걸음 (Phase A: s0 ~ s2)
-     검증: 컴퓨터 구조·프로그램 실행 설명은 표준 컴퓨터 구조 자료
-            (Patterson & Hennessy, CPython 공식 문서) 기반으로 작성
+     1주차 — 첫 걸음 (Phase B: s0 ~ s9, 풀 버전)
+     원칙:
+       1. 사실 정확성 — 비유든 단순화든 fact를 벗어나지 않음
+       2. 메모리 모델 기반 — 모든 값은 객체, 변수는 이름표
+       3. 설명 순서 — 사실(메모리) 먼저, 비유는 보조
+       4. 공식 문서 기반 — docs.python.org
+       5. SVG 텍스트는 currentColor / CSS 변수만 사용 (다크 모드 가독성)
      ============================================================ -->
 
 <div class="lesson-title">Week 1 · Lesson 1</div>
-<h1>컴퓨터, 파이썬, 그리고 첫 코드</h1>
+<h1>컴퓨터, 객체, 그리고 첫 코드</h1>
 <p class="subtitle">
   파이썬 코드를 한 줄도 쓰기 전에, AI 시대에 왜 코딩 기초가 필요한지부터
   솔직하게 이야기합니다. 그리고 코드가 실행될 때 컴퓨터 안에서 무슨 일이
-  일어나는지 천천히 살펴봅니다.
+  일어나는지, 변수는 도대체 무엇인지 천천히 살펴봅니다.
 </p>
 
 <!-- ==================== s0: AI 시대에 파이썬을 왜? ==================== -->
@@ -132,117 +136,108 @@
   <div class="figure">
     <svg viewBox="0 0 720 320" xmlns="http://www.w3.org/2000/svg" role="img"
          aria-label="CPU, 메모리, 저장장치의 관계와 데이터 흐름 다이어그램">
-      <defs>
-        <linearGradient id="g-cpu" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#c1440e" stop-opacity="0.12"/>
-          <stop offset="1" stop-color="#c1440e" stop-opacity="0.04"/>
-        </linearGradient>
-        <linearGradient id="g-mem" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#3b6ea8" stop-opacity="0.14"/>
-          <stop offset="1" stop-color="#3b6ea8" stop-opacity="0.04"/>
-        </linearGradient>
-        <linearGradient id="g-disk" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#5c6e3a" stop-opacity="0.14"/>
-          <stop offset="1" stop-color="#5c6e3a" stop-opacity="0.04"/>
-        </linearGradient>
-        <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5"
-                markerWidth="7" markerHeight="7" orient="auto">
-          <path d="M0,0 L10,5 L0,10 z" fill="#888"/>
-        </marker>
-      </defs>
-
       <!-- CPU -->
       <rect x="60" y="60" width="160" height="180" rx="10"
-            fill="url(#g-cpu)" stroke="#c1440e" stroke-width="1.5"/>
+            fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.9"/>
+      <rect x="60" y="60" width="160" height="180" rx="10"
+            fill="currentColor" opacity="0.04"/>
       <text x="140" y="92" text-anchor="middle" font-family="Pretendard, sans-serif"
-            font-size="13" font-weight="700" fill="#c1440e" letter-spacing="2">CPU</text>
+            font-size="13" font-weight="700" fill="currentColor" letter-spacing="2">CPU</text>
       <text x="140" y="114" text-anchor="middle" font-family="Pretendard, sans-serif"
-            font-size="14" font-weight="600" fill="#1a1a1a">중앙처리장치</text>
+            font-size="14" font-weight="600" fill="currentColor">중앙처리장치</text>
+
       <rect x="92" y="138" width="96" height="72" rx="4"
-            fill="#1e1e1e" stroke="#c1440e" stroke-width="1"/>
-      <g font-family="JetBrains Mono, monospace" font-size="9" fill="#9cdcfe">
-        <text x="100" y="154">+ - × ÷</text>
-        <text x="100" y="170">if then</text>
-        <text x="100" y="186">loop ⟳</text>
-        <text x="100" y="202">compare</text>
+            fill="#1e1e1e" stroke="currentColor" stroke-width="1" opacity="0.95"/>
+      <g font-family="JetBrains Mono, monospace" font-size="10">
+        <text x="100" y="156" fill="#9cdcfe">+ - × ÷</text>
+        <text x="100" y="172" fill="#9cdcfe">if then</text>
+        <text x="100" y="188" fill="#9cdcfe">loop ⟳</text>
+        <text x="100" y="204" fill="#9cdcfe">compare</text>
       </g>
       <text x="140" y="228" text-anchor="middle" font-family="Pretendard, sans-serif"
-            font-size="11" fill="#666">계산 · 판단</text>
+            font-size="11" fill="currentColor" opacity="0.7">계산 · 판단</text>
 
       <!-- 메모리 -->
       <rect x="280" y="60" width="160" height="180" rx="10"
-            fill="url(#g-mem)" stroke="#3b6ea8" stroke-width="1.5"/>
+            fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.9"/>
+      <rect x="280" y="60" width="160" height="180" rx="10"
+            fill="currentColor" opacity="0.04"/>
       <text x="360" y="92" text-anchor="middle" font-family="Pretendard, sans-serif"
-            font-size="13" font-weight="700" fill="#3b6ea8" letter-spacing="2">MEMORY</text>
+            font-size="13" font-weight="700" fill="currentColor" letter-spacing="2">MEMORY</text>
       <text x="360" y="114" text-anchor="middle" font-family="Pretendard, sans-serif"
-            font-size="14" font-weight="600" fill="#1a1a1a">메모리 (RAM)</text>
+            font-size="14" font-weight="600" fill="currentColor">메모리 (RAM)</text>
 
       <g font-family="JetBrains Mono, monospace" font-size="10">
         <rect x="296" y="134" width="128" height="20" rx="3"
-              fill="#fff" stroke="#cfd8e6"/>
-        <text x="304" y="148" fill="#3b6ea8">x</text>
-        <text x="416" y="148" text-anchor="end" fill="#1a1a1a">10</text>
+              fill="currentColor" opacity="0.05" stroke="currentColor" stroke-opacity="0.3"/>
+        <text x="304" y="148" fill="currentColor" opacity="0.9">x</text>
+        <text x="416" y="148" text-anchor="end" fill="currentColor">10</text>
         <rect x="296" y="160" width="128" height="20" rx="3"
-              fill="#fff" stroke="#cfd8e6"/>
-        <text x="304" y="174" fill="#3b6ea8">name</text>
-        <text x="416" y="174" text-anchor="end" fill="#1a1a1a">"홍길동"</text>
+              fill="currentColor" opacity="0.05" stroke="currentColor" stroke-opacity="0.3"/>
+        <text x="304" y="174" fill="currentColor" opacity="0.9">name</text>
+        <text x="416" y="174" text-anchor="end" fill="currentColor">"홍길동"</text>
         <rect x="296" y="186" width="128" height="20" rx="3"
-              fill="#fff" stroke="#cfd8e6"/>
-        <text x="304" y="200" fill="#3b6ea8">price</text>
-        <text x="416" y="200" text-anchor="end" fill="#1a1a1a">3000</text>
+              fill="currentColor" opacity="0.05" stroke="currentColor" stroke-opacity="0.3"/>
+        <text x="304" y="200" fill="currentColor" opacity="0.9">price</text>
+        <text x="416" y="200" text-anchor="end" fill="currentColor">3000</text>
       </g>
       <text x="360" y="228" text-anchor="middle" font-family="Pretendard, sans-serif"
-            font-size="11" fill="#666">실행 중인 데이터</text>
+            font-size="11" fill="currentColor" opacity="0.7">실행 중인 데이터</text>
 
       <!-- 저장장치 -->
       <rect x="500" y="60" width="160" height="180" rx="10"
-            fill="url(#g-disk)" stroke="#5c6e3a" stroke-width="1.5"/>
+            fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.9"/>
+      <rect x="500" y="60" width="160" height="180" rx="10"
+            fill="currentColor" opacity="0.04"/>
       <text x="580" y="92" text-anchor="middle" font-family="Pretendard, sans-serif"
-            font-size="13" font-weight="700" fill="#5c6e3a" letter-spacing="2">STORAGE</text>
+            font-size="13" font-weight="700" fill="currentColor" letter-spacing="2">STORAGE</text>
       <text x="580" y="114" text-anchor="middle" font-family="Pretendard, sans-serif"
-            font-size="14" font-weight="600" fill="#1a1a1a">저장장치 (SSD)</text>
+            font-size="14" font-weight="600" fill="currentColor">저장장치 (SSD)</text>
 
-      <g font-family="JetBrains Mono, monospace" font-size="10" fill="#1a1a1a">
+      <g font-family="JetBrains Mono, monospace" font-size="10" fill="currentColor">
         <g transform="translate(516, 134)">
-          <rect width="14" height="18" rx="1" fill="#fff" stroke="#5c6e3a"/>
-          <path d="M10,0 L14,4 L10,4 Z" fill="#5c6e3a"/>
+          <rect width="14" height="18" rx="1" fill="currentColor" opacity="0.1" stroke="currentColor" stroke-opacity="0.5"/>
           <text x="20" y="13">photo.jpg</text>
         </g>
         <g transform="translate(516, 160)">
-          <rect width="14" height="18" rx="1" fill="#fff" stroke="#5c6e3a"/>
-          <path d="M10,0 L14,4 L10,4 Z" fill="#5c6e3a"/>
+          <rect width="14" height="18" rx="1" fill="currentColor" opacity="0.1" stroke="currentColor" stroke-opacity="0.5"/>
           <text x="20" y="13">report.docx</text>
         </g>
         <g transform="translate(516, 186)">
-          <rect width="14" height="18" rx="1" fill="#fff" stroke="#5c6e3a"/>
-          <path d="M10,0 L14,4 L10,4 Z" fill="#5c6e3a"/>
+          <rect width="14" height="18" rx="1" fill="currentColor" opacity="0.1" stroke="currentColor" stroke-opacity="0.5"/>
           <text x="20" y="13">hello.py</text>
         </g>
       </g>
       <text x="580" y="228" text-anchor="middle" font-family="Pretendard, sans-serif"
-            font-size="11" fill="#666">영구 보관된 파일</text>
+            font-size="11" fill="currentColor" opacity="0.7">영구 보관된 파일</text>
 
       <!-- 화살표 -->
-      <line x1="222" y1="150" x2="278" y2="150" stroke="#888" stroke-width="1.5"
-            marker-end="url(#arr)"/>
-      <line x1="278" y1="170" x2="222" y2="170" stroke="#888" stroke-width="1.5"
-            marker-end="url(#arr)"/>
+      <defs>
+        <marker id="arr-1" viewBox="0 0 10 10" refX="8" refY="5"
+                markerWidth="7" markerHeight="7" orient="auto">
+          <path d="M0,0 L10,5 L0,10 z" fill="currentColor" opacity="0.6"/>
+        </marker>
+      </defs>
+      <line x1="222" y1="150" x2="278" y2="150" stroke="currentColor" stroke-width="1.5"
+            opacity="0.6" marker-end="url(#arr-1)"/>
+      <line x1="278" y1="170" x2="222" y2="170" stroke="currentColor" stroke-width="1.5"
+            opacity="0.6" marker-end="url(#arr-1)"/>
       <text x="250" y="142" text-anchor="middle" font-family="Pretendard, sans-serif"
-            font-size="10" fill="#666">읽기</text>
+            font-size="10" fill="currentColor" opacity="0.7">읽기</text>
       <text x="250" y="186" text-anchor="middle" font-family="Pretendard, sans-serif"
-            font-size="10" fill="#666">쓰기</text>
+            font-size="10" fill="currentColor" opacity="0.7">쓰기</text>
 
-      <line x1="442" y1="150" x2="498" y2="150" stroke="#888" stroke-width="1.5"
-            stroke-dasharray="4 3" marker-end="url(#arr)"/>
-      <line x1="498" y1="170" x2="442" y2="170" stroke="#888" stroke-width="1.5"
-            stroke-dasharray="4 3" marker-end="url(#arr)"/>
+      <line x1="442" y1="150" x2="498" y2="150" stroke="currentColor" stroke-width="1.5"
+            stroke-dasharray="4 3" opacity="0.6" marker-end="url(#arr-1)"/>
+      <line x1="498" y1="170" x2="442" y2="170" stroke="currentColor" stroke-width="1.5"
+            stroke-dasharray="4 3" opacity="0.6" marker-end="url(#arr-1)"/>
       <text x="470" y="142" text-anchor="middle" font-family="Pretendard, sans-serif"
-            font-size="10" fill="#666">불러오기</text>
+            font-size="10" fill="currentColor" opacity="0.7">불러오기</text>
       <text x="470" y="186" text-anchor="middle" font-family="Pretendard, sans-serif"
-            font-size="10" fill="#666">저장하기</text>
+            font-size="10" fill="currentColor" opacity="0.7">저장하기</text>
 
       <!-- 속도/용량 라벨 -->
-      <g font-family="Pretendard, sans-serif" font-size="10" fill="#888">
+      <g font-family="Pretendard, sans-serif" font-size="10" fill="currentColor" opacity="0.7">
         <text x="140" y="266" text-anchor="middle" font-weight="600">매우 빠름</text>
         <text x="140" y="282" text-anchor="middle">용량: 매우 작음</text>
         <text x="360" y="266" text-anchor="middle" font-weight="600">빠름</text>
@@ -284,9 +279,84 @@
 
   <h3>3단계로 보는 프로그램 실행</h3>
 
-  <p>
-    여러분이 어떤 앱을 실행한다고 합시다. 그 순간 크게 세 가지 일이 일어납니다.
-  </p>
+  <div class="figure">
+    <svg viewBox="0 0 720 220" xmlns="http://www.w3.org/2000/svg" role="img"
+         aria-label="프로그램 실행 3단계 다이어그램">
+      <defs>
+        <marker id="arr-prog" viewBox="0 0 10 10" refX="9" refY="5"
+                markerWidth="6" markerHeight="6" orient="auto">
+          <path d="M0,0 L10,5 L0,10 z" fill="currentColor" opacity="0.7"/>
+        </marker>
+      </defs>
+
+      <!-- 1단계: 저장장치 -->
+      <g>
+        <rect x="40" y="50" width="170" height="120" rx="8"
+              fill="currentColor" opacity="0.05" stroke="currentColor" stroke-width="1.2"/>
+        <text x="125" y="36" text-anchor="middle" font-family="Pretendard, sans-serif"
+              font-size="11" font-weight="700" fill="currentColor" letter-spacing="2">STEP 1</text>
+        <text x="125" y="78" text-anchor="middle" font-family="Pretendard, sans-serif"
+              font-size="13" font-weight="600" fill="currentColor">저장장치에서</text>
+        <text x="125" y="98" text-anchor="middle" font-family="Pretendard, sans-serif"
+              font-size="13" font-weight="600" fill="currentColor">메모리로 적재</text>
+        <g transform="translate(70, 115)" font-family="JetBrains Mono, monospace" font-size="10" fill="currentColor">
+          <rect width="14" height="18" rx="1" fill="currentColor" opacity="0.15"/>
+          <text x="20" y="13" opacity="0.85">app.exe</text>
+          <text x="76" y="13" opacity="0.7">→</text>
+        </g>
+        <text x="125" y="156" text-anchor="middle" font-family="Pretendard, sans-serif"
+              font-size="10" fill="currentColor" opacity="0.7">파일 → 작업 공간</text>
+      </g>
+
+      <line x1="216" y1="110" x2="266" y2="110" stroke="currentColor" stroke-width="2"
+            opacity="0.6" marker-end="url(#arr-prog)"/>
+
+      <!-- 2단계: CPU -->
+      <g>
+        <rect x="275" y="50" width="170" height="120" rx="8"
+              fill="currentColor" opacity="0.05" stroke="currentColor" stroke-width="1.2"/>
+        <text x="360" y="36" text-anchor="middle" font-family="Pretendard, sans-serif"
+              font-size="11" font-weight="700" fill="currentColor" letter-spacing="2">STEP 2</text>
+        <text x="360" y="78" text-anchor="middle" font-family="Pretendard, sans-serif"
+              font-size="13" font-weight="600" fill="currentColor">CPU가 명령을</text>
+        <text x="360" y="98" text-anchor="middle" font-family="Pretendard, sans-serif"
+              font-size="13" font-weight="600" fill="currentColor">한 줄씩 실행</text>
+        <g transform="translate(305, 115)" font-family="JetBrains Mono, monospace" font-size="9" fill="currentColor" opacity="0.85">
+          <text>읽기 → 처리 → 다음 →</text>
+        </g>
+        <text x="360" y="156" text-anchor="middle" font-family="Pretendard, sans-serif"
+              font-size="10" fill="currentColor" opacity="0.7">초당 수십억 번 반복</text>
+      </g>
+
+      <line x1="451" y1="110" x2="501" y2="110" stroke="currentColor" stroke-width="2"
+            opacity="0.6" marker-end="url(#arr-prog)"/>
+
+      <!-- 3단계: 출력 -->
+      <g>
+        <rect x="510" y="50" width="170" height="120" rx="8"
+              fill="currentColor" opacity="0.05" stroke="currentColor" stroke-width="1.2"/>
+        <text x="595" y="36" text-anchor="middle" font-family="Pretendard, sans-serif"
+              font-size="11" font-weight="700" fill="currentColor" letter-spacing="2">STEP 3</text>
+        <text x="595" y="78" text-anchor="middle" font-family="Pretendard, sans-serif"
+              font-size="13" font-weight="600" fill="currentColor">결과를 메모리에</text>
+        <text x="595" y="98" text-anchor="middle" font-family="Pretendard, sans-serif"
+              font-size="13" font-weight="600" fill="currentColor">쓰거나 화면 출력</text>
+        <g transform="translate(550, 113)">
+          <rect width="90" height="22" rx="3" fill="#1e1e1e" stroke="#4ec9b0"/>
+          <text x="45" y="16" text-anchor="middle" font-family="JetBrains Mono, monospace"
+                font-size="11" fill="#d4d4d4">Hello!</text>
+        </g>
+        <text x="595" y="156" text-anchor="middle" font-family="Pretendard, sans-serif"
+              font-size="10" fill="currentColor" opacity="0.7">화면 · 스피커 · 파일</text>
+      </g>
+
+      <text x="360" y="200" text-anchor="middle" font-family="Pretendard, sans-serif"
+            font-size="11" fill="currentColor" opacity="0.6" font-style="italic">
+        프로그램 실행 = 저장장치 → 메모리 → CPU → 출력
+      </text>
+    </svg>
+    <div class="caption">그림 1.2 — 프로그램 실행의 3단계</div>
+  </div>
 
   <h4>1단계 — 저장장치에서 메모리로 적재</h4>
   <p>
@@ -314,9 +384,9 @@
     <div class="label">파이썬은 좀 다릅니다</div>
     <p>
       위 설명은 일반적인 프로그램(예: 컴파일된 C 프로그램) 기준입니다.
-      파이썬은 한 단계가 더 있습니다 — <strong>파이썬 인터프리터가 먼저
-      실행되고, 그 인터프리터가 우리가 작성한 .py 파일을 한 줄씩 통역</strong>합니다.
-      그래서 같은 코드도 컴퓨터마다 똑같이 동작합니다. 자세한 건 다음 섹션에서.
+      파이썬은 한 단계가 더 있습니다 — <strong>파이썬 인터프리터(Python interpreter)가
+      먼저 실행되고, 그 인터프리터가 우리가 작성한 .py 파일을 한 줄씩 통역</strong>합니다.
+      그래서 같은 코드도 컴퓨터마다 똑같이 동작합니다. 다음 섹션에서 더 자세히 다룹니다.
     </p>
   </div>
 
@@ -366,16 +436,6 @@
 
   <p>
     실행하셨나요? 화면에 <code class="inline">Hello, Python</code>이 나왔다면 성공입니다.
-    방금 무슨 일이 일어났는지 정리해보면:
-  </p>
-
-  <ol>
-    <li>여러분이 입력한 코드 <code class="inline">print("Hello, Python")</code>이 메모리에 있는 파이썬 인터프리터에 전달됩니다.</li>
-    <li>인터프리터가 이 한 줄을 해석해서 "<code class="inline">Hello, Python</code>이라는 문자열을 화면에 출력하라"는 명령으로 바꿉니다.</li>
-    <li>그 명령이 실행되어 결과가 아래 터미널에 나타납니다.</li>
-  </ol>
-
-  <p>
     한번 코드를 살짝 바꿔보세요. <code class="inline">"Hello, Python"</code>을 다른 글자로
     바꾸고 다시 실행하면 결과가 달라집니다. 이게 "내가 코드를 다루고 있다"는 첫 경험입니다.
   </p>
@@ -390,9 +450,1218 @@
   </div>
 </section>
 
-<!-- 다음 섹션 안내 (Phase A 종료 표시) -->
-<div style="text-align:center; padding:48px 0 24px; border-top:1px dashed var(--border);
-            color:var(--text-mute); font-size:14px; margin-top:64px">
-  ⌁ Phase A 미리보기는 여기까지입니다 ⌁<br>
-  <span style="font-size:12px">검토 후 s3 ~ s9 그리고 시뮬레이터까지 이어서 작성합니다</span>
-</div>
+<!-- ==================== s3: 파이썬과 객체의 세계 ==================== -->
+<section class="section" id="s3">
+  <div class="section-num">SECTION 03</div>
+  <h2>파이썬과 객체의 세계</h2>
+
+  <p>
+    이제부터가 진짜 파이썬 이야기입니다. 그리고 가장 중요한 개념입니다.
+    여기를 잘 잡고 가야 변수, 함수, 리스트, 딕셔너리 — 앞으로 나올 모든 것이
+    자연스럽게 이해됩니다.
+  </p>
+
+  <div class="callout">
+    <div class="label">한 문장으로</div>
+    <p><strong>파이썬에서는 모든 값이 "객체(object)"입니다.</strong></p>
+  </div>
+
+  <h3>객체란 무엇인가?</h3>
+
+  <p>
+    파이썬에서 <strong>객체(object)</strong>란 메모리에 만들어진 데이터 덩어리입니다.
+    숫자 <code class="inline">1</code>도 객체이고, 글자 <code class="inline">"안녕"</code>도 객체이고,
+    참/거짓 <code class="inline">True</code>도 객체이고, 함수 <code class="inline">print</code>도 객체입니다.
+    파이썬에서 우리가 다루는 모든 값은 메모리 어딘가에 객체로 만들어져 있습니다.
+  </p>
+
+  <p>각 객체는 다음 세 가지를 가지고 있습니다:</p>
+
+  <div class="figure">
+    <svg viewBox="0 0 600 240" xmlns="http://www.w3.org/2000/svg"
+         aria-label="객체의 세 가지 속성: 타입·값·고유 번호">
+      <!-- 객체 본체 -->
+      <rect x="180" y="50" width="240" height="140" rx="10"
+            fill="currentColor" opacity="0.05" stroke="currentColor" stroke-width="1.5"/>
+      <text x="300" y="78" text-anchor="middle" font-family="Pretendard, sans-serif"
+            font-size="13" font-weight="700" fill="currentColor" letter-spacing="1">OBJECT</text>
+      <text x="300" y="98" text-anchor="middle" font-family="Pretendard, sans-serif"
+            font-size="13" fill="currentColor" opacity="0.7">객체 (예시: 정수 5)</text>
+
+      <!-- 1. 타입 -->
+      <g transform="translate(195, 115)">
+        <rect width="210" height="20" rx="3" fill="currentColor" opacity="0.08" stroke="currentColor" stroke-opacity="0.4"/>
+        <text x="6" y="14" font-family="JetBrains Mono, monospace" font-size="10" fill="currentColor" opacity="0.85">type</text>
+        <text x="200" y="14" text-anchor="end" font-family="JetBrains Mono, monospace" font-size="11" fill="currentColor">int (정수)</text>
+      </g>
+      <g transform="translate(195, 140)">
+        <rect width="210" height="20" rx="3" fill="currentColor" opacity="0.08" stroke="currentColor" stroke-opacity="0.4"/>
+        <text x="6" y="14" font-family="JetBrains Mono, monospace" font-size="10" fill="currentColor" opacity="0.85">value</text>
+        <text x="200" y="14" text-anchor="end" font-family="JetBrains Mono, monospace" font-size="11" fill="currentColor" font-weight="700">5</text>
+      </g>
+      <g transform="translate(195, 165)">
+        <rect width="210" height="20" rx="3" fill="currentColor" opacity="0.08" stroke="currentColor" stroke-opacity="0.4"/>
+        <text x="6" y="14" font-family="JetBrains Mono, monospace" font-size="10" fill="currentColor" opacity="0.85">id</text>
+        <text x="200" y="14" text-anchor="end" font-family="JetBrains Mono, monospace" font-size="10" fill="currentColor" opacity="0.85">140288751120140</text>
+      </g>
+
+      <!-- 라벨 -->
+      <g font-family="Pretendard, sans-serif" font-size="11" fill="currentColor" opacity="0.75">
+        <text x="50" y="129">① 타입</text>
+        <text x="50" y="154">② 값</text>
+        <text x="50" y="179">③ 고유 번호</text>
+        <text x="450" y="129">int / str / float / bool ...</text>
+        <text x="450" y="154">실제 데이터</text>
+        <text x="450" y="179">메모리 주소 (id)</text>
+      </g>
+      <line x1="100" y1="125" x2="190" y2="125" stroke="currentColor" stroke-width="0.5" opacity="0.3"/>
+      <line x1="100" y1="150" x2="190" y2="150" stroke="currentColor" stroke-width="0.5" opacity="0.3"/>
+      <line x1="100" y1="175" x2="190" y2="175" stroke="currentColor" stroke-width="0.5" opacity="0.3"/>
+    </svg>
+    <div class="caption">그림 1.3 — 모든 객체는 타입, 값, 고유 번호(id)를 가짐</div>
+  </div>
+
+  <h4>① 타입 (type)</h4>
+  <p>
+    객체가 어떤 종류의 데이터인지를 나타냅니다.
+    <code class="inline">int</code>(정수), <code class="inline">str</code>(문자열),
+    <code class="inline">float</code>(실수), <code class="inline">bool</code>(참/거짓),
+    <code class="inline">list</code>(리스트) 등이 있습니다.
+    타입은 그 객체가 어떤 일을 할 수 있는지를 정합니다 — 예를 들어 정수는
+    더하기/빼기를 할 수 있고, 문자열은 이어붙이기를 할 수 있죠.
+  </p>
+
+  <h4>② 값 (value)</h4>
+  <p>
+    객체가 실제로 가지고 있는 데이터입니다. 정수 객체의 값은 숫자
+    <code class="inline">5</code>, 문자열 객체의 값은 글자 <code class="inline">"안녕"</code> 등이죠.
+  </p>
+
+  <h4>③ 고유 번호 (id)</h4>
+  <p>
+    객체가 메모리 어디에 자리 잡고 있는지를 나타내는 번호입니다.
+    같은 시점에 같은 번호를 가진 객체는 단 하나뿐입니다 —
+    주민등록번호 같은 거라고 생각하면 됩니다.
+    이 번호는 파이썬이 알아서 정해주고, <code class="inline">id()</code>라는 함수로 확인할 수 있습니다.
+  </p>
+
+  <h3>직접 확인해보기</h3>
+
+  <p>
+    아래 코드를 실행해서 객체의 타입과 고유 번호를 직접 확인해보세요.
+  </p>
+
+  <div class="editor-block">
+    <div class="editor-tab-bar">
+      <span class="editor-tab">
+        <span class="py-icon"></span>
+        objects.py
+      </span>
+    </div>
+    <textarea class="editor-source"># 정수 객체
+print(type(5))
+print(id(5))
+
+# 문자열 객체
+print(type("안녕"))
+print(id("안녕"))
+
+# 실수 객체
+print(type(3.14))
+print(id(3.14))
+</textarea>
+    <div class="run-bar">
+      <span class="left">
+        <span class="file-name">📄 objects.py</span>
+      </span>
+      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+      <button class="run-btn"><span class="play">▶</span> Run</button>
+    </div>
+  </div>
+
+  <div class="terminal">
+    <div class="terminal-head">
+      <span class="label">실행 결과</span>
+      <span class="status">대기 중</span>
+    </div>
+    <div class="terminal-body empty"></div>
+  </div>
+
+  <p>
+    실행하면 <code class="inline">&lt;class 'int'&gt;</code>, <code class="inline">&lt;class 'str'&gt;</code>,
+    <code class="inline">&lt;class 'float'&gt;</code> 같은 게 나옵니다.
+    이건 "이 객체의 타입은 int 클래스다"라는 뜻입니다 —
+    클래스(class)는 타입의 다른 표현이라고 보시면 됩니다.
+  </p>
+
+  <p>
+    그리고 <code class="inline">id(5)</code>가 보여주는 큰 숫자는 그 객체의 메모리 주소입니다.
+    여러분이 실행할 때마다 다른 숫자가 나올 수 있고, 같은 객체라면 같은 번호가 나옵니다.
+  </p>
+
+  <div class="callout info">
+    <div class="label">왜 이게 중요한가?</div>
+    <p>
+      객체의 정체성(타입·값·id)을 이해하면, 다음 섹션에서 다룰
+      <strong>"변수란 무엇인가"</strong>가 자연스럽게 풀립니다.
+      파이썬의 변수는 객체를 "담는 상자"가 아닙니다 —
+      그 진짜 정체를 곧 만나게 됩니다.
+    </p>
+  </div>
+
+  <div class="key-points">
+    <div class="title">이 섹션의 핵심</div>
+    <ul>
+      <li>파이썬에서 <strong>모든 값은 객체</strong>다 — 숫자, 문자, 함수 모두.</li>
+      <li>각 객체는 <strong>타입(type), 값(value), 고유 번호(id)</strong>를 가진다.</li>
+      <li><code class="inline">type()</code>으로 타입을, <code class="inline">id()</code>로 고유 번호를 확인할 수 있다.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ==================== s4: print()로 출력하기 ==================== -->
+<section class="section" id="s4">
+  <div class="section-num">SECTION 04</div>
+  <h2>print()로 출력하기</h2>
+
+  <p>
+    이미 한 번 써봤죠. 이제 <code class="inline">print()</code>를 좀 더 자세히 알아봅니다.
+    이 함수는 강의 내내 가장 자주 쓰게 될 도구입니다.
+  </p>
+
+  <h3>기본 형태</h3>
+
+  <div class="editor-block">
+    <div class="editor-tab-bar">
+      <span class="editor-tab">
+        <span class="py-icon"></span>
+        print_basic.py
+      </span>
+    </div>
+    <textarea class="editor-source">print("안녕하세요")
+print(42)
+print(3.14)
+print(True)
+</textarea>
+    <div class="run-bar">
+      <span class="left">
+        <span class="file-name">📄 print_basic.py</span>
+      </span>
+      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+      <button class="run-btn"><span class="play">▶</span> Run</button>
+    </div>
+  </div>
+
+  <div class="terminal">
+    <div class="terminal-head">
+      <span class="label">실행 결과</span>
+      <span class="status">대기 중</span>
+    </div>
+    <div class="terminal-body empty"></div>
+  </div>
+
+  <p>
+    어떤 객체든 <code class="inline">print()</code>의 괄호 안에 넣으면 화면에 보여줍니다.
+    문자열은 따옴표 없이 글자만, 숫자는 그대로 출력됩니다.
+  </p>
+
+  <h3>여러 개 한 번에 출력</h3>
+
+  <p>
+    쉼표로 구분해서 여러 값을 한 번에 출력할 수 있습니다. 그러면 자동으로
+    공백 한 칸으로 이어집니다.
+  </p>
+
+  <div class="editor-block">
+    <div class="editor-tab-bar">
+      <span class="editor-tab">
+        <span class="py-icon"></span>
+        print_multi.py
+      </span>
+    </div>
+    <textarea class="editor-source">print("안녕", "파이썬")
+print("나이는", 30, "살")
+print("PI =", 3.14159)
+</textarea>
+    <div class="run-bar">
+      <span class="left">
+        <span class="file-name">📄 print_multi.py</span>
+      </span>
+      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+      <button class="run-btn"><span class="play">▶</span> Run</button>
+    </div>
+  </div>
+
+  <div class="terminal">
+    <div class="terminal-head">
+      <span class="label">실행 결과</span>
+      <span class="status">대기 중</span>
+    </div>
+    <div class="terminal-body empty"></div>
+  </div>
+
+  <h3>줄바꿈에 대해</h3>
+  <p>
+    <code class="inline">print()</code>는 매번 호출할 때마다 자동으로 줄을 바꿉니다.
+    그래서 두 번 호출하면 두 줄로 출력됩니다.
+    이걸 바꾸고 싶으면 <code class="inline">end</code> 매개변수를 쓸 수 있는데,
+    지금은 "기본은 줄바꿈"이라는 사실만 기억하시면 됩니다.
+  </p>
+
+  <h3>print()도 객체입니다</h3>
+  <p>
+    아까 "모든 게 객체다"라고 했죠. <code class="inline">print</code>도 객체 —
+    구체적으로는 <strong>함수 객체(function object)</strong>입니다.
+    뒤에 붙은 괄호 <code class="inline">()</code>는 "이 함수 객체를 호출해라"는 의미입니다.
+  </p>
+
+  <div class="callout info">
+    <div class="label">함수 호출의 사실</div>
+    <p>
+      <code class="inline">print("안녕")</code>은 두 단계입니다 —
+      ① <code class="inline">print</code>라는 함수 객체를 메모리에서 찾고,
+      ② 거기에 <code class="inline">"안녕"</code>이라는 문자열 객체를 넘겨줘서 호출합니다.
+      함수 호출은 늘 <strong>함수 이름 + 괄호 안에 객체 전달</strong>의 패턴입니다.
+    </p>
+  </div>
+
+  <div class="key-points">
+    <div class="title">이 섹션의 핵심</div>
+    <ul>
+      <li><code class="inline">print(객체)</code>는 객체의 값을 화면에 표시한다.</li>
+      <li>여러 값은 쉼표로 구분 — 공백 한 칸으로 자동 이어붙여 출력.</li>
+      <li><code class="inline">print()</code>는 매 호출마다 자동으로 줄바꿈한다.</li>
+      <li><code class="inline">print</code> 자체도 함수 객체. 괄호는 호출의 표시.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ==================== s5: 변수 = 객체를 가리키는 이름표 ==================== -->
+<section class="section" id="s5">
+  <div class="section-num">SECTION 05 · 핵심</div>
+  <h2>변수 = 객체를 가리키는 이름표</h2>
+
+  <div class="callout">
+    <div class="label">이번 섹션이 1주차에서 가장 중요합니다</div>
+    <p>
+      파이썬의 변수는 <strong>"값을 담는 상자"가 아닙니다.</strong>
+      이걸 처음에 잘 잡아두면 앞으로 헷갈릴 일이 없고, 잘못 잡으면 평생 헷갈립니다.
+    </p>
+  </div>
+
+  <h3>변수란?</h3>
+
+  <p>
+    프로그래밍에서 <strong>변수(variable)</strong>는 어떤 값을 다시 사용하기 위해
+    이름을 붙여둔 것입니다. 한 번 만들어둔 객체를 다시 찾으려면 어떻게든
+    참조할 방법이 필요합니다 — 그게 변수입니다.
+  </p>
+
+  <p>그런데 "어떻게 참조하는가"가 언어마다 다릅니다.</p>
+
+  <h3>C 언어의 변수 (참고용)</h3>
+
+  <p>
+    C 언어에서는 변수가 <strong>값을 담는 상자</strong>처럼 동작합니다.
+    <code class="inline">int x = 5;</code>라고 쓰면 메모리에 "x"라는 이름의
+    네모난 공간이 생기고, 그 안에 5가 직접 들어갑니다.
+  </p>
+
+  <div class="figure">
+    <svg viewBox="0 0 540 180" xmlns="http://www.w3.org/2000/svg"
+         aria-label="C 언어의 변수: 상자 모델">
+      <text x="270" y="28" text-anchor="middle" font-family="Pretendard, sans-serif"
+            font-size="13" font-weight="700" fill="currentColor" opacity="0.9">C 언어 — 상자 모델</text>
+
+      <!-- 메모리 영역 라벨 -->
+      <text x="270" y="50" text-anchor="middle" font-family="Pretendard, sans-serif"
+            font-size="11" fill="currentColor" opacity="0.6">메모리</text>
+
+      <!-- 상자 -->
+      <rect x="200" y="65" width="140" height="80" rx="6"
+            fill="currentColor" opacity="0.06" stroke="currentColor" stroke-width="1.5"/>
+      <text x="208" y="80" font-family="JetBrains Mono, monospace"
+            font-size="10" fill="currentColor" opacity="0.7">x</text>
+      <text x="270" y="115" text-anchor="middle" font-family="JetBrains Mono, monospace"
+            font-size="32" font-weight="700" fill="currentColor">5</text>
+
+      <text x="270" y="170" text-anchor="middle" font-family="Pretendard, sans-serif"
+            font-size="11" fill="currentColor" opacity="0.7" font-style="italic">
+        x라는 상자 안에 값 5가 직접 들어있음
+      </text>
+    </svg>
+    <div class="caption">그림 1.4 — C 언어 변수: 상자에 값을 직접 담음</div>
+  </div>
+
+  <h3>파이썬의 변수 — 이름표 모델</h3>
+
+  <p>
+    <strong>파이썬은 다릅니다.</strong> 파이썬에서 <code class="inline">x = 5</code>를 쓰면
+    두 가지 일이 일어납니다:
+  </p>
+  <ol>
+    <li>메모리에 정수 객체 <code class="inline">5</code>가 만들어짐</li>
+    <li><code class="inline">x</code>라는 이름표가 만들어져 그 객체를 가리킴</li>
+  </ol>
+
+  <p>
+    값은 객체에 들어있고, <strong>변수는 그 객체를 가리키는 이름표일 뿐</strong>입니다.
+  </p>
+
+  <div class="figure">
+    <svg viewBox="0 0 600 240" xmlns="http://www.w3.org/2000/svg"
+         aria-label="파이썬의 변수: 이름표 모델">
+      <text x="300" y="28" text-anchor="middle" font-family="Pretendard, sans-serif"
+            font-size="13" font-weight="700" fill="currentColor" opacity="0.9">파이썬 — 이름표 모델</text>
+
+      <!-- 변수 영역 -->
+      <rect x="40" y="60" width="160" height="140" rx="8"
+            fill="currentColor" opacity="0.04" stroke="currentColor" stroke-opacity="0.4"
+            stroke-width="1" stroke-dasharray="4 3"/>
+      <text x="120" y="78" text-anchor="middle" font-family="Pretendard, sans-serif"
+            font-size="10" fill="currentColor" opacity="0.7" font-weight="600" letter-spacing="1">VARIABLES</text>
+      <text x="120" y="93" text-anchor="middle" font-family="Pretendard, sans-serif"
+            font-size="10" fill="currentColor" opacity="0.55">변수 (이름표)</text>
+
+      <!-- 이름표 x -->
+      <g transform="translate(75, 130)">
+        <path d="M 0,12 L 10,0 L 90,0 L 90,24 L 10,24 Z"
+              fill="currentColor" opacity="0.08"
+              stroke="currentColor" stroke-width="1.5"/>
+        <text x="50" y="17" text-anchor="middle"
+              font-family="JetBrains Mono, monospace" font-size="14"
+              font-weight="700" fill="currentColor">x</text>
+      </g>
+
+      <!-- 객체 영역 -->
+      <rect x="320" y="60" width="240" height="140" rx="8"
+            fill="currentColor" opacity="0.04" stroke="currentColor" stroke-opacity="0.4"
+            stroke-width="1" stroke-dasharray="4 3"/>
+      <text x="440" y="78" text-anchor="middle" font-family="Pretendard, sans-serif"
+            font-size="10" fill="currentColor" opacity="0.7" font-weight="600" letter-spacing="1">OBJECTS (HEAP)</text>
+      <text x="440" y="93" text-anchor="middle" font-family="Pretendard, sans-serif"
+            font-size="10" fill="currentColor" opacity="0.55">객체들이 사는 곳</text>
+
+      <!-- 객체 5 -->
+      <g transform="translate(385, 110)">
+        <rect width="110" height="60" rx="6"
+              fill="currentColor" opacity="0.06" stroke="currentColor" stroke-width="1.8"/>
+        <text x="8" y="14" font-family="JetBrains Mono, monospace" font-size="9"
+              fill="currentColor" opacity="0.7" font-weight="600">int</text>
+        <text x="55" y="40" text-anchor="middle" font-family="JetBrains Mono, monospace"
+              font-size="22" font-weight="700" fill="currentColor">5</text>
+        <text x="102" y="55" text-anchor="end" font-family="JetBrains Mono, monospace"
+              font-size="8" fill="currentColor" opacity="0.45">@0x7f0c</text>
+      </g>
+
+      <!-- 화살표 -->
+      <defs>
+        <marker id="arr-name" viewBox="0 0 10 10" refX="9" refY="5"
+                markerWidth="7" markerHeight="7" orient="auto">
+          <path d="M0,0 L10,5 L0,10 z" fill="var(--accent)"/>
+        </marker>
+      </defs>
+      <path d="M 165 142 Q 280 142, 385 140"
+            fill="none" stroke="var(--accent)" stroke-width="2.5"
+            marker-end="url(#arr-name)"/>
+
+      <text x="300" y="225" text-anchor="middle" font-family="Pretendard, sans-serif"
+            font-size="11" fill="currentColor" opacity="0.7" font-style="italic">
+        x는 이름표 — 객체 5를 가리킬 뿐 (값을 "담고 있는" 게 아님)
+      </text>
+    </svg>
+    <div class="caption">그림 1.5 — 파이썬 변수: 객체를 가리키는 이름표</div>
+  </div>
+
+  <h3>왜 이렇게 다를까?</h3>
+
+  <p>
+    이름표 모델 덕분에 파이썬은 다음과 같은 일이 자연스럽습니다:
+  </p>
+  <ul>
+    <li>같은 객체에 여러 이름표 붙이기 (<code class="inline">y = x</code>)</li>
+    <li>이름표를 다른 객체로 옮기기 (<code class="inline">x = 10</code>)</li>
+    <li>이름표 없는 외로운 객체는 자동으로 메모리에서 사라짐 (가비지 컬렉션)</li>
+  </ul>
+
+  <h3>비유: 사물함과 이름표</h3>
+
+  <p>
+    이걸 쉽게 떠올리려면 <strong>사물함과 이름표</strong>를 생각하세요.
+    객체(메모리에 저장된 값)는 사물함입니다. 변수는 그 사물함에 붙인 이름표죠.
+  </p>
+  <ul>
+    <li>사물함(객체)은 메모리에 자리 잡고 있습니다.</li>
+    <li>이름표(변수)는 어떤 사물함을 가리킵니다.</li>
+    <li>같은 사물함에 이름표 두 개 붙일 수 있습니다.</li>
+    <li>이름표를 다른 사물함으로 옮길 수도 있습니다.</li>
+    <li>아무 이름표도 안 붙은 사물함은 비워져 사라집니다.</li>
+  </ul>
+
+  <h3>시뮬레이터로 보기</h3>
+
+  <p>
+    아래 시뮬레이터에서 <code class="inline">x = 2 + 3</code>이 실행될 때
+    메모리에서 무슨 일이 일어나는지 단계별로 따라가보세요.
+    좌우 화살표 키나 R(처음부터)을 사용할 수 있습니다.
+  </p>
+
+  <div style="margin: 24px 0; border-radius: 12px; overflow: hidden;
+              border: 1px solid var(--border); box-shadow: var(--shadow-md);">
+    <iframe src="simulators/sim-variable.html" id="sim-variable-iframe"
+            style="width: 100%; height: 720px; border: 0; display: block;"
+            title="시뮬레이터: 변수와 객체"></iframe>
+  </div>
+
+  <h3>코드로 직접 확인</h3>
+
+  <div class="editor-block">
+    <div class="editor-tab-bar">
+      <span class="editor-tab">
+        <span class="py-icon"></span>
+        variables.py
+      </span>
+    </div>
+    <textarea class="editor-source"># 변수 만들기
+x = 5
+print(x)
+print(id(x))   # x가 가리키는 객체의 고유 번호
+
+# 같은 객체에 다른 이름표 붙이기
+y = x
+print(id(y))   # x와 같은 객체를 가리킴 (id 같음)
+
+# 이름표를 다른 객체로 옮기기
+x = 10
+print(x, "vs", y)
+print(id(x), "vs", id(y))  # 이제 다른 객체
+</textarea>
+    <div class="run-bar">
+      <span class="left">
+        <span class="file-name">📄 variables.py</span>
+      </span>
+      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+      <button class="run-btn"><span class="play">▶</span> Run</button>
+    </div>
+  </div>
+
+  <div class="terminal">
+    <div class="terminal-head">
+      <span class="label">실행 결과</span>
+      <span class="status">대기 중</span>
+    </div>
+    <div class="terminal-body empty"></div>
+  </div>
+
+  <p>
+    실행해보면 <code class="inline">y = x</code> 후에 <code class="inline">id(x)</code>와
+    <code class="inline">id(y)</code>가 같습니다 — 같은 객체를 가리키니까요.
+    그 다음 <code class="inline">x = 10</code>으로 x의 이름표를 새 객체에 붙이면
+    이제 x와 y는 다른 객체를 가리킵니다.
+  </p>
+
+  <h3>변수 이름 짓기</h3>
+  <p>변수 이름에는 규칙이 있습니다:</p>
+  <ul>
+    <li>알파벳, 숫자, 밑줄(_)만 사용 가능</li>
+    <li>숫자로 시작할 수 없음 (<code class="inline">2name</code> 안 됨)</li>
+    <li>대소문자 구분 (<code class="inline">name</code>과 <code class="inline">Name</code>은 다른 변수)</li>
+    <li>한글도 가능하지만 일반적으로 영문 권장</li>
+    <li>의미가 분명한 이름이 좋음 (<code class="inline">a</code>보다 <code class="inline">age</code>)</li>
+  </ul>
+
+  <div class="key-points">
+    <div class="title">이 섹션의 핵심 (가장 중요!)</div>
+    <ul>
+      <li>파이썬 변수는 <strong>값을 담는 상자가 아니라 객체를 가리키는 이름표</strong>입니다.</li>
+      <li><code class="inline">x = 5</code> = 정수 객체 5를 만들고, x 이름표가 그것을 가리키게 한다.</li>
+      <li><code class="inline">y = x</code> = 같은 객체에 y라는 이름표 하나 더 붙인다 (id 같음).</li>
+      <li><code class="inline">x = 10</code> = x 이름표를 새 객체로 옮긴다 (기존 객체는 그대로).</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ==================== s6: 숫자와 산술 연산자 ==================== -->
+<section class="section" id="s6">
+  <div class="section-num">SECTION 06</div>
+  <h2>숫자와 산술 연산자</h2>
+
+  <p>
+    파이썬에는 두 가지 숫자 타입이 있습니다 — 정수와 실수.
+  </p>
+
+  <h3>정수 (int) 와 실수 (float)</h3>
+
+  <ul>
+    <li><strong>정수 (<code class="inline">int</code>)</strong>: 소수점 없는 숫자. 파이썬에서는 자릿수 제한이 거의 없음.</li>
+    <li><strong>실수 (<code class="inline">float</code>)</strong>: 소수점이 있는 숫자. 컴퓨터의 표현 한계로 약간의 오차가 있을 수 있음.</li>
+  </ul>
+
+  <div class="editor-block">
+    <div class="editor-tab-bar">
+      <span class="editor-tab"><span class="py-icon"></span>numbers.py</span>
+    </div>
+    <textarea class="editor-source">print(type(42))      # 정수
+print(type(3.14))    # 실수
+print(type(0))       # 0도 정수
+print(type(0.0))     # 0.0은 실수
+
+# 매우 큰 정수도 OK
+print(2 ** 100)
+</textarea>
+    <div class="run-bar">
+      <span class="left"><span class="file-name">📄 numbers.py</span></span>
+      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+      <button class="run-btn"><span class="play">▶</span> Run</button>
+    </div>
+  </div>
+  <div class="terminal">
+    <div class="terminal-head">
+      <span class="label">실행 결과</span>
+      <span class="status">대기 중</span>
+    </div>
+    <div class="terminal-body empty"></div>
+  </div>
+
+  <h3>산술 연산자</h3>
+
+  <p>파이썬의 산술 연산자는 다음과 같습니다.</p>
+
+  <div class="figure">
+    <svg viewBox="0 0 700 240" xmlns="http://www.w3.org/2000/svg"
+         aria-label="파이썬 산술 연산자 표">
+      <text x="350" y="24" text-anchor="middle" font-family="Pretendard, sans-serif"
+            font-size="12" font-weight="700" fill="currentColor" opacity="0.85" letter-spacing="2">
+        ARITHMETIC OPERATORS
+      </text>
+
+      <g font-family="JetBrains Mono, monospace" font-size="11" fill="currentColor">
+        <!-- 헤더 -->
+        <rect x="40" y="40" width="620" height="28" fill="currentColor" opacity="0.08"/>
+        <text x="80" y="58" font-weight="700" opacity="0.85">기호</text>
+        <text x="180" y="58" font-weight="700" opacity="0.85">의미</text>
+        <text x="320" y="58" font-weight="700" opacity="0.85">예시</text>
+        <text x="500" y="58" font-weight="700" opacity="0.85">결과</text>
+
+        <!-- 행 -->
+        <g>
+          <line x1="40" y1="80" x2="660" y2="80" stroke="currentColor" stroke-opacity="0.2"/>
+          <text x="80" y="98" font-size="14" font-weight="700">+</text>
+          <text x="180" y="98" font-family="Pretendard, sans-serif">더하기</text>
+          <text x="320" y="98" opacity="0.85">7 + 3</text>
+          <text x="500" y="98" font-weight="700">10</text>
+
+          <line x1="40" y1="110" x2="660" y2="110" stroke="currentColor" stroke-opacity="0.2"/>
+          <text x="80" y="128" font-size="14" font-weight="700">-</text>
+          <text x="180" y="128" font-family="Pretendard, sans-serif">빼기</text>
+          <text x="320" y="128" opacity="0.85">7 - 3</text>
+          <text x="500" y="128" font-weight="700">4</text>
+
+          <line x1="40" y1="140" x2="660" y2="140" stroke="currentColor" stroke-opacity="0.2"/>
+          <text x="80" y="158" font-size="14" font-weight="700">*</text>
+          <text x="180" y="158" font-family="Pretendard, sans-serif">곱하기</text>
+          <text x="320" y="158" opacity="0.85">7 * 3</text>
+          <text x="500" y="158" font-weight="700">21</text>
+
+          <line x1="40" y1="170" x2="660" y2="170" stroke="currentColor" stroke-opacity="0.2"/>
+          <text x="80" y="188" font-size="14" font-weight="700">/</text>
+          <text x="180" y="188" font-family="Pretendard, sans-serif">나누기 (실수 결과)</text>
+          <text x="320" y="188" opacity="0.85">7 / 3</text>
+          <text x="500" y="188" font-weight="700">2.3333...</text>
+
+          <line x1="40" y1="200" x2="660" y2="200" stroke="currentColor" stroke-opacity="0.2"/>
+          <text x="80" y="218" font-size="14" font-weight="700">//</text>
+          <text x="180" y="218" font-family="Pretendard, sans-serif">몫 (정수 나누기)</text>
+          <text x="320" y="218" opacity="0.85">7 // 3</text>
+          <text x="500" y="218" font-weight="700">2</text>
+        </g>
+      </g>
+    </svg>
+    <div class="caption">그림 1.6 — 산술 연산자 (+ 추가로 % 나머지, ** 거듭제곱)</div>
+  </div>
+
+  <p>
+    위 표 외에 두 개가 더 있습니다:
+  </p>
+  <ul>
+    <li><code class="inline">%</code> (나머지): <code class="inline">7 % 3</code> = <code class="inline">1</code></li>
+    <li><code class="inline">**</code> (거듭제곱): <code class="inline">2 ** 10</code> = <code class="inline">1024</code></li>
+  </ul>
+
+  <h3>두 가지 나누기 — / 와 // 의 차이</h3>
+
+  <p>
+    파이썬에서 <code class="inline">/</code>는 <strong>항상 실수 결과</strong>를 줍니다.
+    <code class="inline">10 / 2</code>도 <code class="inline">5.0</code>이 됩니다 (정수 5가 아니라).
+    "정수 몫"만 원하면 <code class="inline">//</code>(슬래시 두 개)를 쓰세요.
+  </p>
+
+  <div class="editor-block">
+    <div class="editor-tab-bar">
+      <span class="editor-tab"><span class="py-icon"></span>division.py</span>
+    </div>
+    <textarea class="editor-source">print(7 / 3)     # 2.333... (실수)
+print(7 // 3)    # 2 (몫)
+print(7 % 3)     # 1 (나머지)
+
+print(10 / 2)    # 5.0 (정수 아님!)
+print(10 // 2)   # 5
+
+# 거듭제곱
+print(2 ** 10)   # 2의 10제곱
+</textarea>
+    <div class="run-bar">
+      <span class="left"><span class="file-name">📄 division.py</span></span>
+      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+      <button class="run-btn"><span class="play">▶</span> Run</button>
+    </div>
+  </div>
+  <div class="terminal">
+    <div class="terminal-head">
+      <span class="label">실행 결과</span>
+      <span class="status">대기 중</span>
+    </div>
+    <div class="terminal-body empty"></div>
+  </div>
+
+  <h3>연산자 우선순위</h3>
+
+  <p>
+    학교에서 배운 것과 같습니다 — 곱셈/나눗셈이 덧셈/뺄셈보다 먼저,
+    괄호로 묶은 게 가장 먼저.
+  </p>
+
+  <div class="editor-block">
+    <div class="editor-tab-bar">
+      <span class="editor-tab"><span class="py-icon"></span>priority.py</span>
+    </div>
+    <textarea class="editor-source">print(2 + 3 * 4)        # 14 (곱셈 먼저)
+print((2 + 3) * 4)      # 20 (괄호 먼저)
+print(2 ** 3 * 2)       # 16 (거듭제곱이 곱셈보다 먼저)
+print(10 - 6 / 2)       # 7.0 (나눗셈 먼저, 결과는 실수)
+</textarea>
+    <div class="run-bar">
+      <span class="left"><span class="file-name">📄 priority.py</span></span>
+      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+      <button class="run-btn"><span class="play">▶</span> Run</button>
+    </div>
+  </div>
+  <div class="terminal">
+    <div class="terminal-head">
+      <span class="label">실행 결과</span>
+      <span class="status">대기 중</span>
+    </div>
+    <div class="terminal-body empty"></div>
+  </div>
+
+  <div class="callout info">
+    <div class="label">연산도 새 객체를 만든다</div>
+    <p>
+      <code class="inline">a + b</code>의 결과는 <strong>새 객체</strong>입니다.
+      a와 b 객체는 그대로고, 더한 결과를 담는 새 객체가 따로 만들어집니다.
+      이건 s5에서 본 시뮬레이터에서 직접 보셨죠 — <code class="inline">2 + 3</code>의 결과 5가
+      새 객체로 만들어지는 그 장면입니다.
+    </p>
+  </div>
+
+  <div class="key-points">
+    <div class="title">이 섹션의 핵심</div>
+    <ul>
+      <li>숫자 타입은 <strong>정수(int)</strong>와 <strong>실수(float)</strong> 두 가지.</li>
+      <li><code class="inline">/</code>는 항상 실수 결과, 정수 몫은 <code class="inline">//</code> 사용.</li>
+      <li>나머지는 <code class="inline">%</code>, 거듭제곱은 <code class="inline">**</code>.</li>
+      <li>연산은 <strong>새 객체를 만든다</strong> — 기존 객체는 그대로.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ==================== s7: 문자열 다루기 ==================== -->
+<section class="section" id="s7">
+  <div class="section-num">SECTION 07</div>
+  <h2>문자열 다루기</h2>
+
+  <p>
+    문자열(string)은 글자들의 묶음입니다. 파이썬에서는 <code class="inline">str</code> 타입이고,
+    따옴표로 감싸서 만듭니다.
+  </p>
+
+  <h3>문자열 만들기 — 큰따옴표 / 작은따옴표</h3>
+
+  <p>
+    파이썬에서는 <strong>큰따옴표와 작은따옴표 둘 다</strong> 같은 의미입니다.
+    어느 쪽을 써도 같은 문자열 객체가 만들어집니다.
+  </p>
+
+  <div class="editor-block">
+    <div class="editor-tab-bar">
+      <span class="editor-tab"><span class="py-icon"></span>strings.py</span>
+    </div>
+    <textarea class="editor-source">a = "안녕하세요"
+b = '안녕하세요'
+
+print(a == b)    # True (같은 내용)
+print(type(a))   # &lt;class 'str'&gt;
+
+# 따옴표 자체를 문자열에 넣기
+quote1 = "그가 '좋아'라고 말했다"
+quote2 = '그가 "좋아"라고 말했다'
+print(quote1)
+print(quote2)
+</textarea>
+    <div class="run-bar">
+      <span class="left"><span class="file-name">📄 strings.py</span></span>
+      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+      <button class="run-btn"><span class="play">▶</span> Run</button>
+    </div>
+  </div>
+  <div class="terminal">
+    <div class="terminal-head">
+      <span class="label">실행 결과</span>
+      <span class="status">대기 중</span>
+    </div>
+    <div class="terminal-body empty"></div>
+  </div>
+
+  <h3>문자열 연산 — + 와 *</h3>
+
+  <p>
+    문자열에도 연산자를 쓸 수 있습니다. 다만 의미가 살짝 다릅니다:
+  </p>
+  <ul>
+    <li><code class="inline">+</code> — <strong>이어붙이기 (concatenation)</strong></li>
+    <li><code class="inline">*</code> — <strong>반복 (repetition)</strong></li>
+  </ul>
+
+  <div class="editor-block">
+    <div class="editor-tab-bar">
+      <span class="editor-tab"><span class="py-icon"></span>str_ops.py</span>
+    </div>
+    <textarea class="editor-source"># 이어붙이기
+greeting = "안녕, " + "파이썬"
+print(greeting)
+
+# 반복
+line = "-" * 20
+print(line)
+print("ha" * 3)
+
+# 주의: 숫자와 문자는 + 못 함
+# print("나이: " + 30)  # TypeError!
+print("나이: " + str(30))  # 변환해서 가능
+</textarea>
+    <div class="run-bar">
+      <span class="left"><span class="file-name">📄 str_ops.py</span></span>
+      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+      <button class="run-btn"><span class="play">▶</span> Run</button>
+    </div>
+  </div>
+  <div class="terminal">
+    <div class="terminal-head">
+      <span class="label">실행 결과</span>
+      <span class="status">대기 중</span>
+    </div>
+    <div class="terminal-body empty"></div>
+  </div>
+
+  <h3>문자열 길이 — len()</h3>
+
+  <p>
+    <code class="inline">len()</code> 함수는 객체의 길이를 알려줍니다. 문자열에서는 글자 수입니다.
+  </p>
+
+  <div class="editor-block">
+    <div class="editor-tab-bar">
+      <span class="editor-tab"><span class="py-icon"></span>length.py</span>
+    </div>
+    <textarea class="editor-source">name = "홍길동"
+print(len(name))      # 3
+
+text = "Hello, Python"
+print(len(text))      # 13 (공백, 쉼표 포함)
+
+empty = ""
+print(len(empty))     # 0
+</textarea>
+    <div class="run-bar">
+      <span class="left"><span class="file-name">📄 length.py</span></span>
+      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+      <button class="run-btn"><span class="play">▶</span> Run</button>
+    </div>
+  </div>
+  <div class="terminal">
+    <div class="terminal-head">
+      <span class="label">실행 결과</span>
+      <span class="status">대기 중</span>
+    </div>
+    <div class="terminal-body empty"></div>
+  </div>
+
+  <h3>인덱싱 — 글자 하나 꺼내기</h3>
+
+  <p>
+    문자열의 각 글자에는 <strong>위치 번호(인덱스)</strong>가 붙어있습니다.
+    <strong>0부터 시작</strong>한다는 게 핵심입니다.
+  </p>
+
+  <div class="figure">
+    <svg viewBox="0 0 600 200" xmlns="http://www.w3.org/2000/svg"
+         aria-label="문자열 인덱싱: 각 글자에 0부터 번호가 붙음">
+      <text x="300" y="28" text-anchor="middle" font-family="Pretendard, sans-serif"
+            font-size="13" font-weight="700" fill="currentColor" opacity="0.9">문자열 인덱싱</text>
+      <text x="300" y="46" text-anchor="middle" font-family="JetBrains Mono, monospace"
+            font-size="11" fill="currentColor" opacity="0.65">name = "Python"</text>
+
+      <!-- 글자 박스 -->
+      <g font-family="JetBrains Mono, monospace" font-size="20" font-weight="700" fill="currentColor">
+        <rect x="120" y="70" width="60" height="60" rx="4" fill="currentColor" opacity="0.06" stroke="currentColor" stroke-width="1.5"/>
+        <text x="150" y="108" text-anchor="middle">P</text>
+
+        <rect x="180" y="70" width="60" height="60" rx="4" fill="currentColor" opacity="0.06" stroke="currentColor" stroke-width="1.5"/>
+        <text x="210" y="108" text-anchor="middle">y</text>
+
+        <rect x="240" y="70" width="60" height="60" rx="4" fill="currentColor" opacity="0.06" stroke="currentColor" stroke-width="1.5"/>
+        <text x="270" y="108" text-anchor="middle">t</text>
+
+        <rect x="300" y="70" width="60" height="60" rx="4" fill="currentColor" opacity="0.06" stroke="currentColor" stroke-width="1.5"/>
+        <text x="330" y="108" text-anchor="middle">h</text>
+
+        <rect x="360" y="70" width="60" height="60" rx="4" fill="currentColor" opacity="0.06" stroke="currentColor" stroke-width="1.5"/>
+        <text x="390" y="108" text-anchor="middle">o</text>
+
+        <rect x="420" y="70" width="60" height="60" rx="4" fill="currentColor" opacity="0.06" stroke="currentColor" stroke-width="1.5"/>
+        <text x="450" y="108" text-anchor="middle">n</text>
+      </g>
+
+      <!-- 양수 인덱스 -->
+      <g font-family="JetBrains Mono, monospace" font-size="13" fill="var(--accent)" font-weight="700">
+        <text x="150" y="152" text-anchor="middle">0</text>
+        <text x="210" y="152" text-anchor="middle">1</text>
+        <text x="270" y="152" text-anchor="middle">2</text>
+        <text x="330" y="152" text-anchor="middle">3</text>
+        <text x="390" y="152" text-anchor="middle">4</text>
+        <text x="450" y="152" text-anchor="middle">5</text>
+      </g>
+      <text x="60" y="152" font-family="Pretendard, sans-serif" font-size="11"
+            fill="currentColor" opacity="0.65" font-weight="600">앞에서:</text>
+
+      <!-- 음수 인덱스 -->
+      <g font-family="JetBrains Mono, monospace" font-size="11" fill="currentColor" opacity="0.65">
+        <text x="150" y="180" text-anchor="middle">-6</text>
+        <text x="210" y="180" text-anchor="middle">-5</text>
+        <text x="270" y="180" text-anchor="middle">-4</text>
+        <text x="330" y="180" text-anchor="middle">-3</text>
+        <text x="390" y="180" text-anchor="middle">-2</text>
+        <text x="450" y="180" text-anchor="middle">-1</text>
+      </g>
+      <text x="60" y="180" font-family="Pretendard, sans-serif" font-size="11"
+            fill="currentColor" opacity="0.65" font-weight="600">뒤에서:</text>
+    </svg>
+    <div class="caption">그림 1.7 — 문자열 인덱싱: 0부터 시작, 음수도 가능</div>
+  </div>
+
+  <p>
+    각 글자에 접근할 때는 <code class="inline">name[0]</code>처럼 대괄호와 인덱스를 씁니다.
+    <strong>음수 인덱스</strong>도 가능합니다 — <code class="inline">-1</code>은 마지막 글자, <code class="inline">-2</code>는 그 앞 글자.
+  </p>
+
+  <div class="editor-block">
+    <div class="editor-tab-bar">
+      <span class="editor-tab"><span class="py-icon"></span>indexing.py</span>
+    </div>
+    <textarea class="editor-source">name = "Python"
+
+print(name[0])    # P (첫 글자)
+print(name[1])    # y
+print(name[5])    # n (마지막 글자)
+
+print(name[-1])   # n (뒤에서 첫 번째)
+print(name[-2])   # o (뒤에서 두 번째)
+
+# 범위를 벗어나면 에러
+# print(name[10])  # IndexError!
+</textarea>
+    <div class="run-bar">
+      <span class="left"><span class="file-name">📄 indexing.py</span></span>
+      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+      <button class="run-btn"><span class="play">▶</span> Run</button>
+    </div>
+  </div>
+  <div class="terminal">
+    <div class="terminal-head">
+      <span class="label">실행 결과</span>
+      <span class="status">대기 중</span>
+    </div>
+    <div class="terminal-body empty"></div>
+  </div>
+
+  <div class="key-points">
+    <div class="title">이 섹션의 핵심</div>
+    <ul>
+      <li>문자열은 <strong>큰따옴표 또는 작은따옴표</strong>로 감싼다 (둘 다 같음).</li>
+      <li><code class="inline">+</code>는 이어붙이기, <code class="inline">*</code>는 반복.</li>
+      <li><code class="inline">len(s)</code>는 문자열 길이.</li>
+      <li>인덱스는 <strong>0부터 시작</strong>, 음수 인덱스는 뒤에서부터.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ==================== s8: f-string과 문자열 메서드 ==================== -->
+<section class="section" id="s8">
+  <div class="section-num">SECTION 08</div>
+  <h2>f-string과 문자열 메서드</h2>
+
+  <h3>f-string — 가장 편한 문자열 만들기</h3>
+
+  <p>
+    문자열 안에 변수 값을 끼워넣을 때 가장 편한 방법이 <strong>f-string</strong>입니다.
+    문자열 앞에 <code class="inline">f</code>를 붙이고, 중괄호 <code class="inline">{}</code> 안에 변수나 식을 적으면 됩니다.
+  </p>
+
+  <div class="editor-block">
+    <div class="editor-tab-bar">
+      <span class="editor-tab"><span class="py-icon"></span>fstring.py</span>
+    </div>
+    <textarea class="editor-source">name = "홍길동"
+age = 30
+
+# f-string 사용
+greeting = f"안녕, {name}님! 나이는 {age}살이네요."
+print(greeting)
+
+# 식도 가능
+print(f"{name}님은 5년 후 {age + 5}살입니다.")
+
+# 여러 줄 출력
+print(f"이름: {name}")
+print(f"나이: {age}")
+print(f"내년 나이: {age + 1}")
+</textarea>
+    <div class="run-bar">
+      <span class="left"><span class="file-name">📄 fstring.py</span></span>
+      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+      <button class="run-btn"><span class="play">▶</span> Run</button>
+    </div>
+  </div>
+  <div class="terminal">
+    <div class="terminal-head">
+      <span class="label">실행 결과</span>
+      <span class="status">대기 중</span>
+    </div>
+    <div class="terminal-body empty"></div>
+  </div>
+
+  <div class="callout info">
+    <div class="label">f-string도 새 객체를 만든다</div>
+    <p>
+      <code class="inline">f"{name}님 안녕"</code>의 결과는 새로운 문자열 객체입니다.
+      원본 <code class="inline">name</code> 문자열은 그대로 있고, 새 문자열이 만들어진 것이죠.
+      이건 모든 문자열 연산의 공통 특징입니다.
+    </p>
+  </div>
+
+  <h3>문자열 메서드 — 객체에 점(.) 찍어 호출</h3>
+
+  <p>
+    문자열 객체에는 다양한 <strong>메서드(method)</strong>가 붙어있습니다.
+    메서드는 "그 객체가 할 줄 아는 동작"입니다. 점(<code class="inline">.</code>)으로 호출합니다.
+  </p>
+
+  <div class="editor-block">
+    <div class="editor-tab-bar">
+      <span class="editor-tab"><span class="py-icon"></span>methods.py</span>
+    </div>
+    <textarea class="editor-source">text = "  Hello, Python  "
+
+# 대문자 / 소문자
+print("hello".upper())       # HELLO
+print("HELLO".lower())       # hello
+
+# 양 끝 공백 제거
+print(text.strip())          # "Hello, Python"
+print(len(text))             # 16 (공백 포함)
+print(len(text.strip()))     # 13 (공백 제거)
+
+# 일부 글자 바꾸기
+print("apple pie".replace("apple", "cherry"))   # cherry pie
+
+# 특정 글자가 있는지
+print("Hello".startswith("He"))   # True
+print("hello.py".endswith(".py")) # True
+</textarea>
+    <div class="run-bar">
+      <span class="left"><span class="file-name">📄 methods.py</span></span>
+      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+      <button class="run-btn"><span class="play">▶</span> Run</button>
+    </div>
+  </div>
+  <div class="terminal">
+    <div class="terminal-head">
+      <span class="label">실행 결과</span>
+      <span class="status">대기 중</span>
+    </div>
+    <div class="terminal-body empty"></div>
+  </div>
+
+  <div class="callout">
+    <div class="label">중요한 사실 — 원본은 안 바뀐다</div>
+    <p>
+      문자열 메서드는 <strong>원본을 바꾸지 않고 새 문자열을 돌려줍니다.</strong>
+      <code class="inline">text.upper()</code>를 호출해도 <code class="inline">text</code>는 그대로입니다 —
+      대문자로 바뀐 새 문자열이 반환될 뿐입니다.
+      이건 문자열이 <strong>불변 객체(immutable)</strong>이기 때문입니다 (3주차에 자세히).
+    </p>
+  </div>
+
+  <div class="key-points">
+    <div class="title">이 섹션의 핵심</div>
+    <ul>
+      <li><code class="inline">f"...{변수}..."</code> 형태로 문자열에 값 끼워넣기.</li>
+      <li>중괄호 안에 식도 가능 (<code class="inline">{age + 1}</code> 등).</li>
+      <li><code class="inline">.upper()</code>, <code class="inline">.lower()</code>, <code class="inline">.strip()</code>, <code class="inline">.replace()</code> 등 다양한 메서드.</li>
+      <li>메서드는 원본을 바꾸지 않고 <strong>새 문자열을 돌려준다</strong>.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ==================== s9: 1주차 종합 실습 ==================== -->
+<section class="section" id="s9">
+  <div class="section-num">SECTION 09 · 종합 실습</div>
+  <h2>1주차 종합 실습</h2>
+
+  <p>
+    지금까지 배운 것을 모아서 작은 결과물 두 개를 만들어보겠습니다.
+    완벽히 이해 못 했어도 괜찮습니다 — 코드를 보고 실행해보고 살짝 바꿔보세요.
+  </p>
+
+  <h3>실습 1 — 나이 계산기</h3>
+
+  <p>
+    출생연도를 변수에 저장하고, 현재 연도와의 차이로 나이를 계산해 출력합니다.
+  </p>
+
+  <div class="editor-block">
+    <div class="editor-tab-bar">
+      <span class="editor-tab"><span class="py-icon"></span>age_calculator.py</span>
+    </div>
+    <textarea class="editor-source"># 나이 계산기
+name = "홍길동"
+birth_year = 1990
+current_year = 2026
+
+age = current_year - birth_year
+next_age = age + 1
+
+print(f"안녕하세요, {name}님!")
+print(f"올해 나이는 {age}살입니다.")
+print(f"내년에는 {next_age}살이 되시네요.")
+print(f"태어나신 지 약 {age * 365}일이 지났습니다.")
+</textarea>
+    <div class="run-bar">
+      <span class="left"><span class="file-name">📄 age_calculator.py</span></span>
+      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+      <button class="run-btn"><span class="play">▶</span> Run</button>
+    </div>
+  </div>
+  <div class="terminal">
+    <div class="terminal-head">
+      <span class="label">실행 결과</span>
+      <span class="status">대기 중</span>
+    </div>
+    <div class="terminal-body empty"></div>
+  </div>
+
+  <p>
+    <code class="inline">name</code>과 <code class="inline">birth_year</code>를
+    본인 정보로 바꿔서 다시 실행해보세요.
+  </p>
+
+  <h3>실습 2 — 이름 길이 카운터</h3>
+
+  <p>
+    이름의 길이를 구하고, 다양한 문자열 메서드로 가공해봅니다.
+  </p>
+
+  <div class="editor-block">
+    <div class="editor-tab-bar">
+      <span class="editor-tab"><span class="py-icon"></span>name_info.py</span>
+    </div>
+    <textarea class="editor-source"># 이름 길이 카운터
+full_name = "Hong Gildong"
+
+length = len(full_name)
+upper_name = full_name.upper()
+lower_name = full_name.lower()
+
+print(f"전체 이름: {full_name}")
+print(f"길이: {length}글자")
+print(f"대문자: {upper_name}")
+print(f"소문자: {lower_name}")
+print(f"첫 글자: {full_name[0]}")
+print(f"마지막 글자: {full_name[-1]}")
+
+# 구분선
+print("-" * 40)
+print(f"이름을 3번 부르기:")
+print(f"{full_name}! " * 3)
+</textarea>
+    <div class="run-bar">
+      <span class="left"><span class="file-name">📄 name_info.py</span></span>
+      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+      <button class="run-btn"><span class="play">▶</span> Run</button>
+    </div>
+  </div>
+  <div class="terminal">
+    <div class="terminal-head">
+      <span class="label">실행 결과</span>
+      <span class="status">대기 중</span>
+    </div>
+    <div class="terminal-body empty"></div>
+  </div>
+
+  <h3>1주차 마무리</h3>
+
+  <p>
+    축하합니다! 1주차를 완주하셨습니다. 정리해보면:
+  </p>
+
+  <div class="key-points">
+    <div class="title">1주차에서 익힌 것</div>
+    <ul>
+      <li>컴퓨터 안에서 CPU·메모리·저장장치가 어떻게 협력하는지</li>
+      <li>프로그램이 실행될 때 메모리에서 무슨 일이 일어나는지</li>
+      <li><strong>모든 값이 객체</strong>이고, 각 객체에는 타입·값·고유 번호가 있다는 것</li>
+      <li><strong>변수는 객체를 가리키는 이름표</strong>라는 것 (1주차 가장 중요!)</li>
+      <li><code class="inline">print()</code>로 출력하기</li>
+      <li>숫자와 산술 연산자 (+, -, *, /, //, %, **)</li>
+      <li>문자열 만들기, +, *, len(), 인덱싱</li>
+      <li>f-string으로 변수 끼워넣기, 문자열 메서드</li>
+    </ul>
+  </div>
+
+  <p>
+    2주차에서는 사용자에게 <code class="inline">input()</code>으로 입력을 받고,
+    <code class="inline">if</code>와 <code class="inline">for</code>로 흐름을 만들어봅니다.
+    1주차에서 잡은 객체·변수 모델 위에 자연스럽게 올라갑니다.
+  </p>
+</section>
+
+<!-- 부모 페이지 테마 변경을 시뮬레이터 iframe에 알림 -->
+<script>
+(function() {
+  function notifyTheme() {
+    const theme = document.documentElement.getAttribute('data-theme') || 'light';
+    document.querySelectorAll('iframe').forEach(function(f) {
+      try { f.contentWindow.postMessage({ theme: theme }, '*'); } catch(e) {}
+    });
+  }
+  // MutationObserver로 data-theme 변경 감지
+  const obs = new MutationObserver(notifyTheme);
+  obs.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  // iframe 로드 시에도 한번
+  document.querySelectorAll('iframe').forEach(function(f) {
+    f.addEventListener('load', notifyTheme);
+  });
+  // 초기 호출
+  setTimeout(notifyTheme, 200);
+})();
+</script>
