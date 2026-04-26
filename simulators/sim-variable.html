@@ -20,6 +20,9 @@
   --names-bg: #fef3e8;
   --names-border: #d97706;
   --names-text: #7a3a10;
+  --cpu-bg: #f0e8f5;
+  --cpu-border: #7c3aed;
+  --cpu-text: #5b21b6;
   --code-bg: #2b2b2b;
   --code-text: #a9b7c6;
   --code-keyword: #cc7832;
@@ -44,6 +47,9 @@
   --names-bg: #3a2a18;
   --names-border: #d97706;
   --names-text: #f4b070;
+  --cpu-bg: #2a1f3d;
+  --cpu-border: #a78bfa;
+  --cpu-text: #c4b5fd;
 }
 * { box-sizing: border-box; }
 body {
@@ -191,23 +197,37 @@ body {
     </div>
 
     <div class="canvas-pane">
-      <svg id="memory-svg" viewBox="0 0 540 400" xmlns="http://www.w3.org/2000/svg">
-        <text x="100" y="28" text-anchor="middle" font-family="Pretendard, sans-serif"
+      <svg id="memory-svg" viewBox="0 0 720 400" xmlns="http://www.w3.org/2000/svg">
+        <!-- CPU 영역 -->
+        <text x="90" y="28" text-anchor="middle" font-family="Pretendard, sans-serif"
+              font-size="11" font-weight="700" fill="currentColor" letter-spacing="2"
+              opacity="0.85">CPU</text>
+        <text x="90" y="44" text-anchor="middle" font-family="Pretendard, sans-serif"
+              font-size="11" fill="currentColor" opacity="0.6">계산 · 판단</text>
+        <rect id="cpu-box" x="20" y="58" width="140" height="320" rx="8"
+              fill="var(--cpu-bg)" stroke="var(--cpu-border)" stroke-width="1.5"
+              stroke-dasharray="4 3" opacity="0.45"/>
+
+        <!-- 변수 영역 -->
+        <text x="270" y="28" text-anchor="middle" font-family="Pretendard, sans-serif"
               font-size="11" font-weight="700" fill="currentColor" letter-spacing="2"
               opacity="0.85">VARIABLES</text>
-        <text x="100" y="44" text-anchor="middle" font-family="Pretendard, sans-serif"
+        <text x="270" y="44" text-anchor="middle" font-family="Pretendard, sans-serif"
               font-size="11" fill="currentColor" opacity="0.6">변수 (이름표)</text>
-        <rect x="20" y="58" width="160" height="320" rx="8"
+        <rect x="190" y="58" width="160" height="320" rx="8"
               fill="var(--names-bg)" stroke="var(--names-border)" stroke-width="1.5"
               stroke-dasharray="4 3" opacity="0.5"/>
-        <text x="380" y="28" text-anchor="middle" font-family="Pretendard, sans-serif"
+
+        <!-- 객체 영역 -->
+        <text x="540" y="28" text-anchor="middle" font-family="Pretendard, sans-serif"
               font-size="11" font-weight="700" fill="currentColor" letter-spacing="2"
               opacity="0.85">OBJECTS (HEAP)</text>
-        <text x="380" y="44" text-anchor="middle" font-family="Pretendard, sans-serif"
+        <text x="540" y="44" text-anchor="middle" font-family="Pretendard, sans-serif"
               font-size="11" fill="currentColor" opacity="0.6">객체들이 사는 곳</text>
-        <rect x="220" y="58" width="300" height="320" rx="8"
+        <rect x="380" y="58" width="320" height="320" rx="8"
               fill="var(--heap-bg)" stroke="var(--heap-border)" stroke-width="1.5"
               stroke-dasharray="4 3" opacity="0.45"/>
+
         <g id="dynamic"></g>
       </svg>
     </div>
@@ -326,12 +346,103 @@ body {
     return g;
   }
 
-  // 모든 단계에서 보일 영구 객체들
+  // CPU 박스 안의 표현 (활성 상태에 따라 보임)
+  // mode: 'idle' (조용히 대기), 'reading' (값 읽기), 'computing' (계산 중)
+  function drawCpuContent(mode, opts) {
+    opts = opts || {};
+    const g = el('g');
+    const cx = 90;  // CPU 박스 중심 x
+    if (mode === 'idle') {
+      // 작은 ALU 표시 — 흐릿하게
+      g.appendChild(el('text', {
+        x: cx, y: 200, 'text-anchor': 'middle',
+        'font-family': 'JetBrains Mono, monospace', 'font-size': 11,
+        fill: 'currentColor', opacity: 0.35
+      }, '+ - × ÷'));
+      g.appendChild(el('text', {
+        x: cx, y: 220, 'text-anchor': 'middle',
+        'font-family': 'Pretendard, sans-serif', 'font-size': 10,
+        fill: 'currentColor', opacity: 0.4
+      }, '대기'));
+    } else if (mode === 'computing') {
+      // CPU가 활성화 — 2 + 3 = 5 표시
+      g.appendChild(el('rect', {
+        x: 35, y: 160, width: 110, height: 110, rx: 6,
+        fill: 'var(--cpu-bg)', stroke: 'var(--cpu-border)',
+        'stroke-width': 2
+      }));
+      g.appendChild(el('text', {
+        x: cx, y: 178, 'text-anchor': 'middle',
+        'font-family': 'JetBrains Mono, monospace', 'font-size': 9,
+        fill: 'var(--cpu-text)', 'font-weight': 700, 'letter-spacing': 1
+      }, 'ALU'));
+      // 2 + 3
+      g.appendChild(el('text', {
+        x: cx, y: 210, 'text-anchor': 'middle',
+        'font-family': 'JetBrains Mono, monospace', 'font-size': 24,
+        'font-weight': 700, fill: 'currentColor'
+      }, '2 + 3'));
+      // 화살표 ↓
+      g.appendChild(el('text', {
+        x: cx, y: 234, 'text-anchor': 'middle',
+        'font-family': 'JetBrains Mono, monospace', 'font-size': 14,
+        fill: 'currentColor', opacity: 0.6
+      }, '↓'));
+      // 결과 5
+      g.appendChild(el('text', {
+        x: cx, y: 260, 'text-anchor': 'middle',
+        'font-family': 'JetBrains Mono, monospace', 'font-size': 24,
+        'font-weight': 700, fill: 'var(--accent)'
+      }, '5'));
+    } else if (mode === 'following') {
+      // 이름표 → 객체 따라가기 (print, id 단계)
+      g.appendChild(el('rect', {
+        x: 35, y: 180, width: 110, height: 70, rx: 6,
+        fill: 'var(--cpu-bg)', stroke: 'var(--cpu-border)',
+        'stroke-width': 2, opacity: 0.85
+      }));
+      g.appendChild(el('text', {
+        x: cx, y: 200, 'text-anchor': 'middle',
+        'font-family': 'JetBrains Mono, monospace', 'font-size': 9,
+        fill: 'var(--cpu-text)', 'font-weight': 700, 'letter-spacing': 1
+      }, 'CPU'));
+      g.appendChild(el('text', {
+        x: cx, y: 224, 'text-anchor': 'middle',
+        'font-family': 'Pretendard, sans-serif', 'font-size': 11,
+        fill: 'currentColor', 'font-weight': 600
+      }, opts.label || '읽기'));
+      g.appendChild(el('text', {
+        x: cx, y: 240, 'text-anchor': 'middle',
+        'font-family': 'JetBrains Mono, monospace', 'font-size': 11,
+        fill: 'currentColor', opacity: 0.7
+      }, opts.detail || ''));
+    } else if (mode === 'creating') {
+      // 객체를 만드는 중 (단순한 표현)
+      g.appendChild(el('rect', {
+        x: 35, y: 180, width: 110, height: 60, rx: 6,
+        fill: 'var(--cpu-bg)', stroke: 'var(--cpu-border)',
+        'stroke-width': 1.5, opacity: 0.7
+      }));
+      g.appendChild(el('text', {
+        x: cx, y: 200, 'text-anchor': 'middle',
+        'font-family': 'JetBrains Mono, monospace', 'font-size': 9,
+        fill: 'var(--cpu-text)', 'font-weight': 700, 'letter-spacing': 1
+      }, 'CPU'));
+      g.appendChild(el('text', {
+        x: cx, y: 224, 'text-anchor': 'middle',
+        'font-family': 'Pretendard, sans-serif', 'font-size': 10,
+        fill: 'currentColor', opacity: 0.85
+      }, opts.label || '객체 생성'));
+    }
+    return g;
+  }
+
+  // 모든 단계에서 보일 영구 객체들 (좌표 +160 시프트)
   function objects(stage) {
     const arr = [];
-    if (stage >= 1) arr.push(drawObject({ x: 240, y: 80, value: 2, addr: '0x7f01' }));
-    if (stage >= 2) arr.push(drawObject({ x: 380, y: 80, value: 3, addr: '0x7f02' }));
-    if (stage >= 3) arr.push(drawObject({ x: 290, y: 210, value: 5, addr: '0x7f0c' }));
+    if (stage >= 1) arr.push(drawObject({ x: 400, y: 80, value: 2, addr: '0x7f01' }));
+    if (stage >= 2) arr.push(drawObject({ x: 540, y: 80, value: 3, addr: '0x7f02' }));
+    if (stage >= 3) arr.push(drawObject({ x: 450, y: 210, value: 5, addr: '0x7f0c' }));
     return arr;
   }
 
@@ -339,55 +450,93 @@ body {
     {
       line: 0,
       title: '시작 — 빈 메모리',
-      text: '아직 아무것도 만들어지지 않았습니다. 왼쪽은 변수(이름표) 영역, 오른쪽은 객체 영역입니다.',
-      render: () => {}
+      text: '아직 아무것도 만들어지지 않았습니다. CPU는 계산을 담당하는 부품이고, 가운데는 변수(이름표) 영역, 오른쪽은 객체들이 사는 영역입니다.',
+      render: () => {
+        dynamic.appendChild(drawCpuContent('idle'));
+      }
     },
     {
       line: 1,
       title: '1단계 — 정수 객체 2가 만들어짐',
-      text: '식의 오른쪽부터 평가합니다. 먼저 숫자 2를 보고 파이썬은 메모리에 정수 객체(int)를 만듭니다. 객체에는 고유한 주소(id)가 있습니다.',
-      render: () => objects(1).forEach(o => dynamic.appendChild(o))
+      text: '식의 오른쪽부터 평가합니다. CPU가 명령을 실행해서 메모리(HEAP)에 정수 객체 2를 만듭니다. 객체에는 고유한 주소(id)가 있습니다.',
+      render: () => {
+        dynamic.appendChild(drawCpuContent('creating', { label: '객체 2 생성' }));
+        objects(1).forEach(o => dynamic.appendChild(o));
+        // CPU → 객체 2 (만들기 화살표)
+        dynamic.appendChild(drawArrow({
+          fromX: 145, fromY: 110, toX: 395, toY: 110, color: 'var(--cpu-border)'
+        }));
+      }
     },
     {
       line: 1,
       title: '2단계 — 정수 객체 3이 만들어짐',
-      text: '다음으로 숫자 3을 만듭니다. 또 다른 정수 객체가 메모리에 생깁니다. 별개의 객체이므로 주소도 다릅니다.',
-      render: () => objects(2).forEach(o => dynamic.appendChild(o))
+      text: '다음으로 CPU가 정수 객체 3을 만듭니다. 또 다른 정수 객체가 메모리에 생깁니다. 별개의 객체이므로 주소도 다릅니다.',
+      render: () => {
+        dynamic.appendChild(drawCpuContent('creating', { label: '객체 3 생성' }));
+        objects(2).forEach(o => dynamic.appendChild(o));
+        dynamic.appendChild(drawArrow({
+          fromX: 145, fromY: 110, toX: 535, toY: 110, color: 'var(--cpu-border)'
+        }));
+      }
     },
     {
       line: 1,
-      title: '3단계 — + 연산자가 새 객체를 만듦',
-      text: '2 + 3 이 계산되면 결과 5는 또 다른 새 객체로 메모리에 만들어집니다. 2와 3 객체는 그대로 있고, 5 객체가 추가된 것입니다.',
+      title: '3단계 — CPU가 2 + 3 을 계산해 새 객체 5를 만듦',
+      text: 'CPU가 메모리의 두 객체 값(2와 3)을 읽어서 더하기 연산을 수행합니다. 이 계산은 CPU의 내부에서 일어납니다. 결과 5는 다시 메모리에 새 객체로 만들어집니다. 2와 3 객체는 그대로 있습니다.',
       render: () => {
+        dynamic.appendChild(drawCpuContent('computing'));
         objects(3).forEach(o => dynamic.appendChild(o));
-        dynamic.appendChild(drawArrow({ fromX: 295, fromY: 145, toX: 320, toY: 200, color: 'currentColor' }));
-        dynamic.appendChild(drawArrow({ fromX: 435, fromY: 145, toX: 360, toY: 200, color: 'currentColor' }));
+        // 2 → CPU (값 읽기, 들어오는 화살표)
+        dynamic.appendChild(drawArrow({
+          fromX: 395, fromY: 110, toX: 150, toY: 200, color: 'var(--heap-border)'
+        }));
+        // 3 → CPU (값 읽기)
+        dynamic.appendChild(drawArrow({
+          fromX: 535, fromY: 110, toX: 152, toY: 215, color: 'var(--heap-border)'
+        }));
+        // CPU → 5 (결과 쓰기)
+        dynamic.appendChild(drawArrow({
+          fromX: 150, fromY: 260, toX: 445, toY: 240, color: 'var(--accent)'
+        }));
+        // 라벨
         dynamic.appendChild(el('text', {
-          x: 340, y: 175, 'text-anchor': 'middle',
-          'font-family': 'JetBrains Mono, monospace', 'font-size': 18,
-          fill: 'currentColor', opacity: 0.6
-        }, '+'));
+          x: 270, y: 145, 'text-anchor': 'middle',
+          'font-family': 'Pretendard, sans-serif', 'font-size': 10,
+          fill: 'currentColor', opacity: 0.7
+        }, '값 읽기'));
+        dynamic.appendChild(el('text', {
+          x: 290, y: 290, 'text-anchor': 'middle',
+          'font-family': 'Pretendard, sans-serif', 'font-size': 10,
+          fill: 'var(--accent)', 'font-weight': 600
+        }, '결과 쓰기'));
       }
     },
     {
       line: 1,
       title: '4단계 — 변수 x 가 만들어짐',
-      text: '왼쪽의 x = 가 실행됩니다. 파이썬은 x라는 이름표를 만들고, 그 이름표가 방금 만든 5 객체를 가리키게 합니다. x 안에 5가 "담긴" 게 아니라, x가 5 객체를 "가리키는" 것입니다.',
+      text: '왼쪽의 x = 가 실행됩니다. CPU가 x라는 이름표를 만들고, 그 이름표가 방금 만든 5 객체를 가리키게 합니다. x 안에 5가 "담긴" 게 아니라, x가 5 객체를 "가리키는" 것입니다.',
       render: () => {
+        dynamic.appendChild(drawCpuContent('creating', { label: '이름표 x 연결' }));
         objects(3).forEach(o => dynamic.appendChild(o));
-        dynamic.appendChild(drawNameTag({ x: 60, y: 230, name: 'x' }));
-        dynamic.appendChild(drawArrow({ fromX: 155, fromY: 242, toX: 290, toY: 240, color: 'var(--accent)' }));
+        dynamic.appendChild(drawNameTag({ x: 230, y: 230, name: 'x' }));
+        dynamic.appendChild(drawArrow({
+          fromX: 325, fromY: 242, toX: 450, toY: 240, color: 'var(--accent)'
+        }));
       }
     },
     {
       line: 2,
       title: '5단계 — print(x) 가 5를 출력',
-      text: 'print(x)는 x가 가리키는 객체를 따라가서 그 값을 화면에 보여줍니다. 이름표 x → 5 객체 → 출력 "5".',
+      text: 'CPU가 print(x)를 실행합니다. x가 가리키는 객체를 따라가서 그 값(5)을 화면에 보여줍니다. 이름표 x → 5 객체 → 출력 "5".',
       render: () => {
+        dynamic.appendChild(drawCpuContent('following', { label: 'print(x)', detail: 'x → 5' }));
         objects(3).forEach(o => dynamic.appendChild(o));
-        dynamic.appendChild(drawNameTag({ x: 60, y: 230, name: 'x' }));
-        dynamic.appendChild(drawArrow({ fromX: 155, fromY: 242, toX: 290, toY: 240, color: 'var(--accent)' }));
-        dynamic.appendChild(drawOutput({ x: 295, y: 305, w: 100, text: '5' }));
+        dynamic.appendChild(drawNameTag({ x: 230, y: 230, name: 'x' }));
+        dynamic.appendChild(drawArrow({
+          fromX: 325, fromY: 242, toX: 450, toY: 240, color: 'var(--accent)'
+        }));
+        dynamic.appendChild(drawOutput({ x: 455, y: 320, w: 100, text: '5' }));
       }
     },
     {
@@ -395,19 +544,22 @@ body {
       title: '6단계 — id(x) 는 객체의 고유 번호',
       text: 'id(x)는 x가 가리키는 객체의 고유 번호(메모리 주소)를 알려줍니다. "이름표가 어떤 객체를 가리키고 있는가"를 직접 확인하는 방법입니다.',
       render: () => {
+        dynamic.appendChild(drawCpuContent('following', { label: 'id(x)', detail: '주소 반환' }));
         objects(3).forEach(o => dynamic.appendChild(o));
-        dynamic.appendChild(drawNameTag({ x: 60, y: 230, name: 'x' }));
-        dynamic.appendChild(drawArrow({ fromX: 155, fromY: 242, toX: 290, toY: 240, color: 'var(--accent)' }));
+        dynamic.appendChild(drawNameTag({ x: 230, y: 230, name: 'x' }));
+        dynamic.appendChild(drawArrow({
+          fromX: 325, fromY: 242, toX: 450, toY: 240, color: 'var(--accent)'
+        }));
         dynamic.appendChild(el('rect', {
-          x: 380, y: 256, width: 28, height: 14, rx: 3,
+          x: 540, y: 256, width: 28, height: 14, rx: 3,
           fill: 'var(--accent)', opacity: 0.85
         }));
         dynamic.appendChild(el('text', {
-          x: 394, y: 266, 'text-anchor': 'middle',
+          x: 554, y: 266, 'text-anchor': 'middle',
           'font-family': 'JetBrains Mono, monospace', 'font-size': 8,
           fill: 'white', 'font-weight': 700
         }, 'id'));
-        dynamic.appendChild(drawOutput({ x: 250, y: 305, w: 200, text: '140288751120140' }));
+        dynamic.appendChild(drawOutput({ x: 410, y: 320, w: 200, text: '140288751120140' }));
       }
     }
   ];
