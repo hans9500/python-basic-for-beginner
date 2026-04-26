@@ -147,8 +147,8 @@
   padding: 6px 10px;
   resize: vertical;
   min-height: 40px;
-  max-height: 160px;
   line-height: 1.5;
+  overflow-y: hidden;
 }
 .input-stdin textarea:focus {
   outline: none;

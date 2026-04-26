@@ -43,6 +43,15 @@
     return cm;
   }
 
+  /** input-stdin textarea의 높이를 콘텐츠에 맞게 자동 조정 */
+  function autoResizeStdin(ta) {
+    if (!ta) return;
+    // 일단 높이를 풀어서 scrollHeight 측정
+    ta.style.height = 'auto';
+    // scrollHeight + 살짝 여유
+    ta.style.height = (ta.scrollHeight + 2) + 'px';
+  }
+
   /**
    * 페이지 안의 모든 .editor-block을 자동 변환.
    * 각 블록의 `data-editor-id` 또는 textarea의 `id`로 식별 가능.
@@ -66,6 +75,17 @@
       });
 
       editors.push({ block: block, cm: cm, textarea: ta });
+    });
+
+    // input-stdin textarea 자동 높이 조정 (콘텐츠에 맞춤)
+    const stdinBlocks = root.querySelectorAll('.input-stdin textarea');
+    stdinBlocks.forEach(function(ta) {
+      if (ta.classList.contains('stdin-initialized')) return;
+      ta.classList.add('stdin-initialized');
+      // 초기 높이 조정
+      autoResizeStdin(ta);
+      // 사용자가 입력할 때마다 높이 조정
+      ta.addEventListener('input', function() { autoResizeStdin(ta); });
     });
 
     return editors;
