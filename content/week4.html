@@ -1,16 +1,1287 @@
-<!-- Week 4 placeholder (작업 예정) -->
-<div class="lesson-title">Week 4</div>
-<h1>4주차 — 작업 예정</h1>
+<!-- ============================================================
+     4주차 — 가벼운 마무리 (Phase 4 풀 버전: s1 ~ s5)
+     원칙:
+       1. 사실 정확성 — pyodide.http.pyfetch는 async, 솔직히 노출
+       2. 가볍게 — 새 문법은 최소화, 1~3주차 정리 위주
+       3. 실시간 API 실습 — 모든 환경(데스크톱/태블릿/핸드폰) 작동
+       4. async def는 사용 안 함 — await만 짧게 등장
+       5. 다음 학습 안내 — "지금 몰라도 괜찮다" 톤
+     ============================================================ -->
+
+<div class="lesson-title">Week 4 · Lesson 1</div>
+<h1>가벼운 마무리 — None, 정리, 그리고 실시간 데이터</h1>
 <p class="subtitle">
-  이 주차는 다음 Phase에서 작성될 예정입니다.
-  지금은 1주차의 도입부(s0~s2)부터 검토해주세요.
+  4주차는 새 개념을 무겁게 던지는 시간이 아닙니다. 1~3주차에서 흩어져 있던 작은
+  도구들을 정리하고, 마지막으로 실제 인터넷에서 데이터를 가져오는 흥분을 한 번
+  느껴봅니다. 그리고 여기서 멈춥니다 — 다음에 무엇을 배울지 안내문을 남기고요.
 </p>
 
-<section class="section" id="placeholder">
-  <div class="section-num">PLACEHOLDER</div>
-  <h2>아직 준비되지 않았습니다</h2>
+<!-- ==================== s1: None ==================== -->
+<section class="section" id="s1">
+  <div class="section-num">SECTION 01</div>
+  <h2>None — "값이 없음"이라는 값</h2>
+
   <p>
-    Phase A에서는 1주차 도입부와 골격 동작 검증이 목표입니다.
-    이후 단계에서 4주차 콘텐츠가 채워집니다.
+    지금까지 변수에는 항상 값이 있었습니다. 그런데 가끔
+    <strong>"아직 값이 없음"</strong>을 표현해야 할 때가 있습니다.
+    파이썬에는 그런 상태를 위한 특별한 객체가 있습니다 — <code class="inline">None</code>.
+  </p>
+
+  <h3>None은 단 하나의 객체</h3>
+
+  <p>
+    None은 그 자체로 객체입니다. 그런데 특별한 점 — 파이썬 전체에서 <strong>오직 하나만 존재합니다</strong>.
+    여러 변수가 None을 가리키면 모두 같은 그 하나를 가리킵니다.
+  </p>
+
+  <div class="figure">
+    <svg viewBox="0 0 700 220" xmlns="http://www.w3.org/2000/svg" role="img"
+         aria-label="None 객체 - 모두 같은 하나를 가리킴">
+      <text x="350" y="22" text-anchor="middle" font-family="Pretendard, sans-serif"
+            font-size="11" font-weight="700" fill="currentColor" opacity="0.85" letter-spacing="2">
+        None — 파이썬에 단 하나뿐인 객체
+      </text>
+
+      <!-- 변수 영역 -->
+      <rect x="20" y="50" width="160" height="150" rx="8"
+            fill="currentColor" opacity="0.04" stroke="currentColor" stroke-opacity="0.4"
+            stroke-width="1" stroke-dasharray="4 3"/>
+      <text x="100" y="68" text-anchor="middle" font-family="Pretendard, sans-serif"
+            font-size="9" fill="currentColor" opacity="0.65" font-weight="600" letter-spacing="1">VARIABLES</text>
+
+      <!-- 이름표 a, b, c -->
+      <path d="M 30,90 L 40,78 L 160,78 L 160,102 L 40,102 Z"
+            fill="currentColor" opacity="0.08" stroke="currentColor" stroke-width="1.5"/>
+      <text x="100" y="95" text-anchor="middle" font-family="JetBrains Mono, monospace"
+            font-size="13" font-weight="700" fill="currentColor">a = None</text>
+
+      <path d="M 30,130 L 40,118 L 160,118 L 160,142 L 40,142 Z"
+            fill="currentColor" opacity="0.08" stroke="currentColor" stroke-width="1.5"/>
+      <text x="100" y="135" text-anchor="middle" font-family="JetBrains Mono, monospace"
+            font-size="13" font-weight="700" fill="currentColor">b = None</text>
+
+      <path d="M 30,170 L 40,158 L 160,158 L 160,182 L 40,182 Z"
+            fill="currentColor" opacity="0.08" stroke="currentColor" stroke-width="1.5"/>
+      <text x="100" y="175" text-anchor="middle" font-family="JetBrains Mono, monospace"
+            font-size="13" font-weight="700" fill="currentColor">c = None</text>
+
+      <!-- HEAP -->
+      <rect x="240" y="50" width="440" height="150" rx="8"
+            fill="currentColor" opacity="0.04" stroke="currentColor" stroke-opacity="0.4"
+            stroke-width="1" stroke-dasharray="4 3"/>
+      <text x="460" y="68" text-anchor="middle" font-family="Pretendard, sans-serif"
+            font-size="9" fill="currentColor" opacity="0.65" font-weight="600" letter-spacing="1">HEAP — 단 하나만 존재</text>
+
+      <!-- None 객체 -->
+      <rect x="440" y="100" width="120" height="60" rx="8"
+            fill="var(--accent)" opacity="0.12"
+            stroke="var(--accent)" stroke-width="2.5"/>
+      <text x="448" y="118" font-family="JetBrains Mono, monospace" font-size="9"
+            fill="var(--accent)" font-weight="700">NoneType</text>
+      <text x="500" y="140" text-anchor="middle" font-family="JetBrains Mono, monospace"
+            font-size="20" font-weight="700" fill="currentColor">None</text>
+
+      <!-- 화살표 3개 모두 None으로 -->
+      <defs>
+        <marker id="arr-none-1" viewBox="0 0 10 10" refX="9" refY="5"
+                markerWidth="6" markerHeight="6" orient="auto">
+          <path d="M0,0 L10,5 L0,10 z" fill="var(--accent)" opacity="0.7"/>
+        </marker>
+      </defs>
+      <line x1="160" y1="90" x2="440" y2="115" stroke="var(--accent)"
+            stroke-width="1.8" opacity="0.85" marker-end="url(#arr-none-1)"/>
+      <line x1="160" y1="130" x2="440" y2="130" stroke="var(--accent)"
+            stroke-width="1.8" opacity="0.85" marker-end="url(#arr-none-1)"/>
+      <line x1="160" y1="170" x2="440" y2="145" stroke="var(--accent)"
+            stroke-width="1.8" opacity="0.85" marker-end="url(#arr-none-1)"/>
+    </svg>
+    <div class="caption">그림 4.1 — None은 단 하나의 객체. 모든 None 변수는 같은 하나를 가리킨다.</div>
+  </div>
+
+  <h3>코드로 확인</h3>
+
+  <div class="editor-block">
+    <div class="editor-tab-bar">
+      <span class="editor-tab"><span class="py-icon"></span>none_basic.py</span>
+    </div>
+    <textarea class="editor-source">a = None
+b = None
+c = None
+
+print(a)              # None
+print(type(a))        # &lt;class 'NoneType'&gt;
+
+# 정말 하나의 객체인지 확인
+print(id(a))
+print(id(b))
+print(id(c))
+print(a is b)         # True — 같은 객체
+print(b is c)         # True
+</textarea>
+    <div class="run-bar">
+      <span class="left"><span class="file-name">📄 none_basic.py</span></span>
+      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+      <button class="run-btn"><span class="play">▶</span> Run</button>
+    </div>
+  </div>
+  <div class="terminal">
+    <div class="terminal-head">
+      <span class="label">실행 결과</span>
+      <span class="status">대기 중</span>
+    </div>
+    <div class="terminal-body empty"></div>
+  </div>
+
+  <h3>None 비교는 == 대신 is</h3>
+
+  <div class="callout">
+    <div class="label">기억할 규칙</div>
+    <p>
+      None을 검사할 때는 <code class="inline">x == None</code> 대신
+      <strong><code class="inline">x is None</code></strong>을 씁니다.
+    </p>
+    <p>
+      <code class="inline">==</code>는 "값이 같은가?", <code class="inline">is</code>는 "같은 객체인가?"입니다.
+      None은 단 하나의 객체이므로 "같은 객체인가" 검사가 더 정확합니다.
+    </p>
+  </div>
+
+  <div class="editor-block">
+    <div class="editor-tab-bar">
+      <span class="editor-tab"><span class="py-icon"></span>none_check.py</span>
+    </div>
+    <textarea class="editor-source">def find_first_negative(numbers):
+    """첫 음수를 찾아 반환, 없으면 None"""
+    for n in numbers:
+        if n &lt; 0:
+            return n
+    return None
+
+result = find_first_negative([3, 7, -2, 9])
+print(result)              # -2
+
+result2 = find_first_negative([1, 2, 3])
+print(result2)             # None
+
+# None 검사
+if result2 is None:
+    print("음수가 없습니다.")
+else:
+    print(f"첫 음수: {result2}")
+</textarea>
+    <div class="run-bar">
+      <span class="left"><span class="file-name">📄 none_check.py</span></span>
+      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+      <button class="run-btn"><span class="play">▶</span> Run</button>
+    </div>
+  </div>
+  <div class="terminal">
+    <div class="terminal-head">
+      <span class="label">실행 결과</span>
+      <span class="status">대기 중</span>
+    </div>
+    <div class="terminal-body empty"></div>
+  </div>
+
+  <h3>3주차의 함정 — 이제 답을 봅니다</h3>
+
+  <p>
+    3주차 s7 끝에서 살짝 짚었던 경고를 기억하시나요?
+  </p>
+
+  <div class="callout info">
+    <div class="label">3주차 s7에서</div>
+    <p>
+      "기본값에는 mutable 객체 두지 말 것 (4주차에서 다시)"
+    </p>
+  </div>
+
+  <p>
+    문제를 직접 만나봅시다.
+  </p>
+
+  <div class="editor-block">
+    <div class="editor-tab-bar">
+      <span class="editor-tab"><span class="py-icon"></span>default_trap.py</span>
+    </div>
+    <textarea class="editor-source"># 학생을 명단에 추가하는 함수
+def add_student(name, students=[]):    # ⚠ mutable 기본값
+    students.append(name)
+    return students
+
+print(add_student("홍길동"))    # ['홍길동']
+print(add_student("이몽룡"))    # ['홍길동', '이몽룡']  ← 어?
+print(add_student("성춘향"))    # ['홍길동', '이몽룡', '성춘향']  ← 모두 누적!
+</textarea>
+    <div class="run-bar">
+      <span class="left"><span class="file-name">📄 default_trap.py</span></span>
+      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+      <button class="run-btn"><span class="play">▶</span> Run</button>
+    </div>
+  </div>
+  <div class="terminal">
+    <div class="terminal-head">
+      <span class="label">실행 결과</span>
+      <span class="status">대기 중</span>
+    </div>
+    <div class="terminal-body empty"></div>
+  </div>
+
+  <p>
+    예상과 다른 결과! "함수가 호출될 때마다 새 빈 리스트가 만들어지겠지" 했는데,
+    실제로는 <strong>기본값 리스트가 한 번만 만들어지고 모든 호출이 그걸 공유</strong>합니다.
+    3주차 s4에서 본 가변 객체 모델 그대로 — 같은 객체에 계속 append되는 거예요.
+  </p>
+
+  <h3>해결책 — None을 기본값으로</h3>
+
+  <div class="editor-block">
+    <div class="editor-tab-bar">
+      <span class="editor-tab"><span class="py-icon"></span>default_fix.py</span>
+    </div>
+    <textarea class="editor-source"># 정석 — None을 기본값으로 두고 함수 안에서 새로 만듦
+def add_student(name, students=None):
+    if students is None:
+        students = []        # 호출할 때마다 새 리스트
+    students.append(name)
+    return students
+
+print(add_student("홍길동"))
+print(add_student("이몽룡"))
+print(add_student("성춘향"))
+
+# 기존 명단에 추가하고 싶을 때는 직접 넘기면 됨
+existing = ["김철수", "박영희"]
+print(add_student("최민수", existing))
+</textarea>
+    <div class="run-bar">
+      <span class="left"><span class="file-name">📄 default_fix.py</span></span>
+      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+      <button class="run-btn"><span class="play">▶</span> Run</button>
+    </div>
+  </div>
+  <div class="terminal">
+    <div class="terminal-head">
+      <span class="label">실행 결과</span>
+      <span class="status">대기 중</span>
+    </div>
+    <div class="terminal-body empty"></div>
+  </div>
+
+  <p>
+    이게 파이썬에서 가장 흔한 패턴입니다 — <strong>"기본값은 None, 함수 안에서 진짜 기본값 만들기"</strong>.
+    경력자도 자주 쓰는 정석이니 익혀두세요.
+  </p>
+
+  <div class="key-points">
+    <div class="title">이 섹션의 핵심</div>
+    <ul>
+      <li>None은 "값이 없음"을 표현하는 객체 — 파이썬에 단 하나만 존재.</li>
+      <li>함수에 <code class="inline">return</code>이 없거나 <code class="inline">return</code>만 쓰면 자동 None 반환.</li>
+      <li>None 검사는 <code class="inline">is None</code> / <code class="inline">is not None</code>.</li>
+      <li>기본값은 None으로 두고 함수 안에서 빈 리스트/딕셔너리 만드는 게 정석.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ==================== s2: 리스트 심화 ==================== -->
+<section class="section" id="s2">
+  <div class="section-num">SECTION 02</div>
+  <h2>리스트 심화 — 정렬 옵션, count, index</h2>
+
+  <p>
+    3주차에서 다룬 리스트 도구를 조금 더 알려드립니다. 새 개념이 아니라
+    <strong>이미 아는 도구의 옵션</strong>들입니다.
+  </p>
+
+  <h3>정렬 옵션 — reverse, key</h3>
+
+  <div class="editor-block">
+    <div class="editor-tab-bar">
+      <span class="editor-tab"><span class="py-icon"></span>sort_options.py</span>
+    </div>
+    <textarea class="editor-source">scores = [85, 92, 78, 100, 67]
+
+# 기본 — 오름차순
+print(sorted(scores))           # [67, 78, 85, 92, 100]
+
+# 역순
+print(sorted(scores, reverse=True))  # [100, 92, 85, 78, 67]
+
+# 문자열 리스트 정렬
+fruits = ["banana", "apple", "cherry"]
+print(sorted(fruits))           # 알파벳 순
+print(sorted(fruits, reverse=True))
+
+# key 옵션 — 무엇을 기준으로 정렬할지
+words = ["python", "ai", "code", "ml"]
+print(sorted(words))            # 알파벳 순
+print(sorted(words, key=len))   # 길이 순 — ['ai', 'ml', 'code', 'python']
+</textarea>
+    <div class="run-bar">
+      <span class="left"><span class="file-name">📄 sort_options.py</span></span>
+      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+      <button class="run-btn"><span class="play">▶</span> Run</button>
+    </div>
+  </div>
+  <div class="terminal">
+    <div class="terminal-head">
+      <span class="label">실행 결과</span>
+      <span class="status">대기 중</span>
+    </div>
+    <div class="terminal-body empty"></div>
+  </div>
+
+  <p>
+    <code class="inline">key=len</code>은 "각 요소의 <code class="inline">len()</code>을 기준으로 정렬"이라는 뜻입니다.
+    <code class="inline">len</code> 자리에 다른 함수를 넣을 수도 있는데, 거기까진 다음 단계 학습입니다.
+  </p>
+
+  <h3>count, index — 찾기 도구</h3>
+
+  <div class="editor-block">
+    <div class="editor-tab-bar">
+      <span class="editor-tab"><span class="py-icon"></span>count_index.py</span>
+    </div>
+    <textarea class="editor-source">votes = ["red", "blue", "red", "green", "blue", "red", "yellow"]
+
+# count: 같은 값이 몇 번
+print(votes.count("red"))      # 3
+print(votes.count("blue"))     # 2
+print(votes.count("black"))    # 0 (없으면 0)
+
+# index: 처음 나오는 위치
+print(votes.index("blue"))     # 1
+print(votes.index("green"))    # 3
+# print(votes.index("black"))  # 없으면 ValueError!
+
+# 안전하게 — in 으로 먼저 검사
+target = "black"
+if target in votes:
+    print(f"{target}: 처음 위치 {votes.index(target)}")
+else:
+    print(f"{target}: 명단에 없음")
+</textarea>
+    <div class="run-bar">
+      <span class="left"><span class="file-name">📄 count_index.py</span></span>
+      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+      <button class="run-btn"><span class="play">▶</span> Run</button>
+    </div>
+  </div>
+  <div class="terminal">
+    <div class="terminal-head">
+      <span class="label">실행 결과</span>
+      <span class="status">대기 중</span>
+    </div>
+    <div class="terminal-body empty"></div>
+  </div>
+
+  <h3>실전 — 가장 인기 있는 색 찾기</h3>
+
+  <div class="editor-block">
+    <div class="editor-tab-bar">
+      <span class="editor-tab"><span class="py-icon"></span>most_voted.py</span>
+    </div>
+    <textarea class="editor-source">votes = ["red", "blue", "red", "green", "blue", "red", "yellow"]
+
+# 1. 중복 없는 후보 목록 만들기
+candidates = []
+for v in votes:
+    if v not in candidates:
+        candidates.append(v)
+
+print(f"후보들: {candidates}")
+print(f"총 {len(votes)}표")
+print()
+
+# 2. 각 후보 득표
+for c in candidates:
+    cnt = votes.count(c)
+    bar = "█" * cnt          # 막대 만들기
+    print(f"{c:8s} {bar} {cnt}표")
+
+# 3. 가장 많은 득표 — sorted + key
+ranked = sorted(candidates, key=votes.count, reverse=True)
+print(f"\n1위: {ranked[0]} ({votes.count(ranked[0])}표)")
+</textarea>
+    <div class="run-bar">
+      <span class="left"><span class="file-name">📄 most_voted.py</span></span>
+      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+      <button class="run-btn"><span class="play">▶</span> Run</button>
+    </div>
+  </div>
+  <div class="terminal">
+    <div class="terminal-head">
+      <span class="label">실행 결과</span>
+      <span class="status">대기 중</span>
+    </div>
+    <div class="terminal-body empty"></div>
+  </div>
+
+  <div class="key-points">
+    <div class="title">이 섹션의 핵심</div>
+    <ul>
+      <li><code class="inline">sorted(리스트, reverse=True)</code> — 역순 정렬.</li>
+      <li><code class="inline">sorted(리스트, key=함수)</code> — 함수 결과를 기준으로 정렬.</li>
+      <li><code class="inline">.count(값)</code> — 등장 횟수, 없으면 0.</li>
+      <li><code class="inline">.index(값)</code> — 처음 위치, 없으면 ValueError → <code class="inline">in</code>으로 먼저 검사.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ==================== s3: 문자열 처리 심화 ==================== -->
+<section class="section" id="s3">
+  <div class="section-num">SECTION 03</div>
+  <h2>문자열 처리 심화 — replace, find, strip, 대소문자</h2>
+
+  <p>
+    3주차 로또 실습에서 split / join을 짧게 짚었습니다. 이번 섹션에서 문자열 처리 도구를
+    한 자리에 정리합니다. 새 개념이 아니라 <strong>도구 가짓수</strong>가 늘어나는 것뿐입니다.
+  </p>
+
+  <div class="figure">
+    <svg viewBox="0 0 720 280" xmlns="http://www.w3.org/2000/svg" role="img"
+         aria-label="문자열 메서드 한눈에 정리">
+      <text x="360" y="22" text-anchor="middle" font-family="Pretendard, sans-serif"
+            font-size="11" font-weight="700" fill="currentColor" opacity="0.85" letter-spacing="2">
+        문자열 메서드 — 입력 / 결과
+      </text>
+
+      <!-- 표 -->
+      <g font-family="JetBrains Mono, monospace" font-size="11">
+        <!-- 헤더 -->
+        <rect x="40" y="50" width="640" height="28" fill="currentColor" opacity="0.08"/>
+        <text x="60" y="68" font-weight="700" fill="currentColor" opacity="0.85">메서드</text>
+        <text x="220" y="68" font-weight="700" fill="currentColor" opacity="0.85">입력</text>
+        <text x="430" y="68" font-weight="700" fill="currentColor" opacity="0.85">결과</text>
+
+        <!-- 행 1: split -->
+        <line x1="40" y1="90" x2="680" y2="90" stroke="currentColor" stroke-opacity="0.2"/>
+        <text x="60" y="108" fill="var(--accent)" font-weight="700">.split()</text>
+        <text x="220" y="108" fill="currentColor">"a b c".split()</text>
+        <text x="430" y="108" fill="currentColor">["a", "b", "c"]</text>
+
+        <!-- 행 2: join -->
+        <line x1="40" y1="120" x2="680" y2="120" stroke="currentColor" stroke-opacity="0.2"/>
+        <text x="60" y="138" fill="var(--accent)" font-weight="700">.join()</text>
+        <text x="220" y="138" fill="currentColor">"-".join(["a","b","c"])</text>
+        <text x="430" y="138" fill="currentColor">"a-b-c"</text>
+
+        <!-- 행 3: replace -->
+        <line x1="40" y1="150" x2="680" y2="150" stroke="currentColor" stroke-opacity="0.2"/>
+        <text x="60" y="168" fill="var(--accent)" font-weight="700">.replace()</text>
+        <text x="220" y="168" fill="currentColor">"hello".replace("l", "L")</text>
+        <text x="430" y="168" fill="currentColor">"heLLo"</text>
+
+        <!-- 행 4: strip -->
+        <line x1="40" y1="180" x2="680" y2="180" stroke="currentColor" stroke-opacity="0.2"/>
+        <text x="60" y="198" fill="var(--accent)" font-weight="700">.strip()</text>
+        <text x="220" y="198" fill="currentColor">"  hi  ".strip()</text>
+        <text x="430" y="198" fill="currentColor">"hi"</text>
+
+        <!-- 행 5: lower / upper -->
+        <line x1="40" y1="210" x2="680" y2="210" stroke="currentColor" stroke-opacity="0.2"/>
+        <text x="60" y="228" fill="var(--accent)" font-weight="700">.lower() / .upper()</text>
+        <text x="220" y="228" fill="currentColor">"AbC".lower()</text>
+        <text x="430" y="228" fill="currentColor">"abc"</text>
+
+        <!-- 행 6: find -->
+        <line x1="40" y1="240" x2="680" y2="240" stroke="currentColor" stroke-opacity="0.2"/>
+        <text x="60" y="258" fill="var(--accent)" font-weight="700">.find()</text>
+        <text x="220" y="258" fill="currentColor">"hello".find("ll")</text>
+        <text x="430" y="258" fill="currentColor">2 (없으면 -1)</text>
+      </g>
+
+      <text x="360" y="276" text-anchor="middle" font-family="Pretendard, sans-serif"
+            font-size="10" fill="currentColor" opacity="0.7" font-style="italic">
+        모두 새 문자열을 반환 — 원본은 불변 (3주차 s4 참고)
+      </text>
+    </svg>
+    <div class="caption">그림 4.2 — 자주 쓰는 문자열 메서드 한눈에</div>
+  </div>
+
+  <h3>replace — 바꾸기</h3>
+
+  <div class="editor-block">
+    <div class="editor-tab-bar">
+      <span class="editor-tab"><span class="py-icon"></span>str_replace.py</span>
+    </div>
+    <textarea class="editor-source">text = "Python is great. Python is fun."
+
+# 모든 'Python'을 'AI'로
+new_text = text.replace("Python", "AI")
+print(new_text)
+print(text)         # 원본은 그대로 (문자열 불변!)
+
+# 전화번호 형식 변환
+phone = "010-1234-5678"
+clean = phone.replace("-", "")
+print(clean)        # 01012345678
+
+# 줄바꿈 제거
+data = "line1\nline2\nline3"
+print(data.replace("\n", " | "))
+</textarea>
+    <div class="run-bar">
+      <span class="left"><span class="file-name">📄 str_replace.py</span></span>
+      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+      <button class="run-btn"><span class="play">▶</span> Run</button>
+    </div>
+  </div>
+  <div class="terminal">
+    <div class="terminal-head">
+      <span class="label">실행 결과</span>
+      <span class="status">대기 중</span>
+    </div>
+    <div class="terminal-body empty"></div>
+  </div>
+
+  <h3>strip — 양 끝 공백 제거</h3>
+
+  <p>
+    사용자 입력에서 양 끝의 공백, 줄바꿈을 정리할 때 가장 유용합니다.
+  </p>
+
+  <div class="editor-block">
+    <div class="editor-tab-bar">
+      <span class="editor-tab"><span class="py-icon"></span>str_strip.py</span>
+    </div>
+    <textarea class="editor-source"># 양 끝 공백 제거
+print("  hello  ".strip())          # "hello"
+
+# 줄바꿈도 제거
+print("\nhello\n".strip())
+
+# 안쪽 공백은 그대로
+print("  hello world  ".strip())    # "hello world"
+
+# 특정 문자 제거도 가능
+print("###title###".strip("#"))     # "title"
+</textarea>
+    <div class="run-bar">
+      <span class="left"><span class="file-name">📄 str_strip.py</span></span>
+      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+      <button class="run-btn"><span class="play">▶</span> Run</button>
+    </div>
+  </div>
+  <div class="terminal">
+    <div class="terminal-head">
+      <span class="label">실행 결과</span>
+      <span class="status">대기 중</span>
+    </div>
+    <div class="terminal-body empty"></div>
+  </div>
+
+  <h3>find, in — 부분 찾기</h3>
+
+  <div class="editor-block">
+    <div class="editor-tab-bar">
+      <span class="editor-tab"><span class="py-icon"></span>str_find.py</span>
+    </div>
+    <textarea class="editor-source">text = "Hello, Python world!"
+
+# in: 포함 여부만 (True/False)
+print("Python" in text)        # True
+print("Java" in text)          # False
+
+# find: 첫 위치 (없으면 -1)
+print(text.find("Python"))     # 7
+print(text.find("Java"))       # -1
+
+# startswith / endswith — 시작/끝 검사
+url = "https://www.example.com"
+print(url.startswith("https://"))    # True
+print(url.endswith(".com"))          # True
+print(url.endswith(".kr"))           # False
+</textarea>
+    <div class="run-bar">
+      <span class="left"><span class="file-name">📄 str_find.py</span></span>
+      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+      <button class="run-btn"><span class="play">▶</span> Run</button>
+    </div>
+  </div>
+  <div class="terminal">
+    <div class="terminal-head">
+      <span class="label">실행 결과</span>
+      <span class="status">대기 중</span>
+    </div>
+    <div class="terminal-body empty"></div>
+  </div>
+
+  <h3>실전 — 이메일 검증 흉내</h3>
+
+  <p>
+    문자열 메서드를 모아 진짜 같은 검증을 만들어봅니다 (실제 이메일 검증은 훨씬 복잡합니다).
+  </p>
+
+  <div class="input-stdin">
+    <div class="label">입력값 (미리 적기)</div>
+    <textarea>  USER@EXAMPLE.COM  
+not-an-email
+test@site.org
+admin@my.com</textarea>
+    <div class="hint">여러 줄 — 각 줄을 검사.</div>
+  </div>
+  <div class="editor-block">
+    <div class="editor-tab-bar">
+      <span class="editor-tab"><span class="py-icon"></span>email_check.py</span>
+    </div>
+    <textarea class="editor-source">def check_email(email):
+    """간단한 이메일 검증"""
+    # 1. 양 끝 공백 제거 + 소문자로
+    email = email.strip().lower()
+
+    if email == "":
+        return False, "빈 값"
+
+    # 2. @ 포함?
+    if "@" not in email:
+        return False, "@ 없음"
+
+    # 3. 점(.) 포함?
+    if "." not in email:
+        return False, ". 없음"
+
+    # 4. 도메인 검사
+    if not (email.endswith(".com") or email.endswith(".org") or email.endswith(".net")):
+        return False, "지원하는 도메인 아님"
+
+    return True, "OK"
+
+# 테스트 — 여러 입력 받기
+for i in range(4):
+    line = input()
+    valid, msg = check_email(line)
+    mark = "✓" if valid else "✗"
+    print(f"{mark} '{line.strip()}' → {msg}")
+</textarea>
+    <div class="run-bar">
+      <span class="left"><span class="file-name">📄 email_check.py</span></span>
+      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+      <button class="run-btn"><span class="play">▶</span> Run</button>
+    </div>
+  </div>
+  <div class="terminal">
+    <div class="terminal-head">
+      <span class="label">실행 결과</span>
+      <span class="status">대기 중</span>
+    </div>
+    <div class="terminal-body empty"></div>
+  </div>
+
+  <p>
+    문자열 메서드는 굉장히 많지만, 위에서 본 것 정도가 가장 자주 씁니다.
+    더 정밀한 패턴 검색은 <strong>정규식(regex)</strong>이라는 도구가 따로 있는데, 다음 단계 학습입니다.
+  </p>
+
+  <div class="key-points">
+    <div class="title">이 섹션의 핵심</div>
+    <ul>
+      <li><code class="inline">.replace(old, new)</code> — 모든 일치를 바꿈, 새 문자열 반환.</li>
+      <li><code class="inline">.strip()</code> — 양 끝 공백/문자 제거.</li>
+      <li><code class="inline">.lower() / .upper()</code> — 대소문자 변환.</li>
+      <li><code class="inline">.find()</code> — 첫 위치, 없으면 -1. <code class="inline">in</code>은 True/False만.</li>
+      <li><code class="inline">.startswith() / .endswith()</code> — 시작/끝 검사.</li>
+      <li>모든 문자열 메서드는 <strong>새 문자열 반환</strong> — 원본은 불변.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ==================== s4: JSON과 실시간 API ==================== -->
+<section class="section" id="s4">
+  <div class="section-num">SECTION 04 · 4주차의 하이라이트</div>
+  <h2>JSON과 실시간 API — 인터넷에서 데이터 가져오기</h2>
+
+  <p>
+    드디어 4주 동안 배운 모든 것이 만나는 곳입니다. 이번 섹션이 끝나면 여러분의 코드는
+    실제 인터넷의 서버와 통신해서 진짜 데이터를 가져올 수 있게 됩니다.
+  </p>
+
+  <p>
+    단계는 셋입니다:
+  </p>
+  <ol>
+    <li><strong>JSON 다루기</strong> — 인터넷 데이터의 표준 형식</li>
+    <li><strong>미리 준비된 데이터로 분석 연습</strong></li>
+    <li><strong>실제 인터넷에서 받아오기</strong> ★</li>
+  </ol>
+
+  <h3>4-1: JSON이란?</h3>
+
+  <p>
+    <strong>JSON</strong>(JavaScript Object Notation)은 <strong>데이터를 문자열로 표현하는 형식</strong>입니다.
+    인터넷에서 데이터를 주고받을 때 가장 흔히 쓰입니다. 모양이 파이썬 딕셔너리/리스트와 매우 비슷합니다.
+  </p>
+
+  <div class="editor-block">
+    <div class="editor-tab-bar">
+      <span class="editor-tab"><span class="py-icon"></span>json_basic.py</span>
+    </div>
+    <textarea class="editor-source">import json
+
+# JSON은 문자열입니다 (파이썬 딕셔너리 모양과 비슷할 뿐)
+text = '{"name": "홍길동", "age": 20, "scores": [85, 92, 78]}'
+print(type(text))           # &lt;class 'str'&gt;
+
+# json.loads: 문자열 → 파이썬 객체
+data = json.loads(text)
+print(type(data))           # &lt;class 'dict'&gt;
+
+# 이제 그냥 딕셔너리로 다루면 됨 (3주차에서 배운 것 그대로)
+print(data["name"])
+print(data["scores"])
+print(sum(data["scores"]))
+print(f"평균: {sum(data['scores']) / len(data['scores'])}")
+</textarea>
+    <div class="run-bar">
+      <span class="left"><span class="file-name">📄 json_basic.py</span></span>
+      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+      <button class="run-btn"><span class="play">▶</span> Run</button>
+    </div>
+  </div>
+  <div class="terminal">
+    <div class="terminal-head">
+      <span class="label">실행 결과</span>
+      <span class="status">대기 중</span>
+    </div>
+    <div class="terminal-body empty"></div>
+  </div>
+
+  <p>
+    핵심 함수는 두 개:
+  </p>
+  <ul>
+    <li><code class="inline">json.loads(문자열)</code> — JSON 문자열을 파이썬 딕셔너리/리스트로</li>
+    <li><code class="inline">json.dumps(객체)</code> — 그 반대 (파이썬 객체를 JSON 문자열로)</li>
+  </ul>
+
+  <p>
+    이름이 헷갈릴 수 있는데 <strong>"loads = load string"</strong>, <strong>"dumps = dump string"</strong>으로 외우시면 됩니다.
+  </p>
+
+  <h3>4-2: 중첩된 데이터 다루기</h3>
+
+  <p>
+    실제 API 응답은 보통 <strong>딕셔너리 안에 리스트, 리스트 안에 딕셔너리</strong>가 섞여 있습니다.
+    아래는 우리가 곧 받을 open-meteo 날씨 API의 응답과 같은 형태입니다.
+  </p>
+
+  <div class="editor-block">
+    <div class="editor-tab-bar">
+      <span class="editor-tab"><span class="py-icon"></span>json_nested.py</span>
+    </div>
+    <textarea class="editor-source">import json
+
+# 미리 준비된 날씨 데이터 (실제 open-meteo가 주는 형태)
+weather_text = '''
+{
+  "city": "서울",
+  "current": {
+    "temperature_2m": 22.5,
+    "relative_humidity_2m": 65
+  },
+  "daily": {
+    "time": ["월", "화", "수", "목", "금"],
+    "temperature_2m_max": [22, 25, 19, 21, 24],
+    "precipitation_probability_max": [0, 30, 80, 10, 5]
+  }
+}
+'''
+
+data = json.loads(weather_text)
+
+# 중첩된 데이터 접근
+print(f"=== {data['city']} 날씨 ===")
+print(f"현재 기온: {data['current']['temperature_2m']}°C")
+print(f"현재 습도: {data['current']['relative_humidity_2m']}%")
+print()
+
+# 5일 예보 - 딕셔너리 안의 리스트들을 같이 순회
+days = data["daily"]["time"]
+temps = data["daily"]["temperature_2m_max"]
+rains = data["daily"]["precipitation_probability_max"]
+
+print("=== 5일 예보 ===")
+for i in range(len(days)):
+    if rains[i] &gt;= 50:
+        comment = "☔ 우산 필수"
+    elif rains[i] &gt;= 20:
+        comment = "🌂 우산 챙기세요"
+    else:
+        comment = "☀️ 좋음"
+    print(f"{days[i]}: {temps[i]}°C ({rains[i]}%) {comment}")
+
+# 통계
+avg = sum(temps) / len(temps)
+print(f"\n주간 평균 최고기온: {avg:.1f}°C")
+</textarea>
+    <div class="run-bar">
+      <span class="left"><span class="file-name">📄 json_nested.py</span></span>
+      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+      <button class="run-btn"><span class="play">▶</span> Run</button>
+    </div>
+  </div>
+  <div class="terminal">
+    <div class="terminal-head">
+      <span class="label">실행 결과</span>
+      <span class="status">대기 중</span>
+    </div>
+    <div class="terminal-body empty"></div>
+  </div>
+
+  <p>
+    핵심: <code class="inline">data["daily"]["time"]</code>처럼 대괄호를 연달아 써서 안쪽으로 들어갑니다.
+    어디까지 딕셔너리고 어디부터 리스트인지를 따라가는 연습이 중요합니다.
+  </p>
+
+  <h3>4-3: ★ 진짜 인터넷에서 가져오기</h3>
+
+  <p>
+    드디어 진짜입니다. 위에서 본 미리 준비된 데이터를 <strong>실제 open-meteo 서버에서 받아옵니다.</strong>
+    open-meteo는 무료 날씨 API로 키도 필요 없고 누구나 쓸 수 있습니다.
+  </p>
+
+  <div class="callout info">
+    <div class="label">새로 등장하는 단어 — await</div>
+    <p>
+      인터넷에서 데이터를 받아오는 작업은 <strong>시간이 걸립니다</strong>.
+      파이썬에서는 그런 작업 앞에 <code class="inline">await</code>라는 표시를 붙여
+      "기다린다"고 알려줍니다.
+    </p>
+    <p>
+      <strong>지금은 "이런 표시가 있구나" 정도만 알아두시면 됩니다.</strong>
+      자세한 건 다음 단계 학습에서 만나게 됩니다 (s5에서 안내).
+    </p>
+  </div>
+
+  <div class="figure">
+    <svg viewBox="0 0 720 240" xmlns="http://www.w3.org/2000/svg" role="img"
+         aria-label="API 호출의 흐름">
+      <text x="360" y="22" text-anchor="middle" font-family="Pretendard, sans-serif"
+            font-size="11" font-weight="700" fill="currentColor" opacity="0.85" letter-spacing="2">
+        실시간 API 호출의 흐름
+      </text>
+
+      <defs>
+        <marker id="arr-api-1" viewBox="0 0 10 10" refX="9" refY="5"
+                markerWidth="6" markerHeight="6" orient="auto">
+          <path d="M0,0 L10,5 L0,10 z" fill="var(--accent)" opacity="0.8"/>
+        </marker>
+      </defs>
+
+      <!-- 내 코드 -->
+      <rect x="40" y="60" width="140" height="120" rx="8"
+            fill="currentColor" opacity="0.06"
+            stroke="var(--accent)" stroke-width="1.8"/>
+      <text x="110" y="82" text-anchor="middle" font-family="Pretendard, sans-serif"
+            font-size="12" font-weight="700" fill="var(--accent)">내 코드</text>
+      <text x="110" y="102" text-anchor="middle" font-family="JetBrains Mono, monospace"
+            font-size="10" fill="currentColor" opacity="0.75">await pyfetch(url)</text>
+      <text x="110" y="140" text-anchor="middle" font-family="Pretendard, sans-serif"
+            font-size="10" fill="currentColor" opacity="0.7">(브라우저 안의</text>
+      <text x="110" y="155" text-anchor="middle" font-family="Pretendard, sans-serif"
+            font-size="10" fill="currentColor" opacity="0.7">파이썬 코드)</text>
+
+      <!-- 화살표 1: 요청 -->
+      <line x1="180" y1="100" x2="280" y2="100" stroke="var(--accent)"
+            stroke-width="2.5" marker-end="url(#arr-api-1)"/>
+      <text x="230" y="92" text-anchor="middle" font-family="Pretendard, sans-serif"
+            font-size="10" fill="var(--accent)" font-weight="700">요청</text>
+
+      <!-- 인터넷 -->
+      <rect x="290" y="70" width="140" height="100" rx="8"
+            fill="currentColor" opacity="0.04"
+            stroke="currentColor" stroke-opacity="0.5"
+            stroke-width="1" stroke-dasharray="4 3"/>
+      <text x="360" y="92" text-anchor="middle" font-family="Pretendard, sans-serif"
+            font-size="11" fill="currentColor" opacity="0.75" font-weight="600">인터넷</text>
+      <text x="360" y="125" text-anchor="middle" font-family="Pretendard, sans-serif"
+            font-size="20" fill="currentColor" opacity="0.65">🌐</text>
+
+      <!-- 화살표 2: 요청 -->
+      <line x1="430" y1="120" x2="540" y2="100" stroke="var(--accent)"
+            stroke-width="2.5" marker-end="url(#arr-api-1)"/>
+
+      <!-- API 서버 -->
+      <rect x="550" y="60" width="140" height="120" rx="8"
+            fill="currentColor" opacity="0.06"
+            stroke="currentColor" stroke-width="1.5"/>
+      <text x="620" y="82" text-anchor="middle" font-family="Pretendard, sans-serif"
+            font-size="12" font-weight="700" fill="currentColor">API 서버</text>
+      <text x="620" y="102" text-anchor="middle" font-family="Pretendard, sans-serif"
+            font-size="10" fill="currentColor" opacity="0.75">open-meteo.com</text>
+      <text x="620" y="140" text-anchor="middle" font-family="Pretendard, sans-serif"
+            font-size="10" fill="currentColor" opacity="0.7">(실제 서버 컴퓨터,</text>
+      <text x="620" y="155" text-anchor="middle" font-family="Pretendard, sans-serif"
+            font-size="10" fill="currentColor" opacity="0.7">날씨 데이터 보유)</text>
+
+      <!-- 화살표 3: 응답 -->
+      <line x1="540" y1="155" x2="180" y2="155" stroke="var(--accent)"
+            stroke-width="2.5" stroke-dasharray="5 3" marker-end="url(#arr-api-1)"/>
+      <text x="360" y="170" text-anchor="middle" font-family="Pretendard, sans-serif"
+            font-size="10" fill="var(--accent)" font-weight="700">JSON 응답</text>
+
+      <text x="360" y="220" text-anchor="middle" font-family="Pretendard, sans-serif"
+            font-size="11" fill="currentColor" opacity="0.7" font-style="italic">
+        await = "응답이 올 때까지 잠시 기다린다"
+      </text>
+    </svg>
+    <div class="caption">그림 4.3 — API 호출: 요청 보내고 응답 기다리고 받기</div>
+  </div>
+
+  <h3>처음 받아보는 실시간 데이터</h3>
+
+  <div class="editor-block">
+    <div class="editor-tab-bar">
+      <span class="editor-tab"><span class="py-icon"></span>real_api.py</span>
+    </div>
+    <textarea class="editor-source">from pyodide.http import pyfetch
+
+# 서울의 현재 기온 받기 (open-meteo - 무료, 키 불필요)
+url = "https://api.open-meteo.com/v1/forecast"
+url += "?latitude=37.57&amp;longitude=126.98"
+url += "&amp;current=temperature_2m,relative_humidity_2m"
+
+# 인터넷 통신 — 이 두 줄에 await
+response = await pyfetch(url)        # 응답 받기
+data = await response.json()         # JSON을 딕셔너리로
+
+# 이제부터는 4-2와 똑같음 — 평범한 딕셔너리 다루기
+print("=== 서울 현재 날씨 (실시간) ===")
+print(f"기온: {data['current']['temperature_2m']}°C")
+print(f"습도: {data['current']['relative_humidity_2m']}%")
+
+# 응답 전체 구조 살짝 보기
+print("\n응답의 키들:", list(data.keys()))
+</textarea>
+    <div class="run-bar">
+      <span class="left"><span class="file-name">📄 real_api.py</span></span>
+      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+      <button class="run-btn"><span class="play">▶</span> Run</button>
+    </div>
+  </div>
+  <div class="terminal">
+    <div class="terminal-head">
+      <span class="label">실행 결과</span>
+      <span class="status">대기 중</span>
+    </div>
+    <div class="terminal-body empty"></div>
+  </div>
+
+  <p>
+    실행 결과의 기온이 <strong>지금 이 순간 서울의 진짜 기온</strong>입니다.
+    내일 다시 실행하면 다른 값이 나옵니다. 여러분의 첫 실시간 데이터입니다!
+  </p>
+
+  <h3>4-4: 여러 도시 비교 — 3주차 for의 활용</h3>
+
+  <div class="editor-block">
+    <div class="editor-tab-bar">
+      <span class="editor-tab"><span class="py-icon"></span>multi_city.py</span>
+    </div>
+    <textarea class="editor-source">from pyodide.http import pyfetch
+
+# 한국 주요 도시 (이름, 위도, 경도)
+cities = [
+    ("서울", 37.57, 126.98),
+    ("부산", 35.18, 129.08),
+    ("대구", 35.87, 128.60),
+    ("제주", 33.50, 126.53),
+    ("강릉", 37.75, 128.88),
+]
+
+print("=== 전국 현재 기온 ===\n")
+
+results = []
+for name, lat, lng in cities:
+    url = f"https://api.open-meteo.com/v1/forecast?latitude={lat}&amp;longitude={lng}&amp;current=temperature_2m"
+    response = await pyfetch(url)
+    data = await response.json()
+
+    temp = data["current"]["temperature_2m"]
+    results.append((name, temp))
+    print(f"  {name:4s}: {temp:5.1f}°C")
+
+# 가장 더운 곳, 가장 시원한 곳
+results.sort(key=lambda x: x[1], reverse=True)
+print(f"\n가장 더운 도시: {results[0][0]} ({results[0][1]}°C)")
+print(f"가장 시원한 도시: {results[-1][0]} ({results[-1][1]}°C)")
+</textarea>
+    <div class="run-bar">
+      <span class="left"><span class="file-name">📄 multi_city.py</span></span>
+      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+      <button class="run-btn"><span class="play">▶</span> Run</button>
+    </div>
+  </div>
+  <div class="terminal">
+    <div class="terminal-head">
+      <span class="label">실행 결과</span>
+      <span class="status">대기 중</span>
+    </div>
+    <div class="terminal-body empty"></div>
+  </div>
+
+  <p>
+    <code class="inline">lambda x: x[1]</code>는 "이름 없는 한 줄 함수"입니다 — s5에서 가볍게 안내합니다.
+    여기선 "튜플의 두 번째 값(기온)을 정렬 키로 쓴다" 정도로 보시면 됩니다.
+  </p>
+
+  <h3>4-5: CORS — 왜 모든 사이트에서 가져올 순 없는가</h3>
+
+  <p>
+    "그럼 네이버 메인 페이지나 뉴스 사이트도 이렇게 가져올 수 있나요?"
+    아쉽게도 안 됩니다. 직접 만나봅시다.
+  </p>
+
+  <div class="editor-block">
+    <div class="editor-tab-bar">
+      <span class="editor-tab"><span class="py-icon"></span>cors_demo.py</span>
+    </div>
+    <textarea class="editor-source">from pyodide.http import pyfetch
+
+# 일반 사이트는 차단됩니다
+try:
+    response = await pyfetch("https://www.naver.com")
+    text = await response.string()
+    print(text[:200])
+except Exception as e:
+    print("❌ 가져오기 실패")
+    print(f"이유: {e}")
+    print()
+    print("이게 CORS — Cross-Origin Resource Sharing")
+    print("사이트 주인이 '이 출처에서 접근해도 OK'라고 허용한 곳만 가능")
+    print("open-meteo는 허용해뒀기 때문에 우리가 쓸 수 있었음")
+</textarea>
+    <div class="run-bar">
+      <span class="left"><span class="file-name">📄 cors_demo.py</span></span>
+      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+      <button class="run-btn"><span class="play">▶</span> Run</button>
+    </div>
+  </div>
+  <div class="terminal">
+    <div class="terminal-head">
+      <span class="label">실행 결과</span>
+      <span class="status">대기 중</span>
+    </div>
+    <div class="terminal-body empty"></div>
+  </div>
+
+  <p>
+    이게 학습 포인트입니다 — <strong>"인터넷의 데이터는 자유롭게 갖다 쓰는 게 아니라
+    사이트 주인이 허용한 곳만 가능"</strong>. 보안과 관련된 약속이고, 데스크톱 파이썬에서는
+    이 제약이 약합니다 (그래서 데스크톱에선 더 많은 사이트에 접근 가능).
+  </p>
+
+  <h3>몇 가지 더 검증된 무료 API</h3>
+
+  <p>
+    이 강의 환경에서 동작하는 API들입니다 — 호기심 많은 분들을 위해:
+  </p>
+
+  <ul>
+    <li><strong>open-meteo</strong>: 날씨 — <code class="inline">https://api.open-meteo.com/v1/forecast</code></li>
+    <li><strong>jsonplaceholder</strong>: 가짜 게시글/사용자 — <code class="inline">https://jsonplaceholder.typicode.com/posts/1</code></li>
+    <li><strong>api.github.com</strong>: GitHub 사용자 정보 — <code class="inline">https://api.github.com/users/torvalds</code></li>
+  </ul>
+
+  <p>
+    한 번씩 시도해보시면 좋습니다. 응답 구조는 다 다르지만 <code class="inline">json.loads</code>와
+    딕셔너리 다루기는 모두 같은 패턴입니다.
+  </p>
+
+  <div class="key-points">
+    <div class="title">이 섹션의 핵심</div>
+    <ul>
+      <li>JSON은 데이터를 문자열로 표현하는 형식 — 인터넷의 표준.</li>
+      <li><code class="inline">json.loads()</code>로 문자열 → 파이썬 딕셔너리/리스트.</li>
+      <li>중첩 데이터: <code class="inline">data["a"]["b"][0]</code>처럼 안쪽으로 들어감.</li>
+      <li><code class="inline">pyfetch(url)</code> + <code class="inline">await</code> 조합으로 실시간 데이터.</li>
+      <li>CORS — 사이트 주인이 허용한 곳만 접근 가능.</li>
+      <li>받아온 데이터는 결국 딕셔너리/리스트 — 3주차에서 배운 것 그대로 다룸.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ==================== s5: Notice (다음에 배울 것) ==================== -->
+<section class="section" id="s5">
+  <div class="section-num">SECTION 05 · 마무리</div>
+  <h2>여기까지가 기초 — 앞으로 만나게 될 것들</h2>
+
+  <p>
+    수고하셨습니다. 4주 동안 여러분이 익힌 것을 정리하면:
+  </p>
+
+  <div class="key-points">
+    <div class="title">4주 동안 익힌 것</div>
+    <ul>
+      <li><strong>1주차</strong>: 객체와 변수, 첫 코드, print, 문자열, f-string</li>
+      <li><strong>2주차</strong>: input, 형 변환, 비교/논리, if/elif/else, for, while, break/continue</li>
+      <li><strong>3주차</strong>: 리스트/튜플/딕셔너리, 가변/불변, 함수 def, 매개변수</li>
+      <li><strong>4주차</strong>: None, 정렬/문자열 도구, JSON, 실시간 API</li>
+    </ul>
+  </div>
+
+  <p>
+    이만큼이면 다음과 같은 일을 혼자 할 수 있습니다:
+  </p>
+  <ul>
+    <li>간단한 자동화 스크립트 작성 (점수 통계, 데이터 정리)</li>
+    <li>API에서 데이터 가져와 처리</li>
+    <li>Claude / ChatGPT가 짜준 코드를 <strong>읽고 이해하고 고칠 수 있음</strong></li>
+    <li>다음 단계로 가기 위한 단단한 토대</li>
+  </ul>
+
+  <h3>다음에 만나게 될 것들 — 지금 몰라도 괜찮습니다</h3>
+
+  <div class="figure">
+    <svg viewBox="0 0 720 360" xmlns="http://www.w3.org/2000/svg" role="img"
+         aria-label="앞으로 학습할 것들의 지도">
+      <text x="360" y="22" text-anchor="middle" font-family="Pretendard, sans-serif"
+            font-size="11" font-weight="700" fill="currentColor" opacity="0.85" letter-spacing="2">
+        앞으로 만나게 될 친구들 — 지도
+      </text>
+
+      <!-- 중앙: 현재 위치 -->
+      <circle cx="360" cy="180" r="50" fill="var(--accent)" opacity="0.18"
+              stroke="var(--accent)" stroke-width="2.5"/>
+      <text x="360" y="178" text-anchor="middle" font-family="Pretendard, sans-serif"
+            font-size="12" font-weight="700" fill="currentColor">현재 위치</text>
+      <text x="360" y="196" text-anchor="middle" font-family="Pretendard, sans-serif"
+            font-size="10" fill="currentColor" opacity="0.7">기초 완료</text>
+
+      <!-- 주변 노드들 -->
+      <g font-family="Pretendard, sans-serif" font-size="11">
+        <!-- 클래스 -->
+        <circle cx="160" cy="80" r="38" fill="currentColor" opacity="0.06"
+                stroke="currentColor" stroke-width="1.2"/>
+        <text x="160" y="78" text-anchor="middle" font-weight="700" fill="currentColor">클래스/OOP</text>
+        <text x="160" y="93" text-anchor="middle" fill="currentColor" opacity="0.6" font-size="9">데이터+동작</text>
+
+        <!-- 데코레이터 -->
+        <circle cx="360" cy="60" r="38" fill="currentColor" opacity="0.06"
+                stroke="currentColor" stroke-width="1.2"/>
+        <text x="360" y="58" text-anchor="middle" font-weight="700" fill="currentColor">데코레이터</text>
+        <text x="360" y="73" text-anchor="middle" fill="currentColor" opacity="0.6" font-size="9">@something</text>
+
+        <!-- 비동기 -->
+        <circle cx="560" cy="80" r="38" fill="var(--accent)" opacity="0.1"
+                stroke="var(--accent)" stroke-width="1.5"/>
+        <text x="560" y="78" text-anchor="middle" font-weight="700" fill="currentColor">비동기/async</text>
+        <text x="560" y="93" text-anchor="middle" fill="var(--accent)" opacity="0.85" font-size="9">★ s4 await의 깊이</text>
+
+        <!-- 람다 -->
+        <circle cx="600" cy="180" r="38" fill="currentColor" opacity="0.06"
+                stroke="currentColor" stroke-width="1.2"/>
+        <text x="600" y="178" text-anchor="middle" font-weight="700" fill="currentColor">람다</text>
+        <text x="600" y="193" text-anchor="middle" fill="currentColor" opacity="0.6" font-size="9">한 줄 함수</text>
+
+        <!-- 컴프리헨션 -->
+        <circle cx="560" cy="280" r="38" fill="currentColor" opacity="0.06"
+                stroke="currentColor" stroke-width="1.2"/>
+        <text x="560" y="278" text-anchor="middle" font-weight="700" fill="currentColor">컴프리헨션</text>
+        <text x="560" y="293" text-anchor="middle" fill="currentColor" opacity="0.6" font-size="9">3주차 로또에서</text>
+
+        <!-- 파일 I/O -->
+        <circle cx="360" cy="300" r="38" fill="currentColor" opacity="0.06"
+                stroke="currentColor" stroke-width="1.2"/>
+        <text x="360" y="298" text-anchor="middle" font-weight="700" fill="currentColor">파일 I/O</text>
+        <text x="360" y="313" text-anchor="middle" fill="currentColor" opacity="0.6" font-size="9">디스크 읽기/쓰기</text>
+
+        <!-- 정규식 -->
+        <circle cx="160" cy="280" r="38" fill="currentColor" opacity="0.06"
+                stroke="currentColor" stroke-width="1.2"/>
+        <text x="160" y="278" text-anchor="middle" font-weight="700" fill="currentColor">정규식</text>
+        <text x="160" y="293" text-anchor="middle" fill="currentColor" opacity="0.6" font-size="9">패턴 검색</text>
+
+        <!-- 타입힌트 -->
+        <circle cx="120" cy="180" r="38" fill="currentColor" opacity="0.06"
+                stroke="currentColor" stroke-width="1.2"/>
+        <text x="120" y="178" text-anchor="middle" font-weight="700" fill="currentColor">타입 힌트</text>
+        <text x="120" y="193" text-anchor="middle" fill="currentColor" opacity="0.6" font-size="9">x: int</text>
+
+        <!-- 점선 연결 -->
+        <line x1="195" y1="100" x2="320" y2="160" stroke="currentColor" stroke-opacity="0.3" stroke-dasharray="3 2"/>
+        <line x1="360" y1="98" x2="360" y2="130" stroke="currentColor" stroke-opacity="0.3" stroke-dasharray="3 2"/>
+        <line x1="525" y1="100" x2="395" y2="155" stroke="var(--accent)" stroke-opacity="0.6" stroke-dasharray="3 2"/>
+        <line x1="565" y1="180" x2="410" y2="180" stroke="currentColor" stroke-opacity="0.3" stroke-dasharray="3 2"/>
+        <line x1="525" y1="265" x2="395" y2="210" stroke="currentColor" stroke-opacity="0.3" stroke-dasharray="3 2"/>
+        <line x1="360" y1="265" x2="360" y2="230" stroke="currentColor" stroke-opacity="0.3" stroke-dasharray="3 2"/>
+        <line x1="195" y1="265" x2="325" y2="210" stroke="currentColor" stroke-opacity="0.3" stroke-dasharray="3 2"/>
+        <line x1="155" y1="180" x2="310" y2="180" stroke="currentColor" stroke-opacity="0.3" stroke-dasharray="3 2"/>
+      </g>
+    </svg>
+    <div class="caption">그림 4.4 — 다음에 만나게 될 것들. 지금 다 알 필요 없습니다.</div>
+  </div>
+
+  <p>
+    각각을 한 줄로만 짚으면:
+  </p>
+
+  <ul>
+    <li><strong>클래스 / OOP</strong> — "데이터와 그 데이터를 다루는 동작을 한 묶음으로". 큰 프로그램에서 필수.</li>
+    <li><strong>데코레이터</strong> — 함수 위에 <code class="inline">@something</code>으로 기능 덧붙이기. 웹 프레임워크에서 자주 등장.</li>
+    <li><strong>람다</strong> — 이름 없는 한 줄 함수. <code class="inline">lambda x: x*2</code>. 4주차 s4의 multi_city.py에서 살짝 봤어요.</li>
+    <li><strong>컴프리헨션 (깊이)</strong> — 3주차 로또에서 살짝 본 그것. <code class="inline">if</code> 필터, 중첩, 딕셔너리 컴프리헨션까지.</li>
+    <li><strong>제너레이터 / yield</strong> — 값을 한꺼번에 만들지 않고 필요할 때마다 하나씩.</li>
+    <li><strong>비동기 / async ★</strong> — 4주차에서 만난 <code class="inline">await</code>가 이쪽의 입구. <code class="inline">async def</code>, 동시 처리 등이 본격 등장.</li>
+    <li><strong>타입 힌트</strong> — <code class="inline">def f(x: int) -> str:</code>. 코드의 의도를 명시. 큰 프로젝트에서 가독성 큰 도움.</li>
+    <li><strong>try/except 심화</strong> — 에러 종류별로 다르게 처리. 4주차 s3에서 잠깐 본 try/except의 깊이.</li>
+    <li><strong>파일 I/O</strong> — 디스크의 파일을 읽고 쓰기. 실무에서 매우 흔함.</li>
+    <li><strong>모듈 / 패키지</strong> — 내 코드를 여러 파일로 나눠 관리. <code class="inline">import</code>의 깊이.</li>
+    <li><strong>정규식</strong> — 문자열 패턴 검색의 끝판. 4주차 s3 이메일 검증을 진짜 정밀하게 하려면 이게 필요.</li>
+    <li><strong>가상환경 / pip</strong> — 프로젝트마다 분리된 라이브러리 관리.</li>
+  </ul>
+
+  <h3>그리고 그 너머 — 분야별 라이브러리</h3>
+
+  <p>
+    파이썬은 그 자체보다 <strong>"파이썬을 도구로 쓰는 분야들"</strong>이 훨씬 더 큽니다.
+    관심사에 따라 갈래가 갈립니다:
+  </p>
+
+  <ul>
+    <li><strong>데이터 분석</strong> — pandas, numpy (엑셀의 끝판왕)</li>
+    <li><strong>웹 개발</strong> — Django, Flask, FastAPI (웹사이트와 API 만들기)</li>
+    <li><strong>자동화</strong> — selenium, beautifulsoup (웹 데이터 수집), schedule (예약 실행)</li>
+    <li><strong>머신러닝/AI</strong> — scikit-learn, PyTorch, TensorFlow</li>
+    <li><strong>업무 자동화</strong> — openpyxl (엑셀 다루기), python-docx (Word 다루기)</li>
+  </ul>
+
+  <p>
+    한 분야를 골라 작은 프로젝트 하나 만들어보는 게 가장 빠른 학습입니다.
+    "엑셀 파일 자동 정리", "관심 키워드 뉴스 모으기", "주식 데이터 시각화" 같은 거요.
+  </p>
+
+  <h3>마지막으로 — AI 시대의 코딩</h3>
+
+  <div class="callout">
+    <div class="label">처음에 했던 약속</div>
+    <p>
+      1주차 s0에서 우리는 이런 약속으로 시작했습니다:
+    </p>
+    <p style="margin-top: 8px;">
+      "AI 시대에는 'AI에게 일 시키는 사람'과 'AI가 일 시키는 사람'이 나뉜다. 코딩을 알면 전자가 된다."
+    </p>
+  </div>
+
+  <p>
+    4주가 지난 지금, 여러분은 그 약속을 지킬 준비가 됐습니다. 정확히는:
+  </p>
+
+  <ul>
+    <li><strong>AI에게 정확히 시킬 수 있습니다</strong> — 변수, 함수, 리스트, 딕셔너리 같은 단어로 명확한 지시.</li>
+    <li><strong>AI의 답을 검증할 수 있습니다</strong> — 코드를 읽고 "이게 맞나?" 판단 가능.</li>
+    <li><strong>AI가 못 하는 일을 알아챌 수 있습니다</strong> — 환경 제약, 보안, CORS 같은 현실적 한계.</li>
+    <li><strong>자동화의 가치를 압니다</strong> — 한 번 짜두면 평생 작동하는 코드의 힘.</li>
+  </ul>
+
+  <p>
+    프로그래밍을 시작한 건 끝이 아니라 <strong>시작</strong>입니다.
+    모르는 게 나오면 그때 찾아보면 됩니다 — 한 번에 다 배우려 하지 마세요.
+    작은 프로그램을 한 개씩 만들어보는 게 가장 빠른 길입니다.
+  </p>
+
+  <p style="margin-top: 24px; text-align: center; font-size: 16px; font-weight: 600; color: var(--accent);">
+    수고하셨습니다. 좋은 코딩 여정이 되시길.
   </p>
 </section>
