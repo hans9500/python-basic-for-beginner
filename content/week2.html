@@ -1,16 +1,2072 @@
-<!-- Week 2 placeholder (작업 예정) -->
-<div class="lesson-title">Week 2</div>
-<h1>2주차 — 작업 예정</h1>
+<!-- ============================================================
+     2주차 — 흐름 만들기 (Phase 2A: s1 ~ s3)
+     원칙:
+       1. 사실 정확성 — 비유든 단순화든 fact를 벗어나지 않음
+       2. 메모리 모델 일관성 — 1주차 이름표 모델 그대로 이어감
+       3. 설명 순서 — 사실 먼저, 비유는 보조
+       4. 공식 문서 기반 — docs.python.org
+       5. SVG 텍스트는 currentColor / CSS 변수만 사용 (다크 모드 가독성)
+     남은 작업: s4(if), s5(for+range), s6(while), s7(break/continue),
+               s8(종합실습 3개), 시뮬레이터 ②③
+     ============================================================ -->
+
+<div class="lesson-title">Week 2 · Lesson 1</div>
+<h1>흐름 만들기 — 입력, 분기, 반복</h1>
 <p class="subtitle">
-  이 주차는 다음 Phase에서 작성될 예정입니다.
-  지금은 1주차의 도입부(s0~s2)부터 검토해주세요.
+  1주차에서는 코드가 위에서 아래로 한 번만 흐르는 일직선이었습니다.
+  2주차에서는 사용자에게 입력을 받고, 조건에 따라 갈림길을 만들고,
+  반복 구간을 만듭니다. 진짜 "프로그램"이 시작되는 곳입니다.
 </p>
 
-<section class="section" id="placeholder">
-  <div class="section-num">PLACEHOLDER</div>
-  <h2>아직 준비되지 않았습니다</h2>
+<!-- ==================== s1: 사용자에게 입력받기 ==================== -->
+<section class="section" id="s1">
+  <div class="section-num">SECTION 01</div>
+  <h2>사용자에게 입력받기 — input()</h2>
+
   <p>
-    Phase A에서는 1주차 도입부와 골격 동작 검증이 목표입니다.
-    이후 단계에서 2주차 콘텐츠가 채워집니다.
+    지금까지의 코드는 <strong>모든 값을 우리가 미리 정해서</strong> 썼습니다.
+    <code class="inline">name = "홍길동"</code>처럼요.
+    하지만 진짜 프로그램은 <strong>사용자가 그때그때 다른 값을 넣을 수 있어야</strong>
+    쓸모가 생깁니다. 그 통로가 <code class="inline">input()</code>입니다.
+  </p>
+
+  <h3>가장 단순한 형태</h3>
+
+  <div class="callout info">
+    <div class="label">이 강의 페이지의 input() 사용법</div>
+    <p>
+      이 강의는 브라우저에서 파이썬을 실행합니다. 보통의 환경과 달리,
+      <strong>입력값을 코드 위쪽 입력칸에 미리 적어두고 실행</strong>합니다.
+      한 줄에 한 개의 입력입니다 — <code class="inline">input()</code>이 호출되는 순서대로
+      위에서부터 한 줄씩 가져갑니다.
+    </p>
+  </div>
+
+  <div class="input-stdin">
+    <div class="label">입력값 (미리 적기)</div>
+    <textarea>홍길동</textarea>
+    <div class="hint">한 줄에 한 입력. 코드의 input() 순서대로 위에서부터 읽어갑니다.</div>
+  </div>
+  <div class="editor-block">
+    <div class="editor-tab-bar">
+      <span class="editor-tab"><span class="py-icon"></span>input_basic.py</span>
+    </div>
+    <textarea class="editor-source">name = input()
+print(f"안녕하세요, {name}님!")
+</textarea>
+    <div class="run-bar">
+      <span class="left"><span class="file-name">📄 input_basic.py</span></span>
+      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+      <button class="run-btn"><span class="play">▶</span> Run</button>
+    </div>
+  </div>
+  <div class="terminal">
+    <div class="terminal-head">
+      <span class="label">실행 결과</span>
+      <span class="status">대기 중</span>
+    </div>
+    <div class="terminal-body empty"></div>
+  </div>
+
+  <p>
+    실행하면 입력칸의 "홍길동"이 <code class="inline">input()</code>의 결과로 나오고,
+    <code class="inline">name</code>이 그 문자열을 가리키게 됩니다.
+    위 입력칸을 다른 이름으로 바꾸고 다시 실행해보세요.
+  </p>
+
+  <h3>안내문 띄우기 — input("...")</h3>
+
+  <p>
+    괄호 안에 문자열을 넣으면 입력 받기 전에 그 안내문을 화면에 띄웁니다.
+    실제 프로그램에서는 보통 이렇게 씁니다.
+  </p>
+
+  <div class="input-stdin">
+    <div class="label">입력값 (미리 적기)</div>
+    <textarea>안양</textarea>
+    <div class="hint">한 줄에 한 입력.</div>
+  </div>
+  <div class="editor-block">
+    <div class="editor-tab-bar">
+      <span class="editor-tab"><span class="py-icon"></span>input_prompt.py</span>
+    </div>
+    <textarea class="editor-source">city = input("어디 사세요? ")
+print(f"{city}에 사시는군요!")
+</textarea>
+    <div class="run-bar">
+      <span class="left"><span class="file-name">📄 input_prompt.py</span></span>
+      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+      <button class="run-btn"><span class="play">▶</span> Run</button>
+    </div>
+  </div>
+  <div class="terminal">
+    <div class="terminal-head">
+      <span class="label">실행 결과</span>
+      <span class="status">대기 중</span>
+    </div>
+    <div class="terminal-body empty"></div>
+  </div>
+
+  <h3>input()의 결과는 항상 문자열 — 매우 중요</h3>
+
+  <p>
+    여기가 비전공자가 가장 많이 헷갈리는 지점입니다. 잘 짚고 가겠습니다.
+  </p>
+
+  <div class="callout">
+    <div class="label">절대 사실</div>
+    <p>
+      <code class="inline">input()</code>이 돌려주는 값은 <strong>항상 문자열(str) 객체</strong>입니다.
+      사용자가 "30"을 입력해도, 그건 정수 30이 아니라 <strong>문자열 "30"</strong>입니다.
+    </p>
+  </div>
+
+  <p>
+    1주차에서 본 객체 모델로 생각하면 명확합니다 —
+    <code class="inline">input()</code>은 사용자가 친 글자들을 모아 <strong>문자열 객체</strong>를
+    HEAP에 만들고, 우리는 그 객체에 변수 이름표를 붙입니다.
+    숫자 같아 보이는 글자도 글자입니다.
+  </p>
+
+  <div class="figure">
+    <svg viewBox="0 0 720 260" xmlns="http://www.w3.org/2000/svg" role="img"
+         aria-label="input()의 결과는 문자열 객체임을 보여주는 그림">
+      <text x="360" y="22" text-anchor="middle" font-family="Pretendard, sans-serif"
+            font-size="11" font-weight="700" fill="currentColor" opacity="0.85" letter-spacing="2">
+        input() 의 흐름
+      </text>
+
+      <!-- 사용자 -->
+      <g>
+        <rect x="40" y="60" width="140" height="80" rx="8"
+              fill="currentColor" opacity="0.05" stroke="currentColor" stroke-width="1.2"/>
+        <text x="110" y="86" text-anchor="middle" font-family="Pretendard, sans-serif"
+              font-size="12" font-weight="700" fill="currentColor" letter-spacing="1">사용자 입력</text>
+        <text x="110" y="115" text-anchor="middle" font-family="JetBrains Mono, monospace"
+              font-size="18" fill="currentColor">3 0</text>
+        <text x="110" y="155" text-anchor="middle" font-family="Pretendard, sans-serif"
+              font-size="10" fill="currentColor" opacity="0.65">(키보드로 친 글자)</text>
+      </g>
+
+      <!-- 화살표 1 -->
+      <defs>
+        <marker id="arr-2-1" viewBox="0 0 10 10" refX="9" refY="5"
+                markerWidth="7" markerHeight="7" orient="auto">
+          <path d="M0,0 L10,5 L0,10 z" fill="currentColor" opacity="0.7"/>
+        </marker>
+      </defs>
+      <line x1="186" y1="100" x2="248" y2="100" stroke="currentColor" stroke-width="1.8"
+            opacity="0.7" marker-end="url(#arr-2-1)"/>
+
+      <!-- input() 호출 -->
+      <g>
+        <rect x="252" y="60" width="160" height="80" rx="8"
+              fill="var(--accent)" opacity="0.07" stroke="var(--accent)" stroke-width="1.5"/>
+        <text x="332" y="86" text-anchor="middle" font-family="Pretendard, sans-serif"
+              font-size="12" font-weight="700" fill="var(--accent)" letter-spacing="1">input()</text>
+        <text x="332" y="110" text-anchor="middle" font-family="Pretendard, sans-serif"
+              font-size="11" fill="currentColor">글자를 모아</text>
+        <text x="332" y="126" text-anchor="middle" font-family="Pretendard, sans-serif"
+              font-size="11" fill="currentColor">str 객체로</text>
+      </g>
+
+      <!-- 화살표 2 -->
+      <line x1="418" y1="100" x2="478" y2="100" stroke="var(--accent)" stroke-width="1.8"
+            opacity="0.85" marker-end="url(#arr-2-1)"/>
+
+      <!-- HEAP에 만들어진 문자열 객체 -->
+      <g transform="translate(484, 65)">
+        <rect width="170" height="80" rx="6"
+              fill="currentColor" opacity="0.06"
+              stroke="var(--heap-border, #3b6ea8)" stroke-width="1.8"/>
+        <text x="10" y="16" font-family="JetBrains Mono, monospace" font-size="9"
+              fill="currentColor" opacity="0.7" font-weight="600">str 객체 (HEAP)</text>
+        <text x="85" y="48" text-anchor="middle" font-family="JetBrains Mono, monospace"
+              font-size="20" font-weight="700" fill="currentColor">"30"</text>
+        <text x="85" y="68" text-anchor="middle" font-family="Pretendard, sans-serif"
+              font-size="9.5" fill="currentColor" opacity="0.55">정수가 아님 — 글자 두 개</text>
+      </g>
+
+      <!-- 변수 이름표 (가운데 아래) -->
+      <g transform="translate(485, 175)">
+        <path d="M 0,12 L 10,0 L 90,0 L 90,24 L 10,24 Z"
+              fill="currentColor" opacity="0.08"
+              stroke="var(--names-border, #d97706)" stroke-width="1.5"/>
+        <text x="50" y="17" text-anchor="middle"
+              font-family="JetBrains Mono, monospace" font-size="13"
+              font-weight="700" fill="currentColor">age</text>
+      </g>
+      <!-- 화살표 -->
+      <line x1="535" y1="170" x2="555" y2="150" stroke="var(--accent)" stroke-width="2"
+            marker-end="url(#arr-2-1)"/>
+      <text x="492" y="220" font-family="Pretendard, sans-serif" font-size="10"
+            fill="currentColor" opacity="0.7" font-style="italic">
+        age = input() 후
+      </text>
+      <text x="486" y="234" font-family="Pretendard, sans-serif" font-size="10"
+            fill="currentColor" opacity="0.7" font-style="italic">
+        age는 그 str 객체를 가리킴
+      </text>
+
+      <!-- 본문 위치 화살표 라벨 -->
+      <text x="217" y="80" text-anchor="middle" font-family="Pretendard, sans-serif"
+            font-size="10" fill="currentColor" opacity="0.65">전달</text>
+      <text x="450" y="80" text-anchor="middle" font-family="Pretendard, sans-serif"
+            font-size="10" fill="var(--accent)" opacity="0.85" font-weight="600">반환</text>
+    </svg>
+    <div class="caption">그림 2.1 — input()은 사용자가 친 글자를 str 객체로 만들어 돌려준다</div>
+  </div>
+
+  <h3>증명: input() 결과의 타입은 str</h3>
+
+  <p>
+    이걸 직접 확인해봅시다. <code class="inline">type()</code>으로 input의 결과 타입을 찍어보면
+    숫자만 입력해도 항상 <code class="inline">str</code>입니다.
+  </p>
+
+  <div class="input-stdin">
+    <div class="label">입력값 (미리 적기)</div>
+    <textarea>30</textarea>
+    <div class="hint">한 줄에 한 입력.</div>
+  </div>
+  <div class="editor-block">
+    <div class="editor-tab-bar">
+      <span class="editor-tab"><span class="py-icon"></span>input_type.py</span>
+    </div>
+    <textarea class="editor-source">age = input("나이를 입력하세요: ")
+print(age)
+print(type(age))    # &lt;class 'str'&gt; — 문자열입니다!
+print(len(age))     # 글자 수
+</textarea>
+    <div class="run-bar">
+      <span class="left"><span class="file-name">📄 input_type.py</span></span>
+      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+      <button class="run-btn"><span class="play">▶</span> Run</button>
+    </div>
+  </div>
+  <div class="terminal">
+    <div class="terminal-head">
+      <span class="label">실행 결과</span>
+      <span class="status">대기 중</span>
+    </div>
+    <div class="terminal-body empty"></div>
+  </div>
+
+  <h3>그래서 무엇이 문제인가?</h3>
+
+  <p>
+    "30"이라는 문자열에는 <strong>덧셈을 할 수 없습니다.</strong> 정확히는,
+    문자열에 정수를 더하려고 하면 파이썬은 에러를 냅니다.
+    한 번 직접 만나봅시다.
+  </p>
+
+  <div class="input-stdin">
+    <div class="label">입력값 (미리 적기)</div>
+    <textarea>30</textarea>
+    <div class="hint">한 줄에 한 입력.</div>
+  </div>
+  <div class="editor-block">
+    <div class="editor-tab-bar">
+      <span class="editor-tab"><span class="py-icon"></span>input_error.py</span>
+    </div>
+    <textarea class="editor-source">age = input("나이: ")
+# 한 살 더해서 출력하고 싶은데...
+print(age + 1)   # TypeError: can only concatenate str (not "int") to str
+</textarea>
+    <div class="run-bar">
+      <span class="left"><span class="file-name">📄 input_error.py</span></span>
+      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+      <button class="run-btn"><span class="play">▶</span> Run</button>
+    </div>
+  </div>
+  <div class="terminal">
+    <div class="terminal-head">
+      <span class="label">실행 결과</span>
+      <span class="status">대기 중</span>
+    </div>
+    <div class="terminal-body empty"></div>
+  </div>
+
+  <p>
+    빨간 글씨로 에러가 났을 겁니다 — <code class="inline">TypeError</code>.
+    파이썬이 친절하게 알려줍니다: "문자열에는 문자열만 이어붙일 수 있는데,
+    정수(int)를 붙이려고 했네요."
+  </p>
+
+  <p>
+    해결 방법은 다음 섹션의 주제입니다 — <strong>형 변환(type conversion)</strong>.
+  </p>
+
+  <div class="key-points">
+    <div class="title">이 섹션의 핵심</div>
+    <ul>
+      <li><code class="inline">input()</code>은 사용자에게 한 줄을 입력받는다.</li>
+      <li>괄호 안에 안내 문자열을 넣을 수 있다 — <code class="inline">input("이름: ")</code>.</li>
+      <li><strong>결과는 항상 문자열 객체(str)</strong>다 — 숫자처럼 보여도 글자다.</li>
+      <li>숫자로 쓰려면 다음 섹션의 형 변환이 필요하다.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ==================== s2: 형 변환 ==================== -->
+<section class="section" id="s2">
+  <div class="section-num">SECTION 02</div>
+  <h2>형 변환 — int(), float(), str()</h2>
+
+  <p>
+    <strong>형 변환(type conversion)</strong>은 한 객체의 값을 가지고 다른 타입의 새 객체를
+    만드는 일입니다. 1주차에서 본 객체 모델로 다시 강조합니다 —
+    <strong>원래 객체를 바꾸는 게 아니라, 새 객체를 만드는 것</strong>입니다.
+  </p>
+
+  <h3>세 가지 변환 함수</h3>
+
+  <ul>
+    <li><code class="inline">int(x)</code> — x를 정수 객체로 변환</li>
+    <li><code class="inline">float(x)</code> — x를 실수 객체로 변환</li>
+    <li><code class="inline">str(x)</code> — x를 문자열 객체로 변환</li>
+  </ul>
+
+  <div class="figure">
+    <svg viewBox="0 0 720 260" xmlns="http://www.w3.org/2000/svg" role="img"
+         aria-label="형 변환은 새 객체를 만든다 — 원본은 그대로">
+      <text x="360" y="22" text-anchor="middle" font-family="Pretendard, sans-serif"
+            font-size="11" font-weight="700" fill="currentColor" opacity="0.85" letter-spacing="2">
+        int("30") 호출 시 메모리 변화
+      </text>
+
+      <!-- 변경 전: HEAP에 "30" 문자열만 존재 -->
+      <text x="180" y="56" text-anchor="middle" font-family="Pretendard, sans-serif"
+            font-size="11" font-weight="600" fill="currentColor" opacity="0.7">호출 전</text>
+      <rect x="50" y="68" width="260" height="160" rx="8"
+            fill="currentColor" opacity="0.04" stroke="currentColor" stroke-opacity="0.4"
+            stroke-width="1" stroke-dasharray="4 3"/>
+      <text x="180" y="86" text-anchor="middle" font-family="Pretendard, sans-serif"
+            font-size="9" fill="currentColor" opacity="0.65" letter-spacing="1.5" font-weight="600">HEAP</text>
+
+      <!-- str 객체 "30" -->
+      <g transform="translate(115, 110)">
+        <rect width="130" height="60" rx="6"
+              fill="currentColor" opacity="0.06" stroke="currentColor" stroke-width="1.8"/>
+        <text x="8" y="14" font-family="JetBrains Mono, monospace" font-size="9"
+              fill="currentColor" opacity="0.7" font-weight="600">str</text>
+        <text x="65" y="40" text-anchor="middle" font-family="JetBrains Mono, monospace"
+              font-size="22" font-weight="700" fill="currentColor">"30"</text>
+        <text x="122" y="55" text-anchor="end" font-family="JetBrains Mono, monospace"
+              font-size="8" fill="currentColor" opacity="0.45">@0xa1</text>
+      </g>
+      <text x="180" y="200" text-anchor="middle" font-family="Pretendard, sans-serif"
+            font-size="10" fill="currentColor" opacity="0.7" font-style="italic">
+        문자열 객체 1개
+      </text>
+
+      <!-- 화살표: int() 호출 -->
+      <line x1="320" y1="148" x2="400" y2="148" stroke="var(--accent)" stroke-width="2.5"
+            opacity="0.85" marker-end="url(#arr-2-1)"/>
+      <text x="360" y="138" text-anchor="middle" font-family="JetBrains Mono, monospace"
+            font-size="12" font-weight="700" fill="var(--accent)">int()</text>
+      <text x="360" y="166" text-anchor="middle" font-family="Pretendard, sans-serif"
+            font-size="9" fill="var(--accent)" opacity="0.85">호출</text>
+
+      <!-- 변경 후: 두 객체 다 존재 -->
+      <text x="540" y="56" text-anchor="middle" font-family="Pretendard, sans-serif"
+            font-size="11" font-weight="600" fill="currentColor" opacity="0.7">호출 후</text>
+      <rect x="410" y="68" width="280" height="160" rx="8"
+            fill="currentColor" opacity="0.04" stroke="currentColor" stroke-opacity="0.4"
+            stroke-width="1" stroke-dasharray="4 3"/>
+      <text x="540" y="86" text-anchor="middle" font-family="Pretendard, sans-serif"
+            font-size="9" fill="currentColor" opacity="0.65" letter-spacing="1.5" font-weight="600">HEAP</text>
+
+      <!-- str "30" 그대로 -->
+      <g transform="translate(425, 110)">
+        <rect width="120" height="60" rx="6"
+              fill="currentColor" opacity="0.06" stroke="currentColor" stroke-width="1.5"/>
+        <text x="8" y="14" font-family="JetBrains Mono, monospace" font-size="9"
+              fill="currentColor" opacity="0.7" font-weight="600">str</text>
+        <text x="60" y="40" text-anchor="middle" font-family="JetBrains Mono, monospace"
+              font-size="20" font-weight="700" fill="currentColor">"30"</text>
+        <text x="112" y="55" text-anchor="end" font-family="JetBrains Mono, monospace"
+              font-size="8" fill="currentColor" opacity="0.45">@0xa1</text>
+      </g>
+      <!-- 새 int 객체 30 -->
+      <g transform="translate(560, 110)">
+        <rect width="120" height="60" rx="6"
+              fill="var(--accent)" opacity="0.08"
+              stroke="var(--accent)" stroke-width="2"/>
+        <text x="8" y="14" font-family="JetBrains Mono, monospace" font-size="9"
+              fill="var(--accent)" opacity="0.85" font-weight="700">int (NEW)</text>
+        <text x="60" y="40" text-anchor="middle" font-family="JetBrains Mono, monospace"
+              font-size="22" font-weight="700" fill="currentColor">30</text>
+        <text x="112" y="55" text-anchor="end" font-family="JetBrains Mono, monospace"
+              font-size="8" fill="currentColor" opacity="0.5">@0xb7</text>
+      </g>
+      <text x="540" y="200" text-anchor="middle" font-family="Pretendard, sans-serif"
+            font-size="10" fill="currentColor" opacity="0.7" font-style="italic">
+        원본은 그대로, int 객체가 추가됨
+      </text>
+    </svg>
+    <div class="caption">그림 2.2 — 형 변환은 원본을 바꾸지 않고 새 객체를 만든다</div>
+  </div>
+
+  <h3>실제로 써보기</h3>
+
+  <div class="input-stdin">
+    <div class="label">입력값 (미리 적기)</div>
+    <textarea>30</textarea>
+    <div class="hint">한 줄에 한 입력.</div>
+  </div>
+  <div class="editor-block">
+    <div class="editor-tab-bar">
+      <span class="editor-tab"><span class="py-icon"></span>convert.py</span>
+    </div>
+    <textarea class="editor-source">age_str = input("나이: ")    # 문자열로 들어옴
+print(type(age_str))         # &lt;class 'str'&gt;
+
+age = int(age_str)           # 정수 객체로 변환
+print(type(age))             # &lt;class 'int'&gt;
+print(age + 1)               # 이제 산술 가능!
+
+# 원본 문자열은 그대로
+print(age_str, type(age_str))
+</textarea>
+    <div class="run-bar">
+      <span class="left"><span class="file-name">📄 convert.py</span></span>
+      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+      <button class="run-btn"><span class="play">▶</span> Run</button>
+    </div>
+  </div>
+  <div class="terminal">
+    <div class="terminal-head">
+      <span class="label">실행 결과</span>
+      <span class="status">대기 중</span>
+    </div>
+    <div class="terminal-body empty"></div>
+  </div>
+
+  <p>
+    실제 코드에서는 보통 <code class="inline">input()</code>과 <code class="inline">int()</code>를 묶어서 한 줄에 씁니다.
+  </p>
+
+  <div class="input-stdin">
+    <div class="label">입력값 (미리 적기)</div>
+    <textarea>30</textarea>
+    <div class="hint">한 줄에 한 입력.</div>
+  </div>
+  <div class="editor-block">
+    <div class="editor-tab-bar">
+      <span class="editor-tab"><span class="py-icon"></span>convert_inline.py</span>
+    </div>
+    <textarea class="editor-source"># 흔한 패턴 — input과 int를 한 줄에
+age = int(input("나이: "))
+
+# 이제 산술 OK
+print(f"내년에는 {age + 1}살이 되시네요.")
+print(f"10년 후에는 {age + 10}살입니다.")
+</textarea>
+    <div class="run-bar">
+      <span class="left"><span class="file-name">📄 convert_inline.py</span></span>
+      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+      <button class="run-btn"><span class="play">▶</span> Run</button>
+    </div>
+  </div>
+  <div class="terminal">
+    <div class="terminal-head">
+      <span class="label">실행 결과</span>
+      <span class="status">대기 중</span>
+    </div>
+    <div class="terminal-body empty"></div>
+  </div>
+
+  <h3>변환이 실패할 때</h3>
+
+  <p>
+    아무 글자나 <code class="inline">int()</code>로 변환할 수 있는 건 아닙니다.
+    숫자가 아닌 글자가 섞이면 <code class="inline">ValueError</code>가 납니다.
+  </p>
+
+  <div class="input-stdin">
+    <div class="label">입력값 (미리 적기)</div>
+    <textarea>스무살</textarea>
+    <div class="hint">일부러 숫자가 아닌 글자를 입력해봅니다.</div>
+  </div>
+  <div class="editor-block">
+    <div class="editor-tab-bar">
+      <span class="editor-tab"><span class="py-icon"></span>convert_fail.py</span>
+    </div>
+    <textarea class="editor-source">age = int(input("나이: "))  # "스무살"은 변환 불가
+print(age)
+</textarea>
+    <div class="run-bar">
+      <span class="left"><span class="file-name">📄 convert_fail.py</span></span>
+      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+      <button class="run-btn"><span class="play">▶</span> Run</button>
+    </div>
+  </div>
+  <div class="terminal">
+    <div class="terminal-head">
+      <span class="label">실행 결과</span>
+      <span class="status">대기 중</span>
+    </div>
+    <div class="terminal-body empty"></div>
+  </div>
+
+  <div class="callout info">
+    <div class="label">에러를 두려워하지 마세요</div>
+    <p>
+      에러가 나는 건 <strong>파이썬이 친절하게 알려주는 것</strong>입니다 —
+      "이건 못 하겠어요, 이러이러해서요." 메시지를 읽는 습관을 들이세요.
+      잘못된 입력에 대처하는 방법(<code class="inline">try/except</code>)은 4주차에서 가볍게 다룹니다.
+    </p>
+  </div>
+
+  <h3>실수 변환 — float()</h3>
+
+  <p>
+    소수점이 있는 숫자를 받으려면 <code class="inline">float()</code>를 씁니다.
+    <code class="inline">int()</code>로는 소수점 글자(<code class="inline">"3.14"</code>)를 변환할 수 없습니다.
+  </p>
+
+  <div class="input-stdin">
+    <div class="label">입력값 (미리 적기)</div>
+    <textarea>175.5
+68.2</textarea>
+    <div class="hint">두 줄 — 키와 몸무게.</div>
+  </div>
+  <div class="editor-block">
+    <div class="editor-tab-bar">
+      <span class="editor-tab"><span class="py-icon"></span>float_convert.py</span>
+    </div>
+    <textarea class="editor-source">height = float(input("키 (cm): "))
+weight = float(input("몸무게 (kg): "))
+
+# BMI 공식: 몸무게 / (키(m))^2
+bmi = weight / ((height / 100) ** 2)
+print(f"BMI = {bmi:.2f}")
+</textarea>
+    <div class="run-bar">
+      <span class="left"><span class="file-name">📄 float_convert.py</span></span>
+      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+      <button class="run-btn"><span class="play">▶</span> Run</button>
+    </div>
+  </div>
+  <div class="terminal">
+    <div class="terminal-head">
+      <span class="label">실행 결과</span>
+      <span class="status">대기 중</span>
+    </div>
+    <div class="terminal-body empty"></div>
+  </div>
+
+  <p>
+    <code class="inline">{bmi:.2f}</code>는 f-string의 표시 옵션입니다 — "소수점 둘째 자리까지".
+    상세한 옵션은 더 깊이 들어가지 않고, 필요할 때 검색하시면 됩니다.
+  </p>
+
+  <h3>str() — 숫자를 문자열로</h3>
+
+  <p>
+    반대 방향도 가능합니다. 보통은 f-string으로 충분하지만,
+    문자열 이어붙이기(<code class="inline">+</code>)에서 필요할 때가 있습니다.
+  </p>
+
+  <div class="editor-block">
+    <div class="editor-tab-bar">
+      <span class="editor-tab"><span class="py-icon"></span>to_str.py</span>
+    </div>
+    <textarea class="editor-source">age = 30
+text = "나이: " + str(age)    # str() 변환 필요
+print(text)
+
+# f-string 쓰면 변환 불필요
+print(f"나이: {age}")
+</textarea>
+    <div class="run-bar">
+      <span class="left"><span class="file-name">📄 to_str.py</span></span>
+      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+      <button class="run-btn"><span class="play">▶</span> Run</button>
+    </div>
+  </div>
+  <div class="terminal">
+    <div class="terminal-head">
+      <span class="label">실행 결과</span>
+      <span class="status">대기 중</span>
+    </div>
+    <div class="terminal-body empty"></div>
+  </div>
+
+  <div class="key-points">
+    <div class="title">이 섹션의 핵심</div>
+    <ul>
+      <li><code class="inline">int()</code>, <code class="inline">float()</code>, <code class="inline">str()</code>로 타입을 변환한다.</li>
+      <li>변환은 <strong>새 객체를 만든다</strong> — 원본 객체는 그대로.</li>
+      <li><code class="inline">int(input("..."))</code> 패턴이 가장 흔하다.</li>
+      <li>변환 불가능한 글자(<code class="inline">int("abc")</code>)는 <code class="inline">ValueError</code>.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ==================== s3: 비교와 논리 — True/False ==================== -->
+<section class="section" id="s3">
+  <div class="section-num">SECTION 03</div>
+  <h2>비교와 논리 — True / False</h2>
+
+  <p>
+    프로그램이 "조건에 따라 다른 길로 간다"는 것의 핵심은 <strong>참(True)</strong>과
+    <strong>거짓(False)</strong>입니다. 다음 섹션 <code class="inline">if</code>의 토대이니
+    여기서 단단히 잡고 갑니다.
+  </p>
+
+  <h3>True와 False도 객체다</h3>
+
+  <p>
+    1주차의 원칙 — "모든 값은 객체"가 여기서도 통합니다.
+    파이썬에서 <code class="inline">True</code>와 <code class="inline">False</code>는
+    <code class="inline">bool</code> 타입의 객체입니다. 단 두 개만 있는 특별한 객체입니다.
+  </p>
+
+  <div class="editor-block">
+    <div class="editor-tab-bar">
+      <span class="editor-tab"><span class="py-icon"></span>bool_basic.py</span>
+    </div>
+    <textarea class="editor-source">a = True
+b = False
+
+print(a)
+print(b)
+print(type(a))    # &lt;class 'bool'&gt;
+print(type(b))    # &lt;class 'bool'&gt;
+</textarea>
+    <div class="run-bar">
+      <span class="left"><span class="file-name">📄 bool_basic.py</span></span>
+      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+      <button class="run-btn"><span class="play">▶</span> Run</button>
+    </div>
+  </div>
+  <div class="terminal">
+    <div class="terminal-head">
+      <span class="label">실행 결과</span>
+      <span class="status">대기 중</span>
+    </div>
+    <div class="terminal-body empty"></div>
+  </div>
+
+  <div class="callout">
+    <div class="label">주의</div>
+    <p>
+      <code class="inline">True</code>와 <code class="inline">False</code>는 <strong>맨 앞이 대문자</strong>입니다.
+      <code class="inline">true</code>나 <code class="inline">TRUE</code>는 다른 언어 문법이고,
+      파이썬에서는 에러입니다.
+    </p>
+  </div>
+
+  <h3>비교 연산자</h3>
+
+  <p>
+    두 값을 비교하는 연산자는 다음과 같습니다. 결과는 <strong>항상 bool 객체</strong>입니다 —
+    True 또는 False.
+  </p>
+
+  <div class="figure">
+    <svg viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg" role="img"
+         aria-label="비교 연산자 표">
+      <text x="350" y="22" text-anchor="middle" font-family="Pretendard, sans-serif"
+            font-size="11" font-weight="700" fill="currentColor" opacity="0.85" letter-spacing="2">
+        COMPARISON OPERATORS
+      </text>
+
+      <!-- 헤더 -->
+      <rect x="40" y="40" width="620" height="28" fill="currentColor" opacity="0.08"/>
+      <g font-family="JetBrains Mono, monospace" font-size="11" fill="currentColor">
+        <text x="80" y="58" font-weight="700" opacity="0.85">기호</text>
+        <text x="180" y="58" font-weight="700" opacity="0.85">의미</text>
+        <text x="320" y="58" font-weight="700" opacity="0.85">예시</text>
+        <text x="500" y="58" font-weight="700" opacity="0.85">결과</text>
+      </g>
+
+      <g font-family="JetBrains Mono, monospace" font-size="11" fill="currentColor">
+        <line x1="40" y1="80" x2="660" y2="80" stroke="currentColor" stroke-opacity="0.2"/>
+        <text x="80" y="98" font-size="14" font-weight="700">==</text>
+        <text x="180" y="98" font-family="Pretendard, sans-serif">같다</text>
+        <text x="320" y="98" opacity="0.85">5 == 5</text>
+        <text x="500" y="98" font-weight="700" fill="var(--accent)">True</text>
+
+        <line x1="40" y1="110" x2="660" y2="110" stroke="currentColor" stroke-opacity="0.2"/>
+        <text x="80" y="128" font-size="14" font-weight="700">!=</text>
+        <text x="180" y="128" font-family="Pretendard, sans-serif">다르다</text>
+        <text x="320" y="128" opacity="0.85">5 != 3</text>
+        <text x="500" y="128" font-weight="700" fill="var(--accent)">True</text>
+
+        <line x1="40" y1="140" x2="660" y2="140" stroke="currentColor" stroke-opacity="0.2"/>
+        <text x="80" y="158" font-size="14" font-weight="700">&lt;</text>
+        <text x="180" y="158" font-family="Pretendard, sans-serif">작다</text>
+        <text x="320" y="158" opacity="0.85">3 &lt; 5</text>
+        <text x="500" y="158" font-weight="700" fill="var(--accent)">True</text>
+
+        <line x1="40" y1="170" x2="660" y2="170" stroke="currentColor" stroke-opacity="0.2"/>
+        <text x="80" y="188" font-size="14" font-weight="700">&gt;</text>
+        <text x="180" y="188" font-family="Pretendard, sans-serif">크다</text>
+        <text x="320" y="188" opacity="0.85">3 &gt; 5</text>
+        <text x="500" y="188" font-weight="700" opacity="0.7">False</text>
+
+        <line x1="40" y1="200" x2="660" y2="200" stroke="currentColor" stroke-opacity="0.2"/>
+        <text x="80" y="218" font-size="14" font-weight="700">&lt;=</text>
+        <text x="180" y="218" font-family="Pretendard, sans-serif">작거나 같다</text>
+        <text x="320" y="218" opacity="0.85">5 &lt;= 5</text>
+        <text x="500" y="218" font-weight="700" fill="var(--accent)">True</text>
+
+        <line x1="40" y1="230" x2="660" y2="230" stroke="currentColor" stroke-opacity="0.2"/>
+        <text x="80" y="248" font-size="14" font-weight="700">&gt;=</text>
+        <text x="180" y="248" font-family="Pretendard, sans-serif">크거나 같다</text>
+        <text x="320" y="248" opacity="0.85">5 &gt;= 6</text>
+        <text x="500" y="248" font-weight="700" opacity="0.7">False</text>
+      </g>
+
+      <text x="350" y="285" text-anchor="middle" font-family="Pretendard, sans-serif"
+            font-size="10" fill="currentColor" opacity="0.65" font-style="italic">
+        결과는 항상 bool 객체 (True 또는 False)
+      </text>
+    </svg>
+    <div class="caption">그림 2.3 — 비교 연산자와 결과</div>
+  </div>
+
+  <h3>매우 중요 — = 와 == 의 차이</h3>
+
+  <div class="callout">
+    <div class="label">절대 헷갈리지 말 것</div>
+    <p>
+      <code class="inline">=</code>는 <strong>할당</strong> (이름표 붙이기) — <code class="inline">x = 5</code>는 "x 이름표를 5에 붙여라"
+    </p>
+    <p>
+      <code class="inline">==</code>는 <strong>비교</strong> (같은지 검사) — <code class="inline">x == 5</code>는 "x가 가리키는 값이 5와 같나?"
+    </p>
+  </div>
+
+  <p>
+    초보자가 가장 자주 만드는 실수 중 하나입니다. <code class="inline">if</code>를 쓸 때
+    <code class="inline">if x = 5:</code>라고 쓰면 에러입니다 — <code class="inline">if x == 5:</code>가 맞습니다.
+  </p>
+
+  <h3>비교 연산 직접 해보기</h3>
+
+  <div class="editor-block">
+    <div class="editor-tab-bar">
+      <span class="editor-tab"><span class="py-icon"></span>compare.py</span>
+    </div>
+    <textarea class="editor-source"># 숫자 비교
+print(5 == 5)         # True
+print(5 == 6)         # False
+print(5 != 6)         # True
+print(10 &gt; 7)         # True
+print(7 &gt;= 7)         # True
+
+# 문자열도 비교 가능
+print("abc" == "abc")     # True
+print("abc" == "ABC")     # False (대소문자 다름)
+print("apple" &lt; "banana") # True (사전 순서)
+
+# 결과를 변수에 저장
+is_adult = 30 &gt;= 18
+print(is_adult)           # True
+print(type(is_adult))     # &lt;class 'bool'&gt;
+</textarea>
+    <div class="run-bar">
+      <span class="left"><span class="file-name">📄 compare.py</span></span>
+      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+      <button class="run-btn"><span class="play">▶</span> Run</button>
+    </div>
+  </div>
+  <div class="terminal">
+    <div class="terminal-head">
+      <span class="label">실행 결과</span>
+      <span class="status">대기 중</span>
+    </div>
+    <div class="terminal-body empty"></div>
+  </div>
+
+  <h3>논리 연산자 — and, or, not</h3>
+
+  <p>
+    여러 조건을 결합할 때 씁니다. 영어 단어 그대로입니다.
+  </p>
+
+  <ul>
+    <li><code class="inline">a and b</code> — <strong>둘 다 참</strong>일 때만 True</li>
+    <li><code class="inline">a or b</code> — <strong>하나라도 참</strong>이면 True</li>
+    <li><code class="inline">not a</code> — a를 <strong>반대로</strong> (True ↔ False)</li>
+  </ul>
+
+  <div class="editor-block">
+    <div class="editor-tab-bar">
+      <span class="editor-tab"><span class="py-icon"></span>logical.py</span>
+    </div>
+    <textarea class="editor-source">age = 25
+has_license = True
+
+# 둘 다 참이어야
+can_drive = age >= 18 and has_license
+print("운전 가능?", can_drive)   # True
+
+# 하나라도 참이면
+is_holiday = False
+is_weekend = True
+can_rest = is_holiday or is_weekend
+print("쉴 수 있나?", can_rest)   # True
+
+# not — 반대로
+print(not True)        # False
+print(not (5 > 3))     # False (5 > 3은 True니까 그 반대)
+</textarea>
+    <div class="run-bar">
+      <span class="left"><span class="file-name">📄 logical.py</span></span>
+      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+      <button class="run-btn"><span class="play">▶</span> Run</button>
+    </div>
+  </div>
+  <div class="terminal">
+    <div class="terminal-head">
+      <span class="label">실행 결과</span>
+      <span class="status">대기 중</span>
+    </div>
+    <div class="terminal-body empty"></div>
+  </div>
+
+  <h3>여러 비교를 묶기</h3>
+
+  <p>
+    "10보다 크고 20보다 작다" 같은 범위 조건은 두 가지 방법으로 쓸 수 있습니다.
+  </p>
+
+  <div class="editor-block">
+    <div class="editor-tab-bar">
+      <span class="editor-tab"><span class="py-icon"></span>range_check.py</span>
+    </div>
+    <textarea class="editor-source">score = 75
+
+# 방법 1: and로 연결
+ok1 = score >= 60 and score < 90
+print("합격?", ok1)
+
+# 방법 2: 파이썬 특유의 짧은 표기 (수학처럼)
+ok2 = 60 <= score < 90
+print("합격?", ok2)
+
+# 둘 다 같은 결과
+print(ok1 == ok2)
+</textarea>
+    <div class="run-bar">
+      <span class="left"><span class="file-name">📄 range_check.py</span></span>
+      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+      <button class="run-btn"><span class="play">▶</span> Run</button>
+    </div>
+  </div>
+  <div class="terminal">
+    <div class="terminal-head">
+      <span class="label">실행 결과</span>
+      <span class="status">대기 중</span>
+    </div>
+    <div class="terminal-body empty"></div>
+  </div>
+
+  <p>
+    파이썬은 수학 표기처럼 <code class="inline">60 &lt;= score &lt; 90</code>이라고 쓸 수 있습니다.
+    이게 다른 많은 언어와 다른 점입니다.
+  </p>
+
+  <div class="key-points">
+    <div class="title">이 섹션의 핵심</div>
+    <ul>
+      <li><code class="inline">True</code>, <code class="inline">False</code>는 <strong>bool 타입의 객체</strong>다 (대소문자 주의).</li>
+      <li>비교 연산자: <code class="inline">==</code>, <code class="inline">!=</code>, <code class="inline">&lt;</code>, <code class="inline">&gt;</code>, <code class="inline">&lt;=</code>, <code class="inline">&gt;=</code>.</li>
+      <li><strong><code class="inline">=</code>는 할당, <code class="inline">==</code>는 비교</strong> — 절대 헷갈리지 말 것.</li>
+      <li>논리 연산자: <code class="inline">and</code>, <code class="inline">or</code>, <code class="inline">not</code>.</li>
+      <li>다음 섹션 <code class="inline">if</code>로 이어집니다.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ==================== s4: if / elif / else ==================== -->
+<section class="section" id="s4">
+  <div class="section-num">SECTION 04</div>
+  <h2>if / elif / else — 갈림길 만들기</h2>
+
+  <p>
+    s3에서 만든 True/False가 드디어 쓸모를 발휘하는 곳입니다.
+    조건이 True인 가지로만 흐름이 들어갑니다.
+  </p>
+
+  <h3>가장 단순한 if</h3>
+
+  <div class="editor-block">
+    <div class="editor-tab-bar">
+      <span class="editor-tab"><span class="py-icon"></span>if_basic.py</span>
+    </div>
+    <textarea class="editor-source">score = 75
+
+if score &gt;= 60:
+    print("합격입니다!")
+
+print("프로그램 끝")
+</textarea>
+    <div class="run-bar">
+      <span class="left"><span class="file-name">📄 if_basic.py</span></span>
+      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+      <button class="run-btn"><span class="play">▶</span> Run</button>
+    </div>
+  </div>
+  <div class="terminal">
+    <div class="terminal-head">
+      <span class="label">실행 결과</span>
+      <span class="status">대기 중</span>
+    </div>
+    <div class="terminal-body empty"></div>
+  </div>
+
+  <p>
+    score를 50으로 바꾸고 다시 실행해보세요. 첫 print는 안 나오고 마지막 print만 나옵니다.
+    조건이 False면 그 안의 코드를 건너뜁니다.
+  </p>
+
+  <h3>구조 — 들여쓰기가 곧 블록</h3>
+
+  <p>
+    파이썬에서는 <strong>들여쓰기가 코드 블록을 결정합니다.</strong>
+    중괄호 <code class="inline">{}</code>가 없습니다. 4칸 공백(또는 탭)으로 일관되게 들여쓰면 됩니다.
+  </p>
+
+  <div class="figure">
+    <svg viewBox="0 0 720 280" xmlns="http://www.w3.org/2000/svg" role="img"
+         aria-label="if 구조와 들여쓰기">
+      <text x="360" y="22" text-anchor="middle" font-family="Pretendard, sans-serif"
+            font-size="11" font-weight="700" fill="currentColor" opacity="0.85" letter-spacing="2">
+        if 구조 — 들여쓰기가 블록을 만든다
+      </text>
+
+      <!-- 코드 박스 -->
+      <rect x="60" y="50" width="380" height="200" rx="8"
+            fill="#2b2b2b" stroke="currentColor" stroke-opacity="0.2"/>
+      <g font-family="JetBrains Mono, monospace" font-size="14">
+        <text x="80" y="84" fill="#cc7832" font-weight="700">if</text>
+        <text x="115" y="84" fill="#a9b7c6">score </text>
+        <text x="170" y="84" fill="#cc7832" font-weight="700">&gt;=</text>
+        <text x="195" y="84" fill="#6897bb"> 60</text>
+        <text x="225" y="84" fill="#cc7832">:</text>
+
+        <text x="120" y="116" fill="#ffc66d">print</text>
+        <text x="160" y="116" fill="#a9b7c6">(</text>
+        <text x="170" y="116" fill="#6a8759">"합격"</text>
+        <text x="220" y="116" fill="#a9b7c6">)</text>
+
+        <text x="120" y="142" fill="#ffc66d">print</text>
+        <text x="160" y="142" fill="#a9b7c6">(</text>
+        <text x="170" y="142" fill="#6a8759">"축하"</text>
+        <text x="220" y="142" fill="#a9b7c6">)</text>
+
+        <text x="80" y="174" fill="#a9b7c6">print</text>
+        <text x="120" y="174" fill="#a9b7c6">(</text>
+        <text x="130" y="174" fill="#6a8759">"끝"</text>
+        <text x="170" y="174" fill="#a9b7c6">)</text>
+      </g>
+
+      <!-- 들여쓰기 가이드 라인 -->
+      <line x1="115" y1="92" x2="115" y2="148" stroke="#ffc66d"
+            stroke-width="2" stroke-dasharray="3 2" opacity="0.7"/>
+
+      <!-- 라벨: 같은 들여쓰기 = 같은 블록 -->
+      <g font-family="Pretendard, sans-serif" font-size="11" fill="currentColor">
+        <line x1="465" y1="116" x2="490" y2="116" stroke="currentColor" stroke-opacity="0.4"/>
+        <line x1="465" y1="142" x2="490" y2="142" stroke="currentColor" stroke-opacity="0.4"/>
+        <line x1="490" y1="116" x2="490" y2="142" stroke="currentColor" stroke-opacity="0.4"/>
+        <text x="500" y="125">조건이 True일 때만</text>
+        <text x="500" y="142">실행되는 블록</text>
+
+        <line x1="465" y1="174" x2="490" y2="174" stroke="currentColor" stroke-opacity="0.4"/>
+        <text x="500" y="178" font-weight="600">항상 실행 (들여쓰기 없음)</text>
+      </g>
+
+      <!-- 콜론 강조 -->
+      <text x="240" y="84" fill="#f48771" font-family="JetBrains Mono, monospace"
+            font-size="11" font-weight="700">← 콜론(:) 필수</text>
+    </svg>
+    <div class="caption">그림 2.4 — if 구조: 콜론과 들여쓰기가 핵심</div>
+  </div>
+
+  <p>핵심 규칙 세 가지:</p>
+  <ul>
+    <li><strong>조건 끝에 콜론(<code class="inline">:</code>) 필수</strong> — 빠뜨리면 SyntaxError</li>
+    <li><strong>다음 줄부터 들여쓰기</strong> — 4칸 권장 (탭도 가능, 일관성 유지)</li>
+    <li><strong>같은 들여쓰기 = 같은 블록</strong> — 들여쓰기를 풀면 if 블록을 벗어남</li>
+  </ul>
+
+  <h3>else — 그 외의 경우</h3>
+
+  <div class="editor-block">
+    <div class="editor-tab-bar">
+      <span class="editor-tab"><span class="py-icon"></span>if_else.py</span>
+    </div>
+    <textarea class="editor-source">score = 45
+
+if score &gt;= 60:
+    print("합격")
+else:
+    print("불합격")
+    print("다시 도전하세요")
+</textarea>
+    <div class="run-bar">
+      <span class="left"><span class="file-name">📄 if_else.py</span></span>
+      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+      <button class="run-btn"><span class="play">▶</span> Run</button>
+    </div>
+  </div>
+  <div class="terminal">
+    <div class="terminal-head">
+      <span class="label">실행 결과</span>
+      <span class="status">대기 중</span>
+    </div>
+    <div class="terminal-body empty"></div>
+  </div>
+
+  <h3>elif — "그게 아니라면 만약…"</h3>
+
+  <p>
+    조건이 여러 개일 때는 <code class="inline">elif</code> (else if의 줄임)를 씁니다.
+    위에서부터 차례로 검사하다가 <strong>True인 첫 가지</strong>에서 멈춥니다.
+  </p>
+
+  <div class="editor-block">
+    <div class="editor-tab-bar">
+      <span class="editor-tab"><span class="py-icon"></span>if_elif.py</span>
+    </div>
+    <textarea class="editor-source">score = 75
+
+if score &gt;= 90:
+    print("A 등급")
+elif score &gt;= 80:
+    print("B 등급")
+elif score &gt;= 70:
+    print("C 등급")
+elif score &gt;= 60:
+    print("D 등급")
+else:
+    print("불합격")
+</textarea>
+    <div class="run-bar">
+      <span class="left"><span class="file-name">📄 if_elif.py</span></span>
+      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+      <button class="run-btn"><span class="play">▶</span> Run</button>
+    </div>
+  </div>
+  <div class="terminal">
+    <div class="terminal-head">
+      <span class="label">실행 결과</span>
+      <span class="status">대기 중</span>
+    </div>
+    <div class="terminal-body empty"></div>
+  </div>
+
+  <p>
+    score가 75일 때 첫 번째 True가 되는 가지는 <code class="inline">score >= 70</code>입니다.
+    그래서 "C 등급"이 출력되고, 이후 elif/else는 모두 건너뜁니다.
+  </p>
+
+  <div class="figure">
+    <svg viewBox="0 0 720 320" xmlns="http://www.w3.org/2000/svg" role="img"
+         aria-label="if/elif/else 흐름도">
+      <text x="360" y="22" text-anchor="middle" font-family="Pretendard, sans-serif"
+            font-size="11" font-weight="700" fill="currentColor" opacity="0.85" letter-spacing="2">
+        if / elif / else 의 흐름
+      </text>
+
+      <defs>
+        <marker id="arr-flow" viewBox="0 0 10 10" refX="9" refY="5"
+                markerWidth="6" markerHeight="6" orient="auto">
+          <path d="M0,0 L10,5 L0,10 z" fill="currentColor" opacity="0.7"/>
+        </marker>
+      </defs>
+
+      <!-- 시작 -->
+      <rect x="320" y="40" width="80" height="28" rx="14"
+            fill="currentColor" opacity="0.12" stroke="currentColor"/>
+      <text x="360" y="59" text-anchor="middle" font-family="JetBrains Mono, monospace"
+            font-size="11" font-weight="600" fill="currentColor">START</text>
+
+      <!-- 조건 1 -->
+      <rect x="280" y="90" width="160" height="40" rx="6"
+            fill="currentColor" opacity="0.06" stroke="currentColor" stroke-width="1.5"/>
+      <text x="360" y="115" text-anchor="middle" font-family="JetBrains Mono, monospace"
+            font-size="13" font-weight="600" fill="currentColor">if cond1?</text>
+      <line x1="360" y1="68" x2="360" y2="90" stroke="currentColor" stroke-width="1.5"
+            opacity="0.7" marker-end="url(#arr-flow)"/>
+
+      <!-- True 가지 1 -->
+      <rect x="80" y="105" width="140" height="34" rx="5"
+            fill="var(--accent)" opacity="0.1" stroke="var(--accent)" stroke-width="1.5"/>
+      <text x="150" y="127" text-anchor="middle" font-family="JetBrains Mono, monospace"
+            font-size="12" fill="currentColor">block 1 실행</text>
+      <line x1="278" y1="110" x2="222" y2="120" stroke="var(--true-border, #34a853)"
+            stroke-width="1.8" opacity="0.85" marker-end="url(#arr-flow)"/>
+      <text x="248" y="106" font-family="JetBrains Mono, monospace" font-size="9"
+            fill="var(--true-border, #34a853)" font-weight="700">True</text>
+
+      <!-- 조건 2 -->
+      <rect x="280" y="155" width="160" height="40" rx="6"
+            fill="currentColor" opacity="0.06" stroke="currentColor" stroke-width="1.5"/>
+      <text x="360" y="180" text-anchor="middle" font-family="JetBrains Mono, monospace"
+            font-size="13" font-weight="600" fill="currentColor">elif cond2?</text>
+      <line x1="360" y1="130" x2="360" y2="155" stroke="currentColor" stroke-width="1.5"
+            opacity="0.7" marker-end="url(#arr-flow)"/>
+      <text x="370" y="148" font-family="JetBrains Mono, monospace" font-size="9"
+            fill="currentColor" opacity="0.7">False</text>
+
+      <!-- True 가지 2 -->
+      <rect x="80" y="170" width="140" height="34" rx="5"
+            fill="var(--accent)" opacity="0.1" stroke="var(--accent)" stroke-width="1.5"/>
+      <text x="150" y="192" text-anchor="middle" font-family="JetBrains Mono, monospace"
+            font-size="12" fill="currentColor">block 2 실행</text>
+      <line x1="278" y1="175" x2="222" y2="185" stroke="var(--true-border, #34a853)"
+            stroke-width="1.8" opacity="0.85" marker-end="url(#arr-flow)"/>
+      <text x="248" y="171" font-family="JetBrains Mono, monospace" font-size="9"
+            fill="var(--true-border, #34a853)" font-weight="700">True</text>
+
+      <!-- else -->
+      <rect x="280" y="220" width="160" height="34" rx="6"
+            fill="var(--accent)" opacity="0.08" stroke="currentColor" stroke-width="1.5"/>
+      <text x="360" y="242" text-anchor="middle" font-family="JetBrains Mono, monospace"
+            font-size="12" fill="currentColor">else block 실행</text>
+      <line x1="360" y1="195" x2="360" y2="220" stroke="currentColor" stroke-width="1.5"
+            opacity="0.7" marker-end="url(#arr-flow)"/>
+      <text x="370" y="213" font-family="JetBrains Mono, monospace" font-size="9"
+            fill="currentColor" opacity="0.7">False</text>
+
+      <!-- END -->
+      <rect x="500" y="155" width="80" height="28" rx="14"
+            fill="currentColor" opacity="0.12" stroke="currentColor"/>
+      <text x="540" y="174" text-anchor="middle" font-family="JetBrains Mono, monospace"
+            font-size="11" font-weight="600" fill="currentColor">END</text>
+
+      <!-- 모든 블록에서 END로 -->
+      <line x1="220" y1="122" x2="500" y2="160" stroke="currentColor" stroke-width="1"
+            opacity="0.5" marker-end="url(#arr-flow)"/>
+      <line x1="220" y1="187" x2="500" y2="170" stroke="currentColor" stroke-width="1"
+            opacity="0.5" marker-end="url(#arr-flow)"/>
+      <line x1="440" y1="237" x2="500" y2="180" stroke="currentColor" stroke-width="1"
+            opacity="0.5" marker-end="url(#arr-flow)"/>
+
+      <!-- 본문 라벨 -->
+      <text x="360" y="290" text-anchor="middle" font-family="Pretendard, sans-serif"
+            font-size="11" fill="currentColor" opacity="0.7" font-style="italic">
+        위에서부터 차례로 검사 → 처음 True인 가지만 실행 → 나머지는 모두 건너뜀
+      </text>
+    </svg>
+    <div class="caption">그림 2.5 — if/elif/else의 흐름</div>
+  </div>
+
+  <h3>시뮬레이터로 따라가보기</h3>
+
+  <p>
+    아래 시뮬레이터에서 score 값을 슬라이더로 바꿔가며 흐름이 어떻게 갈라지는지
+    단계별로 확인해보세요.
+  </p>
+
+  <div style="margin: 24px 0; border-radius: 12px; overflow: hidden;
+              border: 1px solid var(--border); box-shadow: var(--shadow-md);">
+    <iframe src="simulators/sim-if.html" id="sim-if-iframe"
+            style="width: 100%; height: 800px; border: 0; display: block;"
+            title="시뮬레이터: if 분기"></iframe>
+  </div>
+
+  <h3>흔한 실수: = 와 == </h3>
+
+  <div class="callout">
+    <div class="label">절대 헷갈리지 말 것</div>
+    <p>
+      <code class="inline">if score = 60:</code> ← <strong>SyntaxError!</strong>
+      <code class="inline">=</code>는 할당이지 비교가 아닙니다.
+      비교는 <code class="inline">==</code>(등호 두 개) — <code class="inline">if score == 60:</code>
+    </p>
+  </div>
+
+  <h3>입력과 if 결합</h3>
+
+  <p>이제 사용자 입력에 따라 다른 결과를 내는 진짜 프로그램이 가능합니다.</p>
+
+  <div class="input-stdin">
+    <div class="label">입력값 (미리 적기)</div>
+    <textarea>78</textarea>
+    <div class="hint">한 줄에 한 입력. 점수를 0~100 사이로.</div>
+  </div>
+  <div class="editor-block">
+    <div class="editor-tab-bar">
+      <span class="editor-tab"><span class="py-icon"></span>grade.py</span>
+    </div>
+    <textarea class="editor-source">score = int(input("점수를 입력하세요: "))
+
+if score &gt;= 90:
+    grade = "A"
+elif score &gt;= 80:
+    grade = "B"
+elif score &gt;= 70:
+    grade = "C"
+elif score &gt;= 60:
+    grade = "D"
+else:
+    grade = "F"
+
+print(f"{score}점은 {grade} 등급입니다.")
+</textarea>
+    <div class="run-bar">
+      <span class="left"><span class="file-name">📄 grade.py</span></span>
+      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+      <button class="run-btn"><span class="play">▶</span> Run</button>
+    </div>
+  </div>
+  <div class="terminal">
+    <div class="terminal-head">
+      <span class="label">실행 결과</span>
+      <span class="status">대기 중</span>
+    </div>
+    <div class="terminal-body empty"></div>
+  </div>
+
+  <div class="key-points">
+    <div class="title">이 섹션의 핵심</div>
+    <ul>
+      <li><code class="inline">if 조건:</code>, <code class="inline">elif 조건:</code>, <code class="inline">else:</code> — 콜론 필수.</li>
+      <li><strong>들여쓰기가 블록</strong> — 4칸 공백 일관성.</li>
+      <li>위에서부터 검사하여 <strong>처음 True인 가지만</strong> 실행, 나머지는 모두 건너뜀.</li>
+      <li><code class="inline">else</code>는 모든 위 조건이 False일 때만 실행됨.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ==================== s5: for 와 range ==================== -->
+<section class="section" id="s5">
+  <div class="section-num">SECTION 05</div>
+  <h2>for 와 range — 정해진 횟수만큼 반복</h2>
+
+  <p>
+    같은 일을 여러 번 해야 할 때 — 1부터 100까지 더하기, 학생 30명 점수 합산 —
+    복사 붙여넣기로는 못 합니다. <code class="inline">for</code>가 답입니다.
+  </p>
+
+  <h3>가장 단순한 형태</h3>
+
+  <div class="editor-block">
+    <div class="editor-tab-bar">
+      <span class="editor-tab"><span class="py-icon"></span>for_basic.py</span>
+    </div>
+    <textarea class="editor-source">for i in range(5):
+    print(i)
+</textarea>
+    <div class="run-bar">
+      <span class="left"><span class="file-name">📄 for_basic.py</span></span>
+      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+      <button class="run-btn"><span class="play">▶</span> Run</button>
+    </div>
+  </div>
+  <div class="terminal">
+    <div class="terminal-head">
+      <span class="label">실행 결과</span>
+      <span class="status">대기 중</span>
+    </div>
+    <div class="terminal-body empty"></div>
+  </div>
+
+  <p>
+    결과는 0, 1, 2, 3, 4 — 다섯 줄. 5는 안 나옵니다.
+    <strong>range(5)</strong>는 0부터 시작해 5 직전까지의 정수들을 의미합니다.
+  </p>
+
+  <h3>range 의 세 가지 형태</h3>
+
+  <div class="figure">
+    <svg viewBox="0 0 720 280" xmlns="http://www.w3.org/2000/svg" role="img"
+         aria-label="range의 세 형태">
+      <text x="360" y="22" text-anchor="middle" font-family="Pretendard, sans-serif"
+            font-size="11" font-weight="700" fill="currentColor" opacity="0.85" letter-spacing="2">
+        range — 세 가지 형태
+      </text>
+
+      <!-- range(5) -->
+      <text x="60" y="60" font-family="JetBrains Mono, monospace" font-size="13"
+            font-weight="700" fill="currentColor">range(5)</text>
+      <text x="60" y="78" font-family="Pretendard, sans-serif" font-size="10"
+            fill="currentColor" opacity="0.65">0부터 5 직전까지</text>
+
+      <g transform="translate(220, 50)">
+        <g font-family="JetBrains Mono, monospace" font-size="13" font-weight="700">
+          <rect x="0" y="0" width="34" height="32" rx="3" fill="var(--accent)" opacity="0.15" stroke="var(--accent)"/>
+          <text x="17" y="22" text-anchor="middle" fill="currentColor">0</text>
+          <rect x="40" y="0" width="34" height="32" rx="3" fill="var(--accent)" opacity="0.15" stroke="var(--accent)"/>
+          <text x="57" y="22" text-anchor="middle" fill="currentColor">1</text>
+          <rect x="80" y="0" width="34" height="32" rx="3" fill="var(--accent)" opacity="0.15" stroke="var(--accent)"/>
+          <text x="97" y="22" text-anchor="middle" fill="currentColor">2</text>
+          <rect x="120" y="0" width="34" height="32" rx="3" fill="var(--accent)" opacity="0.15" stroke="var(--accent)"/>
+          <text x="137" y="22" text-anchor="middle" fill="currentColor">3</text>
+          <rect x="160" y="0" width="34" height="32" rx="3" fill="var(--accent)" opacity="0.15" stroke="var(--accent)"/>
+          <text x="177" y="22" text-anchor="middle" fill="currentColor">4</text>
+          <rect x="200" y="0" width="34" height="32" rx="3" fill="currentColor" opacity="0.04"
+                stroke="currentColor" stroke-opacity="0.4" stroke-dasharray="3 2"/>
+          <text x="217" y="22" text-anchor="middle" fill="currentColor" opacity="0.4">5</text>
+        </g>
+        <text x="217" y="50" text-anchor="middle" font-family="Pretendard, sans-serif"
+              font-size="10" fill="currentColor" opacity="0.55">미포함</text>
+      </g>
+
+      <!-- range(2, 7) -->
+      <text x="60" y="135" font-family="JetBrains Mono, monospace" font-size="13"
+            font-weight="700" fill="currentColor">range(2, 7)</text>
+      <text x="60" y="153" font-family="Pretendard, sans-serif" font-size="10"
+            fill="currentColor" opacity="0.65">2부터 7 직전까지</text>
+
+      <g transform="translate(220, 125)">
+        <g font-family="JetBrains Mono, monospace" font-size="13" font-weight="700">
+          <rect x="0" y="0" width="34" height="32" rx="3" fill="currentColor" opacity="0.04"
+                stroke="currentColor" stroke-opacity="0.4" stroke-dasharray="3 2"/>
+          <text x="17" y="22" text-anchor="middle" opacity="0.4">0</text>
+          <rect x="40" y="0" width="34" height="32" rx="3" fill="currentColor" opacity="0.04"
+                stroke="currentColor" stroke-opacity="0.4" stroke-dasharray="3 2"/>
+          <text x="57" y="22" text-anchor="middle" opacity="0.4">1</text>
+          <rect x="80" y="0" width="34" height="32" rx="3" fill="var(--accent)" opacity="0.15" stroke="var(--accent)"/>
+          <text x="97" y="22" text-anchor="middle">2</text>
+          <rect x="120" y="0" width="34" height="32" rx="3" fill="var(--accent)" opacity="0.15" stroke="var(--accent)"/>
+          <text x="137" y="22" text-anchor="middle">3</text>
+          <rect x="160" y="0" width="34" height="32" rx="3" fill="var(--accent)" opacity="0.15" stroke="var(--accent)"/>
+          <text x="177" y="22" text-anchor="middle">4</text>
+          <rect x="200" y="0" width="34" height="32" rx="3" fill="var(--accent)" opacity="0.15" stroke="var(--accent)"/>
+          <text x="217" y="22" text-anchor="middle">5</text>
+          <rect x="240" y="0" width="34" height="32" rx="3" fill="var(--accent)" opacity="0.15" stroke="var(--accent)"/>
+          <text x="257" y="22" text-anchor="middle">6</text>
+          <rect x="280" y="0" width="34" height="32" rx="3" fill="currentColor" opacity="0.04"
+                stroke="currentColor" stroke-opacity="0.4" stroke-dasharray="3 2"/>
+          <text x="297" y="22" text-anchor="middle" opacity="0.4">7</text>
+        </g>
+        <text x="17" y="50" text-anchor="middle" font-family="Pretendard, sans-serif"
+              font-size="10" fill="currentColor" opacity="0.55">←</text>
+        <text x="297" y="50" text-anchor="middle" font-family="Pretendard, sans-serif"
+              font-size="10" fill="currentColor" opacity="0.55">미포함</text>
+      </g>
+
+      <!-- range(0, 10, 2) -->
+      <text x="60" y="210" font-family="JetBrains Mono, monospace" font-size="13"
+            font-weight="700" fill="currentColor">range(0, 10, 2)</text>
+      <text x="60" y="228" font-family="Pretendard, sans-serif" font-size="10"
+            fill="currentColor" opacity="0.65">0부터 10 직전, 2씩</text>
+
+      <g transform="translate(220, 200)">
+        <g font-family="JetBrains Mono, monospace" font-size="13" font-weight="700">
+          <rect x="0" y="0" width="34" height="32" rx="3" fill="var(--accent)" opacity="0.15" stroke="var(--accent)"/>
+          <text x="17" y="22" text-anchor="middle">0</text>
+          <rect x="40" y="0" width="34" height="32" rx="3" fill="var(--accent)" opacity="0.15" stroke="var(--accent)"/>
+          <text x="57" y="22" text-anchor="middle">2</text>
+          <rect x="80" y="0" width="34" height="32" rx="3" fill="var(--accent)" opacity="0.15" stroke="var(--accent)"/>
+          <text x="97" y="22" text-anchor="middle">4</text>
+          <rect x="120" y="0" width="34" height="32" rx="3" fill="var(--accent)" opacity="0.15" stroke="var(--accent)"/>
+          <text x="137" y="22" text-anchor="middle">6</text>
+          <rect x="160" y="0" width="34" height="32" rx="3" fill="var(--accent)" opacity="0.15" stroke="var(--accent)"/>
+          <text x="177" y="22" text-anchor="middle">8</text>
+          <rect x="200" y="0" width="34" height="32" rx="3" fill="currentColor" opacity="0.04"
+                stroke="currentColor" stroke-opacity="0.4" stroke-dasharray="3 2"/>
+          <text x="217" y="22" text-anchor="middle" opacity="0.4">10</text>
+        </g>
+      </g>
+
+      <text x="360" y="270" text-anchor="middle" font-family="Pretendard, sans-serif"
+            font-size="10" fill="currentColor" opacity="0.7" font-style="italic">
+        끝값(stop)은 미포함 — 시작은 포함, 끝은 미포함이 파이썬 관습
+      </text>
+    </svg>
+    <div class="caption">그림 2.6 — range의 세 가지 형태와 끝값 미포함 규칙</div>
+  </div>
+
+  <div class="callout">
+    <div class="label">기억할 것</div>
+    <p>
+      <code class="inline">range(stop)</code>의 stop은 <strong>미포함</strong>입니다.
+      <code class="inline">range(5)</code>는 0~4, <code class="inline">range(1, 11)</code>은 1~10.
+      "1부터 N까지"가 필요하면 <code class="inline">range(1, N+1)</code>로 씁니다.
+    </p>
+  </div>
+
+  <h3>시뮬레이터 — i 이름표가 어떻게 움직이는가</h3>
+
+  <p>
+    1주차에서 배운 이름표 모델이 for에서 빛납니다.
+    <strong>i는 매 반복마다 새로운 객체로 옮겨가는 이름표</strong>입니다.
+    아래 시뮬레이터로 정확히 어떻게 움직이는지 보세요.
+  </p>
+
+  <div style="margin: 24px 0; border-radius: 12px; overflow: hidden;
+              border: 1px solid var(--border); box-shadow: var(--shadow-md);">
+    <iframe src="simulators/sim-for.html" id="sim-for-iframe"
+            style="width: 100%; height: 740px; border: 0; display: block;"
+            title="시뮬레이터: for 반복"></iframe>
+  </div>
+
+  <h3>합계 구하기 — 가장 흔한 패턴</h3>
+
+  <div class="editor-block">
+    <div class="editor-tab-bar">
+      <span class="editor-tab"><span class="py-icon"></span>sum.py</span>
+    </div>
+    <textarea class="editor-source"># 1부터 100까지 합
+total = 0
+for i in range(1, 101):    # 1, 2, 3, ..., 100
+    total = total + i
+
+print(f"1~100 합계: {total}")
+</textarea>
+    <div class="run-bar">
+      <span class="left"><span class="file-name">📄 sum.py</span></span>
+      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+      <button class="run-btn"><span class="play">▶</span> Run</button>
+    </div>
+  </div>
+  <div class="terminal">
+    <div class="terminal-head">
+      <span class="label">실행 결과</span>
+      <span class="status">대기 중</span>
+    </div>
+    <div class="terminal-body empty"></div>
+  </div>
+
+  <p>
+    <code class="inline">total = total + i</code> 패턴이 핵심입니다.
+    "지금 total이 가리키던 값에 i를 더해서, 그 새 값을 다시 total이 가리키게 한다"는 의미입니다.
+    이걸 <strong>누적</strong>이라고 부릅니다.
+  </p>
+
+  <h3>구구단 출력</h3>
+
+  <div class="input-stdin">
+    <div class="label">입력값 (미리 적기)</div>
+    <textarea>7</textarea>
+    <div class="hint">2~9 중 하나.</div>
+  </div>
+  <div class="editor-block">
+    <div class="editor-tab-bar">
+      <span class="editor-tab"><span class="py-icon"></span>multiply.py</span>
+    </div>
+    <textarea class="editor-source">n = int(input("몇 단? "))
+
+print(f"--- {n}단 ---")
+for i in range(1, 10):
+    print(f"{n} x {i} = {n * i}")
+</textarea>
+    <div class="run-bar">
+      <span class="left"><span class="file-name">📄 multiply.py</span></span>
+      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+      <button class="run-btn"><span class="play">▶</span> Run</button>
+    </div>
+  </div>
+  <div class="terminal">
+    <div class="terminal-head">
+      <span class="label">실행 결과</span>
+      <span class="status">대기 중</span>
+    </div>
+    <div class="terminal-body empty"></div>
+  </div>
+
+  <h3>문자열도 반복할 수 있다</h3>
+
+  <p>
+    <code class="inline">for ch in 문자열:</code> 형태로 글자 하나씩 반복할 수 있습니다.
+  </p>
+
+  <div class="editor-block">
+    <div class="editor-tab-bar">
+      <span class="editor-tab"><span class="py-icon"></span>for_string.py</span>
+    </div>
+    <textarea class="editor-source">name = "Python"
+for ch in name:
+    print(ch)
+</textarea>
+    <div class="run-bar">
+      <span class="left"><span class="file-name">📄 for_string.py</span></span>
+      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+      <button class="run-btn"><span class="play">▶</span> Run</button>
+    </div>
+  </div>
+  <div class="terminal">
+    <div class="terminal-head">
+      <span class="label">실행 결과</span>
+      <span class="status">대기 중</span>
+    </div>
+    <div class="terminal-body empty"></div>
+  </div>
+
+  <div class="key-points">
+    <div class="title">이 섹션의 핵심</div>
+    <ul>
+      <li><code class="inline">for 변수 in 반복가능객체:</code> 형태.</li>
+      <li><code class="inline">range(stop)</code>은 0부터 stop-1까지 — <strong>stop 미포함</strong>.</li>
+      <li><code class="inline">range(start, stop)</code>, <code class="inline">range(start, stop, step)</code>도 가능.</li>
+      <li>i는 <strong>매 반복마다 새 객체로 옮겨가는 이름표</strong> — 1주차 모델 그대로.</li>
+      <li>누적 패턴: <code class="inline">total = total + i</code>.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ==================== s6: while ==================== -->
+<section class="section" id="s6">
+  <div class="section-num">SECTION 06</div>
+  <h2>while — 조건이 참인 동안 반복</h2>
+
+  <p>
+    <code class="inline">for</code>는 "정해진 횟수"의 반복이고,
+    <code class="inline">while</code>은 "조건이 참인 동안" 반복입니다.
+    "사용자가 그만이라고 할 때까지", "정답을 맞힐 때까지" 같은 경우에 씁니다.
+  </p>
+
+  <h3>가장 단순한 while</h3>
+
+  <div class="editor-block">
+    <div class="editor-tab-bar">
+      <span class="editor-tab"><span class="py-icon"></span>while_basic.py</span>
+    </div>
+    <textarea class="editor-source">count = 0
+while count &lt; 5:
+    print(f"count = {count}")
+    count = count + 1
+
+print("끝")
+</textarea>
+    <div class="run-bar">
+      <span class="left"><span class="file-name">📄 while_basic.py</span></span>
+      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+      <button class="run-btn"><span class="play">▶</span> Run</button>
+    </div>
+  </div>
+  <div class="terminal">
+    <div class="terminal-head">
+      <span class="label">실행 결과</span>
+      <span class="status">대기 중</span>
+    </div>
+    <div class="terminal-body empty"></div>
+  </div>
+
+  <p>
+    동작 순서:
+  </p>
+  <ol>
+    <li>조건 검사: <code class="inline">count &lt; 5</code>가 True인가?</li>
+    <li>True면 블록 실행</li>
+    <li>다시 1번으로 → 조건 검사</li>
+    <li>False가 되면 빠져나옴</li>
+  </ol>
+
+  <h3>위험: 무한 루프</h3>
+
+  <p>
+    조건을 절대 False로 못 만들면 <strong>무한히 반복</strong>합니다.
+    초보자가 자주 만드는 실수 — <code class="inline">count = count + 1</code>을 깜빡하는 경우입니다.
+  </p>
+
+  <div class="callout">
+    <div class="label">무한 루프 주의</div>
+    <p>
+      이 강의 환경에서는 무한 루프를 만들면 <strong>실행이 영원히 끝나지 않습니다.</strong>
+      페이지를 새로고침하거나 다른 코드 블록을 실행해서 빠져나오세요.
+      while을 쓸 때는 <strong>"이 반복은 어떻게 끝나는가?"</strong>를 늘 생각하는 습관이 중요합니다.
+    </p>
+  </div>
+
+  <h3>while True와 break</h3>
+
+  <p>
+    의도적으로 무한 루프를 만들고 안에서 <code class="inline">break</code>로 빠져나오는 패턴도 있습니다.
+    "사용자가 q를 입력할 때까지 계속" 같은 경우에 흔합니다.
+  </p>
+
+  <div class="input-stdin">
+    <div class="label">입력값 (미리 적기)</div>
+    <textarea>10
+20
+30
+q</textarea>
+    <div class="hint">숫자를 차례로 입력하다 q로 종료.</div>
+  </div>
+  <div class="editor-block">
+    <div class="editor-tab-bar">
+      <span class="editor-tab"><span class="py-icon"></span>while_true.py</span>
+    </div>
+    <textarea class="editor-source">total = 0
+
+while True:
+    s = input("숫자 (종료: q): ")
+    if s == "q":
+        break
+    total = total + int(s)
+    print(f"  → 누적: {total}")
+
+print(f"최종 합: {total}")
+</textarea>
+    <div class="run-bar">
+      <span class="left"><span class="file-name">📄 while_true.py</span></span>
+      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+      <button class="run-btn"><span class="play">▶</span> Run</button>
+    </div>
+  </div>
+  <div class="terminal">
+    <div class="terminal-head">
+      <span class="label">실행 결과</span>
+      <span class="status">대기 중</span>
+    </div>
+    <div class="terminal-body empty"></div>
+  </div>
+
+  <h3>for vs while — 언제 무엇을?</h3>
+
+  <ul>
+    <li><strong>횟수가 정해져 있다</strong> → <code class="inline">for</code></li>
+    <li><strong>몇 번 돌지 모른다, 조건으로 멈춘다</strong> → <code class="inline">while</code></li>
+  </ul>
+
+  <p>예시:</p>
+  <ul>
+    <li>"학생 30명 점수 합산" → 횟수 정해짐 → for</li>
+    <li>"정답 맞힐 때까지 묻기" → 횟수 모름 → while</li>
+    <li>"파일 끝까지 읽기" → 끝이 어딘지 미리 모름 → while</li>
+  </ul>
+
+  <div class="key-points">
+    <div class="title">이 섹션의 핵심</div>
+    <ul>
+      <li><code class="inline">while 조건:</code> — 조건이 True인 동안 반복.</li>
+      <li>조건을 False로 만들 코드가 안에 반드시 있어야 — 안 그러면 무한 루프.</li>
+      <li><code class="inline">while True:</code> + <code class="inline">break</code> — 의도적 무한 + 빠져나오기 패턴.</li>
+      <li>횟수 정해짐 → for, 조건으로 끝 → while.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ==================== s7: break / continue ==================== -->
+<section class="section" id="s7">
+  <div class="section-num">SECTION 07</div>
+  <h2>break / continue — 반복 중간에 빠져나오기</h2>
+
+  <p>
+    반복 중간에 흐름을 조작하는 두 단어입니다.
+  </p>
+  <ul>
+    <li><strong><code class="inline">break</code></strong>: <strong>반복 자체를 끝낸다</strong> — 즉시 빠져나옴</li>
+    <li><strong><code class="inline">continue</code></strong>: <strong>이번 반복만 건너뛰고 다음으로</strong></li>
+  </ul>
+
+  <div class="figure">
+    <svg viewBox="0 0 720 280" xmlns="http://www.w3.org/2000/svg" role="img"
+         aria-label="break vs continue 비교">
+      <text x="360" y="22" text-anchor="middle" font-family="Pretendard, sans-serif"
+            font-size="11" font-weight="700" fill="currentColor" opacity="0.85" letter-spacing="2">
+        break vs continue
+      </text>
+
+      <defs>
+        <marker id="arr-bc" viewBox="0 0 10 10" refX="9" refY="5"
+                markerWidth="6" markerHeight="6" orient="auto">
+          <path d="M0,0 L10,5 L0,10 z" fill="currentColor" opacity="0.7"/>
+        </marker>
+      </defs>
+
+      <!-- break 다이어그램 -->
+      <text x="160" y="50" text-anchor="middle" font-family="Pretendard, sans-serif"
+            font-size="13" font-weight="700" fill="var(--false-border, #d93025)">break</text>
+
+      <!-- 반복 박스 -->
+      <rect x="40" y="65" width="240" height="170" rx="8"
+            fill="currentColor" opacity="0.04" stroke="currentColor" stroke-opacity="0.4"
+            stroke-width="1" stroke-dasharray="4 3"/>
+      <text x="60" y="82" font-family="JetBrains Mono, monospace" font-size="9"
+            fill="currentColor" opacity="0.65" font-weight="600">반복 블록</text>
+
+      <rect x="60" y="95" width="200" height="30" rx="4"
+            fill="currentColor" opacity="0.06" stroke="currentColor" stroke-opacity="0.4"/>
+      <text x="160" y="115" text-anchor="middle" font-family="JetBrains Mono, monospace"
+            font-size="11" fill="currentColor">코드 1</text>
+
+      <rect x="60" y="135" width="200" height="30" rx="4"
+            fill="var(--false-border, #d93025)" opacity="0.15" stroke="var(--false-border, #d93025)" stroke-width="1.8"/>
+      <text x="160" y="155" text-anchor="middle" font-family="JetBrains Mono, monospace"
+            font-size="11" font-weight="700" fill="currentColor">break ✗</text>
+
+      <rect x="60" y="175" width="200" height="30" rx="4"
+            fill="currentColor" opacity="0.04" stroke="currentColor" stroke-opacity="0.3"
+            stroke-dasharray="3 2"/>
+      <text x="160" y="195" text-anchor="middle" font-family="JetBrains Mono, monospace"
+            font-size="11" fill="currentColor" opacity="0.4">코드 2 (실행 안 됨)</text>
+
+      <!-- 반복 끝 외부 -->
+      <rect x="60" y="245" width="200" height="20" rx="4"
+            fill="currentColor" opacity="0.06" stroke="currentColor" stroke-opacity="0.5"/>
+      <text x="160" y="259" text-anchor="middle" font-family="JetBrains Mono, monospace"
+            font-size="10" fill="currentColor">반복 다음 코드</text>
+
+      <!-- 화살표: break → 반복 밖으로 -->
+      <path d="M 160 165 Q 270 200, 270 245 Q 270 255, 260 255"
+            fill="none" stroke="var(--false-border, #d93025)" stroke-width="2.5"
+            marker-end="url(#arr-bc)"/>
+
+      <!-- continue 다이어그램 -->
+      <text x="560" y="50" text-anchor="middle" font-family="Pretendard, sans-serif"
+            font-size="13" font-weight="700" fill="var(--accent)">continue</text>
+
+      <rect x="440" y="65" width="240" height="170" rx="8"
+            fill="currentColor" opacity="0.04" stroke="currentColor" stroke-opacity="0.4"
+            stroke-width="1" stroke-dasharray="4 3"/>
+      <text x="460" y="82" font-family="JetBrains Mono, monospace" font-size="9"
+            fill="currentColor" opacity="0.65" font-weight="600">반복 블록</text>
+
+      <rect x="460" y="95" width="200" height="30" rx="4"
+            fill="currentColor" opacity="0.06" stroke="currentColor" stroke-opacity="0.4"/>
+      <text x="560" y="115" text-anchor="middle" font-family="JetBrains Mono, monospace"
+            font-size="11" fill="currentColor">코드 1</text>
+
+      <rect x="460" y="135" width="200" height="30" rx="4"
+            fill="var(--accent)" opacity="0.15" stroke="var(--accent)" stroke-width="1.8"/>
+      <text x="560" y="155" text-anchor="middle" font-family="JetBrains Mono, monospace"
+            font-size="11" font-weight="700" fill="currentColor">continue ↻</text>
+
+      <rect x="460" y="175" width="200" height="30" rx="4"
+            fill="currentColor" opacity="0.04" stroke="currentColor" stroke-opacity="0.3"
+            stroke-dasharray="3 2"/>
+      <text x="560" y="195" text-anchor="middle" font-family="JetBrains Mono, monospace"
+            font-size="11" fill="currentColor" opacity="0.4">코드 2 (이번엔 건너뜀)</text>
+
+      <!-- 화살표: continue → 다시 반복 위로 -->
+      <path d="M 460 150 Q 410 150, 410 105 Q 410 95, 460 95"
+            fill="none" stroke="var(--accent)" stroke-width="2.5"
+            marker-end="url(#arr-bc)"/>
+      <text x="395" y="125" text-anchor="middle" font-family="Pretendard, sans-serif"
+            font-size="9" fill="var(--accent)" font-weight="700">다음 반복으로</text>
+    </svg>
+    <div class="caption">그림 2.7 — break는 반복 밖으로, continue는 반복의 처음으로</div>
+  </div>
+
+  <h3>break — 즉시 빠져나오기</h3>
+
+  <div class="editor-block">
+    <div class="editor-tab-bar">
+      <span class="editor-tab"><span class="py-icon"></span>break_demo.py</span>
+    </div>
+    <textarea class="editor-source"># 1부터 세다가 5에서 멈추기
+for i in range(1, 11):
+    if i == 5:
+        print("5에서 break")
+        break
+    print(i)
+
+print("for 다음 코드")
+</textarea>
+    <div class="run-bar">
+      <span class="left"><span class="file-name">📄 break_demo.py</span></span>
+      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+      <button class="run-btn"><span class="play">▶</span> Run</button>
+    </div>
+  </div>
+  <div class="terminal">
+    <div class="terminal-head">
+      <span class="label">실행 결과</span>
+      <span class="status">대기 중</span>
+    </div>
+    <div class="terminal-body empty"></div>
+  </div>
+
+  <p>
+    1, 2, 3, 4가 출력되고, 5에서는 <code class="inline">break</code>로 빠져나오므로
+    "5에서 break"만 나오고 5는 출력 안 됩니다. 6 이후도 안 돌아갑니다.
+  </p>
+
+  <h3>continue — 이번만 건너뛰기</h3>
+
+  <div class="editor-block">
+    <div class="editor-tab-bar">
+      <span class="editor-tab"><span class="py-icon"></span>continue_demo.py</span>
+    </div>
+    <textarea class="editor-source"># 짝수만 출력
+for i in range(1, 11):
+    if i % 2 == 1:    # 홀수면
+        continue       # 건너뛰고 다음 반복으로
+    print(i)
+</textarea>
+    <div class="run-bar">
+      <span class="left"><span class="file-name">📄 continue_demo.py</span></span>
+      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+      <button class="run-btn"><span class="play">▶</span> Run</button>
+    </div>
+  </div>
+  <div class="terminal">
+    <div class="terminal-head">
+      <span class="label">실행 결과</span>
+      <span class="status">대기 중</span>
+    </div>
+    <div class="terminal-body empty"></div>
+  </div>
+
+  <p>
+    홀수일 때 <code class="inline">continue</code>로 건너뛰니 짝수만 출력됩니다.
+    참고로 <code class="inline">i % 2</code>는 i를 2로 나눈 나머지 — 0이면 짝수, 1이면 홀수입니다.
+  </p>
+
+  <div class="key-points">
+    <div class="title">이 섹션의 핵심</div>
+    <ul>
+      <li><code class="inline">break</code>: 반복 자체를 즉시 끝냄, 반복 다음 코드로.</li>
+      <li><code class="inline">continue</code>: 이번 반복만 건너뛰고 반복의 시작으로.</li>
+      <li>둘 다 if와 함께 — "특정 조건일 때만 영향"이 보통.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ==================== s8: 종합 실습 ==================== -->
+<section class="section" id="s8">
+  <div class="section-num">SECTION 08 · 종합 실습</div>
+  <h2>2주차 종합 실습 — 세 가지 미니 프로그램</h2>
+
+  <p>
+    2주차에서 배운 것들을 모아서 진짜 프로그램 같은 것 세 개를 만들어봅니다.
+    각 코드를 실행하고, 입력값을 바꿔가며 충분히 만져보세요.
+  </p>
+
+  <h3>실습 1 — 숫자 맞추기 게임</h3>
+
+  <p>
+    컴퓨터가 1~50 중 무작위 숫자를 정합니다. 사용자가 시도할 때마다 더 큼/작음 힌트를 줍니다.
+    여기서 <code class="inline">random</code> 모듈을 처음 만납니다 —
+    "다른 사람이 만든 도구"를 가져다 쓰는 첫 경험입니다.
+  </p>
+
+  <div class="callout info">
+    <div class="label">모듈이란?</div>
+    <p>
+      <code class="inline">import random</code>은 "random이라는 도구 묶음을 가져온다"는 뜻입니다.
+      파이썬에는 이렇게 미리 만들어진 도구 묶음(모듈)이 많고,
+      <code class="inline">import</code>로 가져와서 씁니다. 모듈은 4주차에 다시 가볍게 짚습니다.
+    </p>
+  </div>
+
+  <div class="input-stdin">
+    <div class="label">입력값 (미리 적기)</div>
+    <textarea>25
+40
+30
+35
+33</textarea>
+    <div class="hint">시도할 숫자들 — 정답 맞힐 때까지.</div>
+  </div>
+  <div class="editor-block">
+    <div class="editor-tab-bar">
+      <span class="editor-tab"><span class="py-icon"></span>guess_game.py</span>
+    </div>
+    <textarea class="editor-source">import random
+
+# 컴퓨터가 1~50 중 하나 선택
+answer = random.randint(1, 50)
+tries = 0
+
+print("1~50 중 숫자 맞추기 게임")
+print("-" * 30)
+
+while True:
+    guess = int(input("내 추측: "))
+    tries = tries + 1
+
+    if guess == answer:
+        print(f"정답! {tries}번 만에 맞췄어요 🎉")
+        break
+    elif guess &lt; answer:
+        print("  → 더 큰 숫자")
+    else:
+        print("  → 더 작은 숫자")
+</textarea>
+    <div class="run-bar">
+      <span class="left"><span class="file-name">📄 guess_game.py</span></span>
+      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+      <button class="run-btn"><span class="play">▶</span> Run</button>
+    </div>
+  </div>
+  <div class="terminal">
+    <div class="terminal-head">
+      <span class="label">실행 결과</span>
+      <span class="status">대기 중</span>
+    </div>
+    <div class="terminal-body empty"></div>
+  </div>
+
+  <p>
+    실행할 때마다 <code class="inline">answer</code>가 달라지므로 결과가 다릅니다.
+    위 입력칸의 숫자를 다양하게 바꿔보세요. 입력이 부족하면 에러가 날 수 있으니,
+    정답을 못 맞히면 충분히 많이 적어두세요.
+  </p>
+
+  <h3>실습 2 — 로그인 흉내</h3>
+
+  <p>
+    미리 정해둔 ID/비밀번호를 사용자가 맞히는지 검사합니다. 3회 실패하면 잠금.
+    <code class="inline">for</code>와 카운터 패턴을 씁니다.
+  </p>
+
+  <div class="input-stdin">
+    <div class="label">입력값 (미리 적기)</div>
+    <textarea>admin
+wrong1
+admin
+wrong2
+admin
+secret123</textarea>
+    <div class="hint">ID/비밀번호를 번갈아. 여러 번 시도.</div>
+  </div>
+  <div class="editor-block">
+    <div class="editor-tab-bar">
+      <span class="editor-tab"><span class="py-icon"></span>login.py</span>
+    </div>
+    <textarea class="editor-source"># 진짜 ID/PW
+real_id = "admin"
+real_pw = "secret123"
+max_tries = 3
+
+print("로그인 (3회 시도 가능)")
+print("-" * 30)
+
+success = False
+for attempt in range(1, max_tries + 1):
+    print(f"\n[시도 {attempt}/{max_tries}]")
+    user_id = input("ID: ")
+    user_pw = input("비밀번호: ")
+
+    if user_id == real_id and user_pw == real_pw:
+        print("로그인 성공!")
+        success = True
+        break
+    else:
+        remaining = max_tries - attempt
+        if remaining &gt; 0:
+            print(f"틀렸습니다. 남은 시도: {remaining}회")
+        else:
+            print("계정이 잠겼습니다.")
+
+if success:
+    print("환영합니다!")
+</textarea>
+    <div class="run-bar">
+      <span class="left"><span class="file-name">📄 login.py</span></span>
+      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+      <button class="run-btn"><span class="play">▶</span> Run</button>
+    </div>
+  </div>
+  <div class="terminal">
+    <div class="terminal-head">
+      <span class="label">실행 결과</span>
+      <span class="status">대기 중</span>
+    </div>
+    <div class="terminal-body empty"></div>
+  </div>
+
+  <h3>실습 3 — 온도 변환기 (반복)</h3>
+
+  <p>
+    섭씨를 화씨로 변환합니다. 사용자가 'q'를 입력할 때까지 반복해서 받습니다.
+    <code class="inline">while True</code> + <code class="inline">break</code> 패턴의 전형이에요.
+  </p>
+
+  <div class="input-stdin">
+    <div class="label">입력값 (미리 적기)</div>
+    <textarea>0
+36.5
+100
+-10
+q</textarea>
+    <div class="hint">섭씨 온도 여러 개 + q로 종료.</div>
+  </div>
+  <div class="editor-block">
+    <div class="editor-tab-bar">
+      <span class="editor-tab"><span class="py-icon"></span>temperature.py</span>
+    </div>
+    <textarea class="editor-source">print("섭씨 → 화씨 변환기")
+print("종료하려면 q 입력")
+print("-" * 30)
+
+while True:
+    user_input = input("\n섭씨 온도: ")
+
+    if user_input == "q":
+        print("종료합니다.")
+        break
+
+    celsius = float(user_input)
+    fahrenheit = celsius * 9 / 5 + 32
+
+    if celsius &gt;= 35:
+        comment = "매우 더움"
+    elif celsius &gt;= 20:
+        comment = "쾌적함"
+    elif celsius &gt;= 0:
+        comment = "쌀쌀함"
+    else:
+        comment = "추움"
+
+    print(f"  {celsius}°C = {fahrenheit:.1f}°F ({comment})")
+</textarea>
+    <div class="run-bar">
+      <span class="left"><span class="file-name">📄 temperature.py</span></span>
+      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+      <button class="run-btn"><span class="play">▶</span> Run</button>
+    </div>
+  </div>
+  <div class="terminal">
+    <div class="terminal-head">
+      <span class="label">실행 결과</span>
+      <span class="status">대기 중</span>
+    </div>
+    <div class="terminal-body empty"></div>
+  </div>
+
+  <p>
+    이 코드는 2주차에서 배운 거의 모든 것이 들어 있습니다 —
+    <code class="inline">while True</code>, <code class="inline">input()</code>, 형변환,
+    <code class="inline">if/elif/else</code>, 비교, f-string, <code class="inline">break</code>.
+    한 번 천천히 따라 읽으면서 어디에 어떤 문법이 쓰였는지 짚어보세요.
+  </p>
+
+  <h3>2주차 마무리</h3>
+
+  <p>
+    축하합니다! 2주차도 완주하셨습니다. 정리해보면:
+  </p>
+
+  <div class="key-points">
+    <div class="title">2주차에서 익힌 것</div>
+    <ul>
+      <li><code class="inline">input()</code>으로 사용자에게 입력받기 — 결과는 항상 문자열</li>
+      <li><code class="inline">int()</code>, <code class="inline">float()</code>, <code class="inline">str()</code>로 형 변환 — 새 객체 생성</li>
+      <li>비교 연산자 (<code class="inline">==</code>, <code class="inline">!=</code>, <code class="inline">&lt;</code>, <code class="inline">&gt;</code>...)와 결과 bool</li>
+      <li>논리 연산자 <code class="inline">and</code>, <code class="inline">or</code>, <code class="inline">not</code></li>
+      <li><code class="inline">if</code>/<code class="inline">elif</code>/<code class="inline">else</code> — 조건 분기, 들여쓰기 블록</li>
+      <li><code class="inline">for</code>와 <code class="inline">range</code> — 정해진 횟수 반복, stop 미포함</li>
+      <li><code class="inline">while</code> — 조건 반복, 무한 루프 주의</li>
+      <li><code class="inline">break</code>(반복 종료) / <code class="inline">continue</code>(이번만 건너뜀)</li>
+      <li>i 이름표가 매 반복마다 새 객체로 옮겨감 (1주차 모델 일관)</li>
+    </ul>
+  </div>
+
+  <p>
+    3주차에서는 여러 값을 묶는 <strong>리스트, 튜플, 딕셔너리</strong>와 직접 만드는
+    <strong>함수(def)</strong>를 다룹니다.
   </p>
 </section>
+
+<!-- 시뮬레이터 iframe 다크모드 동기화 -->
+<script>
+(function() {
+  function notifyTheme() {
+    const theme = document.documentElement.getAttribute('data-theme') || 'light';
+    document.querySelectorAll('iframe').forEach(function(f) {
+      try { f.contentWindow.postMessage({ theme: theme }, '*'); } catch(e) {}
+    });
+  }
+  const obs = new MutationObserver(notifyTheme);
+  obs.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  document.querySelectorAll('iframe').forEach(function(f) {
+    f.addEventListener('load', notifyTheme);
+  });
+  setTimeout(notifyTheme, 200);
+})();
+</script>

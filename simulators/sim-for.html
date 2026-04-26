@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>시뮬레이터 — for 반복</title>
+<style>
+:root {
+  --bg: #ffffff;
+  --bg-soft: #f7f7f5;
+  --bg-card: #fcfcfa;
+  --border: #e5e5e0;
+  --text: #1a1a1a;
+  --text-soft: #4a4a4a;
+  --text-mute: #888880;
+  --accent: #c1440e;
+  --accent-soft: #f5e8e0;
+  --heap-bg: #eaf3fb;
+  --heap-border: #3b6ea8;
+  --heap-text: #1e5a8e;
+  --names-bg: #fef3e8;
+  --names-border: #d97706;
+  --names-text: #7a3a10;
+  --code-bg: #2b2b2b;
+  --code-text: #a9b7c6;
+  --code-keyword: #cc7832;
+  --code-number: #6897bb;
+  --code-string: #6a8759;
+  --code-comment: #808080;
+  --code-builtin: #ffc66d;
+}
+[data-theme="dark"] {
+  --bg: #1a1a1a;
+  --bg-soft: #232320;
+  --bg-card: #252522;
+  --border: #3a3a35;
+  --text: #ececec;
+  --text-soft: #c4c4c0;
+  --text-mute: #888880;
+  --accent: #e07a4f;
+  --accent-soft: #3a2a22;
+  --heap-bg: #1f3650;
+  --heap-border: #5b8fc5;
+  --heap-text: #92c5f0;
+  --names-bg: #3a2a18;
+  --names-border: #d97706;
+  --names-text: #f4b070;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  padding: 24px;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  line-height: 1.6;
+}
+.sim-wrapper {
+  max-width: 920px;
+  margin: 0 auto;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.sim-head { padding: 20px 28px; border-bottom: 2px solid var(--accent); }
+.sim-head h2 { margin: 0 0 4px; font-size: 18px; font-weight: 700; }
+.sim-head .desc { margin: 0; color: var(--text-soft); font-size: 13px; }
+.sim-body {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+}
+@media (max-width: 720px) { .sim-body { grid-template-columns: 1fr; } }
+
+.code-pane {
+  background: var(--code-bg);
+  padding: 20px 24px;
+  font-family: 'JetBrains Mono', 'D2Coding', 'Consolas', monospace;
+  font-size: 14px;
+  line-height: 1.9;
+  color: var(--code-text);
+}
+.code-line {
+  display: block;
+  padding: 2px 8px;
+  border-radius: 3px;
+  transition: background 0.3s, opacity 0.3s;
+  opacity: 0.4;
+}
+.code-line.active {
+  background: rgba(255, 198, 109, 0.15);
+  opacity: 1;
+  border-left: 3px solid #ffc66d;
+  margin-left: -3px;
+}
+.code-line.done { opacity: 0.65; }
+.tk-kw { color: var(--code-keyword); font-weight: bold; }
+.tk-num { color: var(--code-number); }
+.tk-str { color: var(--code-string); }
+.tk-com { color: var(--code-comment); font-style: italic; }
+.tk-fn { color: var(--code-builtin); }
+
+.canvas-pane {
+  background: var(--bg-soft);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 380px;
+}
+.canvas-pane svg { width: 100%; height: auto; max-height: 420px; }
+
+.explain {
+  padding: 18px 28px;
+  border-top: 1px solid var(--border);
+  background: var(--bg);
+  min-height: 84px;
+}
+.explain .step-num {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  color: var(--accent);
+  font-weight: 700;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+}
+.explain .step-title { font-size: 15px; font-weight: 600; margin: 0 0 6px; }
+.explain .step-text {
+  font-size: 13.5px;
+  color: var(--text-soft);
+  margin: 0;
+  line-height: 1.65;
+}
+
+.controls {
+  padding: 14px 24px 18px;
+  background: var(--bg-card);
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.btn {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 7px 14px;
+  font-family: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  color: var(--text);
+  transition: all 0.15s;
+  font-weight: 500;
+}
+.btn:hover { background: var(--bg-soft); border-color: var(--accent); }
+.btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.btn-primary { background: var(--accent); color: white; border-color: var(--accent); }
+.btn-icon { width: 36px; padding: 7px 0; text-align: center; }
+
+.dots { display: flex; gap: 5px; margin-left: auto; }
+.dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--border);
+  transition: background 0.2s, transform 0.2s;
+}
+.dot.active { background: var(--accent); transform: scale(1.4); }
+.dot.done { background: var(--text-mute); }
+.kbd-hint {
+  font-size: 11px;
+  color: var(--text-mute);
+  font-family: 'JetBrains Mono', monospace;
+}
+@media (max-width: 720px) { .kbd-hint { display: none; } }
+</style>
+</head>
+<body>
+
+<div class="sim-wrapper">
+  <div class="sim-head">
+    <h2>for 반복 — i 이름표가 매번 다른 객체로 옮겨감</h2>
+    <p class="desc">range(3)이 만든 0, 1, 2 객체에 i 이름표가 차례로 옮겨가며 print가 호출됩니다.</p>
+  </div>
+
+  <div class="sim-body">
+    <div class="code-pane">
+      <span class="code-line" data-line="0"><span class="tk-com"># i 이름표가 0, 1, 2를 차례로 가리킴</span></span>
+      <span class="code-line" data-line="1"><span class="tk-kw">for</span> i <span class="tk-kw">in</span> <span class="tk-fn">range</span>(<span class="tk-num">3</span>)<span class="tk-kw">:</span></span>
+      <span class="code-line" data-line="2">    <span class="tk-fn">print</span>(i)</span>
+    </div>
+
+    <div class="canvas-pane">
+      <svg id="loop-svg" viewBox="0 0 540 420" xmlns="http://www.w3.org/2000/svg">
+        <!-- 정적 라벨 -->
+        <text x="100" y="22" text-anchor="middle" font-family="Pretendard, sans-serif"
+              font-size="11" font-weight="700" fill="currentColor" letter-spacing="2"
+              opacity="0.85">VARIABLES</text>
+        <text x="100" y="38" text-anchor="middle" font-family="Pretendard, sans-serif"
+              font-size="10" fill="currentColor" opacity="0.6">변수 (이름표)</text>
+        <rect x="20" y="50" width="160" height="350" rx="8"
+              fill="var(--names-bg)" stroke="var(--names-border)" stroke-width="1.5"
+              stroke-dasharray="4 3" opacity="0.5"/>
+
+        <text x="370" y="22" text-anchor="middle" font-family="Pretendard, sans-serif"
+              font-size="11" font-weight="700" fill="currentColor" letter-spacing="2"
+              opacity="0.85">OBJECTS (HEAP)</text>
+        <text x="370" y="38" text-anchor="middle" font-family="Pretendard, sans-serif"
+              font-size="10" fill="currentColor" opacity="0.6">range가 만든 객체들</text>
+        <rect x="220" y="50" width="300" height="350" rx="8"
+              fill="var(--heap-bg)" stroke="var(--heap-border)" stroke-width="1.5"
+              stroke-dasharray="4 3" opacity="0.45"/>
+
+        <g id="dynamic"></g>
+      </svg>
+    </div>
+  </div>
+
+  <div class="explain">
+    <div class="step-num" id="step-num">STEP 1 / 8</div>
+    <div class="step-title" id="step-title">시작</div>
+    <p class="step-text" id="step-text">아직 반복이 시작되지 않았습니다.</p>
+  </div>
+
+  <div class="controls">
+    <button class="btn btn-icon" id="btn-restart" title="처음부터">⟲</button>
+    <button class="btn btn-icon" id="btn-prev" title="이전">←</button>
+    <button class="btn btn-primary" id="btn-next">다음 →</button>
+    <button class="btn" id="btn-auto">▶ 자동재생</button>
+    <span class="kbd-hint">← / → / R</span>
+    <div class="dots" id="dots"></div>
+  </div>
+</div>
+
+<script>
+(function() {
+  'use strict';
+  const SVG_NS = 'http://www.w3.org/2000/svg';
+  const dynamic = document.getElementById('dynamic');
+
+  function el(tag, attrs, children) {
+    const e = document.createElementNS(SVG_NS, tag);
+    if (attrs) Object.keys(attrs).forEach(k => e.setAttribute(k, attrs[k]));
+    if (children) (Array.isArray(children) ? children : [children]).forEach(c => {
+      if (typeof c === 'string') e.appendChild(document.createTextNode(c));
+      else if (c) e.appendChild(c);
+    });
+    return e;
+  }
+
+  function drawObject(opts) {
+    const g = el('g', { transform: `translate(${opts.x}, ${opts.y})` });
+    const isActive = opts.active;
+    g.appendChild(el('rect', {
+      x: 0, y: 0, width: 90, height: 60, rx: 6,
+      fill: isActive ? 'var(--accent)' : 'var(--bg)',
+      'fill-opacity': isActive ? 0.15 : 1,
+      stroke: isActive ? 'var(--accent)' : 'var(--heap-border)',
+      'stroke-width': isActive ? 2.5 : 1.5
+    }));
+    g.appendChild(el('text', {
+      x: 6, y: 14,
+      'font-family': 'JetBrains Mono, monospace', 'font-size': 9,
+      fill: 'var(--heap-text)', 'font-weight': 600
+    }, 'int'));
+    g.appendChild(el('text', {
+      x: 45, y: 40, 'text-anchor': 'middle',
+      'font-family': 'JetBrains Mono, monospace', 'font-size': 22,
+      'font-weight': 700, fill: 'currentColor'
+    }, String(opts.value)));
+    return g;
+  }
+
+  function drawNameTag(opts) {
+    const g = el('g', { transform: `translate(${opts.x}, ${opts.y})` });
+    g.appendChild(el('path', {
+      d: 'M 0,12 L 10,0 L 80,0 L 80,24 L 10,24 Z',
+      fill: 'var(--names-bg)',
+      stroke: 'var(--names-border)', 'stroke-width': 1.5
+    }));
+    g.appendChild(el('text', {
+      x: 45, y: 17, 'text-anchor': 'middle',
+      'font-family': 'JetBrains Mono, monospace', 'font-size': 14,
+      'font-weight': 700, fill: 'var(--names-text)'
+    }, opts.name));
+    return g;
+  }
+
+  let arrowCounter = 0;
+  function drawArrow(opts) {
+    const g = el('g');
+    const color = opts.color || 'var(--accent)';
+    const markerId = 'arr-loop-' + (++arrowCounter);
+    const defs = el('defs');
+    defs.appendChild(el('marker', {
+      id: markerId, viewBox: '0 0 10 10', refX: 9, refY: 5,
+      markerWidth: 6, markerHeight: 6, orient: 'auto'
+    }, [el('path', { d: 'M0,0 L10,5 L0,10 z', fill: color })]));
+    g.appendChild(defs);
+    const cx = (opts.fromX + opts.toX) / 2;
+    g.appendChild(el('path', {
+      d: `M ${opts.fromX} ${opts.fromY} Q ${cx} ${opts.fromY}, ${opts.toX} ${opts.toY}`,
+      fill: 'none', stroke: color, 'stroke-width': 2.5,
+      'marker-end': `url(#${markerId})`
+    }));
+    return g;
+  }
+
+  // 출력 누적 (화면 출력 박스)
+  function drawOutputBox(opts) {
+    const g = el('g');
+    const lines = opts.lines || [];
+    const x = 240, y = 280;
+    const lineHeight = 22;
+    const boxH = lines.length * lineHeight + 16;
+    g.appendChild(el('rect', {
+      x: x, y: y, width: 260, height: boxH, rx: 4,
+      fill: '#2b2b2b', stroke: '#4ec9b0', 'stroke-width': 1
+    }));
+    g.appendChild(el('text', {
+      x: x + 8, y: y - 6,
+      'font-family': 'Pretendard, sans-serif', 'font-size': 10,
+      fill: 'currentColor', opacity: 0.6
+    }, '화면 출력 ↓'));
+    lines.forEach((line, i) => {
+      g.appendChild(el('text', {
+        x: x + 12, y: y + 18 + i * lineHeight,
+        'font-family': 'JetBrains Mono, monospace', 'font-size': 14,
+        fill: '#d4d4d4'
+      }, line));
+    });
+    return g;
+  }
+
+  // 항상 보일 객체 3개 (range가 만든 0, 1, 2)
+  function drawHeapObjects(activeIdx) {
+    const arr = [];
+    arr.push(drawObject({ x: 250, y: 80, value: 0, active: activeIdx === 0 }));
+    arr.push(drawObject({ x: 350, y: 80, value: 1, active: activeIdx === 1 }));
+    arr.push(drawObject({ x: 450, y: 80, value: 2, active: activeIdx === 2 }));
+    return arr;
+  }
+
+  // ============== 단계 정의 ==============
+  // 단계: 시작 → range가 객체 만듦 → iter 1 시작 → print → iter 2 → print → iter 3 → print → 끝
+  const STEPS = [
+    {
+      line: 1,
+      title: '1단계 — range(3)가 객체들을 준비',
+      text: 'range(3)이 0, 1, 2 세 정수 객체를 차례로 내놓을 준비를 합니다. (실제로는 range가 객체를 미리 다 만들지 않고 필요할 때 하나씩 주지만, 이해를 위해 미리 보여둡니다.)',
+      activeIdx: -1, iName: false, output: []
+    },
+    {
+      line: 1,
+      title: '2단계 — i 이름표가 첫 번째 0을 가리킴',
+      text: 'for의 첫 반복이 시작됩니다. i 이름표가 만들어져 0 객체를 가리킵니다.',
+      activeIdx: 0, iName: 0, output: []
+    },
+    {
+      line: 2,
+      title: '3단계 — print(i) 실행 → 0 출력',
+      text: '들여쓰인 print(i)가 실행됩니다. i가 가리키는 객체의 값(0)이 화면에 출력됩니다.',
+      activeIdx: 0, iName: 0, output: ['0']
+    },
+    {
+      line: 1,
+      title: '4단계 — i 이름표가 1로 옮겨감',
+      text: 'for의 두 번째 반복. i 이름표가 0 객체에서 떨어져 1 객체로 옮겨갑니다. 0 객체는 그대로 있습니다.',
+      activeIdx: 1, iName: 1, output: ['0']
+    },
+    {
+      line: 2,
+      title: '5단계 — print(i) 실행 → 1 출력',
+      text: '다시 print(i)가 실행됩니다. 이제 i가 가리키는 1이 출력됩니다.',
+      activeIdx: 1, iName: 1, output: ['0', '1']
+    },
+    {
+      line: 1,
+      title: '6단계 — i 이름표가 2로 옮겨감',
+      text: '세 번째 반복. i가 2 객체로 옮겨갑니다.',
+      activeIdx: 2, iName: 2, output: ['0', '1']
+    },
+    {
+      line: 2,
+      title: '7단계 — print(i) 실행 → 2 출력',
+      text: '마지막 print 실행.',
+      activeIdx: 2, iName: 2, output: ['0', '1', '2']
+    },
+    {
+      line: -1,
+      title: '8단계 — 반복 종료',
+      text: 'range가 더 줄 객체가 없으니 for 루프가 끝납니다. i 이름표는 마지막 값(2)에 그대로 머물러 있습니다.',
+      activeIdx: 2, iName: 2, output: ['0', '1', '2'], done: true
+    }
+  ];
+
+  let currentStep = 0;
+  let autoTimer = null;
+
+  const dotsEl = document.getElementById('dots');
+  STEPS.forEach(() => {
+    const d = document.createElement('div');
+    d.className = 'dot';
+    dotsEl.appendChild(d);
+  });
+
+  function render() {
+    while (dynamic.firstChild) dynamic.removeChild(dynamic.firstChild);
+    arrowCounter = 0;
+    const step = STEPS[currentStep];
+
+    // 객체들
+    drawHeapObjects(step.activeIdx).forEach(o => dynamic.appendChild(o));
+
+    // i 이름표
+    if (step.iName !== false && step.iName !== undefined) {
+      dynamic.appendChild(drawNameTag({ x: 60, y: 120, name: 'i' }));
+      // 화살표
+      const targetX = 250 + step.iName * 100;
+      dynamic.appendChild(drawArrow({
+        fromX: 145, fromY: 132, toX: targetX, toY: 110,
+        color: 'var(--accent)'
+      }));
+    }
+
+    // 반복 카운터 (좌측 하단)
+    if (step.activeIdx >= 0 && !step.done) {
+      const counterText = `반복 ${step.activeIdx + 1} / 3`;
+      dynamic.appendChild(el('text', {
+        x: 100, y: 270, 'text-anchor': 'middle',
+        'font-family': 'JetBrains Mono, monospace', 'font-size': 11,
+        'font-weight': 700, fill: 'var(--accent)'
+      }, counterText));
+    } else if (step.done) {
+      dynamic.appendChild(el('text', {
+        x: 100, y: 270, 'text-anchor': 'middle',
+        'font-family': 'JetBrains Mono, monospace', 'font-size': 11,
+        'font-weight': 700, fill: 'var(--accent)'
+      }, '✓ 종료'));
+    }
+
+    // 출력
+    if (step.output.length > 0) {
+      dynamic.appendChild(drawOutputBox({ lines: step.output }));
+    }
+
+    // 코드 라인 활성화
+    document.querySelectorAll('.code-line').forEach((el, i) => {
+      el.classList.remove('active', 'done');
+      if (i === step.line) el.classList.add('active');
+    });
+
+    // 컨트롤
+    document.getElementById('step-num').textContent = `STEP ${currentStep + 1} / ${STEPS.length}`;
+    document.getElementById('step-title').textContent = step.title;
+    document.getElementById('step-text').textContent = step.text;
+    document.querySelectorAll('.dot').forEach((d, i) => {
+      d.classList.remove('active', 'done');
+      if (i === currentStep) d.classList.add('active');
+      else if (i < currentStep) d.classList.add('done');
+    });
+    document.getElementById('btn-prev').disabled = currentStep === 0;
+    const nextBtn = document.getElementById('btn-next');
+    if (currentStep === STEPS.length - 1) {
+      nextBtn.textContent = '완료';
+      nextBtn.disabled = true;
+    } else {
+      nextBtn.textContent = '다음 →';
+      nextBtn.disabled = false;
+    }
+  }
+
+  function next() { if (currentStep < STEPS.length - 1) { currentStep++; render(); } }
+  function prev() { if (currentStep > 0) { currentStep--; render(); } }
+  function restart() { stopAuto(); currentStep = 0; render(); }
+  function startAuto() {
+    if (autoTimer) return;
+    document.getElementById('btn-auto').textContent = '⏸ 일시정지';
+    autoTimer = setInterval(() => {
+      if (currentStep < STEPS.length - 1) next();
+      else stopAuto();
+    }, 1800);
+  }
+  function stopAuto() {
+    if (autoTimer) {
+      clearInterval(autoTimer);
+      autoTimer = null;
+      document.getElementById('btn-auto').textContent = '▶ 자동재생';
+    }
+  }
+
+  document.getElementById('btn-next').addEventListener('click', () => { stopAuto(); next(); });
+  document.getElementById('btn-prev').addEventListener('click', () => { stopAuto(); prev(); });
+  document.getElementById('btn-restart').addEventListener('click', restart);
+  document.getElementById('btn-auto').addEventListener('click', () => {
+    if (autoTimer) stopAuto(); else startAuto();
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight') { stopAuto(); next(); e.preventDefault(); }
+    else if (e.key === 'ArrowLeft') { stopAuto(); prev(); e.preventDefault(); }
+    else if (e.key === 'r' || e.key === 'R') { restart(); e.preventDefault(); }
+  });
+
+  function syncTheme() {
+    try {
+      const parentTheme = window.parent && window.parent.document &&
+                          window.parent.document.documentElement.getAttribute('data-theme');
+      if (parentTheme) document.documentElement.setAttribute('data-theme', parentTheme);
+    } catch (e) {
+      if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    }
+  }
+  syncTheme();
+  window.addEventListener('message', (e) => {
+    if (e.data && e.data.theme) {
+      document.documentElement.setAttribute('data-theme', e.data.theme);
+    }
+  });
+
+  render();
+})();
+</script>
+
+</body>
+</html>

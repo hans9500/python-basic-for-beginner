@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>시뮬레이터 — if 분기</title>
+<style>
+:root {
+  --bg: #ffffff;
+  --bg-soft: #f7f7f5;
+  --bg-card: #fcfcfa;
+  --border: #e5e5e0;
+  --text: #1a1a1a;
+  --text-soft: #4a4a4a;
+  --text-mute: #888880;
+  --accent: #c1440e;
+  --accent-soft: #f5e8e0;
+  --true-bg: #e6f4ea;
+  --true-border: #34a853;
+  --true-text: #137333;
+  --false-bg: #fce8e6;
+  --false-border: #d93025;
+  --false-text: #b3261e;
+  --code-bg: #2b2b2b;
+  --code-text: #a9b7c6;
+  --code-keyword: #cc7832;
+  --code-number: #6897bb;
+  --code-string: #6a8759;
+  --code-comment: #808080;
+  --code-builtin: #ffc66d;
+}
+[data-theme="dark"] {
+  --bg: #1a1a1a;
+  --bg-soft: #232320;
+  --bg-card: #252522;
+  --border: #3a3a35;
+  --text: #ececec;
+  --text-soft: #c4c4c0;
+  --text-mute: #888880;
+  --accent: #e07a4f;
+  --accent-soft: #3a2a22;
+  --true-bg: #1a3a25;
+  --true-border: #5cb87a;
+  --true-text: #8de3a5;
+  --false-bg: #3a1f1c;
+  --false-border: #f48771;
+  --false-text: #f8a99a;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  padding: 24px;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  line-height: 1.6;
+}
+.sim-wrapper {
+  max-width: 920px;
+  margin: 0 auto;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.sim-head { padding: 20px 28px; border-bottom: 2px solid var(--accent); }
+.sim-head h2 { margin: 0 0 4px; font-size: 18px; font-weight: 700; }
+.sim-head .desc { margin: 0; color: var(--text-soft); font-size: 13px; }
+.sim-body {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+}
+@media (max-width: 720px) { .sim-body { grid-template-columns: 1fr; } }
+
+.code-pane {
+  background: var(--code-bg);
+  padding: 20px 24px;
+  font-family: 'JetBrains Mono', 'D2Coding', 'Consolas', monospace;
+  font-size: 14px;
+  line-height: 1.9;
+  color: var(--code-text);
+}
+.code-line {
+  display: block;
+  padding: 2px 8px;
+  border-radius: 3px;
+  transition: background 0.3s, opacity 0.3s;
+  opacity: 0.4;
+}
+.code-line.active {
+  background: rgba(255, 198, 109, 0.15);
+  opacity: 1;
+  border-left: 3px solid #ffc66d;
+  margin-left: -3px;
+}
+.code-line.taken { opacity: 1; }
+.code-line.skipped {
+  opacity: 0.25;
+  text-decoration: line-through;
+  text-decoration-color: rgba(244, 135, 113, 0.5);
+}
+.tk-kw { color: var(--code-keyword); font-weight: bold; }
+.tk-num { color: var(--code-number); }
+.tk-str { color: var(--code-string); }
+.tk-com { color: var(--code-comment); font-style: italic; }
+.tk-fn { color: var(--code-builtin); }
+
+.canvas-pane {
+  background: var(--bg-soft);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 380px;
+}
+.canvas-pane svg { width: 100%; height: auto; max-height: 400px; }
+
+.explain {
+  padding: 18px 28px;
+  border-top: 1px solid var(--border);
+  background: var(--bg);
+  min-height: 84px;
+}
+.explain .step-num {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  color: var(--accent);
+  font-weight: 700;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+}
+.explain .step-title { font-size: 15px; font-weight: 600; margin: 0 0 6px; }
+.explain .step-text {
+  font-size: 13.5px;
+  color: var(--text-soft);
+  margin: 0;
+  line-height: 1.65;
+}
+
+.controls {
+  padding: 14px 24px 18px;
+  background: var(--bg-card);
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.btn {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 7px 14px;
+  font-family: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  color: var(--text);
+  transition: all 0.15s;
+  font-weight: 500;
+}
+.btn:hover { background: var(--bg-soft); border-color: var(--accent); }
+.btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.btn-primary { background: var(--accent); color: white; border-color: var(--accent); }
+.btn-icon { width: 36px; padding: 7px 0; text-align: center; }
+
+.score-control {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 24px;
+  background: var(--bg-soft);
+  border-bottom: 1px solid var(--border);
+}
+.score-control label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-soft);
+}
+.score-control input[type=range] {
+  flex: 1;
+  accent-color: var(--accent);
+}
+.score-control .score-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--accent);
+  min-width: 36px;
+  text-align: right;
+}
+
+.dots { display: flex; gap: 5px; margin-left: auto; }
+.dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--border);
+  transition: background 0.2s, transform 0.2s;
+}
+.dot.active { background: var(--accent); transform: scale(1.4); }
+.dot.done { background: var(--text-mute); }
+.kbd-hint {
+  font-size: 11px;
+  color: var(--text-mute);
+  font-family: 'JetBrains Mono', monospace;
+}
+@media (max-width: 720px) { .kbd-hint { display: none; } }
+</style>
+</head>
+<body>
+
+<div class="sim-wrapper">
+  <div class="sim-head">
+    <h2>if 분기 — score 값에 따라 어디로 갈까?</h2>
+    <p class="desc">조건이 True인 가지로만 흐름이 들어갑니다. score 값을 바꿔가며 단계별로 따라가보세요.</p>
+  </div>
+
+  <!-- score 슬라이더 -->
+  <div class="score-control">
+    <label for="score-slider">score:</label>
+    <input type="range" id="score-slider" min="0" max="100" value="75">
+    <span class="score-value" id="score-value">75</span>
+  </div>
+
+  <div class="sim-body">
+    <div class="code-pane">
+      <span class="code-line" data-line="0"><span class="tk-kw">if</span> score <span class="tk-kw">&gt;=</span> <span class="tk-num">90</span><span class="tk-kw">:</span></span>
+      <span class="code-line" data-line="1">    <span class="tk-fn">print</span>(<span class="tk-str">"A 등급"</span>)</span>
+      <span class="code-line" data-line="2"><span class="tk-kw">elif</span> score <span class="tk-kw">&gt;=</span> <span class="tk-num">60</span><span class="tk-kw">:</span></span>
+      <span class="code-line" data-line="3">    <span class="tk-fn">print</span>(<span class="tk-str">"합격"</span>)</span>
+      <span class="code-line" data-line="4"><span class="tk-kw">else</span><span class="tk-kw">:</span></span>
+      <span class="code-line" data-line="5">    <span class="tk-fn">print</span>(<span class="tk-str">"불합격"</span>)</span>
+    </div>
+
+    <div class="canvas-pane">
+      <svg id="flow-svg" viewBox="0 0 540 400" xmlns="http://www.w3.org/2000/svg">
+        <g id="dynamic"></g>
+      </svg>
+    </div>
+  </div>
+
+  <div class="explain">
+    <div class="step-num" id="step-num">STEP 1 / 4</div>
+    <div class="step-title" id="step-title">시작</div>
+    <p class="step-text" id="step-text">score를 위 슬라이더로 정하고 next를 눌러 흐름을 따라가세요.</p>
+  </div>
+
+  <div class="controls">
+    <button class="btn btn-icon" id="btn-restart" title="처음부터">⟲</button>
+    <button class="btn btn-icon" id="btn-prev" title="이전">←</button>
+    <button class="btn btn-primary" id="btn-next">다음 →</button>
+    <span class="kbd-hint">← / → / R</span>
+    <div class="dots" id="dots"></div>
+  </div>
+</div>
+
+<script>
+(function() {
+  'use strict';
+  const SVG_NS = 'http://www.w3.org/2000/svg';
+  const dynamic = document.getElementById('dynamic');
+
+  function el(tag, attrs, children) {
+    const e = document.createElementNS(SVG_NS, tag);
+    if (attrs) Object.keys(attrs).forEach(k => e.setAttribute(k, attrs[k]));
+    if (children) (Array.isArray(children) ? children : [children]).forEach(c => {
+      if (typeof c === 'string') e.appendChild(document.createTextNode(c));
+      else if (c) e.appendChild(c);
+    });
+    return e;
+  }
+
+  let arrowCounter = 0;
+  function drawArrow(opts) {
+    const g = el('g');
+    const color = opts.color || 'currentColor';
+    const markerId = 'arr-if-' + (++arrowCounter);
+    const defs = el('defs');
+    defs.appendChild(el('marker', {
+      id: markerId, viewBox: '0 0 10 10', refX: 9, refY: 5,
+      markerWidth: 6, markerHeight: 6, orient: 'auto'
+    }, [el('path', { d: 'M0,0 L10,5 L0,10 z', fill: color })]));
+    g.appendChild(defs);
+    const dash = opts.dash ? `stroke-dasharray="5 4"` : '';
+    g.appendChild(el('path', {
+      d: opts.path,
+      fill: 'none', stroke: color, 'stroke-width': opts.width || 2,
+      'marker-end': `url(#${markerId})`,
+      'stroke-dasharray': opts.dash ? '5 4' : 'none',
+      opacity: opts.opacity || 1
+    }));
+    return g;
+  }
+
+  // 조건 박스 (마름모)
+  function drawCond(opts) {
+    const g = el('g', { transform: `translate(${opts.x}, ${opts.y})` });
+    const w = opts.w || 200;
+    const h = opts.h || 50;
+    const result = opts.result; // true / false / null (미평가)
+    let strokeColor = 'currentColor';
+    let fillColor = 'currentColor';
+    let opacity = 0.06;
+    if (result === true) {
+      strokeColor = 'var(--true-border)';
+      fillColor = 'var(--true-bg)';
+      opacity = 0.6;
+    } else if (result === false) {
+      strokeColor = 'var(--false-border)';
+      fillColor = 'var(--false-bg)';
+      opacity = 0.5;
+    }
+    g.appendChild(el('rect', {
+      x: 0, y: 0, width: w, height: h, rx: 6,
+      fill: fillColor, stroke: strokeColor, 'stroke-width': result !== null ? 2 : 1.5,
+      opacity: result !== null ? opacity : 0.06
+    }));
+    g.appendChild(el('text', {
+      x: w / 2, y: 22, 'text-anchor': 'middle',
+      'font-family': 'JetBrains Mono, monospace', 'font-size': 13,
+      'font-weight': 600, fill: 'currentColor'
+    }, opts.text));
+    if (opts.subtext) {
+      g.appendChild(el('text', {
+        x: w / 2, y: 40, 'text-anchor': 'middle',
+        'font-family': 'JetBrains Mono, monospace', 'font-size': 12,
+        'font-weight': 700,
+        fill: result === true ? 'var(--true-text)' : (result === false ? 'var(--false-text)' : 'currentColor'),
+        opacity: 0.95
+      }, opts.subtext));
+    }
+    return g;
+  }
+
+  // 실행 박스 (사각)
+  function drawExec(opts) {
+    const g = el('g', { transform: `translate(${opts.x}, ${opts.y})` });
+    const w = opts.w || 160;
+    const taken = opts.taken; // true: 실행됨 / false: 건너뜀 / null: 미평가
+    let stroke = 'currentColor';
+    let fill = 'currentColor';
+    let opacity = 0.06;
+    if (taken === true) {
+      stroke = 'var(--accent)';
+      fill = 'var(--accent)';
+      opacity = 0.15;
+    } else if (taken === false) {
+      stroke = 'currentColor';
+      opacity = 0.04;
+    }
+    g.appendChild(el('rect', {
+      x: 0, y: 0, width: w, height: 40, rx: 6,
+      fill: fill, stroke: stroke,
+      'stroke-width': taken === true ? 2 : 1.2,
+      opacity: opacity,
+      'stroke-dasharray': taken === false ? '4 3' : 'none'
+    }));
+    g.appendChild(el('text', {
+      x: w / 2, y: 25, 'text-anchor': 'middle',
+      'font-family': 'JetBrains Mono, monospace', 'font-size': 13,
+      'font-weight': taken === true ? 700 : 500,
+      fill: taken === false ? 'currentColor' : (taken === true ? 'var(--accent)' : 'currentColor'),
+      opacity: taken === false ? 0.4 : 1
+    }, opts.text));
+    return g;
+  }
+
+  // 시작 / 끝 동그란 박스
+  function drawTerm(opts) {
+    const g = el('g', { transform: `translate(${opts.x}, ${opts.y})` });
+    g.appendChild(el('rect', {
+      x: 0, y: 0, width: 80, height: 28, rx: 14,
+      fill: 'currentColor', opacity: 0.12,
+      stroke: 'currentColor', 'stroke-width': 1
+    }));
+    g.appendChild(el('text', {
+      x: 40, y: 19, 'text-anchor': 'middle',
+      'font-family': 'JetBrains Mono, monospace', 'font-size': 11,
+      'font-weight': 600, fill: 'currentColor'
+    }, opts.text));
+    return g;
+  }
+
+  // 출력 박스
+  function drawOutput(opts) {
+    const g = el('g');
+    const x = opts.x;
+    const y = opts.y;
+    g.appendChild(el('rect', {
+      x: x, y: y, width: 130, height: 28, rx: 4,
+      fill: '#2b2b2b', stroke: '#4ec9b0', 'stroke-width': 1
+    }));
+    g.appendChild(el('text', {
+      x: x + 65, y: y + 19, 'text-anchor': 'middle',
+      'font-family': 'JetBrains Mono, monospace', 'font-size': 13,
+      fill: '#d4d4d4'
+    }, opts.text));
+    return g;
+  }
+
+  // ============== 상태 ==============
+  let currentStep = 0;
+  let score = 75;
+
+  function evaluate() {
+    // 조건 평가 결과: 어느 가지로 가는가?
+    if (score >= 90) return 'A';
+    else if (score >= 60) return 'B';
+    else return 'C';
+  }
+
+  // ============== 단계별 렌더 ==============
+  function renderStep0() {
+    // 시작 — 다이어그램 전체를 미평가 상태로
+    dynamic.appendChild(drawTerm({ x: 230, y: 20, text: 'START' }));
+    dynamic.appendChild(drawCond({ x: 170, y: 70, text: 'score >= 90 ?', result: null }));
+    dynamic.appendChild(drawExec({ x: 30, y: 150, text: 'print("A 등급")', taken: null }));
+    dynamic.appendChild(drawCond({ x: 170, y: 200, text: 'score >= 60 ?', result: null }));
+    dynamic.appendChild(drawExec({ x: 30, y: 280, text: 'print("합격")', taken: null }));
+    dynamic.appendChild(drawExec({ x: 350, y: 280, text: 'print("불합격")', taken: null }));
+    dynamic.appendChild(drawTerm({ x: 230, y: 350, text: 'END' }));
+
+    // 회색 점선으로 모든 가능한 경로 표시
+    const arrowOpts = { color: 'currentColor', width: 1.2, opacity: 0.3 };
+    dynamic.appendChild(drawArrow({ ...arrowOpts, path: 'M 270 48 L 270 70' }));
+    dynamic.appendChild(drawArrow({ ...arrowOpts, path: 'M 200 105 Q 110 110, 110 150' }));
+    dynamic.appendChild(drawArrow({ ...arrowOpts, path: 'M 270 120 L 270 200' }));
+    dynamic.appendChild(drawArrow({ ...arrowOpts, path: 'M 200 230 Q 110 240, 110 280' }));
+    dynamic.appendChild(drawArrow({ ...arrowOpts, path: 'M 340 230 Q 430 240, 430 280' }));
+    dynamic.appendChild(drawArrow({ ...arrowOpts, path: 'M 110 195 Q 230 350, 270 350' }));
+    dynamic.appendChild(drawArrow({ ...arrowOpts, path: 'M 110 325 L 110 350 Q 230 380, 270 378' }));
+    dynamic.appendChild(drawArrow({ ...arrowOpts, path: 'M 430 325 L 430 350 Q 320 360, 270 350' }));
+  }
+
+  function renderStep1() {
+    // Step 1: 첫 번째 조건 평가
+    const cond1Result = score >= 90;
+    const branch = evaluate();
+
+    dynamic.appendChild(drawTerm({ x: 230, y: 20, text: 'START' }));
+    dynamic.appendChild(drawCond({
+      x: 170, y: 70, text: 'score >= 90 ?',
+      subtext: `(${score} >= 90) → ${cond1Result ? 'True' : 'False'}`,
+      result: cond1Result
+    }));
+
+    // 다른 박스들은 미평가
+    dynamic.appendChild(drawExec({ x: 30, y: 150, text: 'print("A 등급")', taken: null }));
+    dynamic.appendChild(drawCond({ x: 170, y: 200, text: 'score >= 60 ?', result: null }));
+    dynamic.appendChild(drawExec({ x: 30, y: 280, text: 'print("합격")', taken: null }));
+    dynamic.appendChild(drawExec({ x: 350, y: 280, text: 'print("불합격")', taken: null }));
+    dynamic.appendChild(drawTerm({ x: 230, y: 350, text: 'END' }));
+
+    // 활성 화살표 (START → 첫 cond)
+    dynamic.appendChild(drawArrow({
+      path: 'M 270 48 L 270 70', color: 'var(--accent)', width: 2.5
+    }));
+    // 나머지는 회색 점선
+    const dim = { color: 'currentColor', width: 1.2, opacity: 0.25 };
+    dynamic.appendChild(drawArrow({ ...dim, path: 'M 200 105 Q 110 110, 110 150' }));
+    dynamic.appendChild(drawArrow({ ...dim, path: 'M 270 120 L 270 200' }));
+    dynamic.appendChild(drawArrow({ ...dim, path: 'M 200 230 Q 110 240, 110 280' }));
+    dynamic.appendChild(drawArrow({ ...dim, path: 'M 340 230 Q 430 240, 430 280' }));
+  }
+
+  function renderStep2() {
+    // Step 2: 첫 번째 분기 결과에 따라
+    const cond1Result = score >= 90;
+    const branch = evaluate();
+
+    dynamic.appendChild(drawTerm({ x: 230, y: 20, text: 'START' }));
+    dynamic.appendChild(drawCond({
+      x: 170, y: 70, text: 'score >= 90 ?',
+      subtext: `(${score} >= 90) → ${cond1Result ? 'True' : 'False'}`,
+      result: cond1Result
+    }));
+
+    if (branch === 'A') {
+      // True → A등급으로
+      dynamic.appendChild(drawExec({ x: 30, y: 150, text: 'print("A 등급")', taken: true }));
+      dynamic.appendChild(drawCond({ x: 170, y: 200, text: 'score >= 60 ?', result: null }));
+      dynamic.appendChild(drawExec({ x: 30, y: 280, text: 'print("합격")', taken: false }));
+      dynamic.appendChild(drawExec({ x: 350, y: 280, text: 'print("불합격")', taken: false }));
+      dynamic.appendChild(drawTerm({ x: 230, y: 350, text: 'END' }));
+
+      dynamic.appendChild(drawArrow({ path: 'M 270 48 L 270 70', color: 'currentColor', width: 1.5, opacity: 0.5 }));
+      // True 가지로 이동
+      dynamic.appendChild(drawArrow({
+        path: 'M 200 105 Q 110 110, 110 150', color: 'var(--true-border)', width: 2.5
+      }));
+      // 라벨 True
+      dynamic.appendChild(el('text', {
+        x: 145, y: 130, 'text-anchor': 'middle',
+        'font-family': 'JetBrains Mono, monospace', 'font-size': 11,
+        'font-weight': 700, fill: 'var(--true-text)'
+      }, 'True'));
+    } else {
+      // False → 다음 elif로
+      dynamic.appendChild(drawExec({ x: 30, y: 150, text: 'print("A 등급")', taken: false }));
+      dynamic.appendChild(drawCond({ x: 170, y: 200, text: 'score >= 60 ?', result: null }));
+      dynamic.appendChild(drawExec({ x: 30, y: 280, text: 'print("합격")', taken: null }));
+      dynamic.appendChild(drawExec({ x: 350, y: 280, text: 'print("불합격")', taken: null }));
+      dynamic.appendChild(drawTerm({ x: 230, y: 350, text: 'END' }));
+
+      dynamic.appendChild(drawArrow({ path: 'M 270 48 L 270 70', color: 'currentColor', width: 1.5, opacity: 0.5 }));
+      dynamic.appendChild(drawArrow({
+        path: 'M 270 120 L 270 200', color: 'var(--false-border)', width: 2.5
+      }));
+      dynamic.appendChild(el('text', {
+        x: 295, y: 165, 'text-anchor': 'start',
+        'font-family': 'JetBrains Mono, monospace', 'font-size': 11,
+        'font-weight': 700, fill: 'var(--false-text)'
+      }, 'False'));
+    }
+  }
+
+  function renderStep3() {
+    // Step 3: A로 끝났으면 끝난 거고, 아니면 두 번째 조건 평가
+    const cond1Result = score >= 90;
+    const cond2Result = score >= 60;
+    const branch = evaluate();
+
+    dynamic.appendChild(drawTerm({ x: 230, y: 20, text: 'START' }));
+    dynamic.appendChild(drawCond({
+      x: 170, y: 70, text: 'score >= 90 ?',
+      subtext: `→ ${cond1Result ? 'True' : 'False'}`,
+      result: cond1Result
+    }));
+
+    if (branch === 'A') {
+      // 이미 끝남 - END로
+      dynamic.appendChild(drawExec({ x: 30, y: 150, text: 'print("A 등급")', taken: true }));
+      dynamic.appendChild(drawCond({ x: 170, y: 200, text: 'score >= 60 ?', result: null }));
+      dynamic.appendChild(drawExec({ x: 30, y: 280, text: 'print("합격")', taken: false }));
+      dynamic.appendChild(drawExec({ x: 350, y: 280, text: 'print("불합격")', taken: false }));
+      dynamic.appendChild(drawTerm({ x: 230, y: 350, text: 'END' }));
+
+      // 화살표들
+      dynamic.appendChild(drawArrow({ path: 'M 270 48 L 270 70', color: 'currentColor', width: 1.2, opacity: 0.4 }));
+      dynamic.appendChild(drawArrow({ path: 'M 200 105 Q 110 110, 110 150', color: 'var(--true-border)', width: 2 }));
+      // A등급 → END
+      dynamic.appendChild(drawArrow({
+        path: 'M 110 195 Q 200 350, 270 360', color: 'var(--accent)', width: 2.5
+      }));
+      // 출력
+      dynamic.appendChild(drawOutput({ x: 380, y: 156, text: '"A 등급"' }));
+    } else {
+      // 두 번째 조건 평가
+      dynamic.appendChild(drawExec({ x: 30, y: 150, text: 'print("A 등급")', taken: false }));
+      dynamic.appendChild(drawCond({
+        x: 170, y: 200, text: 'score >= 60 ?',
+        subtext: `(${score} >= 60) → ${cond2Result ? 'True' : 'False'}`,
+        result: cond2Result
+      }));
+      dynamic.appendChild(drawExec({ x: 30, y: 280, text: 'print("합격")', taken: null }));
+      dynamic.appendChild(drawExec({ x: 350, y: 280, text: 'print("불합격")', taken: null }));
+      dynamic.appendChild(drawTerm({ x: 230, y: 350, text: 'END' }));
+
+      dynamic.appendChild(drawArrow({ path: 'M 270 48 L 270 70', color: 'currentColor', width: 1.2, opacity: 0.4 }));
+      dynamic.appendChild(drawArrow({ path: 'M 270 120 L 270 200', color: 'currentColor', width: 1.5, opacity: 0.6 }));
+      dynamic.appendChild(drawArrow({
+        path: 'M 270 250 L 270 250', color: 'var(--accent)', width: 2.5
+      }));
+    }
+  }
+
+  function renderStep4() {
+    // Step 4: 최종 결과 출력
+    const cond1Result = score >= 90;
+    const cond2Result = score >= 60;
+    const branch = evaluate();
+
+    dynamic.appendChild(drawTerm({ x: 230, y: 20, text: 'START' }));
+    dynamic.appendChild(drawCond({
+      x: 170, y: 70, text: 'score >= 90 ?',
+      subtext: `→ ${cond1Result ? 'True' : 'False'}`,
+      result: cond1Result
+    }));
+    dynamic.appendChild(drawExec({ x: 30, y: 150, text: 'print("A 등급")', taken: branch === 'A' }));
+
+    if (branch !== 'A') {
+      dynamic.appendChild(drawCond({
+        x: 170, y: 200, text: 'score >= 60 ?',
+        subtext: `→ ${cond2Result ? 'True' : 'False'}`,
+        result: cond2Result
+      }));
+    } else {
+      dynamic.appendChild(drawCond({ x: 170, y: 200, text: 'score >= 60 ?', result: null }));
+    }
+    dynamic.appendChild(drawExec({ x: 30, y: 280, text: 'print("합격")', taken: branch === 'B' }));
+    dynamic.appendChild(drawExec({ x: 350, y: 280, text: 'print("불합격")', taken: branch === 'C' }));
+    dynamic.appendChild(drawTerm({ x: 230, y: 350, text: 'END' }));
+
+    // 활성 경로 그리기
+    const dim = { color: 'currentColor', width: 1, opacity: 0.3 };
+
+    if (branch === 'A') {
+      dynamic.appendChild(drawArrow({ path: 'M 270 48 L 270 70', color: 'currentColor', width: 1.2, opacity: 0.4 }));
+      dynamic.appendChild(drawArrow({ path: 'M 200 105 Q 110 110, 110 150', color: 'var(--true-border)', width: 2 }));
+      dynamic.appendChild(drawArrow({ path: 'M 110 195 Q 200 350, 270 360', color: 'var(--accent)', width: 2.5 }));
+      dynamic.appendChild(drawOutput({ x: 380, y: 156, text: '"A 등급"' }));
+    } else if (branch === 'B') {
+      dynamic.appendChild(drawArrow({ path: 'M 270 48 L 270 70', color: 'currentColor', width: 1.2, opacity: 0.4 }));
+      dynamic.appendChild(drawArrow({ path: 'M 270 120 L 270 200', color: 'currentColor', width: 1.5, opacity: 0.6 }));
+      dynamic.appendChild(drawArrow({ path: 'M 200 230 Q 110 240, 110 280', color: 'var(--true-border)', width: 2.5 }));
+      dynamic.appendChild(drawArrow({ path: 'M 110 325 L 110 350 Q 200 360, 270 360', color: 'var(--accent)', width: 2 }));
+      dynamic.appendChild(drawOutput({ x: 380, y: 286, text: '"합격"' }));
+    } else {
+      dynamic.appendChild(drawArrow({ path: 'M 270 48 L 270 70', color: 'currentColor', width: 1.2, opacity: 0.4 }));
+      dynamic.appendChild(drawArrow({ path: 'M 270 120 L 270 200', color: 'currentColor', width: 1.5, opacity: 0.6 }));
+      dynamic.appendChild(drawArrow({ path: 'M 340 230 Q 430 240, 430 280', color: 'var(--false-border)', width: 2.5 }));
+      dynamic.appendChild(drawArrow({ path: 'M 430 325 L 430 350 Q 320 360, 270 360', color: 'var(--accent)', width: 2 }));
+      dynamic.appendChild(drawOutput({ x: 30, y: 340, text: '"불합격"' }));
+    }
+  }
+
+  // ============== 단계 정의 ==============
+  const STEPS = [
+    { line: -1, render: renderStep0,
+      title: '시작 — 흐름도 미리 보기',
+      text: '아래 코드의 모든 가능한 경로입니다. 슬라이더로 score를 정한 뒤 next를 눌러 어디로 흐르는지 따라가보세요.' },
+    { line: 0, render: renderStep1,
+      title: '1단계 — 첫 번째 조건 평가',
+      text: 'CPU가 score >= 90을 평가합니다. 결과는 True 또는 False — bool 객체입니다.' },
+    { line: -1, render: renderStep2,
+      titleFn: () => evaluate() === 'A' ? '2단계 — True 가지로 진입' : '2단계 — False, 다음 elif로',
+      textFn: () => evaluate() === 'A'
+        ? '첫 조건이 True이므로 그 안의 print 문이 실행됩니다. elif와 else는 건너뜁니다.'
+        : '첫 조건이 False이므로 그 안의 print는 건너뛰고 elif로 갑니다.' },
+    { line: -1, render: renderStep3,
+      titleFn: () => evaluate() === 'A' ? '3단계 — A 등급 출력 후 종료' : '3단계 — 두 번째 조건 평가',
+      textFn: () => evaluate() === 'A'
+        ? 'print("A 등급")이 실행되어 화면에 출력됩니다. 나머지 elif/else는 모두 건너뜁니다.'
+        : 'CPU가 score >= 60을 평가합니다. 결과에 따라 합격 또는 불합격으로 갈립니다.' },
+    { line: -1, render: renderStep4,
+      titleFn: () => {
+        const b = evaluate();
+        return b === 'A' ? '완료 — A 등급'
+          : b === 'B' ? '완료 — 합격' : '완료 — 불합격';
+      },
+      textFn: () => {
+        const b = evaluate();
+        if (b === 'A') return '실행 종료. if/elif/else 중 if 가지만 실행되었습니다.';
+        if (b === 'B') return '실행 종료. elif 가지가 실행되었습니다.';
+        return '실행 종료. 모든 조건이 False여서 else 가지가 실행되었습니다.';
+      } },
+  ];
+
+  // ============== 컨트롤 ==============
+  const dotsEl = document.getElementById('dots');
+  STEPS.forEach(() => {
+    const d = document.createElement('div');
+    d.className = 'dot';
+    dotsEl.appendChild(d);
+  });
+
+  function render() {
+    while (dynamic.firstChild) dynamic.removeChild(dynamic.firstChild);
+    arrowCounter = 0;
+    STEPS[currentStep].render();
+
+    // 코드 라인 활성화 (어느 분기를 탔는지에 따라)
+    const branch = evaluate();
+    document.querySelectorAll('.code-line').forEach((el, i) => {
+      el.classList.remove('active', 'taken', 'skipped');
+    });
+
+    if (currentStep >= 4) {
+      // 최종 단계: 어느 라인이 실행됐는지 색칠
+      if (branch === 'A') {
+        document.querySelector('[data-line="0"]').classList.add('taken');
+        document.querySelector('[data-line="1"]').classList.add('taken');
+        document.querySelector('[data-line="2"]').classList.add('skipped');
+        document.querySelector('[data-line="3"]').classList.add('skipped');
+        document.querySelector('[data-line="4"]').classList.add('skipped');
+        document.querySelector('[data-line="5"]').classList.add('skipped');
+      } else if (branch === 'B') {
+        document.querySelector('[data-line="0"]').classList.add('taken');
+        document.querySelector('[data-line="1"]').classList.add('skipped');
+        document.querySelector('[data-line="2"]').classList.add('taken');
+        document.querySelector('[data-line="3"]').classList.add('taken');
+        document.querySelector('[data-line="4"]').classList.add('skipped');
+        document.querySelector('[data-line="5"]').classList.add('skipped');
+      } else {
+        document.querySelector('[data-line="0"]').classList.add('taken');
+        document.querySelector('[data-line="1"]').classList.add('skipped');
+        document.querySelector('[data-line="2"]').classList.add('taken');
+        document.querySelector('[data-line="3"]').classList.add('skipped');
+        document.querySelector('[data-line="4"]').classList.add('taken');
+        document.querySelector('[data-line="5"]').classList.add('taken');
+      }
+    } else if (currentStep >= 1) {
+      // 활성 라인 강조
+      const activeLine = STEPS[currentStep].line;
+      if (activeLine >= 0) {
+        const lineEl = document.querySelector(`[data-line="${activeLine}"]`);
+        if (lineEl) lineEl.classList.add('active');
+      }
+    }
+
+    document.getElementById('step-num').textContent = `STEP ${currentStep + 1} / ${STEPS.length}`;
+    const title = STEPS[currentStep].titleFn ? STEPS[currentStep].titleFn() : STEPS[currentStep].title;
+    const text = STEPS[currentStep].textFn ? STEPS[currentStep].textFn() : STEPS[currentStep].text;
+    document.getElementById('step-title').textContent = title;
+    document.getElementById('step-text').textContent = text;
+
+    document.querySelectorAll('.dot').forEach((d, i) => {
+      d.classList.remove('active', 'done');
+      if (i === currentStep) d.classList.add('active');
+      else if (i < currentStep) d.classList.add('done');
+    });
+    document.getElementById('btn-prev').disabled = currentStep === 0;
+    const nextBtn = document.getElementById('btn-next');
+    if (currentStep === STEPS.length - 1) {
+      nextBtn.textContent = '완료';
+      nextBtn.disabled = true;
+    } else {
+      nextBtn.textContent = '다음 →';
+      nextBtn.disabled = false;
+    }
+  }
+
+  function next() { if (currentStep < STEPS.length - 1) { currentStep++; render(); } }
+  function prev() { if (currentStep > 0) { currentStep--; render(); } }
+  function restart() { currentStep = 0; render(); }
+
+  // 슬라이더
+  const slider = document.getElementById('score-slider');
+  const scoreValue = document.getElementById('score-value');
+  slider.addEventListener('input', () => {
+    score = parseInt(slider.value);
+    scoreValue.textContent = score;
+    render();
+  });
+
+  document.getElementById('btn-next').addEventListener('click', next);
+  document.getElementById('btn-prev').addEventListener('click', prev);
+  document.getElementById('btn-restart').addEventListener('click', restart);
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight') { next(); e.preventDefault(); }
+    else if (e.key === 'ArrowLeft') { prev(); e.preventDefault(); }
+    else if (e.key === 'r' || e.key === 'R') { restart(); e.preventDefault(); }
+  });
+
+  function syncTheme() {
+    try {
+      const parentTheme = window.parent && window.parent.document &&
+                          window.parent.document.documentElement.getAttribute('data-theme');
+      if (parentTheme) document.documentElement.setAttribute('data-theme', parentTheme);
+    } catch (e) {
+      if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    }
+  }
+  syncTheme();
+  window.addEventListener('message', (e) => {
+    if (e.data && e.data.theme) {
+      document.documentElement.setAttribute('data-theme', e.data.theme);
+    }
+  });
+
+  render();
+})();
+</script>
+
+</body>
+</html>
