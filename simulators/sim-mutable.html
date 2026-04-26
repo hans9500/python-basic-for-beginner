@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>시뮬레이터 — 가변 vs 불변</title>
+<style>
+:root {
+  --bg: #ffffff;
+  --bg-soft: #f7f7f5;
+  --bg-card: #fcfcfa;
+  --border: #e5e5e0;
+  --text: #1a1a1a;
+  --text-soft: #4a4a4a;
+  --text-mute: #888880;
+  --accent: #c1440e;
+  --heap-bg: #eaf3fb;
+  --heap-border: #3b6ea8;
+  --heap-text: #1e5a8e;
+  --names-bg: #fef3e8;
+  --names-border: #d97706;
+  --names-text: #7a3a10;
+  --tuple-bg: #f0e8f5;
+  --tuple-border: #7c3aed;
+  --tuple-text: #5b21b6;
+  --code-bg: #2b2b2b;
+  --code-text: #a9b7c6;
+  --code-keyword: #cc7832;
+  --code-number: #6897bb;
+  --code-string: #6a8759;
+  --code-comment: #808080;
+  --code-builtin: #ffc66d;
+}
+[data-theme="dark"] {
+  --bg: #1a1a1a;
+  --bg-soft: #232320;
+  --bg-card: #252522;
+  --border: #3a3a35;
+  --text: #ececec;
+  --text-soft: #c4c4c0;
+  --text-mute: #888880;
+  --accent: #e07a4f;
+  --heap-bg: #1f3650;
+  --heap-border: #5b8fc5;
+  --heap-text: #92c5f0;
+  --names-bg: #3a2a18;
+  --names-border: #d97706;
+  --names-text: #f4b070;
+  --tuple-bg: #2a1f3d;
+  --tuple-border: #a78bfa;
+  --tuple-text: #c4b5fd;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; padding: 24px;
+  background: var(--bg); color: var(--text);
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  line-height: 1.6;
+}
+.sim-wrapper {
+  max-width: 920px; margin: 0 auto;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px; overflow: hidden;
+}
+.sim-head { padding: 20px 28px; border-bottom: 2px solid var(--accent); }
+.sim-head h2 { margin: 0 0 4px; font-size: 18px; font-weight: 700; }
+.sim-head .desc { margin: 0; color: var(--text-soft); font-size: 13px; }
+.sim-body { display: grid; grid-template-columns: 1fr 1.4fr; }
+@media (max-width: 720px) { .sim-body { grid-template-columns: 1fr; } }
+
+.code-pane {
+  background: var(--code-bg); padding: 20px 24px;
+  font-family: 'JetBrains Mono', 'D2Coding', monospace;
+  font-size: 13px; line-height: 1.85; color: var(--code-text);
+}
+.code-line {
+  display: block; padding: 2px 8px; border-radius: 3px;
+  transition: background 0.3s, opacity 0.3s;
+  opacity: 0.4; white-space: pre;
+}
+.code-line.active {
+  background: rgba(255, 198, 109, 0.15); opacity: 1;
+  border-left: 3px solid #ffc66d; margin-left: -3px;
+}
+.code-line.done { opacity: 0.65; }
+.code-line.error {
+  background: rgba(244, 135, 113, 0.18);
+  border-left: 3px solid #f48771; margin-left: -3px;
+  opacity: 1;
+}
+.tk-kw { color: var(--code-keyword); font-weight: bold; }
+.tk-num { color: var(--code-number); }
+.tk-str { color: var(--code-string); }
+.tk-com { color: var(--code-comment); font-style: italic; }
+.tk-fn { color: var(--code-builtin); }
+
+.canvas-pane {
+  background: var(--bg-soft); padding: 18px;
+  display: flex; flex-direction: column; justify-content: center;
+  min-height: 420px;
+}
+.canvas-pane svg { width: 100%; height: auto; max-height: 480px; }
+
+.explain {
+  padding: 18px 28px; border-top: 1px solid var(--border);
+  background: var(--bg); min-height: 100px;
+}
+.explain .step-num {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; letter-spacing: 0.18em;
+  color: var(--accent); font-weight: 700;
+  margin-bottom: 4px; text-transform: uppercase;
+}
+.explain .step-title { font-size: 15px; font-weight: 600; margin: 0 0 6px; }
+.explain .step-text {
+  font-size: 13.5px; color: var(--text-soft);
+  margin: 0; line-height: 1.65;
+}
+
+.controls {
+  padding: 14px 24px 18px; background: var(--bg-card);
+  border-top: 1px solid var(--border);
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+}
+.btn {
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: 6px; padding: 7px 14px;
+  font-family: inherit; font-size: 13px;
+  cursor: pointer; color: var(--text);
+  transition: all 0.15s; font-weight: 500;
+}
+.btn:hover { background: var(--bg-soft); border-color: var(--accent); }
+.btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.btn-primary { background: var(--accent); color: white; border-color: var(--accent); }
+.btn-icon { width: 36px; padding: 7px 0; text-align: center; }
+
+.dots { display: flex; gap: 5px; margin-left: auto; }
+.dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--border);
+  transition: background 0.2s, transform 0.2s;
+}
+.dot.active { background: var(--accent); transform: scale(1.4); }
+.dot.done { background: var(--text-mute); }
+.kbd-hint {
+  font-size: 11px; color: var(--text-mute);
+  font-family: 'JetBrains Mono', monospace;
+}
+@media (max-width: 720px) { .kbd-hint { display: none; } }
+</style>
+</head>
+<body>
+
+<div class="sim-wrapper">
+  <div class="sim-head">
+    <h2>가변 vs 불변, 그리고 튜플의 진실</h2>
+    <p class="desc">리스트는 변할 수 있고, 튜플은 잠겨 있습니다 — 그런데 정말 그게 끝일까요?</p>
+  </div>
+
+  <div class="sim-body">
+    <div class="code-pane">
+      <span class="code-line" data-line="0">a <span class="tk-kw">=</span> [<span class="tk-num">1</span>, <span class="tk-num">2</span>, <span class="tk-num">3</span>]</span>
+      <span class="code-line" data-line="1">b <span class="tk-kw">=</span> a</span>
+      <span class="code-line" data-line="2">a.<span class="tk-fn">append</span>(<span class="tk-num">4</span>)</span>
+      <span class="code-line" data-line="3">a <span class="tk-kw">=</span> a <span class="tk-kw">+</span> [<span class="tk-num">5</span>]</span>
+      <span class="code-line" data-line="4">t <span class="tk-kw">=</span> (a, <span class="tk-str">"안녕"</span>, <span class="tk-num">3</span>)</span>
+      <span class="code-line" data-line="5">t[<span class="tk-num">0</span>] <span class="tk-kw">=</span> [<span class="tk-num">9</span>]  <span class="tk-com"># 에러</span></span>
+      <span class="code-line" data-line="6">t[<span class="tk-num">0</span>].<span class="tk-fn">append</span>(<span class="tk-num">99</span>)</span>
+    </div>
+
+    <div class="canvas-pane">
+      <svg id="mem-svg" viewBox="0 0 600 460" xmlns="http://www.w3.org/2000/svg">
+        <!-- 정적 라벨 -->
+        <text x="80" y="22" text-anchor="middle" font-family="Pretendard, sans-serif"
+              font-size="11" font-weight="700" fill="currentColor" letter-spacing="2"
+              opacity="0.85">VARIABLES</text>
+        <rect x="20" y="32" width="120" height="410" rx="8"
+              fill="var(--names-bg)" stroke="var(--names-border)" stroke-width="1.5"
+              stroke-dasharray="4 3" opacity="0.45"/>
+
+        <text x="380" y="22" text-anchor="middle" font-family="Pretendard, sans-serif"
+              font-size="11" font-weight="700" fill="currentColor" letter-spacing="2"
+              opacity="0.85">OBJECTS (HEAP)</text>
+        <rect x="160" y="32" width="420" height="410" rx="8"
+              fill="var(--heap-bg)" stroke="var(--heap-border)" stroke-width="1.5"
+              stroke-dasharray="4 3" opacity="0.4"/>
+
+        <g id="dynamic"></g>
+      </svg>
+    </div>
+  </div>
+
+  <div class="explain">
+    <div class="step-num" id="step-num">STEP 1 / 8</div>
+    <div class="step-title" id="step-title">시작</div>
+    <p class="step-text" id="step-text">단계별로 메모리에서 어떤 일이 일어나는지 따라가보세요.</p>
+  </div>
+
+  <div class="controls">
+    <button class="btn btn-icon" id="btn-restart" title="처음부터">⟲</button>
+    <button class="btn btn-icon" id="btn-prev" title="이전">←</button>
+    <button class="btn btn-primary" id="btn-next">다음 →</button>
+    <button class="btn" id="btn-auto">▶ 자동재생</button>
+    <span class="kbd-hint">← / → / R</span>
+    <div class="dots" id="dots"></div>
+  </div>
+</div>
+
+<script>
+(function() {
+  'use strict';
+  const SVG_NS = 'http://www.w3.org/2000/svg';
+  const dynamic = document.getElementById('mem-svg').querySelector('#dynamic');
+
+  function el(tag, attrs, children) {
+    const e = document.createElementNS(SVG_NS, tag);
+    if (attrs) Object.keys(attrs).forEach(k => e.setAttribute(k, attrs[k]));
+    if (children) (Array.isArray(children) ? children : [children]).forEach(c => {
+      if (typeof c === 'string') e.appendChild(document.createTextNode(c));
+      else if (c) e.appendChild(c);
+    });
+    return e;
+  }
+
+  // 리스트 객체 (참조 슬롯 강조)
+  function drawList(opts) {
+    // opts: {x, y, items: [{value, type}], addr, highlight}
+    const g = el('g', { transform: `translate(${opts.x}, ${opts.y})` });
+    const itemCount = opts.items.length;
+    const slotW = 28;
+    const totalW = 24 + itemCount * slotW + 4;
+    const h = 70;
+
+    g.appendChild(el('rect', {
+      x: 0, y: 0, width: totalW, height: h, rx: 6,
+      fill: 'var(--bg)',
+      stroke: opts.highlight ? 'var(--accent)' : 'var(--heap-border)',
+      'stroke-width': opts.highlight ? 2.5 : 1.5
+    }));
+    g.appendChild(el('text', {
+      x: 6, y: 14,
+      'font-family': 'JetBrains Mono, monospace', 'font-size': 9,
+      fill: 'var(--heap-text)', 'font-weight': 600
+    }, 'list'));
+
+    // 참조 슬롯들
+    opts.items.forEach((item, i) => {
+      const sx = 16 + i * slotW;
+      g.appendChild(el('rect', {
+        x: sx, y: 24, width: slotW - 2, height: 36, rx: 3,
+        fill: 'currentColor', 'fill-opacity': 0.05,
+        stroke: 'currentColor', 'stroke-opacity': 0.4
+      }));
+      // 인덱스
+      g.appendChild(el('text', {
+        x: sx + (slotW - 2) / 2, y: 22, 'text-anchor': 'middle',
+        'font-family': 'JetBrains Mono, monospace', 'font-size': 8,
+        fill: 'currentColor', opacity: 0.55
+      }, '[' + i + ']'));
+      // 점(참조 표시)
+      g.appendChild(el('circle', {
+        cx: sx + (slotW - 2) / 2, cy: 42, r: 3,
+        fill: 'var(--accent)', opacity: 0.85
+      }));
+    });
+
+    // 주소
+    if (opts.addr) {
+      g.appendChild(el('text', {
+        x: totalW - 4, y: h - 4, 'text-anchor': 'end',
+        'font-family': 'JetBrains Mono, monospace', 'font-size': 7,
+        fill: 'currentColor', opacity: 0.45
+      }, '@' + opts.addr));
+    }
+    return { g: g, slotPositions: opts.items.map((_, i) => ({ x: opts.x + 16 + i * slotW + (slotW - 2) / 2, y: opts.y + 42 })), width: totalW };
+  }
+
+  // 튜플 객체 (자물쇠 표시)
+  function drawTuple(opts) {
+    const g = el('g', { transform: `translate(${opts.x}, ${opts.y})` });
+    const itemCount = opts.items.length;
+    const slotW = 32;
+    const totalW = 24 + itemCount * slotW + 4;
+    const h = 78;
+
+    g.appendChild(el('rect', {
+      x: 0, y: 0, width: totalW, height: h, rx: 6,
+      fill: 'var(--tuple-bg)', 'fill-opacity': 0.4,
+      stroke: 'var(--tuple-border)',
+      'stroke-width': opts.highlight ? 2.5 : 1.8
+    }));
+    g.appendChild(el('text', {
+      x: 6, y: 14,
+      'font-family': 'JetBrains Mono, monospace', 'font-size': 9,
+      fill: 'var(--tuple-text)', 'font-weight': 700
+    }, 'tuple'));
+    // 자물쇠 아이콘
+    g.appendChild(el('text', {
+      x: totalW - 12, y: 14, 'text-anchor': 'middle',
+      'font-size': 11, fill: 'var(--tuple-text)'
+    }, '🔒'));
+
+    opts.items.forEach((item, i) => {
+      const sx = 16 + i * slotW;
+      g.appendChild(el('rect', {
+        x: sx, y: 24, width: slotW - 2, height: 44, rx: 3,
+        fill: 'currentColor', 'fill-opacity': 0.04,
+        stroke: 'var(--tuple-border)', 'stroke-opacity': 0.5,
+        'stroke-dasharray': '2 2'
+      }));
+      g.appendChild(el('text', {
+        x: sx + (slotW - 2) / 2, y: 22, 'text-anchor': 'middle',
+        'font-family': 'JetBrains Mono, monospace', 'font-size': 8,
+        fill: 'currentColor', opacity: 0.55
+      }, '[' + i + ']'));
+      g.appendChild(el('circle', {
+        cx: sx + (slotW - 2) / 2, cy: 48, r: 3,
+        fill: 'var(--tuple-border)', opacity: 0.95
+      }));
+    });
+
+    if (opts.addr) {
+      g.appendChild(el('text', {
+        x: totalW - 4, y: h - 4, 'text-anchor': 'end',
+        'font-family': 'JetBrains Mono, monospace', 'font-size': 7,
+        fill: 'currentColor', opacity: 0.45
+      }, '@' + opts.addr));
+    }
+    return {
+      g: g,
+      slotPositions: opts.items.map((_, i) => ({
+        x: opts.x + 16 + i * slotW + (slotW - 2) / 2,
+        y: opts.y + 48
+      })),
+      width: totalW
+    };
+  }
+
+  // 단순 값 객체 (int, str)
+  function drawSimple(opts) {
+    const g = el('g', { transform: `translate(${opts.x}, ${opts.y})` });
+    const isStr = opts.type === 'str';
+    const w = isStr ? 60 : 50;
+    g.appendChild(el('rect', {
+      x: 0, y: 0, width: w, height: 38, rx: 5,
+      fill: 'var(--bg)', stroke: 'var(--heap-border)', 'stroke-width': 1.3
+    }));
+    g.appendChild(el('text', {
+      x: 5, y: 11,
+      'font-family': 'JetBrains Mono, monospace', 'font-size': 8,
+      fill: 'var(--heap-text)', opacity: 0.75, 'font-weight': 600
+    }, opts.type));
+    const display = isStr ? '"' + opts.value + '"' : String(opts.value);
+    g.appendChild(el('text', {
+      x: w / 2, y: 28, 'text-anchor': 'middle',
+      'font-family': 'JetBrains Mono, monospace', 'font-size': 13,
+      'font-weight': 700, fill: 'currentColor'
+    }, display));
+    return { g: g, anchor: { x: opts.x + w / 2, y: opts.y + 19 }, width: w };
+  }
+
+  function drawNameTag(opts) {
+    const g = el('g', { transform: `translate(${opts.x}, ${opts.y})` });
+    const w = 80;
+    g.appendChild(el('path', {
+      d: `M 0,12 L 10,0 L ${w},0 L ${w},24 L 10,24 Z`,
+      fill: 'var(--names-bg)',
+      stroke: 'var(--names-border)', 'stroke-width': 1.5
+    }));
+    g.appendChild(el('text', {
+      x: (w + 10) / 2, y: 17, 'text-anchor': 'middle',
+      'font-family': 'JetBrains Mono, monospace', 'font-size': 13,
+      'font-weight': 700, fill: 'var(--names-text)'
+    }, opts.name));
+    return { g: g, anchor: { x: opts.x + w, y: opts.y + 12 } };
+  }
+
+  let arrowCounter = 0;
+  function drawArrow(opts) {
+    const g = el('g');
+    const color = opts.color || 'var(--accent)';
+    const markerId = 'mem-arr-' + (++arrowCounter);
+    const defs = el('defs');
+    defs.appendChild(el('marker', {
+      id: markerId, viewBox: '0 0 10 10', refX: 9, refY: 5,
+      markerWidth: 6, markerHeight: 6, orient: 'auto'
+    }, [el('path', { d: 'M0,0 L10,5 L0,10 z', fill: color })]));
+    g.appendChild(defs);
+    const dx = opts.toX - opts.fromX;
+    const dy = opts.toY - opts.fromY;
+    const cx = (opts.fromX + opts.toX) / 2;
+    const cy = (opts.fromY + opts.toY) / 2 - Math.abs(dx) * 0.05;
+    g.appendChild(el('path', {
+      d: `M ${opts.fromX} ${opts.fromY} Q ${cx} ${cy}, ${opts.toX} ${opts.toY}`,
+      fill: 'none', stroke: color, 'stroke-width': opts.width || 2,
+      'marker-end': `url(#${markerId})`,
+      'stroke-dasharray': opts.dashed ? '4 3' : 'none',
+      opacity: opts.opacity || 1
+    }));
+    return g;
+  }
+
+  // 빨간 X 표시 (에러)
+  function drawErrorMark(x, y) {
+    const g = el('g');
+    g.appendChild(el('circle', {
+      cx: x, cy: y, r: 14,
+      fill: '#f48771', 'fill-opacity': 0.2,
+      stroke: '#f48771', 'stroke-width': 2.5
+    }));
+    g.appendChild(el('line', {
+      x1: x - 7, y1: y - 7, x2: x + 7, y2: y + 7,
+      stroke: '#f48771', 'stroke-width': 2.5, 'stroke-linecap': 'round'
+    }));
+    g.appendChild(el('line', {
+      x1: x + 7, y1: y - 7, x2: x - 7, y2: y + 7,
+      stroke: '#f48771', 'stroke-width': 2.5, 'stroke-linecap': 'round'
+    }));
+    return g;
+  }
+
+  // ============== 단계 정의 ==============
+  // state는 각 단계마다 메모리 상태를 표현합니다
+  const STEPS = [
+    {
+      line: 0,
+      title: '1단계 — a = [1, 2, 3]',
+      text: '리스트 객체가 HEAP에 만들어집니다. 안에는 각 요소를 가리키는 참조 슬롯들이 있습니다. a 이름표가 그 list 객체를 가리킵니다.',
+      render: () => {
+        // 정수 객체 1, 2, 3
+        const o1 = drawSimple({ x: 410, y: 50, type: 'int', value: 1 });
+        const o2 = drawSimple({ x: 470, y: 50, type: 'int', value: 2 });
+        const o3 = drawSimple({ x: 530, y: 50, type: 'int', value: 3 });
+        dynamic.appendChild(o1.g); dynamic.appendChild(o2.g); dynamic.appendChild(o3.g);
+
+        // list 객체
+        const list = drawList({ x: 200, y: 130, items: [{},{},{}], addr: '0xa1', highlight: true });
+        dynamic.appendChild(list.g);
+
+        // 이름표 a
+        const tagA = drawNameTag({ x: 30, y: 150, name: 'a' });
+        dynamic.appendChild(tagA.g);
+
+        // 화살표 a → list
+        dynamic.appendChild(drawArrow({
+          fromX: 110, fromY: 162, toX: 200, toY: 165,
+          color: 'var(--accent)', width: 2.5
+        }));
+        // 슬롯 → 정수들
+        list.slotPositions.forEach((p, i) => {
+          const target = [o1, o2, o3][i].anchor;
+          dynamic.appendChild(drawArrow({
+            fromX: p.x, fromY: p.y, toX: target.x - 5, toY: target.y + 8,
+            color: 'currentColor', width: 1.3, opacity: 0.65
+          }));
+        });
+      }
+    },
+    {
+      line: 1,
+      title: '2단계 — b = a',
+      text: '같은 객체에 b라는 이름표 하나가 더 붙습니다. 새 리스트가 만들어진 게 아닙니다 — a와 b는 같은 list 객체를 가리킵니다.',
+      render: () => {
+        const o1 = drawSimple({ x: 410, y: 50, type: 'int', value: 1 });
+        const o2 = drawSimple({ x: 470, y: 50, type: 'int', value: 2 });
+        const o3 = drawSimple({ x: 530, y: 50, type: 'int', value: 3 });
+        dynamic.appendChild(o1.g); dynamic.appendChild(o2.g); dynamic.appendChild(o3.g);
+
+        const list = drawList({ x: 200, y: 130, items: [{},{},{}], addr: '0xa1' });
+        dynamic.appendChild(list.g);
+
+        const tagA = drawNameTag({ x: 30, y: 130, name: 'a' });
+        const tagB = drawNameTag({ x: 30, y: 175, name: 'b' });
+        dynamic.appendChild(tagA.g); dynamic.appendChild(tagB.g);
+
+        dynamic.appendChild(drawArrow({
+          fromX: 110, fromY: 142, toX: 200, toY: 158,
+          color: 'var(--accent)', width: 2.5
+        }));
+        dynamic.appendChild(drawArrow({
+          fromX: 110, fromY: 187, toX: 200, toY: 175,
+          color: 'var(--accent)', width: 2.5
+        }));
+        list.slotPositions.forEach((p, i) => {
+          const target = [o1, o2, o3][i].anchor;
+          dynamic.appendChild(drawArrow({
+            fromX: p.x, fromY: p.y, toX: target.x - 5, toY: target.y + 8,
+            color: 'currentColor', width: 1.3, opacity: 0.65
+          }));
+        });
+
+        // 강조 메시지
+        dynamic.appendChild(el('text', {
+          x: 380, y: 230, 'text-anchor': 'middle',
+          'font-family': 'Pretendard, sans-serif', 'font-size': 11,
+          fill: 'var(--accent)', 'font-weight': 600
+        }, '같은 객체 — 두 이름표'));
+      }
+    },
+    {
+      line: 2,
+      title: '3단계 — a.append(4)',
+      text: '리스트는 가변(mutable). 객체 자체에 새 슬롯이 추가됩니다. b는 이름표 그대로지만 같은 객체를 보고 있으므로 b로 봐도 [1,2,3,4]가 됩니다 — 비전공자가 가장 많이 놀라는 지점!',
+      render: () => {
+        const o1 = drawSimple({ x: 410, y: 50, type: 'int', value: 1 });
+        const o2 = drawSimple({ x: 470, y: 50, type: 'int', value: 2 });
+        const o3 = drawSimple({ x: 530, y: 50, type: 'int', value: 3 });
+        const o4 = drawSimple({ x: 410, y: 240, type: 'int', value: 4 });
+        dynamic.appendChild(o1.g); dynamic.appendChild(o2.g);
+        dynamic.appendChild(o3.g); dynamic.appendChild(o4.g);
+
+        const list = drawList({ x: 200, y: 130, items: [{},{},{},{}], addr: '0xa1', highlight: true });
+        dynamic.appendChild(list.g);
+
+        const tagA = drawNameTag({ x: 30, y: 130, name: 'a' });
+        const tagB = drawNameTag({ x: 30, y: 175, name: 'b' });
+        dynamic.appendChild(tagA.g); dynamic.appendChild(tagB.g);
+
+        dynamic.appendChild(drawArrow({
+          fromX: 110, fromY: 142, toX: 200, toY: 158,
+          color: 'var(--accent)', width: 2.5
+        }));
+        dynamic.appendChild(drawArrow({
+          fromX: 110, fromY: 187, toX: 200, toY: 175,
+          color: 'var(--accent)', width: 2.5
+        }));
+        list.slotPositions.forEach((p, i) => {
+          const target = [o1, o2, o3, o4][i].anchor;
+          dynamic.appendChild(drawArrow({
+            fromX: p.x, fromY: p.y, toX: target.x - 5, toY: target.y + 8,
+            color: 'currentColor', width: 1.3, opacity: 0.65
+          }));
+        });
+
+        dynamic.appendChild(el('text', {
+          x: 380, y: 230, 'text-anchor': 'middle',
+          'font-family': 'Pretendard, sans-serif', 'font-size': 11,
+          fill: 'var(--accent)', 'font-weight': 600
+        }, '객체 자체가 변함 → b로 봐도 [1,2,3,4]'));
+      }
+    },
+    {
+      line: 3,
+      title: '4단계 — a = a + [5]',
+      text: '+ 연산은 새 리스트 객체를 만듭니다. a 이름표가 새 객체로 옮겨갑니다. b는 그대로 옛 객체를 가리키고 있으므로 b는 여전히 [1,2,3,4]!',
+      render: () => {
+        const o1 = drawSimple({ x: 410, y: 50, type: 'int', value: 1 });
+        const o2 = drawSimple({ x: 470, y: 50, type: 'int', value: 2 });
+        const o3 = drawSimple({ x: 530, y: 50, type: 'int', value: 3 });
+        const o4 = drawSimple({ x: 410, y: 240, type: 'int', value: 4 });
+        const o5 = drawSimple({ x: 530, y: 240, type: 'int', value: 5 });
+        dynamic.appendChild(o1.g); dynamic.appendChild(o2.g);
+        dynamic.appendChild(o3.g); dynamic.appendChild(o4.g); dynamic.appendChild(o5.g);
+
+        // 옛 list (b가 가리킴)
+        const oldList = drawList({ x: 200, y: 130, items: [{},{},{},{}], addr: '0xa1' });
+        dynamic.appendChild(oldList.g);
+        // 새 list (a가 가리킴)
+        const newList = drawList({ x: 180, y: 320, items: [{},{},{},{},{}], addr: '0xa9', highlight: true });
+        dynamic.appendChild(newList.g);
+
+        const tagA = drawNameTag({ x: 30, y: 340, name: 'a' });
+        const tagB = drawNameTag({ x: 30, y: 175, name: 'b' });
+        dynamic.appendChild(tagA.g); dynamic.appendChild(tagB.g);
+
+        dynamic.appendChild(drawArrow({
+          fromX: 110, fromY: 352, toX: 180, toY: 348,
+          color: 'var(--accent)', width: 2.5
+        }));
+        dynamic.appendChild(drawArrow({
+          fromX: 110, fromY: 187, toX: 200, toY: 165,
+          color: 'currentColor', width: 1.8, opacity: 0.6
+        }));
+
+        oldList.slotPositions.forEach((p, i) => {
+          const target = [o1, o2, o3, o4][i].anchor;
+          dynamic.appendChild(drawArrow({
+            fromX: p.x, fromY: p.y, toX: target.x - 5, toY: target.y + 8,
+            color: 'currentColor', width: 1.2, opacity: 0.5
+          }));
+        });
+
+        dynamic.appendChild(el('text', {
+          x: 400, y: 380, 'text-anchor': 'middle',
+          'font-family': 'Pretendard, sans-serif', 'font-size': 11,
+          fill: 'var(--accent)', 'font-weight': 600
+        }, '+ 는 새 객체 → a만 옮겨감, b는 그대로'));
+      }
+    },
+    {
+      line: 4,
+      title: '5단계 — t = (a, "안녕", 3)',
+      text: '튜플 객체가 만들어집니다. tuple은 잠겨 있어요(🔒). 슬롯 0은 a가 가리키는 리스트, 슬롯 1은 문자열, 슬롯 2는 정수 3을 가리킵니다.',
+      render: () => {
+        const o1 = drawSimple({ x: 410, y: 30, type: 'int', value: 1 });
+        const o2 = drawSimple({ x: 470, y: 30, type: 'int', value: 2 });
+        const o3 = drawSimple({ x: 530, y: 30, type: 'int', value: 3 });
+        const o4 = drawSimple({ x: 410, y: 90, type: 'int', value: 4 });
+        const o5 = drawSimple({ x: 470, y: 90, type: 'int', value: 5 });
+        const greeting = drawSimple({ x: 200, y: 360, type: 'str', value: '안녕' });
+        const three = drawSimple({ x: 290, y: 360, type: 'int', value: 3 });
+        [o1,o2,o3,o4,o5,greeting,three].forEach(o => dynamic.appendChild(o.g));
+
+        // 옛 list (b)
+        const oldList = drawList({ x: 380, y: 150, items: [{},{},{},{}], addr: '0xa1' });
+        dynamic.appendChild(oldList.g);
+        // 새 list (a) — t[0]도 여기를 가리킴
+        const newList = drawList({ x: 380, y: 240, items: [{},{},{},{},{}], addr: '0xa9' });
+        dynamic.appendChild(newList.g);
+
+        // tuple
+        const tup = drawTuple({ x: 180, y: 240, items: [{},{},{}], addr: '0xb0', highlight: true });
+        dynamic.appendChild(tup.g);
+
+        const tagA = drawNameTag({ x: 30, y: 250, name: 'a' });
+        const tagB = drawNameTag({ x: 30, y: 175, name: 'b' });
+        const tagT = drawNameTag({ x: 30, y: 290, name: 't' });
+        [tagA, tagB, tagT].forEach(t => dynamic.appendChild(t.g));
+
+        // 화살표들
+        dynamic.appendChild(drawArrow({
+          fromX: 110, fromY: 187, toX: 380, toY: 175,
+          color: 'currentColor', width: 1.5, opacity: 0.55
+        }));
+        dynamic.appendChild(drawArrow({
+          fromX: 110, fromY: 262, toX: 380, toY: 268,
+          color: 'var(--accent)', width: 2
+        }));
+        dynamic.appendChild(drawArrow({
+          fromX: 110, fromY: 302, toX: 180, toY: 280,
+          color: 'var(--tuple-border)', width: 2.2
+        }));
+
+        // tuple 슬롯들
+        dynamic.appendChild(drawArrow({
+          fromX: tup.slotPositions[0].x, fromY: tup.slotPositions[0].y,
+          toX: 378, toY: 268,
+          color: 'var(--tuple-border)', width: 1.5, opacity: 0.7
+        }));
+        dynamic.appendChild(drawArrow({
+          fromX: tup.slotPositions[1].x, fromY: tup.slotPositions[1].y,
+          toX: 230, toY: 360,
+          color: 'var(--tuple-border)', width: 1.3, opacity: 0.7
+        }));
+        dynamic.appendChild(drawArrow({
+          fromX: tup.slotPositions[2].x, fromY: tup.slotPositions[2].y,
+          toX: 320, toY: 360,
+          color: 'var(--tuple-border)', width: 1.3, opacity: 0.7
+        }));
+      }
+    },
+    {
+      line: 5,
+      title: '6단계 — t[0] = [9] 시도 → TypeError!',
+      text: '튜플의 참조 슬롯은 잠겨 있어서 다른 객체로 바꿀 수 없습니다. 파이썬은 TypeError를 냅니다.',
+      render: () => {
+        const o3 = drawSimple({ x: 530, y: 30, type: 'int', value: 3 });
+        const greeting = drawSimple({ x: 200, y: 360, type: 'str', value: '안녕' });
+        const three = drawSimple({ x: 290, y: 360, type: 'int', value: 3 });
+        [o3, greeting, three].forEach(o => dynamic.appendChild(o.g));
+
+        const newList = drawList({ x: 380, y: 240, items: [{},{},{},{},{}], addr: '0xa9' });
+        dynamic.appendChild(newList.g);
+        const tup = drawTuple({ x: 180, y: 240, items: [{},{},{}], addr: '0xb0', highlight: true });
+        dynamic.appendChild(tup.g);
+
+        const tagA = drawNameTag({ x: 30, y: 250, name: 'a' });
+        const tagT = drawNameTag({ x: 30, y: 290, name: 't' });
+        [tagA, tagT].forEach(t => dynamic.appendChild(t.g));
+
+        dynamic.appendChild(drawArrow({
+          fromX: 110, fromY: 262, toX: 380, toY: 268,
+          color: 'var(--accent)', width: 2
+        }));
+        dynamic.appendChild(drawArrow({
+          fromX: 110, fromY: 302, toX: 180, toY: 280,
+          color: 'var(--tuple-border)', width: 2.2
+        }));
+        dynamic.appendChild(drawArrow({
+          fromX: tup.slotPositions[0].x, fromY: tup.slotPositions[0].y,
+          toX: 378, toY: 268,
+          color: 'var(--tuple-border)', width: 1.5, opacity: 0.7
+        }));
+        dynamic.appendChild(drawArrow({
+          fromX: tup.slotPositions[1].x, fromY: tup.slotPositions[1].y,
+          toX: 230, toY: 360,
+          color: 'var(--tuple-border)', width: 1.3, opacity: 0.7
+        }));
+        dynamic.appendChild(drawArrow({
+          fromX: tup.slotPositions[2].x, fromY: tup.slotPositions[2].y,
+          toX: 320, toY: 360,
+          color: 'var(--tuple-border)', width: 1.3, opacity: 0.7
+        }));
+
+        // X 표시 — 슬롯 0 위에
+        dynamic.appendChild(drawErrorMark(tup.slotPositions[0].x, tup.slotPositions[0].y));
+
+        // 에러 메시지 박스
+        dynamic.appendChild(el('rect', {
+          x: 130, y: 150, width: 340, height: 50, rx: 6,
+          fill: '#f48771', 'fill-opacity': 0.12,
+          stroke: '#f48771', 'stroke-width': 1.5
+        }));
+        dynamic.appendChild(el('text', {
+          x: 300, y: 170, 'text-anchor': 'middle',
+          'font-family': 'JetBrains Mono, monospace', 'font-size': 11,
+          'font-weight': 700, fill: '#f48771'
+        }, 'TypeError'));
+        dynamic.appendChild(el('text', {
+          x: 300, y: 190, 'text-anchor': 'middle',
+          'font-family': 'Pretendard, sans-serif', 'font-size': 10,
+          fill: 'currentColor', opacity: 0.85
+        }, '"tuple object does not support item assignment"'));
+      }
+    },
+    {
+      line: 6,
+      title: '7단계 — t[0].append(99) → 가능!',
+      text: '튜플의 슬롯은 잠겼지만, 슬롯이 가리키는 리스트 객체 자체는 mutable입니다. .append()는 그 리스트 객체를 변경합니다 — 튜플은 안 변하는 것 같지만 보이는 모양은 달라집니다!',
+      render: () => {
+        const o3 = drawSimple({ x: 530, y: 30, type: 'int', value: 3 });
+        const greeting = drawSimple({ x: 200, y: 360, type: 'str', value: '안녕' });
+        const three = drawSimple({ x: 290, y: 360, type: 'int', value: 3 });
+        [o3, greeting, three].forEach(o => dynamic.appendChild(o.g));
+
+        // 리스트가 6개 요소 (5 + 99 추가)
+        const newList = drawList({ x: 360, y: 240, items: [{},{},{},{},{},{}], addr: '0xa9', highlight: true });
+        dynamic.appendChild(newList.g);
+        const tup = drawTuple({ x: 180, y: 240, items: [{},{},{}], addr: '0xb0' });
+        dynamic.appendChild(tup.g);
+
+        const tagA = drawNameTag({ x: 30, y: 250, name: 'a' });
+        const tagT = drawNameTag({ x: 30, y: 290, name: 't' });
+        [tagA, tagT].forEach(t => dynamic.appendChild(t.g));
+
+        dynamic.appendChild(drawArrow({
+          fromX: 110, fromY: 262, toX: 360, toY: 268,
+          color: 'var(--accent)', width: 2
+        }));
+        dynamic.appendChild(drawArrow({
+          fromX: 110, fromY: 302, toX: 180, toY: 280,
+          color: 'var(--tuple-border)', width: 2.2
+        }));
+        dynamic.appendChild(drawArrow({
+          fromX: tup.slotPositions[0].x, fromY: tup.slotPositions[0].y,
+          toX: 358, toY: 268,
+          color: 'var(--tuple-border)', width: 1.5, opacity: 0.7
+        }));
+        dynamic.appendChild(drawArrow({
+          fromX: tup.slotPositions[1].x, fromY: tup.slotPositions[1].y,
+          toX: 230, toY: 360,
+          color: 'var(--tuple-border)', width: 1.3, opacity: 0.7
+        }));
+        dynamic.appendChild(drawArrow({
+          fromX: tup.slotPositions[2].x, fromY: tup.slotPositions[2].y,
+          toX: 320, toY: 360,
+          color: 'var(--tuple-border)', width: 1.3, opacity: 0.7
+        }));
+
+        // 강조 메시지
+        dynamic.appendChild(el('text', {
+          x: 400, y: 405, 'text-anchor': 'middle',
+          'font-family': 'Pretendard, sans-serif', 'font-size': 11,
+          fill: 'var(--accent)', 'font-weight': 700
+        }, '튜플은 그대로(🔒) — 그러나 안의 리스트가 변함!'));
+        dynamic.appendChild(el('text', {
+          x: 400, y: 425, 'text-anchor': 'middle',
+          'font-family': 'Pretendard, sans-serif', 'font-size': 10,
+          fill: 'currentColor', opacity: 0.7, 'font-style': 'italic'
+        }, '잠긴 슬롯 vs 변할 수 있는 참조 대상'));
+      }
+    },
+    {
+      line: -1,
+      title: '✓ 완료 — 메모리 모델의 핵심',
+      text: '리스트는 가변(객체 자체가 변함). 튜플은 불변(슬롯 잠김). 그러나 튜플 안의 mutable 객체는 변할 수 있음. 이 세 가지를 이해하면 파이썬 메모리 모델의 거의 전부를 잡은 겁니다.',
+      render: () => {
+        // 요약 박스
+        dynamic.appendChild(el('rect', {
+          x: 50, y: 80, width: 500, height: 280, rx: 12,
+          fill: 'var(--accent)', 'fill-opacity': 0.08,
+          stroke: 'var(--accent)', 'stroke-width': 1.5
+        }));
+        dynamic.appendChild(el('text', {
+          x: 300, y: 120, 'text-anchor': 'middle',
+          'font-family': 'Pretendard, sans-serif', 'font-size': 16,
+          'font-weight': 700, fill: 'var(--accent)'
+        }, '핵심 정리'));
+
+        const items = [
+          ['리스트 (mutable)', '.append(), [i]=값 → 객체 자체가 변함'],
+          ['+ 연산', '항상 새 객체 생성 — 원본은 그대로'],
+          ['튜플 (immutable)', '슬롯 자체는 잠김 — t[i]=다른값 불가능'],
+          ['튜플 안의 mutable', '리스트 같은 mutable 요소는 변할 수 있음']
+        ];
+        items.forEach((it, i) => {
+          dynamic.appendChild(el('text', {
+            x: 80, y: 165 + i * 45,
+            'font-family': 'JetBrains Mono, monospace', 'font-size': 11,
+            'font-weight': 700, fill: 'currentColor'
+          }, it[0]));
+          dynamic.appendChild(el('text', {
+            x: 80, y: 182 + i * 45,
+            'font-family': 'Pretendard, sans-serif', 'font-size': 11,
+            fill: 'currentColor', opacity: 0.75
+          }, it[1]));
+        });
+      }
+    }
+  ];
+
+  let currentStep = 0;
+  let autoTimer = null;
+
+  const dotsEl = document.getElementById('dots');
+  STEPS.forEach(() => {
+    const d = document.createElement('div');
+    d.className = 'dot';
+    dotsEl.appendChild(d);
+  });
+
+  function render() {
+    while (dynamic.firstChild) dynamic.removeChild(dynamic.firstChild);
+    arrowCounter = 0;
+    STEPS[currentStep].render();
+
+    document.querySelectorAll('.code-line').forEach((el, i) => {
+      el.classList.remove('active', 'done', 'error');
+      const stepLine = STEPS[currentStep].line;
+      if (i === stepLine) {
+        if (i === 5) el.classList.add('error');
+        else el.classList.add('active');
+      } else if (stepLine >= 0 && i < stepLine) {
+        el.classList.add('done');
+      } else if (stepLine === -1) {
+        el.classList.add('done');
+      }
+    });
+
+    document.getElementById('step-num').textContent = `STEP ${currentStep + 1} / ${STEPS.length}`;
+    document.getElementById('step-title').textContent = STEPS[currentStep].title;
+    document.getElementById('step-text').textContent = STEPS[currentStep].text;
+
+    document.querySelectorAll('.dot').forEach((d, i) => {
+      d.classList.remove('active', 'done');
+      if (i === currentStep) d.classList.add('active');
+      else if (i < currentStep) d.classList.add('done');
+    });
+    document.getElementById('btn-prev').disabled = currentStep === 0;
+    const nextBtn = document.getElementById('btn-next');
+    if (currentStep === STEPS.length - 1) {
+      nextBtn.textContent = '완료'; nextBtn.disabled = true;
+    } else {
+      nextBtn.textContent = '다음 →'; nextBtn.disabled = false;
+    }
+  }
+
+  function next() { if (currentStep < STEPS.length - 1) { currentStep++; render(); } }
+  function prev() { if (currentStep > 0) { currentStep--; render(); } }
+  function restart() { stopAuto(); currentStep = 0; render(); }
+  function startAuto() {
+    if (autoTimer) return;
+    document.getElementById('btn-auto').textContent = '⏸ 일시정지';
+    autoTimer = setInterval(() => {
+      if (currentStep < STEPS.length - 1) next();
+      else stopAuto();
+    }, 2800);
+  }
+  function stopAuto() {
+    if (autoTimer) {
+      clearInterval(autoTimer); autoTimer = null;
+      document.getElementById('btn-auto').textContent = '▶ 자동재생';
+    }
+  }
+
+  document.getElementById('btn-next').addEventListener('click', () => { stopAuto(); next(); });
+  document.getElementById('btn-prev').addEventListener('click', () => { stopAuto(); prev(); });
+  document.getElementById('btn-restart').addEventListener('click', restart);
+  document.getElementById('btn-auto').addEventListener('click', () => {
+    if (autoTimer) stopAuto(); else startAuto();
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight') { stopAuto(); next(); e.preventDefault(); }
+    else if (e.key === 'ArrowLeft') { stopAuto(); prev(); e.preventDefault(); }
+    else if (e.key === 'r' || e.key === 'R') { restart(); e.preventDefault(); }
+  });
+
+  function syncTheme() {
+    try {
+      const parentTheme = window.parent && window.parent.document &&
+                          window.parent.document.documentElement.getAttribute('data-theme');
+      if (parentTheme) document.documentElement.setAttribute('data-theme', parentTheme);
+    } catch (e) {
+      if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    }
+  }
+  syncTheme();
+  window.addEventListener('message', (e) => {
+    if (e.data && e.data.theme) {
+      document.documentElement.setAttribute('data-theme', e.data.theme);
+    }
+  });
+
+  render();
+})();
+</script>
+
+</body>
+</html>

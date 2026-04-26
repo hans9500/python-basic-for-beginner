@@ -5,7 +5,7 @@
 ## 폴더 구조
 
 ```
-python-lesson/
+python-basic-for-beginner/
 ├── index.html              메인 페이지 (탭 + 사이드바)
 ├── css/
 │   ├── common.css          디자인 토큰, 레이아웃, 타이포
@@ -22,13 +22,18 @@ python-lesson/
 │   ├── week2.html          2주차 콘텐츠
 │   ├── week3.html          3주차 콘텐츠
 │   └── week4.html          4주차 콘텐츠
-├── simulators/             (시뮬레이터 — 추후 추가)
+├── simulators/
+│   ├── sim-variable.html   시뮬레이터 ① 변수와 객체 (1주차 s5)
+│   ├── sim-if.html         시뮬레이터 ② if 분기 (2주차 s4)
+│   └── sim-for.html        시뮬레이터 ③ for 반복 (2주차 s5)
 └── assets/                 (이미지 등 정적 자원)
 ```
 
 ## 학생용 — 사용 방법
 
-학생은 강사가 알려준 URL에 접속하면 끝입니다.
+**접속 URL**: <https://hans9500.github.io/python-basic-for-beginner/>
+
+위 링크에 접속하면 바로 학습을 시작할 수 있습니다.
 
 - **PC·노트북·태블릿·스마트폰** 모든 환경에서 작동
 - 파이썬 설치 불필요 (브라우저 안에서 진짜 파이썬이 돌아감)
@@ -40,7 +45,7 @@ python-lesson/
 
 1. <https://github.com> 로그인
 2. 우측 상단 **+ → New repository**
-3. 저장소 이름 입력 (예: `python-lesson`)
+3. 저장소 이름 입력 (예: `python-basic-for-beginner`)
 4. **Public** 선택 (GitHub Pages 무료 사용을 위해)
 5. **Create repository**
 
@@ -55,12 +60,12 @@ python-lesson/
 **방법 B — git 명령어**
 
 ```bash
-cd python-lesson
+cd python-basic-for-beginner
 git init
 git add .
 git commit -m "first commit"
 git branch -M main
-git remote add origin https://github.com/사용자명/python-lesson.git
+git remote add origin https://github.com/hans9500/python-basic-for-beginner.git
 git push -u origin main
 ```
 
@@ -75,7 +80,7 @@ git push -u origin main
 4. **Save** 클릭
 5. 1~2분 기다리면 상단에 URL 표시:
    ```
-   https://사용자명.github.io/python-lesson/
+   https://hans9500.github.io/python-basic-for-beginner/
    ```
 6. 이 URL을 학생에게 공유
 
