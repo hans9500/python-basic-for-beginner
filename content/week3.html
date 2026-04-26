@@ -1850,7 +1850,7 @@ def pick_lotto():
 
 def print_set(numbers, label):
     """예쁘게 출력"""
-    line = " ".join(f"{n:2d}" for n in numbers)
+    line = " ".join([f"{n:2d}" for n in numbers])
     print(f"{label}: [ {line} ]")
 
 # 5세트 자동 생성
@@ -1879,6 +1879,126 @@ for i in range(5):
     중복 없이 6개를 뽑아 리스트로 줍니다. <code class="inline">f"{n:2d}"</code>는 "정수를 2자리 너비로 표시"입니다.
     실행할 때마다 다른 번호가 나옵니다.
   </p>
+
+  <div class="callout info">
+    <div class="label">이 한 줄에 대하여 — 살짝만 알려드립니다</div>
+    <p>
+      위 코드의 <code class="inline">line = " ".join([f"{n:2d}" for n in numbers])</code> 한 줄에는
+      세 가지 새로운 것이 있습니다. 지금 깊이 알 필요는 없고, "이런 게 있구나" 정도만
+      알아두시면 됩니다 — 4주차에서 다시 만납니다.
+    </p>
+
+    <p style="margin-top: 14px;"><strong>1) 리스트 컴프리헨션 — <code class="inline">[f"{n:2d}" for n in numbers]</code></strong></p>
+    <p>
+      이건 <strong>for 루프로 새 리스트를 만드는 일</strong>을 한 줄로 짧게 쓰는 문법입니다.
+      아래 두 코드는 결과가 똑같습니다:
+    </p>
+    <div class="editor-block" style="margin-top: 8px;">
+      <div class="editor-tab-bar">
+        <span class="editor-tab"><span class="py-icon"></span>같은_일_두_가지.py</span>
+      </div>
+      <textarea class="editor-source"># 우리가 아는 방법 — for 루프
+parts = []
+for n in [3, 7, 12]:
+    parts.append(f"{n:2d}")
+print(parts)        # [' 3', ' 7', '12']
+
+# 같은 일을 컴프리헨션으로 — 한 줄
+parts = [f"{n:2d}" for n in [3, 7, 12]]
+print(parts)        # 같은 결과
+</textarea>
+      <div class="run-bar">
+        <span class="left"><span class="file-name">📄 같은_일_두_가지.py</span></span>
+        <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+        <button class="run-btn"><span class="play">▶</span> Run</button>
+      </div>
+    </div>
+    <div class="terminal">
+      <div class="terminal-head">
+        <span class="label">실행 결과</span>
+        <span class="status">대기 중</span>
+      </div>
+      <div class="terminal-body empty"></div>
+    </div>
+    <p>
+      처음엔 어색하지만 익숙해지면 짧고 명확합니다. 어렵게 느껴지면 그냥 for 루프로 쓰셔도 OK —
+      파이썬 코드는 둘 다 흔합니다.
+    </p>
+
+    <p style="margin-top: 14px;"><strong>2) join — 리스트를 문자열로 합치기</strong></p>
+    <p>
+      <code class="inline">" ".join(리스트)</code>는 리스트의 문자열들을
+      <strong>구분자(여기선 공백)로 이어 붙여 하나의 문자열</strong>로 만듭니다:
+    </p>
+    <div class="editor-block" style="margin-top: 8px;">
+      <div class="editor-tab-bar">
+        <span class="editor-tab"><span class="py-icon"></span>join.py</span>
+      </div>
+      <textarea class="editor-source">words = ["사과", "바나나", "딸기"]
+
+print(" ".join(words))      # 사과 바나나 딸기
+print(", ".join(words))     # 사과, 바나나, 딸기
+print("-".join(words))      # 사과-바나나-딸기
+
+# 주의: join은 문자열의 메서드 — 리스트가 아닌 구분자에 호출
+# words.join(" ")  ← 이렇게 쓰면 안 됨!
+</textarea>
+      <div class="run-bar">
+        <span class="left"><span class="file-name">📄 join.py</span></span>
+        <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+        <button class="run-btn"><span class="play">▶</span> Run</button>
+      </div>
+    </div>
+    <div class="terminal">
+      <div class="terminal-head">
+        <span class="label">실행 결과</span>
+        <span class="status">대기 중</span>
+      </div>
+      <div class="terminal-body empty"></div>
+    </div>
+
+    <p style="margin-top: 14px;"><strong>3) split — 그 반대 방향</strong></p>
+    <p>
+      <code class="inline">.split()</code>은 join의 정반대입니다 —
+      <strong>문자열을 구분자로 잘라 리스트로</strong> 만듭니다.
+      실습 3에서 이미 등장했으니 한 자리에서 같이 보세요:
+    </p>
+    <div class="editor-block" style="margin-top: 8px;">
+      <div class="editor-tab-bar">
+        <span class="editor-tab"><span class="py-icon"></span>split_join.py</span>
+      </div>
+      <textarea class="editor-source"># split — 문자열 → 리스트
+text = "python is great"
+words = text.split()         # 공백 기준
+print(words)                 # ['python', 'is', 'great']
+
+# 다른 구분자로
+csv = "사과,바나나,딸기"
+fruits = csv.split(",")      # 쉼표 기준
+print(fruits)                # ['사과', '바나나', '딸기']
+
+# split과 join은 서로 반대
+back = "/".join(fruits)
+print(back)                  # 사과/바나나/딸기
+</textarea>
+      <div class="run-bar">
+        <span class="left"><span class="file-name">📄 split_join.py</span></span>
+        <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+        <button class="run-btn"><span class="play">▶</span> Run</button>
+      </div>
+    </div>
+    <div class="terminal">
+      <div class="terminal-head">
+        <span class="label">실행 결과</span>
+        <span class="status">대기 중</span>
+      </div>
+      <div class="terminal-body empty"></div>
+    </div>
+    <p style="margin-top: 12px;">
+      한 줄로 정리: <strong><code class="inline">split</code>은 문자열 → 리스트, <code class="inline">join</code>은 리스트 → 문자열</strong>.
+      양방향 변환의 짝입니다.
+    </p>
+  </div>
 
   <h3>실습 3 — 단어 빈도 카운터</h3>
 
@@ -1945,7 +2065,7 @@ print_top(counts, 3)
 
   <p>
     핵심 패턴 — "있으면 더하고, 없으면 1로 시작" — 가 딕셔너리 빈도 누적의 정석입니다.
-    <code class="inline">.split()</code>은 문자열을 공백으로 잘라 리스트로 만듭니다 (4주차에서 자세히).
+    <code class="inline">.split()</code>은 문자열을 공백으로 잘라 리스트로 만듭니다 — 위 로또 실습 박스에서 split / join 짝으로 짧게 짚었습니다.
   </p>
 
   <h3>3주차 마무리</h3>
