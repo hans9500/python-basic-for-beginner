@@ -664,6 +664,55 @@ for i, s in enumerate(scores):
   </div>
 </section>
 
+  <h3>참고 — 한 줄로 쓰는 리스트 만들기 (컴프리헨션)</h3>
+
+  <p>
+    for 루프로 리스트를 만드는 패턴이 워낙 자주 쓰이다 보니,
+    파이썬에는 이걸 한 줄로 쓰는 문법이 있습니다 — <strong>리스트 컴프리헨션</strong>입니다.
+    AI가 만들어주는 코드에 자주 등장하니 읽을 줄은 알아야 합니다.
+  </p>
+
+  <div class="editor-block">
+    <div class="editor-tab-bar">
+      <span class="editor-tab"><span class="py-icon"></span>comprehension.py</span>
+    </div>
+    <textarea class="editor-source"># 1~5의 제곱수 리스트 만들기
+
+# 우리가 아는 방법 — for 루프
+squares = []
+for n in range(1, 6):
+    squares.append(n ** 2)
+print(squares)   # [1, 4, 9, 16, 25]
+
+# 같은 결과를 컴프리헨션으로 — 한 줄
+squares = [n ** 2 for n in range(1, 6)]
+print(squares)   # [1, 4, 9, 16, 25]
+
+# 조건도 붙일 수 있음 — 짝수만
+evens = [n for n in range(1, 11) if n % 2 == 0]
+print(evens)     # [2, 4, 6, 8, 10]
+</textarea>
+    <div class="run-bar">
+      <span class="left"><span class="file-name">📄 comprehension.py</span></span>
+      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+      <button class="run-btn"><span class="play">▶</span> Run</button>
+    </div>
+  </div>
+  <div class="terminal">
+    <div class="terminal-head">
+      <span class="label">실행 결과</span>
+      <span class="status">대기 중</span>
+    </div>
+    <div class="terminal-body empty"></div>
+  </div>
+
+  <p>
+    구조: <code class="inline">[표현식 for 변수 in 반복가능객체]</code>.
+    어렵게 느껴지면 for 루프로 써도 됩니다 — 결과는 같습니다.
+    지금은 "이런 게 있구나, AI 코드에서 보면 이 의미다"를 아는 것으로 충분합니다.
+  </p>
+
+
 <!-- ==================== s3: 튜플 ==================== -->
 <section class="section" id="s3">
   <div class="section-num">SECTION 03</div>

@@ -601,6 +601,141 @@ print(f"나이: {age}")
   </div>
 </section>
 
+<!-- ==================== s2b: try/except ==================== -->
+<section class="section" id="s2b">
+  <div class="section-num">SECTION 02 · 추가</div>
+  <h2>try / except — 에러를 안전하게 처리하기</h2>
+
+  <p>
+    s2에서 <code class="inline">int("스무살")</code>은 <code class="inline">ValueError</code>를 낸다고 했죠.
+    사용자가 잘못된 값을 입력할 때마다 프로그램이 죽으면 쓰기 어렵습니다.
+    <code class="inline">try/except</code>는 에러가 났을 때 프로그램이 멈추지 않고
+    미리 정해둔 방식으로 처리하게 해줍니다.
+  </p>
+
+  <h3>기본 구조</h3>
+
+  <p>
+    <code class="inline">try</code> 블록 안에 "시도할 코드"를,
+    <code class="inline">except</code> 블록 안에 "에러 났을 때 할 일"을 씁니다.
+  </p>
+
+  <div class="editor-block">
+    <div class="editor-tab-bar">
+      <span class="editor-tab"><span class="py-icon"></span>try_basic.py</span>
+    </div>
+    <textarea class="editor-source">try:
+    age = int(input("나이를 입력하세요: "))
+    print(f"내년에는 {age + 1}살이 되시네요.")
+except ValueError:
+    print("숫자만 입력해주세요.")
+
+print("프로그램 계속 실행됩니다.")
+</textarea>
+    <div class="run-bar">
+      <span class="left"><span class="file-name">📄 try_basic.py</span></span>
+      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+      <button class="run-btn"><span class="play">▶</span> Run</button>
+    </div>
+  </div>
+  <div class="terminal">
+    <div class="terminal-head">
+      <span class="label">실행 결과</span>
+      <span class="status">대기 중</span>
+    </div>
+    <div class="terminal-body empty"></div>
+  </div>
+
+  <p>
+    입력칸에 <code class="inline">스무살</code>을 넣고 실행해보세요.
+    에러가 나도 프로그램이 죽지 않고 안내 메시지를 출력한 뒤 계속 실행됩니다.
+  </p>
+
+  <h3>여러 에러 종류 처리하기</h3>
+
+  <p>
+    <code class="inline">except</code>를 여러 개 쓰면 에러 종류에 따라 다르게 처리할 수 있습니다.
+  </p>
+
+  <div class="editor-block">
+    <div class="editor-tab-bar">
+      <span class="editor-tab"><span class="py-icon"></span>try_multi.py</span>
+    </div>
+    <textarea class="editor-source">numbers = [10, 20, 30]
+
+try:
+    idx = int(input("몇 번째 숫자? (0~2): "))
+    print(f"결과: {numbers[idx]}")
+except ValueError:
+    print("숫자를 입력해주세요.")
+except IndexError:
+    print("0~2 범위를 벗어났습니다.")
+</textarea>
+    <div class="run-bar">
+      <span class="left"><span class="file-name">📄 try_multi.py</span></span>
+      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+      <button class="run-btn"><span class="play">▶</span> Run</button>
+    </div>
+  </div>
+  <div class="terminal">
+    <div class="terminal-head">
+      <span class="label">실행 결과</span>
+      <span class="status">대기 중</span>
+    </div>
+    <div class="terminal-body empty"></div>
+  </div>
+
+  <p>
+    <code class="inline">IndexError</code>는 리스트 범위를 벗어난 인덱스에 접근했을 때 나는 에러입니다.
+    입력칸에 <code class="inline">abc</code>도 넣어보고, <code class="inline">99</code>도 넣어보세요.
+  </p>
+
+  <h3>실전 패턴 — while로 올바른 입력 받을 때까지 반복</h3>
+
+  <p>
+    try/except와 while을 합치면 "올바른 값이 들어올 때까지 계속 묻는" 프로그램을 만들 수 있습니다.
+    실제 프로그램에서 가장 자주 쓰는 패턴입니다.
+  </p>
+
+  <div class="editor-block">
+    <div class="editor-tab-bar">
+      <span class="editor-tab"><span class="py-icon"></span>try_loop.py</span>
+    </div>
+    <textarea class="editor-source">while True:
+    try:
+        age = int(input("나이를 입력하세요: "))
+        break    # 성공하면 반복 종료
+    except ValueError:
+        print("숫자만 입력해주세요. 다시 시도합니다.")
+
+print(f"입력된 나이: {age}")
+</textarea>
+    <div class="run-bar">
+      <span class="left"><span class="file-name">📄 try_loop.py</span></span>
+      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+      <button class="run-btn"><span class="play">▶</span> Run</button>
+    </div>
+  </div>
+  <div class="terminal">
+    <div class="terminal-head">
+      <span class="label">실행 결과</span>
+      <span class="status">대기 중</span>
+    </div>
+    <div class="terminal-body empty"></div>
+  </div>
+
+  <div class="key-points">
+    <div class="title">이 섹션의 핵심</div>
+    <ul>
+      <li><code class="inline">try:</code> 블록에 시도할 코드, <code class="inline">except 에러종류:</code> 블록에 처리할 코드.</li>
+      <li>에러가 나도 프로그램이 멈추지 않고 계속 실행된다.</li>
+      <li>자주 쓰는 에러: <code class="inline">ValueError</code>(잘못된 형식), <code class="inline">IndexError</code>(범위 초과), <code class="inline">KeyError</code>(없는 키).</li>
+      <li><code class="inline">while True + try/except + break</code> — 올바른 입력 받을 때까지 반복하는 정석 패턴.</li>
+    </ul>
+  </div>
+</section>
+
+
 <!-- ==================== s3: 비교와 논리 — True/False ==================== -->
 <section class="section" id="s3">
   <div class="section-num">SECTION 03</div>

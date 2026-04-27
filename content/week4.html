@@ -674,6 +674,156 @@ for i in range(4):
   </div>
 </section>
 
+<!-- ==================== s3b: 파일 읽기/쓰기 ==================== -->
+<section class="section" id="s3b">
+  <div class="section-num">SECTION 03 · 추가</div>
+  <h2>파일 읽기 / 쓰기 — with 문</h2>
+
+  <p>
+    1주차에서 "엑셀 자동화"를 이야기했는데, 정작 파일을 다루는 내용이 없었습니다.
+    파이썬에서 파일을 읽고 쓰는 건 <code class="inline">open()</code>과
+    <code class="inline">with</code> 문 두 가지만 알면 됩니다.
+  </p>
+
+  <h3>with 문 — 파일을 안전하게 열고 닫기</h3>
+
+  <p>
+    파일을 열면 반드시 닫아야 합니다. <code class="inline">with</code>는
+    블록이 끝날 때 자동으로 파일을 닫아주는 문법입니다.
+    파일뿐 아니라 "열고 닫아야 하는 자원"에 쓰이는 파이썬의 기본 패턴입니다.
+  </p>
+
+  <h3>파일 쓰기</h3>
+
+  <div class="editor-block">
+    <div class="editor-tab-bar">
+      <span class="editor-tab"><span class="py-icon"></span>file_write.py</span>
+    </div>
+    <textarea class="editor-source"># 파일 쓰기 — "w" 모드 (write)
+with open("hello.txt", "w", encoding="utf-8") as f:
+    f.write("안녕하세요
+")
+    f.write("파이썬 파일 쓰기 테스트입니다.
+")
+
+print("파일 저장 완료")
+</textarea>
+    <div class="run-bar">
+      <span class="left"><span class="file-name">📄 file_write.py</span></span>
+      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+      <button class="run-btn"><span class="play">▶</span> Run</button>
+    </div>
+  </div>
+  <div class="terminal">
+    <div class="terminal-head">
+      <span class="label">실행 결과</span>
+      <span class="status">대기 중</span>
+    </div>
+    <div class="terminal-body empty"></div>
+  </div>
+
+  <h3>파일 읽기</h3>
+
+  <div class="editor-block">
+    <div class="editor-tab-bar">
+      <span class="editor-tab"><span class="py-icon"></span>file_read.py</span>
+    </div>
+    <textarea class="editor-source"># 먼저 파일 만들기
+with open("scores.txt", "w", encoding="utf-8") as f:
+    f.write("홍길동 85
+")
+    f.write("이몽룡 92
+")
+    f.write("성춘향 78
+")
+
+# 파일 읽기 — "r" 모드 (read)
+with open("scores.txt", "r", encoding="utf-8") as f:
+    content = f.read()
+
+print(content)
+print("---")
+
+# 줄 단위로 읽기
+with open("scores.txt", "r", encoding="utf-8") as f:
+    for line in f:
+        line = line.strip()   # 줄 끝 줄바꿈 제거
+        print(f"읽은 줄: {line}")
+</textarea>
+    <div class="run-bar">
+      <span class="left"><span class="file-name">📄 file_read.py</span></span>
+      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+      <button class="run-btn"><span class="play">▶</span> Run</button>
+    </div>
+  </div>
+  <div class="terminal">
+    <div class="terminal-head">
+      <span class="label">실행 결과</span>
+      <span class="status">대기 중</span>
+    </div>
+    <div class="terminal-body empty"></div>
+  </div>
+
+  <h3>CSV 파일 — 엑셀과 파이썬의 연결고리</h3>
+
+  <p>
+    CSV(Comma-Separated Values)는 쉼표로 구분된 텍스트 파일입니다.
+    엑셀에서 "CSV로 저장"하면 파이썬에서 바로 읽을 수 있습니다.
+    파이썬에는 CSV를 다루는 <code class="inline">csv</code> 모듈이 내장돼 있습니다.
+  </p>
+
+  <div class="editor-block">
+    <div class="editor-tab-bar">
+      <span class="editor-tab"><span class="py-icon"></span>csv_read.py</span>
+    </div>
+    <textarea class="editor-source">import csv
+
+# CSV 파일 만들기
+with open("students.csv", "w", encoding="utf-8", newline="") as f:
+    writer = csv.writer(f)
+    writer.writerow(["이름", "점수", "등급"])
+    writer.writerow(["홍길동", 85, "B"])
+    writer.writerow(["이몽룡", 92, "A"])
+    writer.writerow(["성춘향", 78, "C"])
+
+# CSV 파일 읽기
+with open("students.csv", "r", encoding="utf-8") as f:
+    reader = csv.reader(f)
+    for row in reader:
+        print(row)
+</textarea>
+    <div class="run-bar">
+      <span class="left"><span class="file-name">📄 csv_read.py</span></span>
+      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+      <button class="run-btn"><span class="play">▶</span> Run</button>
+    </div>
+  </div>
+  <div class="terminal">
+    <div class="terminal-head">
+      <span class="label">실행 결과</span>
+      <span class="status">대기 중</span>
+    </div>
+    <div class="terminal-body empty"></div>
+  </div>
+
+  <p>
+    실제 엑셀 파일(<code class="inline">.xlsx</code>)을 다루려면
+    <code class="inline">openpyxl</code>이라는 외부 라이브러리가 필요합니다.
+    CSV는 설치 없이 바로 쓸 수 있는 가장 간단한 방법입니다.
+  </p>
+
+  <div class="key-points">
+    <div class="title">이 섹션의 핵심</div>
+    <ul>
+      <li><code class="inline">with open(파일명, 모드, encoding="utf-8") as f:</code> — 파일을 열고 블록 끝에 자동으로 닫음.</li>
+      <li>모드: <code class="inline">"r"</code>(읽기), <code class="inline">"w"</code>(쓰기, 덮어씀), <code class="inline">"a"</code>(이어쓰기).</li>
+      <li><code class="inline">f.read()</code>로 전체 읽기, <code class="inline">for line in f:</code>로 줄 단위 읽기.</li>
+      <li>CSV는 엑셀과 파이썬의 연결고리 — <code class="inline">import csv</code>로 바로 사용 가능.</li>
+    </ul>
+  </div>
+</section>
+
+
 <!-- ==================== s4: JSON과 실시간 API ==================== -->
 <section class="section" id="s4">
   <div class="section-num">SECTION 04 · 4주차의 하이라이트</div>
@@ -736,6 +886,37 @@ print(f"평균: {sum(data['scores']) / len(data['scores'])}")
   <p>
     이름이 헷갈릴 수 있는데 <strong>"loads = load string"</strong>, <strong>"dumps = dump string"</strong>으로 외우시면 됩니다.
   </p>
+
+
+  <h3>API 키 — 보통의 API는 인증이 필요하다</h3>
+
+  <p>
+    open-meteo는 "무료에 키 불필요"라고 했죠. 하지만 대부분의 API는 다릅니다.
+    Claude, ChatGPT, 구글 지도, 카카오 API 등은 모두 <strong>API 키</strong>가 필요합니다.
+  </p>
+
+  <p>
+    API 키는 <strong>"내가 이 서비스를 쓸 자격이 있다는 신분증"</strong>입니다.
+    요청마다 키를 함께 보내면 서버가 "이 사람은 인증된 사용자"라고 확인합니다.
+    사용량 추적과 과금도 키를 기준으로 합니다.
+  </p>
+
+  <div class="callout warn">
+    <div class="label">⚠️ API 키를 코드에 직접 넣으면 안 됩니다</div>
+    <p>
+      코드를 GitHub 같은 곳에 올리면 키가 전 세계에 공개됩니다.
+      누군가 그 키로 API를 마구 호출하면 요금이 나오거나 계정이 정지됩니다.
+      키는 별도 파일(<code class="inline">.env</code>)에 보관하고 코드에서는 불러오는 방식을 씁니다.
+      AI에게 코드를 만들어달라고 할 때 "API 키를 코드에 하드코딩하지 말고 환경변수로 처리해줘"라고 요청하세요.
+    </p>
+  </div>
+
+  <p>
+    API 키를 받는 방법은 서비스마다 다릅니다.
+    보통 해당 서비스 개발자 콘솔에 가입 후 키를 발급받습니다.
+    Claude API 키는 <code class="inline">console.anthropic.com</code>에서 발급받을 수 있습니다.
+  </p>
+
 
   <h3>중첩된 데이터 다루기</h3>
 
@@ -1208,6 +1389,76 @@ print(get_temp_lambda(data))  # 22.5
     한 분야를 골라 작은 프로젝트 하나 만들어보는 게 가장 빠른 학습입니다.
     "엑셀 파일 자동 정리", "관심 키워드 뉴스 모으기", "주식 데이터 시각화" 같은 것들입니다.
   </p>
+
+  <h3>AI에게 잘 시키는 법 — 프롬프트 엔지니어링 기초</h3>
+
+  <p>
+    4주 동안 파이썬을 배운 이유는 결국 "AI와 잘 협력하기 위해서"였습니다.
+    그 협력의 반은 파이썬이고, 나머지 반은 <strong>AI에게 어떻게 말하느냐</strong>입니다.
+    AI에게 지시를 잘 쓰는 것을 <strong>프롬프트 엔지니어링</strong>이라고 합니다.
+  </p>
+
+  <h4>좋은 프롬프트의 4가지 구성 요소</h4>
+
+  <p>
+    복잡하게 생각할 필요 없습니다. 아래 4가지를 갖추면 AI의 답이 달라집니다.
+  </p>
+
+  <div class="callout info">
+    <div class="label">역할 (Role) — AI에게 어떤 역할을 맡길지</div>
+    <p>
+      "파이썬 초보자를 가르치는 선생님처럼 설명해줘"<br>
+      "시니어 백엔드 개발자처럼 코드를 리뷰해줘"
+    </p>
+  </div>
+
+  <div class="callout info">
+    <div class="label">맥락 (Context) — 상황을 구체적으로</div>
+    <p>
+      "엑셀을 주로 쓰는 비전공자인데"<br>
+      "이 코드는 매월 보고서를 자동화하는 데 쓰려고 해"
+    </p>
+  </div>
+
+  <div class="callout info">
+    <div class="label">작업 (Task) — 원하는 것을 명확하게</div>
+    <p>
+      ❌ "코드 짜줘"<br>
+      ✅ "폴더 안의 모든 .csv 파일을 읽어서 B열 합계를 구하고 결과를 result.txt에 저장하는 파이썬 코드를 짜줘"
+    </p>
+  </div>
+
+  <div class="callout info">
+    <div class="label">형식 (Format) — 출력 방식 지정</div>
+    <p>
+      "코드만 주고 설명은 주석으로 달아줘"<br>
+      "단계별로 설명해줘"<br>
+      "함수로 묶어서 작성해줘"
+    </p>
+  </div>
+
+  <h4>파이썬 코드 요청할 때 자주 쓰는 표현</h4>
+
+  <ul>
+    <li>"에러 처리(try/except)도 포함해줘"</li>
+    <li>"API 키를 코드에 하드코딩하지 말고 환경변수로 처리해줘"</li>
+    <li>"주석을 한국어로 달아줘"</li>
+    <li>"이 코드를 함수로 분리해줘"</li>
+    <li>"초보자도 이해할 수 있게 설명해줘"</li>
+  </ul>
+
+  <h4>AI 코드를 받은 뒤 검증하는 법</h4>
+
+  <p>
+    4주 동안 배운 것이 여기서 쓰입니다.
+  </p>
+
+  <ul>
+    <li>코드를 실행해서 결과가 맞는지 확인한다 — 맞다고 해도 직접 돌려봐야 합니다.</li>
+    <li>변수 이름, 함수 구조를 읽어본다 — 이상한 부분이 있으면 "이 부분 설명해줘"라고 물어본다.</li>
+    <li>다른 입력값으로도 테스트한다 — 경계 조건(빈 값, 매우 큰 수 등)을 넣어본다.</li>
+    <li>에러가 나면 에러 메시지 전체를 AI에게 붙여넣는다 — 요약하지 말고 그대로.</li>
+  </ul>
 
   <h3>마지막으로 — AI 시대의 코딩</h3>
 
