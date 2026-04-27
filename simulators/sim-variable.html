@@ -26,9 +26,30 @@
 
 * { box-sizing:border-box; margin:0; padding:0; }
 
-/* 전체를 뷰포트에 꽉 채우되 스크롤 없음 */
+/*
+  높이 설계 (SIMH = 560px 기준):
+    헤더  : 48px  (flex-shrink:0)
+    본문  : flex:1 (나머지 전부)
+    설명  : 72px  (flex-shrink:0)
+    컨트롤: 44px  (flex-shrink:0)
+    합계  : 48 + flex + 72 + 44 = 164 + flex = 560 → flex = 396px
+
+  모바일(≤600px): SIMH = 580px, 코드 위/SVG 아래 세로 배치
+    헤더  : 40px
+    코드  : 110px (flex-shrink:0)
+    SVG   : flex:1
+    설명  : 72px
+    컨트롤: 44px
+    합계  : 40+110+flex+72+44 = 266+flex = 580 → flex = 314px
+*/
+
+html {
+  /* JS가 --simh를 주입. 없으면 560px */
+  --simh: 560px;
+}
 html, body {
-  width:100%; height:100%;
+  width:100%;
+  height:var(--simh);
   overflow:hidden;
 }
 body {
@@ -37,40 +58,38 @@ body {
   display:flex; flex-direction:column;
 }
 
-/* 헤더: 내용에 맞게, flex-shrink 0 */
+/* 헤더 48px */
 .sim-head {
-  flex-shrink:0;
-  padding:8px 16px 7px;
+  height:48px; flex-shrink:0;
+  padding:6px 16px;
   border-bottom:2px solid var(--accent);
   background:var(--bg-card);
-}
-.sim-head h2 { font-size:clamp(11px,2vw,14px); font-weight:700; line-height:1.35; }
-.sim-head .desc { font-size:clamp(10px,1.6vw,12px); color:var(--text-soft); margin-top:2px; }
-
-/* 본문: 남은 공간 전부 차지 */
-.sim-main {
-  flex:1;
-  display:flex;
+  display:flex; flex-direction:column; justify-content:center;
   overflow:hidden;
-  min-height:0; /* flex 자식이 줄어들 수 있게 */
+}
+.sim-head h2   { font-size:13px; font-weight:700; line-height:1.3; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.sim-head .desc{ font-size:11px; color:var(--text-soft); margin-top:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+
+/* 본문: 남은 높이 전부 */
+.sim-main {
+  flex:1; min-height:0;
+  display:flex; overflow:hidden;
 }
 
-/* 코드 패널: 데스크톱 좌측, 너비 비율 고정 */
+/* 코드 패널: 좌측 고정 너비 */
 .code-pane {
-  flex-shrink:0;
-  width:clamp(140px, 28%, 220px);
+  width:200px; flex-shrink:0;
   background:var(--code-bg);
   padding:0 12px;
   font-family:'JetBrains Mono',monospace;
-  font-size:clamp(11px,1.8vw,14px);
-  line-height:2;
+  font-size:13px; line-height:2;
   color:var(--code-text);
   display:flex; flex-direction:column; justify-content:center;
   overflow:hidden;
 }
 .code-line {
   display:block; padding:2px 6px; border-radius:3px;
-  opacity:0.4; white-space:pre;
+  opacity:0.4; white-space:pre; height:28px; line-height:28px;
 }
 .code-line.active {
   background:rgba(255,198,109,.15); opacity:1;
@@ -82,74 +101,67 @@ body {
 .tk-com { color:var(--code-com); font-style:italic; }
 .tk-fn  { color:var(--code-fn); }
 
-/* SVG 캔버스: 나머지 전부 */
+/* SVG 캔버스: 나머지 너비 전부 */
 .canvas-pane {
-  flex:1;
+  flex:1; min-width:0;
   background:var(--bg-soft);
   overflow:hidden;
   display:flex;
-  min-width:0;
 }
 .canvas-pane svg {
   width:100%; height:100%;
   display:block;
 }
 
-/* 설명: 내용에 맞게, 최소/최대 높이만 */
+/* 설명 72px */
 .explain {
-  flex-shrink:0;
-  padding:6px 16px 7px;
+  height:72px; flex-shrink:0;
+  padding:6px 16px;
   border-top:1px solid var(--border);
   background:var(--bg);
-  min-height:70px; max-height:100px;
   overflow:hidden;
 }
-.explain .step-num {
-  font-family:'JetBrains Mono',monospace;
-  font-size:clamp(8px,1.2vw,10px);
-  letter-spacing:.18em; color:var(--accent); font-weight:700;
-  text-transform:uppercase;
-}
-.explain .step-title { font-size:clamp(11px,1.8vw,13px); font-weight:600; margin:2px 0 2px; }
-.explain .step-text  { font-size:clamp(10px,1.6vw,12px); color:var(--text-soft); line-height:1.5; }
+.explain .step-num   { font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.18em; color:var(--accent); font-weight:700; text-transform:uppercase; }
+.explain .step-title { font-size:12px; font-weight:600; margin:2px 0 2px; }
+.explain .step-text  { font-size:11.5px; color:var(--text-soft); line-height:1.45; }
 
-/* 컨트롤 */
+/* 컨트롤 44px */
 .controls {
-  flex-shrink:0;
-  padding:0 16px;
-  height:44px;
+  height:44px; flex-shrink:0;
+  padding:0 14px;
   background:var(--bg-card);
   border-top:1px solid var(--border);
   display:flex; align-items:center; gap:8px;
+  overflow:hidden;
 }
 .btn {
   background:var(--bg); border:1px solid var(--border); border-radius:6px;
-  padding:4px 10px; font-family:inherit; font-size:clamp(10px,1.5vw,12px);
+  padding:4px 10px; font-family:inherit; font-size:12px;
   cursor:pointer; color:var(--text); font-weight:500; white-space:nowrap;
+  flex-shrink:0;
 }
 .btn:hover { background:var(--bg-soft); border-color:var(--accent); }
 .btn:disabled { opacity:.4; cursor:not-allowed; }
 .btn-primary { background:var(--accent); color:white; border-color:var(--accent); }
 .btn-icon { width:30px; padding:4px 0; text-align:center; }
 .dots { display:flex; gap:5px; margin-left:auto; }
-.dot { width:6px; height:6px; border-radius:50%; background:var(--border); }
+.dot { width:6px; height:6px; border-radius:50%; background:var(--border); flex-shrink:0; }
 .dot.active { background:var(--accent); transform:scale(1.4); }
 .dot.done   { background:var(--text-mute); }
-.kbd-hint   { font-size:10px; color:var(--text-mute); font-family:'JetBrains Mono',monospace; }
+.kbd-hint   { font-size:10px; color:var(--text-mute); font-family:'JetBrains Mono',monospace; white-space:nowrap; }
 
-/* 모바일: 코드를 위에, SVG를 아래로 */
+/* 모바일: 코드 위, SVG 아래 세로 배치 */
 @media (max-width:600px) {
   .sim-head .desc { display:none; }
+  .sim-head { height:40px; }
   .sim-main { flex-direction:column; }
   .code-pane {
-    width:100%;
-    flex-shrink:0;
-    height:auto; max-height:22%;
-    padding:6px 12px;
-    justify-content:center;
+    width:100%; height:110px; flex-shrink:0;
     border-bottom:1px solid #444;
-    font-size:11px; line-height:1.7;
+    font-size:11.5px; line-height:1.8;
+    padding:6px 12px;
   }
+  .code-line { height:24px; line-height:24px; }
   .kbd-hint { display:none; }
 }
 </style>
@@ -172,20 +184,15 @@ body {
     <svg id="mem-svg" viewBox="0 0 620 500"
          preserveAspectRatio="xMidYMid meet"
          xmlns="http://www.w3.org/2000/svg">
-
-      <!-- 영역 라벨 -->
       <text x="90"  y="22" text-anchor="middle" font-family="Pretendard,sans-serif" font-size="12" font-weight="700" fill="currentColor" letter-spacing="2" opacity=".85">CPU</text>
       <text x="90"  y="36" text-anchor="middle" font-family="Pretendard,sans-serif" font-size="11" fill="currentColor" opacity=".55">계산 · 판단</text>
       <text x="280" y="22" text-anchor="middle" font-family="Pretendard,sans-serif" font-size="12" font-weight="700" fill="currentColor" letter-spacing="2" opacity=".85">VARIABLES</text>
       <text x="280" y="36" text-anchor="middle" font-family="Pretendard,sans-serif" font-size="11" fill="currentColor" opacity=".55">변수 (이름표)</text>
       <text x="500" y="22" text-anchor="middle" font-family="Pretendard,sans-serif" font-size="12" font-weight="700" fill="currentColor" letter-spacing="2" opacity=".85">HEAP</text>
       <text x="500" y="36" text-anchor="middle" font-family="Pretendard,sans-serif" font-size="11" fill="currentColor" opacity=".55">객체들이 사는 곳</text>
-
-      <!-- 영역 박스 -->
       <rect x="10"  y="46" width="160" height="445" rx="8" fill="var(--cpu-bg)"   stroke="var(--cpu-border)"   stroke-width="1.5" stroke-dasharray="4 3" opacity=".4"/>
       <rect x="180" y="46" width="200" height="445" rx="8" fill="var(--names-bg)" stroke="var(--names-border)" stroke-width="1.5" stroke-dasharray="4 3" opacity=".45"/>
       <rect x="390" y="46" width="220" height="445" rx="8" fill="var(--heap-bg)"  stroke="var(--heap-border)"  stroke-width="1.5" stroke-dasharray="4 3" opacity=".4"/>
-
       <g id="dyn"></g>
     </svg>
   </div>
@@ -209,6 +216,27 @@ body {
 <script>
 (function(){
 'use strict';
+
+/* ── 높이 동기화: 부모 iframe이 주는 높이에 맞춤 ── */
+function setHeight(h) {
+  document.documentElement.style.setProperty('--simh', h + 'px');
+  document.documentElement.style.height = h + 'px';
+  document.body.style.height = h + 'px';
+}
+// 부모로부터 높이 메시지 수신
+window.addEventListener('message', function(e) {
+  if (e.data && e.data.simHeight) setHeight(e.data.simHeight);
+  if (e.data && e.data.theme) document.documentElement.setAttribute('data-theme', e.data.theme);
+});
+// 초기: 부모에게 높이 요청
+try {
+  if (window.parent !== window) {
+    var iframe = window.parent.document.getElementById('sim-variable-iframe');
+    if (iframe) setHeight(iframe.offsetHeight);
+  }
+} catch(e) {}
+
+/* ── SVG 드로잉 ── */
 const NS='http://www.w3.org/2000/svg';
 const dyn=document.getElementById('dyn');
 
@@ -221,115 +249,66 @@ function el(tag,a,ch){
   });
   return e;
 }
-
 function obj(x,y,val,type,addr){
   const g=el('g',{transform:`translate(${x},${y})`});
-  g.appendChild(el('rect',{x:0,y:0,width:140,height:76,rx:7,
-    fill:'var(--bg)',stroke:'var(--heap-border)','stroke-width':2.5}));
-  g.appendChild(el('text',{x:9,y:18,'font-family':'JetBrains Mono,monospace',
-    'font-size':14,fill:'var(--heap-text)','font-weight':700},type||'int'));
-  g.appendChild(el('text',{x:70,y:56,'text-anchor':'middle',
-    'font-family':'JetBrains Mono,monospace','font-size':32,
-    'font-weight':700,fill:'currentColor'},String(val)));
-  if(addr) g.appendChild(el('text',{x:131,y:72,'text-anchor':'end',
-    'font-family':'JetBrains Mono,monospace','font-size':11,
-    fill:'currentColor',opacity:.4},'@'+addr));
+  g.appendChild(el('rect',{x:0,y:0,width:140,height:76,rx:7,fill:'var(--bg)',stroke:'var(--heap-border)','stroke-width':2.5}));
+  g.appendChild(el('text',{x:9,y:18,'font-family':'JetBrains Mono,monospace','font-size':14,fill:'var(--heap-text)','font-weight':700},type||'int'));
+  g.appendChild(el('text',{x:70,y:56,'text-anchor':'middle','font-family':'JetBrains Mono,monospace','font-size':32,'font-weight':700,fill:'currentColor'},String(val)));
+  if(addr) g.appendChild(el('text',{x:131,y:72,'text-anchor':'end','font-family':'JetBrains Mono,monospace','font-size':11,fill:'currentColor',opacity:.4},'@'+addr));
   return g;
 }
-
 function tag(x,y,name){
   const g=el('g',{transform:`translate(${x},${y})`});
-  g.appendChild(el('path',{d:'M 0,15 L 13,0 L 120,0 L 120,30 L 13,30 Z',
-    fill:'var(--names-bg)',stroke:'var(--names-border)','stroke-width':1.5}));
-  g.appendChild(el('text',{x:64,y:21,'text-anchor':'middle',
-    'font-family':'JetBrains Mono,monospace','font-size':17,
-    'font-weight':700,fill:'var(--names-text)'},name));
+  g.appendChild(el('path',{d:'M 0,15 L 13,0 L 120,0 L 120,30 L 13,30 Z',fill:'var(--names-bg)',stroke:'var(--names-border)','stroke-width':1.5}));
+  g.appendChild(el('text',{x:64,y:21,'text-anchor':'middle','font-family':'JetBrains Mono,monospace','font-size':17,'font-weight':700,fill:'var(--names-text)'},name));
   return g;
 }
-
 let ac=0;
 function arrow(x1,y1,x2,y2,color){
   const id='a'+(++ac),col=color||'var(--accent)';
   const g=el('g');
   const df=el('defs');
-  df.appendChild(el('marker',{id,viewBox:'0 0 10 10',refX:9,refY:5,
-    markerWidth:7,markerHeight:7,orient:'auto'},
-    [el('path',{d:'M0,0 L10,5 L0,10 z',fill:col})]));
+  df.appendChild(el('marker',{id,viewBox:'0 0 10 10',refX:9,refY:5,markerWidth:7,markerHeight:7,orient:'auto'},[el('path',{d:'M0,0 L10,5 L0,10 z',fill:col})]));
   g.appendChild(df);
   const cx=(x1+x2)/2;
-  g.appendChild(el('path',{
-    d:`M ${x1} ${y1} Q ${cx} ${y1} ${x2} ${y2}`,
-    fill:'none',stroke:col,'stroke-width':2.8,'marker-end':`url(#${id})`}));
+  g.appendChild(el('path',{d:`M ${x1} ${y1} Q ${cx} ${y1} ${x2} ${y2}`,fill:'none',stroke:col,'stroke-width':2.8,'marker-end':`url(#${id})`}));
   return g;
 }
-
 function lbl(x,y,text,col){
-  return el('text',{x,y,'text-anchor':'middle',
-    'font-family':'Pretendard,sans-serif','font-size':13,
-    fill:col||'currentColor',opacity:col?1:.7},text);
+  return el('text',{x,y,'text-anchor':'middle','font-family':'Pretendard,sans-serif','font-size':13,fill:col||'currentColor',opacity:col?1:.7},text);
 }
-
 function out(x,y,w,text){
   const g=el('g');
-  g.appendChild(el('rect',{x,y,width:w,height:36,rx:4,
-    fill:'#2b2b2b',stroke:'#4ec9b0','stroke-width':1.2}));
-  g.appendChild(el('text',{x:x+w/2,y:y+24,'text-anchor':'middle',
-    'font-family':'JetBrains Mono,monospace','font-size':16,fill:'#d4d4d4'},String(text)));
-  g.appendChild(el('text',{x:x-8,y:y+24,'text-anchor':'end',
-    'font-family':'Pretendard,sans-serif','font-size':12,fill:'currentColor',opacity:.6},'화면 →'));
+  g.appendChild(el('rect',{x,y,width:w,height:36,rx:4,fill:'#2b2b2b',stroke:'#4ec9b0','stroke-width':1.2}));
+  g.appendChild(el('text',{x:x+w/2,y:y+24,'text-anchor':'middle','font-family':'JetBrains Mono,monospace','font-size':16,fill:'#d4d4d4'},String(text)));
+  g.appendChild(el('text',{x:x-8,y:y+24,'text-anchor':'end','font-family':'Pretendard,sans-serif','font-size':12,fill:'currentColor',opacity:.6},'화면 →'));
   return g;
 }
-
 function cpu(mode,opts){
   opts=opts||{};
   const g=el('g'),cx=90;
   if(mode==='idle'){
-    g.appendChild(el('text',{x:cx,y:250,'text-anchor':'middle',
-      'font-family':'JetBrains Mono,monospace','font-size':15,fill:'currentColor',opacity:.25},'+ - × ÷'));
-    g.appendChild(el('text',{x:cx,y:275,'text-anchor':'middle',
-      'font-family':'Pretendard,sans-serif','font-size':13,fill:'currentColor',opacity:.3},'대기 중'));
+    g.appendChild(el('text',{x:cx,y:250,'text-anchor':'middle','font-family':'JetBrains Mono,monospace','font-size':15,fill:'currentColor',opacity:.25},'+ - × ÷'));
+    g.appendChild(el('text',{x:cx,y:275,'text-anchor':'middle','font-family':'Pretendard,sans-serif','font-size':13,fill:'currentColor',opacity:.3},'대기 중'));
   } else if(mode==='making'){
-    g.appendChild(el('rect',{x:20,y:190,width:140,height:65,rx:6,
-      fill:'var(--cpu-bg)',stroke:'var(--cpu-border)','stroke-width':1.8,opacity:.85}));
-    g.appendChild(el('text',{x:cx,y:210,'text-anchor':'middle',
-      'font-family':'JetBrains Mono,monospace','font-size':11,
-      fill:'var(--cpu-text)','font-weight':700,'letter-spacing':1},'CPU'));
-    g.appendChild(el('text',{x:cx,y:240,'text-anchor':'middle',
-      'font-family':'Pretendard,sans-serif','font-size':14,fill:'currentColor',opacity:.9},
-      opts.label||'생성 중'));
+    g.appendChild(el('rect',{x:20,y:190,width:140,height:65,rx:6,fill:'var(--cpu-bg)',stroke:'var(--cpu-border)','stroke-width':1.8,opacity:.85}));
+    g.appendChild(el('text',{x:cx,y:210,'text-anchor':'middle','font-family':'JetBrains Mono,monospace','font-size':11,fill:'var(--cpu-text)','font-weight':700,'letter-spacing':1},'CPU'));
+    g.appendChild(el('text',{x:cx,y:240,'text-anchor':'middle','font-family':'Pretendard,sans-serif','font-size':14,fill:'currentColor',opacity:.9},opts.label||'생성 중'));
   } else if(mode==='calc'){
-    g.appendChild(el('rect',{x:15,y:155,width:150,height:155,rx:6,
-      fill:'var(--cpu-bg)',stroke:'var(--cpu-border)','stroke-width':2.2}));
-    g.appendChild(el('text',{x:cx,y:175,'text-anchor':'middle',
-      'font-family':'JetBrains Mono,monospace','font-size':11,
-      fill:'var(--cpu-text)','font-weight':700,'letter-spacing':1},'ALU'));
-    g.appendChild(el('text',{x:cx,y:220,'text-anchor':'middle',
-      'font-family':'JetBrains Mono,monospace','font-size':28,'font-weight':700,fill:'currentColor'},'2 + 3'));
-    g.appendChild(el('text',{x:cx,y:248,'text-anchor':'middle',
-      'font-family':'JetBrains Mono,monospace','font-size':16,fill:'currentColor',opacity:.5},'↓'));
-    g.appendChild(el('text',{x:cx,y:288,'text-anchor':'middle',
-      'font-family':'JetBrains Mono,monospace','font-size':28,'font-weight':700,fill:'var(--accent)'},'5'));
+    g.appendChild(el('rect',{x:15,y:155,width:150,height:155,rx:6,fill:'var(--cpu-bg)',stroke:'var(--cpu-border)','stroke-width':2.2}));
+    g.appendChild(el('text',{x:cx,y:175,'text-anchor':'middle','font-family':'JetBrains Mono,monospace','font-size':11,fill:'var(--cpu-text)','font-weight':700,'letter-spacing':1},'ALU'));
+    g.appendChild(el('text',{x:cx,y:220,'text-anchor':'middle','font-family':'JetBrains Mono,monospace','font-size':28,'font-weight':700,fill:'currentColor'},'2 + 3'));
+    g.appendChild(el('text',{x:cx,y:248,'text-anchor':'middle','font-family':'JetBrains Mono,monospace','font-size':16,fill:'currentColor',opacity:.5},'↓'));
+    g.appendChild(el('text',{x:cx,y:288,'text-anchor':'middle','font-family':'JetBrains Mono,monospace','font-size':28,'font-weight':700,fill:'var(--accent)'},'5'));
   } else if(mode==='read'){
-    g.appendChild(el('rect',{x:20,y:180,width:140,height:90,rx:6,
-      fill:'var(--cpu-bg)',stroke:'var(--cpu-border)','stroke-width':1.8,opacity:.85}));
-    g.appendChild(el('text',{x:cx,y:200,'text-anchor':'middle',
-      'font-family':'JetBrains Mono,monospace','font-size':11,
-      fill:'var(--cpu-text)','font-weight':700,'letter-spacing':1},'CPU'));
-    g.appendChild(el('text',{x:cx,y:232,'text-anchor':'middle',
-      'font-family':'Pretendard,sans-serif','font-size':15,fill:'currentColor','font-weight':600},
-      opts.label||''));
-    g.appendChild(el('text',{x:cx,y:258,'text-anchor':'middle',
-      'font-family':'JetBrains Mono,monospace','font-size':14,fill:'currentColor',opacity:.7},
-      opts.detail||''));
+    g.appendChild(el('rect',{x:20,y:180,width:140,height:90,rx:6,fill:'var(--cpu-bg)',stroke:'var(--cpu-border)','stroke-width':1.8,opacity:.85}));
+    g.appendChild(el('text',{x:cx,y:200,'text-anchor':'middle','font-family':'JetBrains Mono,monospace','font-size':11,fill:'var(--cpu-text)','font-weight':700,'letter-spacing':1},'CPU'));
+    g.appendChild(el('text',{x:cx,y:232,'text-anchor':'middle','font-family':'Pretendard,sans-serif','font-size':15,fill:'currentColor','font-weight':600},opts.label||''));
+    g.appendChild(el('text',{x:cx,y:258,'text-anchor':'middle','font-family':'JetBrains Mono,monospace','font-size':14,fill:'currentColor',opacity:.7},opts.detail||''));
   }
   return g;
 }
-
-const POS={
-  o2:{x:400,y:65}, o3:{x:400,y:195}, o5:{x:400,y:325},
-  tag:{x:193,y:330},
-};
-
+const POS={o2:{x:400,y:65},o3:{x:400,y:195},o5:{x:400,y:325},tag:{x:193,y:330}};
 function drawObjs(n){
   const arr=[];
   if(n>=1) arr.push(obj(POS.o2.x,POS.o2.y,2,'int','0x7f01'));
@@ -337,58 +316,38 @@ function drawObjs(n){
   if(n>=3) arr.push(obj(POS.o5.x,POS.o5.y,5,'int','0x7f0c'));
   return arr;
 }
-
 const STEPS=[
-  {line:-1,title:'시작 — 빈 메모리',
-   text:'아직 아무것도 만들어지지 않았습니다. CPU는 계산·판단, 가운데는 변수(이름표) 영역, 오른쪽 HEAP은 객체들이 사는 곳입니다.',
+  {line:-1,title:'시작 — 빈 메모리',text:'아직 아무것도 만들어지지 않았습니다. CPU는 계산·판단, 가운데는 변수(이름표) 영역, 오른쪽 HEAP은 객체들이 사는 곳입니다.',
    fn(){dyn.appendChild(cpu('idle'));}},
-  {line:1,title:'1단계 — 정수 객체 2 생성',
-   text:'오른쪽 식부터 평가합니다. CPU가 HEAP에 정수 객체 2를 만듭니다. 각 객체에는 고유한 주소(id)가 부여됩니다.',
+  {line:1,title:'1단계 — 정수 객체 2 생성',text:'오른쪽 식부터 평가합니다. CPU가 HEAP에 정수 객체 2를 만듭니다. 각 객체에는 고유한 주소(id)가 부여됩니다.',
+   fn(){dyn.appendChild(cpu('making',{label:'객체 2 생성'}));drawObjs(1).forEach(o=>dyn.appendChild(o));dyn.appendChild(arrow(172,103,398,103,'var(--cpu-border)'));}},
+  {line:1,title:'2단계 — 정수 객체 3 생성',text:'CPU가 HEAP에 정수 객체 3을 만듭니다. 별개의 객체라 주소도 다릅니다.',
+   fn(){dyn.appendChild(cpu('making',{label:'객체 3 생성'}));drawObjs(2).forEach(o=>dyn.appendChild(o));dyn.appendChild(arrow(172,103,398,233,'var(--cpu-border)'));}},
+  {line:1,title:'3단계 — CPU가 2+3 계산, 객체 5 생성',text:'CPU가 두 객체의 값을 읽어 더합니다. 결과 5는 새 객체로 HEAP에 만들어집니다. 2와 3 객체는 그대로 남아있습니다.',
    fn(){
-     dyn.appendChild(cpu('making',{label:'객체 2 생성'}));
-     drawObjs(1).forEach(o=>dyn.appendChild(o));
-     dyn.appendChild(arrow(172,103,398,103,'var(--cpu-border)'));
-   }},
-  {line:1,title:'2단계 — 정수 객체 3 생성',
-   text:'CPU가 HEAP에 정수 객체 3을 만듭니다. 별개의 객체라 주소도 다릅니다.',
-   fn(){
-     dyn.appendChild(cpu('making',{label:'객체 3 생성'}));
-     drawObjs(2).forEach(o=>dyn.appendChild(o));
-     dyn.appendChild(arrow(172,103,398,233,'var(--cpu-border)'));
-   }},
-  {line:1,title:'3단계 — CPU가 2+3 계산, 객체 5 생성',
-   text:'CPU가 두 객체의 값을 읽어 더합니다. 결과 5는 새 객체로 HEAP에 만들어집니다. 2와 3 객체는 그대로 남아있습니다.',
-   fn(){
-     dyn.appendChild(cpu('calc'));
-     drawObjs(3).forEach(o=>dyn.appendChild(o));
+     dyn.appendChild(cpu('calc'));drawObjs(3).forEach(o=>dyn.appendChild(o));
      dyn.appendChild(arrow(398,103,170,225,'var(--heap-border)'));
      dyn.appendChild(arrow(398,233,172,240,'var(--heap-border)'));
      dyn.appendChild(arrow(172,313,398,363,'var(--accent)'));
      dyn.appendChild(lbl(284,188,'값 읽기'));
      dyn.appendChild(lbl(284,352,'결과 쓰기','var(--accent)'));
    }},
-  {line:1,title:'4단계 — 이름표 x 가 객체 5를 가리킴',
-   text:'x = 부분이 실행됩니다. 변수 x라는 이름표가 만들어지고 객체 5를 가리킵니다. x 안에 5가 담긴 게 아니라, x가 5 객체를 "가리키는" 것입니다.',
+  {line:1,title:'4단계 — 이름표 x 가 객체 5를 가리킴',text:'x = 부분이 실행됩니다. 변수 x라는 이름표가 만들어지고 객체 5를 가리킵니다. x 안에 5가 담긴 게 아니라, x가 5 객체를 "가리키는" 것입니다.',
    fn(){
-     dyn.appendChild(cpu('making',{label:'이름표 x 연결'}));
-     drawObjs(3).forEach(o=>dyn.appendChild(o));
+     dyn.appendChild(cpu('making',{label:'이름표 x 연결'}));drawObjs(3).forEach(o=>dyn.appendChild(o));
      dyn.appendChild(tag(POS.tag.x,POS.tag.y,'x'));
      dyn.appendChild(arrow(315,345,398,363,'var(--accent)'));
    }},
-  {line:2,title:'5단계 — print(x) 가 5를 출력',
-   text:'CPU가 x 이름표를 따라가 객체 5의 값을 읽고 화면에 출력합니다.',
+  {line:2,title:'5단계 — print(x) 가 5를 출력',text:'CPU가 x 이름표를 따라가 객체 5의 값을 읽고 화면에 출력합니다.',
    fn(){
-     dyn.appendChild(cpu('read',{label:'print(x)',detail:'x → 5'}));
-     drawObjs(3).forEach(o=>dyn.appendChild(o));
+     dyn.appendChild(cpu('read',{label:'print(x)',detail:'x → 5'}));drawObjs(3).forEach(o=>dyn.appendChild(o));
      dyn.appendChild(tag(POS.tag.x,POS.tag.y,'x'));
      dyn.appendChild(arrow(315,345,398,363,'var(--accent)'));
      dyn.appendChild(out(193,430,130,'5'));
    }},
-  {line:3,title:'6단계 — id(x) 는 객체의 고유 번호',
-   text:'id(x)는 x가 가리키는 객체의 메모리 주소를 알려줍니다. 같은 객체면 항상 같은 번호가 나옵니다.',
+  {line:3,title:'6단계 — id(x) 는 객체의 고유 번호',text:'id(x)는 x가 가리키는 객체의 메모리 주소를 알려줍니다. 같은 객체면 항상 같은 번호가 나옵니다.',
    fn(){
-     dyn.appendChild(cpu('read',{label:'id(x)',detail:'주소 반환'}));
-     drawObjs(3).forEach(o=>dyn.appendChild(o));
+     dyn.appendChild(cpu('read',{label:'id(x)',detail:'주소 반환'}));drawObjs(3).forEach(o=>dyn.appendChild(o));
      dyn.appendChild(tag(POS.tag.x,POS.tag.y,'x'));
      dyn.appendChild(arrow(315,345,398,363,'var(--accent)'));
      dyn.appendChild(out(183,430,350,'140288751120'));
@@ -421,7 +380,6 @@ function render(){
   if(cur===STEPS.length-1){nb.textContent='완료';nb.disabled=true;}
   else{nb.textContent='다음 →';nb.disabled=false;}
 }
-
 function next(){if(cur<STEPS.length-1){cur++;render();}}
 function prev(){if(cur>0){cur--;render();}}
 function restart(){stopAuto();cur=0;render();}
@@ -431,10 +389,8 @@ function startAuto(){
   timer=setInterval(()=>{if(cur<STEPS.length-1)next();else stopAuto();},2200);
 }
 function stopAuto(){
-  if(timer){clearInterval(timer);timer=null;
-    document.getElementById('btn-auto').textContent='▶ 자동재생';}
+  if(timer){clearInterval(timer);timer=null;document.getElementById('btn-auto').textContent='▶ 자동재생';}
 }
-
 document.getElementById('btn-next').addEventListener('click',()=>{stopAuto();next();});
 document.getElementById('btn-prev').addEventListener('click',()=>{stopAuto();prev();});
 document.getElementById('btn-restart').addEventListener('click',restart);
@@ -447,18 +403,13 @@ document.addEventListener('keydown',e=>{
 
 function syncTheme(){
   try{
-    const t=window.parent&&window.parent.document&&
-      window.parent.document.documentElement.getAttribute('data-theme');
+    const t=window.parent&&window.parent.document&&window.parent.document.documentElement.getAttribute('data-theme');
     if(t) document.documentElement.setAttribute('data-theme',t);
   }catch(e){
-    if(window.matchMedia('(prefers-color-scheme: dark)').matches)
-      document.documentElement.setAttribute('data-theme','dark');
+    if(window.matchMedia('(prefers-color-scheme: dark)').matches) document.documentElement.setAttribute('data-theme','dark');
   }
 }
 syncTheme();
-window.addEventListener('message',e=>{
-  if(e.data&&e.data.theme) document.documentElement.setAttribute('data-theme',e.data.theme);
-});
 
 render();
 })();
