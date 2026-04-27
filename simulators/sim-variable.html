@@ -13,7 +13,6 @@
   --text-soft: #4a4a4a;
   --text-mute: #888880;
   --accent: #c1440e;
-  --accent-soft: #f5e8e0;
   --heap-bg: #eaf3fb;
   --heap-border: #3b6ea8;
   --heap-text: #1e5a8e;
@@ -27,7 +26,6 @@
   --code-text: #a9b7c6;
   --code-keyword: #cc7832;
   --code-number: #6897bb;
-  --code-string: #6a8759;
   --code-comment: #808080;
   --code-builtin: #ffc66d;
 }
@@ -40,7 +38,6 @@
   --text-soft: #c4c4c0;
   --text-mute: #888880;
   --accent: #e07a4f;
-  --accent-soft: #3a2a22;
   --heap-bg: #1f3650;
   --heap-border: #5b8fc5;
   --heap-text: #92c5f0;
@@ -51,37 +48,45 @@
   --cpu-border: #a78bfa;
   --cpu-text: #c4b5fd;
 }
-* { box-sizing: border-box; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 100%; height: 100%; overflow: hidden; }
 body {
-  margin: 0;
-  padding: 24px;
   background: var(--bg);
   color: var(--text);
   font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
-  line-height: 1.6;
-}
-.sim-wrapper {
-  max-width: 920px;
-  margin: 0 auto;
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  overflow: hidden;
-}
-.sim-head { padding: 20px 28px; border-bottom: 2px solid var(--accent); }
-.sim-head h2 { margin: 0 0 4px; font-size: 18px; font-weight: 700; }
-.sim-head .desc { margin: 0; color: var(--text-soft); font-size: 13px; }
-.sim-body {
   display: flex;
   flex-direction: column;
+  height: 100vh;
 }
+.sim-head {
+  padding: 12px 20px;
+  border-bottom: 2px solid var(--accent);
+  background: var(--bg-card);
+  flex-shrink: 0;
+}
+.sim-head h2 { margin: 0 0 2px; font-size: 15px; font-weight: 700; }
+.sim-head .desc { margin: 0; color: var(--text-soft); font-size: 12px; }
+
+.sim-main {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  min-height: 0;
+}
+
+/* 왼쪽: 코드 패널 */
 .code-pane {
+  width: 210px;
+  flex-shrink: 0;
   background: var(--code-bg);
-  padding: 14px 24px;
-  font-family: 'JetBrains Mono', 'D2Coding', 'Consolas', monospace;
-  font-size: 14px;
-  line-height: 1.8;
+  padding: 16px 14px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  line-height: 2;
   color: var(--code-text);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 .code-line {
   display: block;
@@ -92,157 +97,146 @@ body {
   white-space: pre;
 }
 .code-line.active {
-  background: rgba(255, 198, 109, 0.15);
+  background: rgba(255,198,109,0.15);
   opacity: 1;
   border-left: 3px solid #ffc66d;
   margin-left: -3px;
 }
 .code-line.done { opacity: 0.65; }
-.tk-kw { color: var(--code-keyword); font-weight: bold; }
+.tk-kw  { color: var(--code-keyword); font-weight: bold; }
 .tk-num { color: var(--code-number); }
-.tk-str { color: var(--code-string); }
 .tk-com { color: var(--code-comment); font-style: italic; }
-.tk-fn { color: var(--code-builtin); }
+.tk-fn  { color: var(--code-builtin); }
+
+/* 오른쪽: SVG 캔버스 — 나머지 전부 */
 .canvas-pane {
+  flex: 1;
   background: var(--bg-soft);
-  padding: 20px 24px;
+  overflow: hidden;
+  display: flex;
+  align-items: stretch;
 }
-.canvas-pane svg { width: 100%; height: auto; }
+.canvas-pane svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* 하단: 설명 + 컨트롤 */
 .explain {
-  padding: 18px 28px;
+  padding: 10px 20px;
   border-top: 1px solid var(--border);
   background: var(--bg);
-  min-height: 84px;
+  flex-shrink: 0;
 }
 .explain .step-num {
-  display: inline-block;
   font-family: 'JetBrains Mono', monospace;
-  font-size: 10px;
+  font-size: 9px;
   letter-spacing: 0.18em;
   color: var(--accent);
   font-weight: 700;
-  margin-bottom: 4px;
   text-transform: uppercase;
 }
 .explain .step-title {
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 600;
-  margin: 0 0 6px;
+  margin: 2px 0 3px;
 }
 .explain .step-text {
-  font-size: 13.5px;
+  font-size: 12.5px;
   color: var(--text-soft);
-  margin: 0;
-  line-height: 1.65;
+  line-height: 1.55;
 }
 .controls {
-  padding: 14px 24px 18px;
+  padding: 8px 20px 10px;
   background: var(--bg-card);
   border-top: 1px solid var(--border);
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
+  flex-shrink: 0;
 }
 .btn {
   background: var(--bg);
   border: 1px solid var(--border);
   border-radius: 6px;
-  padding: 7px 14px;
+  padding: 6px 12px;
   font-family: inherit;
-  font-size: 13px;
+  font-size: 12px;
   cursor: pointer;
   color: var(--text);
-  transition: all 0.15s;
   font-weight: 500;
 }
 .btn:hover { background: var(--bg-soft); border-color: var(--accent); }
 .btn:disabled { opacity: 0.4; cursor: not-allowed; }
 .btn-primary { background: var(--accent); color: white; border-color: var(--accent); }
-.btn-icon { width: 36px; padding: 7px 0; text-align: center; }
+.btn-icon { width: 32px; padding: 6px 0; text-align: center; }
 .dots { display: flex; gap: 5px; margin-left: auto; }
-.dot {
-  width: 7px; height: 7px;
-  border-radius: 50%;
-  background: var(--border);
-  transition: background 0.2s, transform 0.2s;
-}
+.dot { width: 7px; height: 7px; border-radius: 50%; background: var(--border); transition: background 0.2s, transform 0.2s; }
 .dot.active { background: var(--accent); transform: scale(1.4); }
 .dot.done { background: var(--text-mute); }
-.kbd-hint {
-  font-size: 11px;
-  color: var(--text-mute);
-  font-family: 'JetBrains Mono', monospace;
-}
-@media (max-width: 720px) { .kbd-hint { display: none; } }
+.kbd-hint { font-size: 10px; color: var(--text-mute); font-family: 'JetBrains Mono', monospace; }
 </style>
 </head>
 <body>
 
-<div class="sim-wrapper">
-  <div class="sim-head">
-    <h2>변수와 객체 — <code style="font-family:monospace; color:var(--accent)">x = 2 + 3</code> 이 실행될 때</h2>
-    <p class="desc">파이썬은 값을 변수에 "담지" 않습니다. 객체를 만들고, 변수는 그 객체를 가리킬 뿐입니다.</p>
+<div class="sim-head">
+  <h2>변수와 객체 — <code style="font-family:monospace;color:var(--accent)">x = 2 + 3</code> 이 실행될 때</h2>
+  <p class="desc">파이썬은 값을 변수에 "담지" 않습니다. 객체를 만들고, 변수는 그 객체를 가리킬 뿐입니다.</p>
+</div>
+
+<div class="sim-main">
+  <div class="code-pane">
+    <span class="code-line" data-line="0"><span class="tk-com"># 객체를 만들고</span></span>
+    <span class="code-line" data-line="0"><span class="tk-com"># x가 가리키게 합니다</span></span>
+    <span class="code-line" data-line="1">x <span class="tk-kw">=</span> <span class="tk-num">2</span> <span class="tk-kw">+</span> <span class="tk-num">3</span></span>
+    <span class="code-line" data-line="2"><span class="tk-fn">print</span>(x)</span>
+    <span class="code-line" data-line="3"><span class="tk-fn">print</span>(<span class="tk-fn">id</span>(x))</span>
   </div>
+  <div class="canvas-pane">
+    <svg id="memory-svg" viewBox="0 0 560 360" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
 
-  <div class="sim-body">
-    <div class="code-pane">
-      <span class="code-line" data-line="0"><span class="tk-com"># 두 객체를 만들고, 합을 x가 가리키게 합니다</span></span>
-      <span class="code-line" data-line="1">x <span class="tk-kw">=</span> <span class="tk-num">2</span> <span class="tk-kw">+</span> <span class="tk-num">3</span></span>
-      <span class="code-line" data-line="2"><span class="tk-fn">print</span>(x)</span>
-      <span class="code-line" data-line="3"><span class="tk-fn">print</span>(<span class="tk-fn">id</span>(x))  <span class="tk-com"># 객체의 고유 번호</span></span>
-    </div>
+      <!-- 영역 라벨 -->
+      <text x="80" y="22" text-anchor="middle" font-family="Pretendard,sans-serif"
+            font-size="12" font-weight="700" fill="currentColor" letter-spacing="2" opacity="0.85">CPU</text>
+      <text x="80" y="36" text-anchor="middle" font-family="Pretendard,sans-serif"
+            font-size="11" fill="currentColor" opacity="0.55">계산 · 판단</text>
 
-    <div class="canvas-pane">
-      <svg id="memory-svg" viewBox="0 0 780 380" xmlns="http://www.w3.org/2000/svg">
-        <!-- CPU 영역 -->
-        <text x="90" y="28" text-anchor="middle" font-family="Pretendard, sans-serif"
-              font-size="11" font-weight="700" fill="currentColor" letter-spacing="2"
-              opacity="0.85">CPU</text>
-        <text x="90" y="44" text-anchor="middle" font-family="Pretendard, sans-serif"
-              font-size="11" fill="currentColor" opacity="0.6">계산 · 판단</text>
-        <rect id="cpu-box" x="20" y="58" width="140" height="300" rx="8"
-              fill="var(--cpu-bg)" stroke="var(--cpu-border)" stroke-width="1.5"
-              stroke-dasharray="4 3" opacity="0.45"/>
+      <text x="230" y="22" text-anchor="middle" font-family="Pretendard,sans-serif"
+            font-size="12" font-weight="700" fill="currentColor" letter-spacing="2" opacity="0.85">VARIABLES</text>
+      <text x="230" y="36" text-anchor="middle" font-family="Pretendard,sans-serif"
+            font-size="11" fill="currentColor" opacity="0.55">변수 (이름표)</text>
 
-        <!-- 변수 영역 -->
-        <text x="270" y="28" text-anchor="middle" font-family="Pretendard, sans-serif"
-              font-size="11" font-weight="700" fill="currentColor" letter-spacing="2"
-              opacity="0.85">VARIABLES</text>
-        <text x="270" y="44" text-anchor="middle" font-family="Pretendard, sans-serif"
-              font-size="11" fill="currentColor" opacity="0.6">변수 (이름표)</text>
-        <rect x="190" y="58" width="160" height="300" rx="8"
-              fill="var(--names-bg)" stroke="var(--names-border)" stroke-width="1.5"
-              stroke-dasharray="4 3" opacity="0.5"/>
+      <text x="430" y="22" text-anchor="middle" font-family="Pretendard,sans-serif"
+            font-size="12" font-weight="700" fill="currentColor" letter-spacing="2" opacity="0.85">HEAP</text>
+      <text x="430" y="36" text-anchor="middle" font-family="Pretendard,sans-serif"
+            font-size="11" fill="currentColor" opacity="0.55">객체들이 사는 곳</text>
 
-        <!-- 객체 영역 -->
-        <text x="560" y="28" text-anchor="middle" font-family="Pretendard, sans-serif"
-              font-size="11" font-weight="700" fill="currentColor" letter-spacing="2"
-              opacity="0.85">OBJECTS (HEAP)</text>
-        <text x="560" y="44" text-anchor="middle" font-family="Pretendard, sans-serif"
-              font-size="11" fill="currentColor" opacity="0.6">객체들이 사는 곳</text>
-        <rect x="380" y="58" width="380" height="300" rx="8"
-              fill="var(--heap-bg)" stroke="var(--heap-border)" stroke-width="1.5"
-              stroke-dasharray="4 3" opacity="0.45"/>
+      <!-- 영역 박스 -->
+      <rect x="10"  y="46" width="140" height="300" rx="8"
+            fill="var(--cpu-bg)"   stroke="var(--cpu-border)"   stroke-width="1.5" stroke-dasharray="4 3" opacity="0.45"/>
+      <rect x="160" y="46" width="140" height="300" rx="8"
+            fill="var(--names-bg)" stroke="var(--names-border)" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.5"/>
+      <rect x="310" y="46" width="240" height="300" rx="8"
+            fill="var(--heap-bg)"  stroke="var(--heap-border)"  stroke-width="1.5" stroke-dasharray="4 3" opacity="0.45"/>
 
-        <g id="dynamic"></g>
-      </svg>
-    </div>
+      <g id="dynamic"></g>
+    </svg>
   </div>
+</div>
 
-  <div class="explain">
-    <div class="step-num" id="step-num">STEP 1 / 7</div>
-    <div class="step-title" id="step-title">시작 — 빈 메모리</div>
-    <p class="step-text" id="step-text">아직 아무것도 만들어지지 않았습니다.</p>
-  </div>
+<div class="explain">
+  <div class="step-num" id="step-num">STEP 1 / 7</div>
+  <div class="step-title" id="step-title">시작 — 빈 메모리</div>
+  <p class="step-text" id="step-text">아직 아무것도 없습니다.</p>
+</div>
 
-  <div class="controls">
-    <button class="btn btn-icon" id="btn-restart" title="처음부터">⟲</button>
-    <button class="btn btn-icon" id="btn-prev" title="이전">←</button>
-    <button class="btn btn-primary" id="btn-next">다음 →</button>
-    <button class="btn" id="btn-auto">▶ 자동재생</button>
-    <span class="kbd-hint">← / → / R</span>
-    <div class="dots" id="dots"></div>
-  </div>
+<div class="controls">
+  <button class="btn btn-icon" id="btn-restart" title="처음부터">⟲</button>
+  <button class="btn btn-icon" id="btn-prev">←</button>
+  <button class="btn btn-primary" id="btn-next">다음 →</button>
+  <button class="btn" id="btn-auto">▶ 자동재생</button>
+  <span class="kbd-hint">← / → / R</span>
+  <div class="dots" id="dots"></div>
 </div>
 
 <script>
@@ -261,307 +255,236 @@ body {
     return e;
   }
 
+  // 객체 박스: 130×72, 폰트 크게
   function drawObject(opts) {
-    const g = el('g', { transform: `translate(${opts.x}, ${opts.y})` });
+    const g = el('g', { transform: `translate(${opts.x},${opts.y})` });
     g.appendChild(el('rect', {
-      x: 0, y: 0, width: 130, height: 72, rx: 6,
-      fill: 'var(--bg)', stroke: 'var(--heap-border)', 'stroke-width': 2
+      x:0, y:0, width:130, height:72, rx:6,
+      fill:'var(--bg)', stroke:'var(--heap-border)', 'stroke-width':2
     }));
     g.appendChild(el('text', {
-      x: 8, y: 16,
-      'font-family': 'JetBrains Mono, monospace', 'font-size': 12,
-      fill: 'var(--heap-text)', 'font-weight': 600
+      x:8, y:16,
+      'font-family':'JetBrains Mono,monospace', 'font-size':13,
+      fill:'var(--heap-text)', 'font-weight':600
     }, opts.label || 'int'));
     g.appendChild(el('text', {
-      x: 65, y: 48, 'text-anchor': 'middle',
-      'font-family': 'JetBrains Mono, monospace', 'font-size': 26,
-      'font-weight': 700, fill: 'currentColor'
+      x:65, y:50, 'text-anchor':'middle',
+      'font-family':'JetBrains Mono,monospace', 'font-size':28,
+      'font-weight':700, fill:'currentColor'
     }, String(opts.value)));
     if (opts.addr) {
       g.appendChild(el('text', {
-        x: 122, y: 67, 'text-anchor': 'end',
-        'font-family': 'JetBrains Mono, monospace', 'font-size': 10,
-        fill: 'currentColor', opacity: 0.45
-      }, '@' + opts.addr));
+        x:122, y:68, 'text-anchor':'end',
+        'font-family':'JetBrains Mono,monospace', 'font-size':11,
+        fill:'currentColor', opacity:0.45
+      }, '@'+opts.addr));
     }
     return g;
   }
 
+  // 이름표
   function drawNameTag(opts) {
-    const g = el('g', { transform: `translate(${opts.x}, ${opts.y})` });
+    const g = el('g', { transform: `translate(${opts.x},${opts.y})` });
     g.appendChild(el('path', {
-      d: 'M 0,12 L 10,0 L 90,0 L 90,24 L 10,24 Z',
-      fill: 'var(--names-bg)',
-      stroke: 'var(--names-border)',
-      'stroke-width': 1.5
+      d:'M 0,14 L 12,0 L 108,0 L 108,28 L 12,28 Z',
+      fill:'var(--names-bg)', stroke:'var(--names-border)', 'stroke-width':1.5
     }));
     g.appendChild(el('text', {
-      x: 50, y: 17, 'text-anchor': 'middle',
-      'font-family': 'JetBrains Mono, monospace', 'font-size': 14,
-      'font-weight': 700, fill: 'var(--names-text)'
+      x:58, y:20, 'text-anchor':'middle',
+      'font-family':'JetBrains Mono,monospace', 'font-size':16,
+      'font-weight':700, fill:'var(--names-text)'
     }, opts.name));
     return g;
   }
 
-  let arrowCounter = 0;
+  let arrowCnt = 0;
   function drawArrow(opts) {
     const g = el('g');
     const color = opts.color || 'var(--accent)';
-    const markerId = 'arr-' + (++arrowCounter);
+    const mid = 'arr-'+(++arrowCnt);
     const defs = el('defs');
     defs.appendChild(el('marker', {
-      id: markerId, viewBox: '0 0 10 10', refX: 9, refY: 5,
-      markerWidth: 6, markerHeight: 6, orient: 'auto'
-    }, [el('path', { d: 'M0,0 L10,5 L0,10 z', fill: color })]));
+      id:mid, viewBox:'0 0 10 10', refX:9, refY:5,
+      markerWidth:6, markerHeight:6, orient:'auto'
+    }, [el('path', { d:'M0,0 L10,5 L0,10 z', fill:color })]));
     g.appendChild(defs);
-    const cx = (opts.fromX + opts.toX) / 2;
+    const cx = (opts.x1+opts.x2)/2;
     g.appendChild(el('path', {
-      d: `M ${opts.fromX} ${opts.fromY} Q ${cx} ${opts.fromY}, ${opts.toX} ${opts.toY}`,
-      fill: 'none', stroke: color, 'stroke-width': 2.5,
-      'marker-end': `url(#${markerId})`
+      d:`M ${opts.x1} ${opts.y1} Q ${cx} ${opts.y1} ${opts.x2} ${opts.y2}`,
+      fill:'none', stroke:color, 'stroke-width':2.5,
+      'marker-end':`url(#${mid})`
     }));
     return g;
   }
 
-  function drawOutput(opts) {
+  function drawLabel(x, y, text, color) {
+    return el('text', {
+      x, y, 'text-anchor':'middle',
+      'font-family':'Pretendard,sans-serif', 'font-size':12,
+      fill: color || 'currentColor', opacity: color ? 1 : 0.7
+    }, text);
+  }
+
+  function drawOutput(x, y, w, text) {
     const g = el('g');
-    g.appendChild(el('rect', {
-      x: opts.x, y: opts.y, width: opts.w || 140, height: 32, rx: 4,
-      fill: '#2b2b2b', stroke: '#4ec9b0', 'stroke-width': 1
-    }));
+    g.appendChild(el('rect', { x, y, width:w, height:34, rx:4, fill:'#2b2b2b', stroke:'#4ec9b0', 'stroke-width':1 }));
     g.appendChild(el('text', {
-      x: opts.x + (opts.w || 140) / 2, y: opts.y + 21, 'text-anchor': 'middle',
-      'font-family': 'JetBrains Mono, monospace', 'font-size': 14,
-      fill: '#d4d4d4'
-    }, String(opts.text)));
+      x: x+w/2, y: y+23, 'text-anchor':'middle',
+      'font-family':'JetBrains Mono,monospace', 'font-size':15, fill:'#d4d4d4'
+    }, String(text)));
     g.appendChild(el('text', {
-      x: opts.x - 8, y: opts.y + 21, 'text-anchor': 'end',
-      'font-family': 'Pretendard, sans-serif', 'font-size': 11,
-      fill: 'currentColor', opacity: 0.6
+      x: x-8, y: y+23, 'text-anchor':'end',
+      'font-family':'Pretendard,sans-serif', 'font-size':11, fill:'currentColor', opacity:0.6
     }, '화면 →'));
     return g;
   }
 
-  // CPU 박스 안의 표현 (활성 상태에 따라 보임)
-  // mode: 'idle' (조용히 대기), 'reading' (값 읽기), 'computing' (계산 중)
-  function drawCpuContent(mode, opts) {
-    opts = opts || {};
+  // CPU 내부
+  function drawCpu(mode, opts) {
+    opts = opts||{};
     const g = el('g');
-    const cx = 90;  // CPU 박스 중심 x
+    const cx = 80;
     if (mode === 'idle') {
-      // 작은 ALU 표시 — 흐릿하게
-      g.appendChild(el('text', {
-        x: cx, y: 200, 'text-anchor': 'middle',
-        'font-family': 'JetBrains Mono, monospace', 'font-size': 11,
-        fill: 'currentColor', opacity: 0.35
-      }, '+ - × ÷'));
-      g.appendChild(el('text', {
-        x: cx, y: 220, 'text-anchor': 'middle',
-        'font-family': 'Pretendard, sans-serif', 'font-size': 10,
-        fill: 'currentColor', opacity: 0.4
-      }, '대기'));
-    } else if (mode === 'computing') {
-      // CPU가 활성화 — 2 + 3 = 5 표시
-      g.appendChild(el('rect', {
-        x: 35, y: 160, width: 110, height: 110, rx: 6,
-        fill: 'var(--cpu-bg)', stroke: 'var(--cpu-border)',
-        'stroke-width': 2
-      }));
-      g.appendChild(el('text', {
-        x: cx, y: 178, 'text-anchor': 'middle',
-        'font-family': 'JetBrains Mono, monospace', 'font-size': 9,
-        fill: 'var(--cpu-text)', 'font-weight': 700, 'letter-spacing': 1
-      }, 'ALU'));
-      // 2 + 3
-      g.appendChild(el('text', {
-        x: cx, y: 210, 'text-anchor': 'middle',
-        'font-family': 'JetBrains Mono, monospace', 'font-size': 24,
-        'font-weight': 700, fill: 'currentColor'
-      }, '2 + 3'));
-      // 화살표 ↓
-      g.appendChild(el('text', {
-        x: cx, y: 234, 'text-anchor': 'middle',
-        'font-family': 'JetBrains Mono, monospace', 'font-size': 14,
-        fill: 'currentColor', opacity: 0.6
-      }, '↓'));
-      // 결과 5
-      g.appendChild(el('text', {
-        x: cx, y: 260, 'text-anchor': 'middle',
-        'font-family': 'JetBrains Mono, monospace', 'font-size': 24,
-        'font-weight': 700, fill: 'var(--accent)'
-      }, '5'));
-    } else if (mode === 'following') {
-      // 이름표 → 객체 따라가기 (print, id 단계)
-      g.appendChild(el('rect', {
-        x: 35, y: 180, width: 110, height: 70, rx: 6,
-        fill: 'var(--cpu-bg)', stroke: 'var(--cpu-border)',
-        'stroke-width': 2, opacity: 0.85
-      }));
-      g.appendChild(el('text', {
-        x: cx, y: 200, 'text-anchor': 'middle',
-        'font-family': 'JetBrains Mono, monospace', 'font-size': 9,
-        fill: 'var(--cpu-text)', 'font-weight': 700, 'letter-spacing': 1
-      }, 'CPU'));
-      g.appendChild(el('text', {
-        x: cx, y: 224, 'text-anchor': 'middle',
-        'font-family': 'Pretendard, sans-serif', 'font-size': 11,
-        fill: 'currentColor', 'font-weight': 600
-      }, opts.label || '읽기'));
-      g.appendChild(el('text', {
-        x: cx, y: 240, 'text-anchor': 'middle',
-        'font-family': 'JetBrains Mono, monospace', 'font-size': 11,
-        fill: 'currentColor', opacity: 0.7
-      }, opts.detail || ''));
+      g.appendChild(el('text', { x:cx, y:200, 'text-anchor':'middle',
+        'font-family':'JetBrains Mono,monospace', 'font-size':13,
+        fill:'currentColor', opacity:0.3 }, '+ - × ÷'));
+      g.appendChild(el('text', { x:cx, y:220, 'text-anchor':'middle',
+        'font-family':'Pretendard,sans-serif', 'font-size':12,
+        fill:'currentColor', opacity:0.35 }, '대기 중'));
     } else if (mode === 'creating') {
-      // 객체를 만드는 중 (단순한 표현)
-      g.appendChild(el('rect', {
-        x: 35, y: 180, width: 110, height: 60, rx: 6,
-        fill: 'var(--cpu-bg)', stroke: 'var(--cpu-border)',
-        'stroke-width': 1.5, opacity: 0.7
-      }));
-      g.appendChild(el('text', {
-        x: cx, y: 200, 'text-anchor': 'middle',
-        'font-family': 'JetBrains Mono, monospace', 'font-size': 9,
-        fill: 'var(--cpu-text)', 'font-weight': 700, 'letter-spacing': 1
-      }, 'CPU'));
-      g.appendChild(el('text', {
-        x: cx, y: 224, 'text-anchor': 'middle',
-        'font-family': 'Pretendard, sans-serif', 'font-size': 10,
-        fill: 'currentColor', opacity: 0.85
-      }, opts.label || '객체 생성'));
+      g.appendChild(el('rect', { x:25, y:165, width:110, height:55, rx:6,
+        fill:'var(--cpu-bg)', stroke:'var(--cpu-border)', 'stroke-width':1.5, opacity:0.8 }));
+      g.appendChild(el('text', { x:cx, y:183, 'text-anchor':'middle',
+        'font-family':'JetBrains Mono,monospace', 'font-size':10,
+        fill:'var(--cpu-text)', 'font-weight':700, 'letter-spacing':1 }, 'CPU'));
+      g.appendChild(el('text', { x:cx, y:207, 'text-anchor':'middle',
+        'font-family':'Pretendard,sans-serif', 'font-size':13,
+        fill:'currentColor', opacity:0.9 }, opts.label||'생성 중'));
+    } else if (mode === 'computing') {
+      g.appendChild(el('rect', { x:20, y:140, width:120, height:130, rx:6,
+        fill:'var(--cpu-bg)', stroke:'var(--cpu-border)', 'stroke-width':2 }));
+      g.appendChild(el('text', { x:cx, y:158, 'text-anchor':'middle',
+        'font-family':'JetBrains Mono,monospace', 'font-size':10,
+        fill:'var(--cpu-text)', 'font-weight':700, 'letter-spacing':1 }, 'ALU'));
+      g.appendChild(el('text', { x:cx, y:193, 'text-anchor':'middle',
+        'font-family':'JetBrains Mono,monospace', 'font-size':26,
+        'font-weight':700, fill:'currentColor' }, '2 + 3'));
+      g.appendChild(el('text', { x:cx, y:218, 'text-anchor':'middle',
+        'font-family':'JetBrains Mono,monospace', 'font-size':14,
+        fill:'currentColor', opacity:0.5 }, '↓'));
+      g.appendChild(el('text', { x:cx, y:248, 'text-anchor':'middle',
+        'font-family':'JetBrains Mono,monospace', 'font-size':26,
+        'font-weight':700, fill:'var(--accent)' }, '5'));
+    } else if (mode === 'following') {
+      g.appendChild(el('rect', { x:25, y:155, width:110, height:80, rx:6,
+        fill:'var(--cpu-bg)', stroke:'var(--cpu-border)', 'stroke-width':1.5, opacity:0.85 }));
+      g.appendChild(el('text', { x:cx, y:174, 'text-anchor':'middle',
+        'font-family':'JetBrains Mono,monospace', 'font-size':10,
+        fill:'var(--cpu-text)', 'font-weight':700, 'letter-spacing':1 }, 'CPU'));
+      g.appendChild(el('text', { x:cx, y:200, 'text-anchor':'middle',
+        'font-family':'Pretendard,sans-serif', 'font-size':14,
+        fill:'currentColor', 'font-weight':600 }, opts.label||''));
+      g.appendChild(el('text', { x:cx, y:222, 'text-anchor':'middle',
+        'font-family':'JetBrains Mono,monospace', 'font-size':13,
+        fill:'currentColor', opacity:0.7 }, opts.detail||''));
     }
     return g;
   }
 
-  // 모든 단계에서 보일 영구 객체들 (좌표 +160 시프트)
+  // 객체 배치: 박스 130×72
+  // obj2: x=320, y=70  → 우측끝 450
+  // obj3: x=320, y=190 → 수직으로 배치 (겹침 없음)
+  // obj5: x=320, y=190 이후 (obj3 대체 아님, obj5는 아래)
+  // 실제: obj2(x=320,y=65), obj3(x=320,y=180), obj5(x=320,y=65) — 단계별 표시
   function objects(stage) {
     const arr = [];
-    if (stage >= 1) arr.push(drawObject({ x: 400, y: 80, value: 2, addr: '0x7f01' }));
-    if (stage >= 2) arr.push(drawObject({ x: 560, y: 80, value: 3, addr: '0x7f02' }));
-    if (stage >= 3) arr.push(drawObject({ x: 480, y: 210, value: 5, addr: '0x7f0c' }));
+    if (stage >= 1) arr.push(drawObject({ x:322, y:65,  value:2, addr:'0x7f01' }));
+    if (stage >= 2) arr.push(drawObject({ x:322, y:175, value:3, addr:'0x7f02' }));
+    if (stage >= 3) arr.push(drawObject({ x:322, y:290, value:5, addr:'0x7f0c' }));
     return arr;
   }
 
   const STEPS = [
     {
-      line: 0,
+      line: -1,
       title: '시작 — 빈 메모리',
-      text: '아직 아무것도 만들어지지 않았습니다. CPU는 계산을 담당하는 부품이고, 가운데는 변수(이름표) 영역, 오른쪽은 객체들이 사는 영역입니다.',
-      render: () => {
-        dynamic.appendChild(drawCpuContent('idle'));
+      text: '아직 아무것도 만들어지지 않았습니다. CPU는 계산·판단, 가운데는 변수(이름표) 영역, 오른쪽 HEAP은 객체들이 사는 곳입니다.',
+      render() {
+        dynamic.appendChild(drawCpu('idle'));
       }
     },
     {
       line: 1,
-      title: '1단계 — 정수 객체 2가 만들어짐',
-      text: '식의 오른쪽부터 평가합니다. CPU가 명령을 실행해서 메모리(HEAP)에 정수 객체 2를 만듭니다. 객체에는 고유한 주소(id)가 있습니다.',
-      render: () => {
-        dynamic.appendChild(drawCpuContent('creating', { label: '객체 2 생성' }));
+      title: '1단계 — 정수 객체 2 생성',
+      text: '오른쪽 식부터 평가합니다. CPU가 HEAP에 정수 객체 2를 만듭니다. 고유 주소(id)가 부여됩니다.',
+      render() {
+        dynamic.appendChild(drawCpu('creating', { label:'객체 2 생성' }));
         objects(1).forEach(o => dynamic.appendChild(o));
-        // CPU → 객체 2 (만들기 화살표)
-        dynamic.appendChild(drawArrow({
-          fromX: 145, fromY: 110, toX: 398, toY: 110, color: 'var(--cpu-border)'
-        }));
+        dynamic.appendChild(drawArrow({ x1:148, y1:100, x2:320, y2:100, color:'var(--cpu-border)' }));
       }
     },
     {
       line: 1,
-      title: '2단계 — 정수 객체 3이 만들어짐',
-      text: '다음으로 CPU가 정수 객체 3을 만듭니다. 또 다른 정수 객체가 메모리에 생깁니다. 별개의 객체이므로 주소도 다릅니다.',
-      render: () => {
-        dynamic.appendChild(drawCpuContent('creating', { label: '객체 3 생성' }));
+      title: '2단계 — 정수 객체 3 생성',
+      text: 'CPU가 HEAP에 정수 객체 3을 만듭니다. 별개의 객체라 주소도 다릅니다.',
+      render() {
+        dynamic.appendChild(drawCpu('creating', { label:'객체 3 생성' }));
         objects(2).forEach(o => dynamic.appendChild(o));
-        dynamic.appendChild(drawArrow({
-          fromX: 145, fromY: 110, toX: 558, toY: 110, color: 'var(--cpu-border)'
-        }));
+        dynamic.appendChild(drawArrow({ x1:148, y1:100, x2:320, y2:210, color:'var(--cpu-border)' }));
       }
     },
     {
       line: 1,
-      title: '3단계 — CPU가 2 + 3 을 계산해 새 객체 5를 만듦',
-      text: 'CPU가 메모리의 두 객체 값(2와 3)을 읽어서 더하기 연산을 수행합니다. 이 계산은 CPU의 내부에서 일어납니다. 결과 5는 다시 메모리에 새 객체로 만들어집니다. 2와 3 객체는 그대로 있습니다.',
-      render: () => {
-        dynamic.appendChild(drawCpuContent('computing'));
+      title: '3단계 — CPU가 2+3 계산, 객체 5 생성',
+      text: 'CPU가 두 객체의 값을 읽어 더합니다. 결과 5는 새 객체로 HEAP에 만들어집니다. 2와 3 객체는 그대로 남아있습니다.',
+      render() {
+        dynamic.appendChild(drawCpu('computing'));
         objects(3).forEach(o => dynamic.appendChild(o));
-        // 2 → CPU (값 읽기, 들어오는 화살표)
-        dynamic.appendChild(drawArrow({
-          fromX: 398, fromY: 116, toX: 150, toY: 200, color: 'var(--heap-border)'
-        }));
-        // 3 → CPU (값 읽기)
-        dynamic.appendChild(drawArrow({
-          fromX: 558, fromY: 116, toX: 152, toY: 215, color: 'var(--heap-border)'
-        }));
-        // CPU → 5 (결과 쓰기)
-        dynamic.appendChild(drawArrow({
-          fromX: 150, fromY: 260, toX: 478, toY: 245, color: 'var(--accent)'
-        }));
-        // 라벨
-        dynamic.appendChild(el('text', {
-          x: 290, y: 148, 'text-anchor': 'middle',
-          'font-family': 'Pretendard, sans-serif', 'font-size': 11,
-          fill: 'currentColor', opacity: 0.7
-        }, '값 읽기'));
-        dynamic.appendChild(el('text', {
-          x: 300, y: 295, 'text-anchor': 'middle',
-          'font-family': 'Pretendard, sans-serif', 'font-size': 11,
-          fill: 'var(--accent)', 'font-weight': 600
-        }, '결과 쓰기'));
+        dynamic.appendChild(drawArrow({ x1:320, y1:101, x2:148, y2:195, color:'var(--heap-border)' }));
+        dynamic.appendChild(drawArrow({ x1:320, y1:211, x2:148, y2:215, color:'var(--heap-border)' }));
+        dynamic.appendChild(drawArrow({ x1:148, y1:255, x2:320, y2:326, color:'var(--accent)' }));
+        dynamic.appendChild(drawLabel(230, 170, '값 읽기'));
+        dynamic.appendChild(drawLabel(230, 295, '결과 쓰기', 'var(--accent)'));
       }
     },
     {
       line: 1,
-      title: '4단계 — 변수 x 가 만들어짐',
-      text: '왼쪽의 x = 가 실행됩니다. CPU가 x라는 이름표를 만들고, 그 이름표가 방금 만든 5 객체를 가리키게 합니다. x 안에 5가 "담긴" 게 아니라, x가 5 객체를 "가리키는" 것입니다.',
-      render: () => {
-        dynamic.appendChild(drawCpuContent('creating', { label: '이름표 x 연결' }));
+      title: '4단계 — 이름표 x 가 객체 5를 가리킴',
+      text: 'x = 부분이 실행됩니다. 변수 x라는 이름표가 만들어지고 객체 5를 가리킵니다. x 안에 5가 담긴 게 아니라, x가 5 객체를 가리키는 것입니다.',
+      render() {
+        dynamic.appendChild(drawCpu('creating', { label:'이름표 x 연결' }));
         objects(3).forEach(o => dynamic.appendChild(o));
-        dynamic.appendChild(drawNameTag({ x: 230, y: 230, name: 'x' }));
-        dynamic.appendChild(drawArrow({
-          fromX: 325, fromY: 242, toX: 478, toY: 246, color: 'var(--accent)'
-        }));
+        dynamic.appendChild(drawNameTag({ x:175, y:312 }));
+        dynamic.appendChild(drawArrow({ x1:285, y1:326, x2:320, y2:326, color:'var(--accent)' }));
       }
     },
     {
       line: 2,
       title: '5단계 — print(x) 가 5를 출력',
-      text: 'CPU가 print(x)를 실행합니다. x가 가리키는 객체를 따라가서 그 값(5)을 화면에 보여줍니다. 이름표 x → 5 객체 → 출력 "5".',
-      render: () => {
-        dynamic.appendChild(drawCpuContent('following', { label: 'print(x)', detail: 'x → 5' }));
+      text: 'CPU가 x 이름표를 따라가 객체 5의 값을 읽고 화면에 출력합니다.',
+      render() {
+        dynamic.appendChild(drawCpu('following', { label:'print(x)', detail:'x → 5' }));
         objects(3).forEach(o => dynamic.appendChild(o));
-        dynamic.appendChild(drawNameTag({ x: 230, y: 230, name: 'x' }));
-        dynamic.appendChild(drawArrow({
-          fromX: 325, fromY: 242, toX: 478, toY: 246, color: 'var(--accent)'
-        }));
-        dynamic.appendChild(drawOutput({ x: 480, y: 320, w: 100, text: '5' }));
+        dynamic.appendChild(drawNameTag({ x:175, y:312 }));
+        dynamic.appendChild(drawArrow({ x1:285, y1:326, x2:320, y2:326, color:'var(--accent)' }));
+        dynamic.appendChild(drawOutput(170, 200, 120, '5'));
       }
     },
     {
       line: 3,
       title: '6단계 — id(x) 는 객체의 고유 번호',
-      text: 'id(x)는 x가 가리키는 객체의 고유 번호(메모리 주소)를 알려줍니다. "이름표가 어떤 객체를 가리키고 있는가"를 직접 확인하는 방법입니다.',
-      render: () => {
-        dynamic.appendChild(drawCpuContent('following', { label: 'id(x)', detail: '주소 반환' }));
+      text: 'id(x)는 x가 가리키는 객체의 메모리 주소를 알려줍니다. 같은 객체면 항상 같은 번호가 나옵니다.',
+      render() {
+        dynamic.appendChild(drawCpu('following', { label:'id(x)', detail:'주소 반환' }));
         objects(3).forEach(o => dynamic.appendChild(o));
-        dynamic.appendChild(drawNameTag({ x: 230, y: 230, name: 'x' }));
-        dynamic.appendChild(drawArrow({
-          fromX: 325, fromY: 242, toX: 478, toY: 246, color: 'var(--accent)'
-        }));
-        dynamic.appendChild(el('rect', {
-          x: 482, y: 278, width: 36, height: 16, rx: 3,
-          fill: 'var(--accent)', opacity: 0.85
-        }));
-        dynamic.appendChild(el('text', {
-          x: 500, y: 290, 'text-anchor': 'middle',
-          'font-family': 'JetBrains Mono, monospace', 'font-size': 10,
-          fill: 'white', 'font-weight': 700
-        }, 'id'));
-        dynamic.appendChild(drawOutput({ x: 430, y: 335, w: 220, text: '140288751120140' }));
+        dynamic.appendChild(drawNameTag({ x:175, y:312 }));
+        dynamic.appendChild(drawArrow({ x1:285, y1:326, x2:320, y2:326, color:'var(--accent)' }));
+        dynamic.appendChild(drawOutput(155, 200, 200, '140288751120'));
       }
     }
   ];
 
-  let currentStep = 0;
-  let autoTimer = null;
+  let cur = 0, autoTimer = null;
 
   const dotsEl = document.getElementById('dots');
   STEPS.forEach(() => {
@@ -571,86 +494,73 @@ body {
   });
 
   function render() {
-    document.querySelectorAll('.code-line').forEach((el, i) => {
-      el.classList.remove('active', 'done');
-      const stepLine = STEPS[currentStep].line;
-      if (i === stepLine) el.classList.add('active');
-      else if (i < stepLine) el.classList.add('done');
+    const lines = document.querySelectorAll('.code-line');
+    lines.forEach(el => { el.classList.remove('active','done'); });
+    const ln = STEPS[cur].line;
+    lines.forEach(el => {
+      const l = parseInt(el.dataset.line);
+      if (l === ln) el.classList.add('active');
+      else if (l < ln) el.classList.add('done');
     });
+
     while (dynamic.firstChild) dynamic.removeChild(dynamic.firstChild);
-    STEPS[currentStep].render();
-    document.getElementById('step-num').textContent = `STEP ${currentStep + 1} / ${STEPS.length}`;
-    document.getElementById('step-title').textContent = STEPS[currentStep].title;
-    document.getElementById('step-text').textContent = STEPS[currentStep].text;
-    document.querySelectorAll('.dot').forEach((d, i) => {
-      d.classList.remove('active', 'done');
-      if (i === currentStep) d.classList.add('active');
-      else if (i < currentStep) d.classList.add('done');
+    STEPS[cur].render();
+
+    document.getElementById('step-num').textContent = `STEP ${cur+1} / ${STEPS.length}`;
+    document.getElementById('step-title').textContent = STEPS[cur].title;
+    document.getElementById('step-text').textContent = STEPS[cur].text;
+
+    document.querySelectorAll('.dot').forEach((d,i) => {
+      d.classList.remove('active','done');
+      if (i===cur) d.classList.add('active');
+      else if (i<cur) d.classList.add('done');
     });
-    document.getElementById('btn-prev').disabled = currentStep === 0;
-    const nextBtn = document.getElementById('btn-next');
-    if (currentStep === STEPS.length - 1) {
-      nextBtn.textContent = '완료';
-      nextBtn.disabled = true;
-    } else {
-      nextBtn.textContent = '다음 →';
-      nextBtn.disabled = false;
-    }
+
+    document.getElementById('btn-prev').disabled = cur===0;
+    const nb = document.getElementById('btn-next');
+    if (cur===STEPS.length-1) { nb.textContent='완료'; nb.disabled=true; }
+    else { nb.textContent='다음 →'; nb.disabled=false; }
   }
 
-  function next() { if (currentStep < STEPS.length - 1) { currentStep++; render(); } }
-  function prev() { if (currentStep > 0) { currentStep--; render(); } }
-  function restart() { stopAuto(); currentStep = 0; render(); }
+  function next() { if (cur<STEPS.length-1) { cur++; render(); } }
+  function prev() { if (cur>0) { cur--; render(); } }
+  function restart() { stopAuto(); cur=0; render(); }
   function startAuto() {
     if (autoTimer) return;
-    document.getElementById('btn-auto').textContent = '⏸ 일시정지';
-    autoTimer = setInterval(() => {
-      if (currentStep < STEPS.length - 1) next();
-      else stopAuto();
-    }, 2200);
+    document.getElementById('btn-auto').textContent='⏸ 일시정지';
+    autoTimer = setInterval(() => { if (cur<STEPS.length-1) next(); else stopAuto(); }, 2200);
   }
   function stopAuto() {
-    if (autoTimer) {
-      clearInterval(autoTimer);
-      autoTimer = null;
-      document.getElementById('btn-auto').textContent = '▶ 자동재생';
-    }
+    if (autoTimer) { clearInterval(autoTimer); autoTimer=null; document.getElementById('btn-auto').textContent='▶ 자동재생'; }
   }
 
-  document.getElementById('btn-next').addEventListener('click', () => { stopAuto(); next(); });
-  document.getElementById('btn-prev').addEventListener('click', () => { stopAuto(); prev(); });
+  document.getElementById('btn-next').addEventListener('click', ()=>{ stopAuto(); next(); });
+  document.getElementById('btn-prev').addEventListener('click', ()=>{ stopAuto(); prev(); });
   document.getElementById('btn-restart').addEventListener('click', restart);
-  document.getElementById('btn-auto').addEventListener('click', () => {
-    if (autoTimer) stopAuto(); else startAuto();
-  });
-
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowRight') { stopAuto(); next(); e.preventDefault(); }
-    else if (e.key === 'ArrowLeft') { stopAuto(); prev(); e.preventDefault(); }
-    else if (e.key === 'r' || e.key === 'R') { restart(); e.preventDefault(); }
+  document.getElementById('btn-auto').addEventListener('click', ()=>{ if (autoTimer) stopAuto(); else startAuto(); });
+  document.addEventListener('keydown', e => {
+    if (e.key==='ArrowRight') { stopAuto(); next(); e.preventDefault(); }
+    else if (e.key==='ArrowLeft') { stopAuto(); prev(); e.preventDefault(); }
+    else if (e.key==='r'||e.key==='R') { restart(); e.preventDefault(); }
   });
 
   function syncTheme() {
     try {
-      const parentTheme = window.parent && window.parent.document &&
-                          window.parent.document.documentElement.getAttribute('data-theme');
-      if (parentTheme) document.documentElement.setAttribute('data-theme', parentTheme);
-    } catch (e) {
-      if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        document.documentElement.setAttribute('data-theme', 'dark');
-      }
+      const t = window.parent&&window.parent.document&&
+                window.parent.document.documentElement.getAttribute('data-theme');
+      if (t) document.documentElement.setAttribute('data-theme', t);
+    } catch(e) {
+      if (window.matchMedia('(prefers-color-scheme: dark)').matches)
+        document.documentElement.setAttribute('data-theme','dark');
     }
   }
   syncTheme();
-  window.addEventListener('message', (e) => {
-    if (e.data && e.data.theme) {
-      document.documentElement.setAttribute('data-theme', e.data.theme);
-    }
+  window.addEventListener('message', e => {
+    if (e.data&&e.data.theme) document.documentElement.setAttribute('data-theme', e.data.theme);
   });
 
   render();
 })();
 </script>
-
 </body>
 </html>
