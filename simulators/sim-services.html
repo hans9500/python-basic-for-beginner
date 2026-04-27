@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>시뮬레이터 — 배달의민족 주문 흐름</title>
+<style>
+:root {
+  --bg: #ffffff;
+  --bg-soft: #f7f7f5;
+  --bg-card: #fcfcfa;
+  --border: #e5e5e0;
+  --text: #1a1a1a;
+  --text-soft: #4a4a4a;
+  --text-mute: #888880;
+  --accent: #c1440e;
+
+  --node-user: #2563eb;
+  --node-frontend: #0891b2;
+  --node-backend: #c1440e;
+  --node-db: #7c3aed;
+  --node-payment: #16a34a;
+  --node-kafka: #d97706;
+  --node-store: #db2777;
+  --node-rider: #0d9488;
+  --node-push: #6366f1;
+
+  --idle-color: #cbd5e1;
+  --idle-text: #94a3b8;
+
+  --speculation-bg: #fef3c7;
+  --speculation-border: #d97706;
+  --speculation-text: #78350f;
+}
+[data-theme="dark"] {
+  --bg: #1a1a1a;
+  --bg-soft: #232320;
+  --bg-card: #252522;
+  --border: #3a3a35;
+  --text: #ececec;
+  --text-soft: #c4c4c0;
+  --text-mute: #888880;
+  --accent: #e07a4f;
+
+  --node-user: #60a5fa;
+  --node-frontend: #22d3ee;
+  --node-backend: #e07a4f;
+  --node-db: #a78bfa;
+  --node-payment: #4ade80;
+  --node-kafka: #fbbf24;
+  --node-store: #f472b6;
+  --node-rider: #2dd4bf;
+  --node-push: #a5b4fc;
+
+  --idle-color: #475569;
+  --idle-text: #64748b;
+
+  --speculation-bg: #3a2a18;
+  --speculation-border: #d97706;
+  --speculation-text: #fbbf24;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  padding: 12px;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  line-height: 1.55;
+}
+.sim-wrapper {
+  max-width: 920px;
+  margin: 0 auto;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 헤더 — 짧게 */
+.sim-head {
+  padding: 10px 18px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.sim-head h2 {
+  margin: 0 0 2px;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--accent);
+}
+.sim-head .desc {
+  margin: 0;
+  color: var(--text-mute);
+  font-size: 11px;
+}
+
+/* ⭐ 버튼 컨트롤 바 — 헤더 바로 아래 (절대 고정 위치!) */
+.sim-controls {
+  padding: 10px 18px;
+  background: var(--bg-soft);
+  border-bottom: 2px solid var(--accent);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+}
+.sim-btn {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 7px 13px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: inherit;
+  transition: background 0.15s, border-color 0.15s;
+}
+.sim-btn:hover:not(:disabled) {
+  background: var(--bg);
+  border-color: var(--accent);
+}
+.sim-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.sim-btn-primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+.sim-btn-primary:hover:not(:disabled) {
+  filter: brightness(1.1);
+  background: var(--accent);
+}
+.sim-step-indicator {
+  margin-left: auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: 0.05em;
+}
+.sim-dots {
+  display: flex;
+  gap: 4px;
+  margin-left: 12px;
+  align-items: center;
+}
+.sim-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--idle-color);
+  transition: all 0.2s;
+}
+.sim-dot.active {
+  background: var(--accent);
+  transform: scale(1.4);
+}
+.sim-dot.done {
+  background: var(--text-soft);
+}
+
+/* 다이어그램 영역 — 짧게 */
+.sim-diagram {
+  background: var(--bg-soft);
+  padding: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.sim-diagram svg {
+  width: 100%;
+  height: auto;
+  max-height: 360px;
+  display: block;
+}
+
+/* 단계 정보 */
+.sim-step-info {
+  padding: 14px 18px;
+  background: var(--bg-card);
+  min-height: 130px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.sim-step-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0;
+}
+.sim-step-desc {
+  font-size: 13px;
+  color: var(--text-soft);
+  margin: 0;
+  line-height: 1.55;
+}
+.sim-step-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 2px;
+}
+.sim-tag {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  background: var(--bg-soft);
+  border: 1px solid var(--border);
+  color: var(--text-soft);
+  font-weight: 600;
+}
+.sim-tag.fact {
+  background: rgba(22, 163, 74, 0.12);
+  border-color: #16a34a;
+  color: #16a34a;
+}
+.sim-tag.guess {
+  background: var(--speculation-bg);
+  border-color: var(--speculation-border);
+  color: var(--speculation-text);
+}
+.sim-speculation {
+  background: var(--speculation-bg);
+  border-left: 3px solid var(--speculation-border);
+  border-radius: 4px;
+  padding: 8px 12px;
+  font-size: 12px;
+  color: var(--speculation-text);
+  margin-top: 4px;
+}
+.sim-speculation .label {
+  font-weight: 700;
+  margin-right: 4px;
+}
+.sim-source {
+  font-size: 11px;
+  color: var(--text-mute);
+  font-style: italic;
+  margin: 0;
+}
+
+/* SVG 노드 */
+.node-rect {
+  transition: all 0.4s ease;
+}
+.node-rect.idle {
+  fill: var(--bg-card);
+  stroke: var(--idle-color);
+  stroke-width: 1.5;
+}
+.node-rect.active {
+  stroke-width: 3;
+  filter: drop-shadow(0 0 8px currentColor);
+}
+.node-text {
+  font-family: 'Pretendard', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  text-anchor: middle;
+  pointer-events: none;
+  transition: fill 0.4s ease;
+}
+.node-text.idle { fill: var(--idle-text); }
+.node-text.active { fill: var(--text); }
+.node-tech {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  text-anchor: middle;
+  pointer-events: none;
+  transition: fill 0.4s ease;
+}
+.node-tech.idle { fill: var(--idle-text); }
+.node-tech.active { fill: currentColor; }
+
+.flow-arrow {
+  stroke-width: 2.5;
+  fill: none;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  stroke-dasharray: 5 4;
+  animation: flow-dash 1s linear infinite;
+}
+.flow-arrow.show {
+  opacity: 1;
+}
+@keyframes flow-dash {
+  to { stroke-dashoffset: -18; }
+}
+
+/* 모바일 */
+@media (max-width: 720px) {
+  .sim-wrapper { border-radius: 8px; }
+  .sim-head { padding: 9px 14px; }
+  .sim-controls { padding: 8px 14px; gap: 6px; }
+  .sim-btn { padding: 6px 10px; font-size: 12px; }
+  .sim-step-info { padding: 12px 14px; min-height: 150px; }
+  .sim-dots { width: 100%; justify-content: center; margin: 4px 0 0 0; }
+  .sim-step-indicator { width: 100%; text-align: center; margin: 4px 0 0 0; }
+  .node-text { font-size: 12px; }
+  .node-tech { font-size: 10px; }
+}
+</style>
+</head>
+<body>
+
+<div class="sim-wrapper">
+  <!-- 헤더 -->
+  <div class="sim-head">
+    <h2>배달의민족 주문 흐름 시뮬레이터</h2>
+    <p class="desc">우아한형제들 공개 자료 + 일반 IT 산업 패턴 기반</p>
+  </div>
+
+  <!-- ⭐ 버튼 컨트롤 바 — 헤더 바로 아래 (절대 고정!) -->
+  <div class="sim-controls">
+    <button class="sim-btn" id="btn-restart" title="처음부터">⟲</button>
+    <button class="sim-btn" id="btn-prev">◀ 이전</button>
+    <button class="sim-btn sim-btn-primary" id="btn-next">다음 ▶</button>
+    <button class="sim-btn" id="btn-auto">▶ 자동</button>
+    <span class="sim-step-indicator" id="step-num">STEP 0 / 10</span>
+    <div class="sim-dots" id="dots">
+      <span class="sim-dot active"></span>
+      <span class="sim-dot"></span>
+      <span class="sim-dot"></span>
+      <span class="sim-dot"></span>
+      <span class="sim-dot"></span>
+      <span class="sim-dot"></span>
+      <span class="sim-dot"></span>
+      <span class="sim-dot"></span>
+      <span class="sim-dot"></span>
+      <span class="sim-dot"></span>
+      <span class="sim-dot"></span>
+    </div>
+  </div>
+
+  <!-- 다이어그램 (viewBox 700×420 — 짧게) -->
+  <div class="sim-diagram">
+    <svg viewBox="0 0 700 420" xmlns="http://www.w3.org/2000/svg" role="img"
+         aria-label="배달의민족 주문 흐름 다이어그램">
+      <defs>
+        <marker id="arr-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+          <path d="M0,0 L10,5 L0,10 z" fill="var(--node-user)"/>
+        </marker>
+        <marker id="arr-cyan" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+          <path d="M0,0 L10,5 L0,10 z" fill="var(--node-frontend)"/>
+        </marker>
+        <marker id="arr-orange" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+          <path d="M0,0 L10,5 L0,10 z" fill="var(--accent)"/>
+        </marker>
+        <marker id="arr-purple" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+          <path d="M0,0 L10,5 L0,10 z" fill="var(--node-db)"/>
+        </marker>
+        <marker id="arr-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+          <path d="M0,0 L10,5 L0,10 z" fill="var(--node-payment)"/>
+        </marker>
+        <marker id="arr-kafka" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+          <path d="M0,0 L10,5 L0,10 z" fill="var(--node-kafka)"/>
+        </marker>
+      </defs>
+
+      <!-- 노드들 (글씨 크게 14px, 박스 더 큼) -->
+
+      <!-- 사용자 (좌상단) -->
+      <g id="node-user" data-node="user" style="color: var(--node-user)">
+        <rect class="node-rect idle" x="20" y="30" width="140" height="55" rx="8"/>
+        <text class="node-text idle" x="90" y="55">👤 사용자</text>
+        <text class="node-tech idle" x="90" y="73">스마트폰</text>
+      </g>
+
+      <!-- 모바일 앱 -->
+      <g id="node-frontend" data-node="frontend" style="color: var(--node-frontend)">
+        <rect class="node-rect idle" x="190" y="30" width="160" height="55" rx="8"/>
+        <text class="node-text idle" x="270" y="55">📱 모바일 앱</text>
+        <text class="node-tech idle" x="270" y="73">iOS / Android</text>
+      </g>
+
+      <!-- 백엔드 (중앙) -->
+      <g id="node-backend" data-node="backend" style="color: var(--node-backend)">
+        <rect class="node-rect idle" x="260" y="170" width="180" height="65" rx="8"/>
+        <text class="node-text idle" x="350" y="195">⚙️ 백엔드 서버</text>
+        <text class="node-tech idle" x="350" y="215">Java / Spring Boot</text>
+        <text class="node-tech idle" x="350" y="228">(마이크로서비스)</text>
+      </g>
+
+      <!-- DB (우상단) -->
+      <g id="node-db" data-node="db" style="color: var(--node-db)">
+        <rect class="node-rect idle" x="510" y="30" width="170" height="55" rx="8"/>
+        <text class="node-text idle" x="595" y="55">🗄️ 데이터베이스</text>
+        <text class="node-tech idle" x="595" y="73">AWS Aurora MySQL</text>
+      </g>
+
+      <!-- 결제 (우중간) -->
+      <g id="node-payment" data-node="payment" style="color: var(--node-payment)">
+        <rect class="node-rect idle" x="510" y="175" width="170" height="55" rx="8"/>
+        <text class="node-text idle" x="595" y="200">💳 결제 대행사</text>
+        <text class="node-tech idle" x="595" y="218">PG사 (KCP/토스 등)</text>
+      </g>
+
+      <!-- Kafka (백엔드 아래) -->
+      <g id="node-kafka" data-node="kafka" style="color: var(--node-kafka)">
+        <rect class="node-rect idle" x="260" y="270" width="180" height="55" rx="8"/>
+        <text class="node-text idle" x="350" y="295">📨 메시지 큐</text>
+        <text class="node-tech idle" x="350" y="313">Kafka</text>
+      </g>
+
+      <!-- 매장 (좌하) -->
+      <g id="node-store" data-node="store" style="color: var(--node-store)">
+        <rect class="node-rect idle" x="20" y="350" width="160" height="55" rx="8"/>
+        <text class="node-text idle" x="100" y="375">🏪 매장 시스템</text>
+        <text class="node-tech idle" x="100" y="393">매장 POS</text>
+      </g>
+
+      <!-- 라이더 (중하) -->
+      <g id="node-rider" data-node="rider" style="color: var(--node-rider)">
+        <rect class="node-rect idle" x="260" y="350" width="180" height="55" rx="8"/>
+        <text class="node-text idle" x="350" y="375">🛵 라이더 매칭</text>
+        <text class="node-tech idle" x="350" y="393">배민배달 시스템</text>
+      </g>
+
+      <!-- 푸시 (우하) -->
+      <g id="node-push" data-node="push" style="color: var(--node-push)">
+        <rect class="node-rect idle" x="510" y="350" width="170" height="55" rx="8"/>
+        <text class="node-text idle" x="595" y="375">🔔 푸시 알림</text>
+        <text class="node-tech idle" x="595" y="393">FCM / APNs</text>
+      </g>
+
+      <!-- 흐름 화살표들 -->
+
+      <!-- 1: 사용자 → 모바일 앱 -->
+      <path id="flow-1" class="flow-arrow" d="M 160 57 L 190 57"
+            stroke="var(--node-user)" marker-end="url(#arr-blue)"/>
+
+      <!-- 2: 모바일 앱 → 백엔드 -->
+      <path id="flow-2" class="flow-arrow" d="M 280 85 L 340 170"
+            stroke="var(--node-frontend)" marker-end="url(#arr-cyan)"/>
+
+      <!-- 3: 백엔드 자기 자신 (인증) -->
+      <path id="flow-3" class="flow-arrow"
+            d="M 410 180 a 22 22 0 1 1 25 22"
+            stroke="var(--accent)" marker-end="url(#arr-orange)"/>
+
+      <!-- 4: 백엔드 → DB -->
+      <path id="flow-4" class="flow-arrow" d="M 440 180 L 510 70"
+            stroke="var(--node-db)" marker-end="url(#arr-purple)"/>
+
+      <!-- 4b: DB → 백엔드 -->
+      <path id="flow-4b" class="flow-arrow" d="M 510 75 L 440 195"
+            stroke="var(--node-db)" marker-end="url(#arr-purple)"/>
+
+      <!-- 5: 백엔드 → 결제 -->
+      <path id="flow-5" class="flow-arrow" d="M 440 205 L 510 200"
+            stroke="var(--node-payment)" marker-end="url(#arr-green)"/>
+
+      <!-- 5b: 결제 → 백엔드 -->
+      <path id="flow-5b" class="flow-arrow" d="M 510 215 L 440 215"
+            stroke="var(--node-payment)" marker-end="url(#arr-green)"/>
+
+      <!-- 6: 백엔드 → DB (저장) -->
+      <path id="flow-6" class="flow-arrow" d="M 420 170 L 520 85"
+            stroke="var(--node-db)" marker-end="url(#arr-purple)"/>
+
+      <!-- 7: 백엔드 → Kafka -->
+      <path id="flow-7" class="flow-arrow" d="M 350 235 L 350 270"
+            stroke="var(--node-kafka)" marker-end="url(#arr-kafka)"/>
+
+      <!-- 8: Kafka → 매장 -->
+      <path id="flow-8" class="flow-arrow" d="M 280 325 L 110 350"
+            stroke="var(--node-kafka)" marker-end="url(#arr-kafka)"/>
+
+      <!-- 9: Kafka → 라이더 -->
+      <path id="flow-9" class="flow-arrow" d="M 350 325 L 350 350"
+            stroke="var(--node-kafka)" marker-end="url(#arr-kafka)"/>
+
+      <!-- 10: Kafka → 푸시 -->
+      <path id="flow-10a" class="flow-arrow" d="M 420 325 L 580 350"
+            stroke="var(--node-kafka)" marker-end="url(#arr-kafka)"/>
+      <!-- 푸시 → 사용자 -->
+      <path id="flow-10b" class="flow-arrow" d="M 570 350 Q 320 200 160 85"
+            stroke="var(--node-push)" marker-end="url(#arr-blue)"/>
+    </svg>
+  </div>
+
+  <!-- 단계 설명 -->
+  <div class="sim-step-info">
+    <h3 class="sim-step-title" id="step-title">시작 — 흐름도 미리 보기</h3>
+    <p class="sim-step-desc" id="step-desc">
+      위 다이어그램은 배달앱 주문 한 번에 움직이는 시스템들입니다. "다음 ▶" 버튼을 눌러 한 단계씩 따라가 보세요.
+    </p>
+    <div class="sim-step-tags" id="step-tags"></div>
+    <div class="sim-speculation" id="step-speculation" style="display:none">
+      <span class="label">❓ 추측</span><span id="step-spec-text"></span>
+    </div>
+    <p class="sim-source" id="step-source"></p>
+  </div>
+</div>
+
+<script>
+const STEPS = [
+  {
+    title: '시작 — 흐름도 미리 보기',
+    desc: '위 다이어그램은 배달앱 주문 한 번에 움직이는 시스템들입니다. "다음 ▶" 버튼을 눌러 한 단계씩 따라가 보세요.',
+    activeNodes: [],
+    flows: [],
+    tags: [],
+    source: ''
+  },
+  {
+    title: '1단계 — 사용자가 앱에서 "주문" 버튼 탭',
+    desc: '메뉴 고르고 결제 정보 확인한 다음 "주문하기" 버튼을 누릅니다. 아직은 사용자 폰 안에서만 일이 일어나요.',
+    activeNodes: ['user', 'frontend'],
+    flows: ['flow-1'],
+    tags: [{ type: 'fact', label: 'iOS — Swift' }, { type: 'fact', label: 'Android — Kotlin' }],
+    source: ''
+  },
+  {
+    title: '2단계 — 모바일 앱이 백엔드 서버에 주문 요청',
+    desc: '앱이 인터넷을 통해 우아한형제들 백엔드 서버에 "이 사용자가 이런 주문을 했어요" 메시지를 보냅니다 (4주차 API 호출).',
+    activeNodes: ['frontend', 'backend'],
+    flows: ['flow-2'],
+    tags: [{ type: 'fact', label: 'HTTPS POST' }, { type: 'fact', label: 'Java / Spring Boot' }],
+    source: '✓ 출처: 우아한형제들 기술블로그 (2016) — Java/Spring + 마이크로서비스'
+  },
+  {
+    title: '3단계 — 백엔드가 "정말 본인이 맞나?" 확인',
+    desc: '받은 요청에 같이 온 "토큰(임시 출입증)"을 보고 진짜 로그인된 사용자인지 확인합니다.',
+    activeNodes: ['backend'],
+    flows: ['flow-3'],
+    tags: [{ type: 'guess', label: '토큰 인증' }],
+    source: '',
+    speculation: '배민이 정확히 어떤 인증 방식을 쓰는지는 공개되지 않았습니다. 한국 대형 IT 서비스 대부분이 JWT 같은 토큰 방식을 씀.'
+  },
+  {
+    title: '4단계 — 데이터베이스에서 사용자·메뉴 정보 꺼내기',
+    desc: '백엔드가 DB에 가서 사용자 주소, 가게 메뉴 가격, 할인 쿠폰 같은 정보를 꺼내옵니다.',
+    activeNodes: ['backend', 'db'],
+    flows: ['flow-4', 'flow-4b'],
+    tags: [{ type: 'fact', label: 'AWS Aurora MySQL' }],
+    source: '✓ 출처: 우아한형제들 기술블로그 (2019) — AWS Aurora MySQL'
+  },
+  {
+    title: '5단계 — 외부 결제 대행사에 결제 요청',
+    desc: '백엔드는 직접 카드사와 통신하지 않고, "결제 대행사(PG사)"에 "이 카드로 이만큼 결제해주세요" 요청을 보냅니다.',
+    activeNodes: ['backend', 'payment'],
+    flows: ['flow-5', 'flow-5b'],
+    tags: [{ type: 'guess', label: '한국 PG사' }],
+    source: '',
+    speculation: '배민이 정확히 어떤 PG사와 연동했는지는 공개되지 않았습니다. 한국에는 KCP, 토스페이먼츠, 이니시스 같은 회사들이 있어요.'
+  },
+  {
+    title: '6단계 — 주문 정보를 데이터베이스에 저장',
+    desc: '결제 성공하면 백엔드가 "누가 / 어디에 / 무엇을 / 얼마에" 같은 모든 정보를 DB에 영구 보관합니다.',
+    activeNodes: ['backend', 'db'],
+    flows: ['flow-6'],
+    tags: [{ type: 'fact', label: 'AWS Aurora MySQL' }],
+    source: '✓ 출처: 우아한형제들 기술블로그 (2019)'
+  },
+  {
+    title: '7단계 — Kafka에 "신규 주문" 이벤트 발행 ★',
+    desc: '백엔드가 매장·라이더·푸시에 직접 알리지 않고, Kafka에 "주문 들어왔어!" 메시지 한 번만 던지면 끝. 한쪽이 멈춰도 영향 없어요.',
+    activeNodes: ['backend', 'kafka'],
+    flows: ['flow-7'],
+    tags: [{ type: 'fact', label: 'Apache Kafka' }, { type: 'fact', label: '이벤트 기반' }],
+    source: '✓ 출처: 우아한형제들 기술블로그 (2025.6) — "주문이벤트를 받아 배달 프로세스를 관리"'
+  },
+  {
+    title: '8단계 — 매장 시스템이 주문 메시지를 받음',
+    desc: '가게 매장 시스템이 Kafka에서 신규 주문 메시지를 받아 주문서로 출력합니다. 사장님이 음식 만들기 시작.',
+    activeNodes: ['kafka', 'store'],
+    flows: ['flow-8'],
+    tags: [{ type: 'fact', label: 'Kafka Consumer' }, { type: 'guess', label: '매장 POS' }],
+    source: '',
+    speculation: 'Kafka에서 메시지를 가져가는 부분은 사실이지만, 매장 시스템 내부 구조는 공개되지 않았습니다. 일반적으로 매장 POS와 연동.'
+  },
+  {
+    title: '9단계 — 라이더 매칭 시스템이 작동',
+    desc: '같은 Kafka 메시지를 받아 "근처 라이더 누구지?", "예상 도착 시간 짧은 순" 같은 계산을 해서 적절한 라이더에게 배달 요청.',
+    activeNodes: ['kafka', 'rider'],
+    flows: ['flow-9'],
+    tags: [{ type: 'fact', label: '배민배달 자체 매칭' }],
+    source: '✓ 출처: 우아한형제들 기술블로그 (2025) — "배민배달(자체 배달)"'
+  },
+  {
+    title: '10단계 — 사용자에게 "주문 접수됨" 알림',
+    desc: '푸시 알림 시스템이 같은 메시지를 받아 사용자 폰에 알림을 띄웁니다. 한 사이클 완성!',
+    activeNodes: ['kafka', 'push', 'user'],
+    flows: ['flow-10a', 'flow-10b'],
+    tags: [{ type: 'guess', label: 'FCM (Android)' }, { type: 'guess', label: 'APNs (iOS)' }],
+    source: '',
+    speculation: '배민이 정확히 어떤 푸시 시스템을 쓰는지는 공개되지 않았으나, 한국 대부분 모바일 앱은 안드로이드는 FCM, iOS는 APNs를 쓰는 게 표준.'
+  }
+];
+
+let currentStep = 0;
+let autoTimer = null;
+
+const stepNumEl = document.getElementById('step-num');
+const stepTitleEl = document.getElementById('step-title');
+const stepDescEl = document.getElementById('step-desc');
+const stepTagsEl = document.getElementById('step-tags');
+const stepSpecEl = document.getElementById('step-speculation');
+const stepSpecText = document.getElementById('step-spec-text');
+const stepSourceEl = document.getElementById('step-source');
+const dotsEls = document.querySelectorAll('.sim-dot');
+const btnPrev = document.getElementById('btn-prev');
+const btnNext = document.getElementById('btn-next');
+const btnRestart = document.getElementById('btn-restart');
+const btnAuto = document.getElementById('btn-auto');
+
+const allNodes = ['user', 'frontend', 'backend', 'db', 'payment', 'kafka', 'store', 'rider', 'push'];
+const allFlows = ['flow-1', 'flow-2', 'flow-3', 'flow-4', 'flow-4b', 'flow-5', 'flow-5b',
+                  'flow-6', 'flow-7', 'flow-8', 'flow-9', 'flow-10a', 'flow-10b'];
+
+function applyStep(idx) {
+  const step = STEPS[idx];
+  if (!step) return;
+
+  stepNumEl.textContent = `STEP ${idx} / ${STEPS.length - 1}`;
+  stepTitleEl.textContent = step.title;
+  stepDescEl.textContent = step.desc;
+
+  // 태그
+  stepTagsEl.innerHTML = '';
+  if (step.tags && step.tags.length > 0) {
+    step.tags.forEach(t => {
+      const tag = document.createElement('span');
+      tag.className = 'sim-tag ' + (t.type || '');
+      tag.textContent = (t.type === 'fact' ? '✓ ' : t.type === 'guess' ? '❓ ' : '') + t.label;
+      stepTagsEl.appendChild(tag);
+    });
+  }
+
+  // 추측 박스
+  if (step.speculation) {
+    stepSpecEl.style.display = '';
+    stepSpecText.textContent = step.speculation;
+  } else {
+    stepSpecEl.style.display = 'none';
+  }
+
+  // 출처
+  stepSourceEl.textContent = step.source || '';
+
+  // 노드 활성화
+  allNodes.forEach(n => {
+    const node = document.getElementById('node-' + n);
+    if (!node) return;
+    const rect = node.querySelector('.node-rect');
+    const texts = node.querySelectorAll('.node-text, .node-tech');
+    const isActive = step.activeNodes.includes(n);
+    rect.classList.toggle('idle', !isActive);
+    rect.classList.toggle('active', isActive);
+    texts.forEach(t => {
+      t.classList.toggle('idle', !isActive);
+      t.classList.toggle('active', isActive);
+    });
+  });
+
+  // 화살표
+  allFlows.forEach(f => {
+    const flow = document.getElementById(f);
+    if (!flow) return;
+    flow.classList.toggle('show', step.flows.includes(f));
+  });
+
+  // 점
+  dotsEls.forEach((dot, i) => {
+    dot.classList.toggle('active', i === idx);
+    dot.classList.toggle('done', i < idx);
+  });
+
+  // 버튼
+  btnPrev.disabled = idx === 0;
+  btnNext.disabled = idx === STEPS.length - 1;
+}
+
+btnNext.addEventListener('click', () => {
+  if (currentStep < STEPS.length - 1) { currentStep++; applyStep(currentStep); }
+});
+btnPrev.addEventListener('click', () => {
+  if (currentStep > 0) { currentStep--; applyStep(currentStep); }
+});
+btnRestart.addEventListener('click', () => {
+  stopAuto(); currentStep = 0; applyStep(currentStep);
+});
+function stopAuto() {
+  if (autoTimer) { clearInterval(autoTimer); autoTimer = null; btnAuto.textContent = '▶ 자동'; }
+}
+function startAuto() {
+  btnAuto.textContent = '⏸ 정지';
+  autoTimer = setInterval(() => {
+    if (currentStep < STEPS.length - 1) { currentStep++; applyStep(currentStep); }
+    else { stopAuto(); }
+  }, 4500);
+}
+btnAuto.addEventListener('click', () => {
+  if (autoTimer) stopAuto(); else startAuto();
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowRight') btnNext.click();
+  else if (e.key === 'ArrowLeft') btnPrev.click();
+  else if (e.key === 'r' || e.key === 'R') btnRestart.click();
+});
+
+function applyTheme(theme) {
+  if (theme === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+  else document.documentElement.removeAttribute('data-theme');
+}
+window.addEventListener('message', (e) => {
+  if (e.data && e.data.type === 'theme') applyTheme(e.data.value);
+});
+const stored = (() => {
+  try {
+    return localStorage.getItem('theme') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  } catch (e) { return 'light'; }
+})();
+applyTheme(stored);
+
+applyStep(0);
+</script>
+
+</body>
+</html>
