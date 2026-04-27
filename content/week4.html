@@ -924,7 +924,7 @@ url += "&amp;current=temperature_2m,relative_humidity_2m"
 response = await pyfetch(url)        # 응답 받기
 data = await response.json()         # JSON을 딕셔너리로
 
-# 이제부터는 4-2와 똑같음 — 평범한 딕셔너리 다루기
+# 이제부터는 평범한 딕셔너리 다루기
 print("=== 서울 현재 날씨 (실시간) ===")
 print(f"기온: {data['current']['temperature_2m']}°C")
 print(f"습도: {data['current']['relative_humidity_2m']}%")
