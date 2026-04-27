@@ -1,0 +1,188 @@
+/* ============================================================
+   시뮬레이터 — 단계별 애니메이션 패널
+   ============================================================ */
+
+.sim-panel {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  margin: 32px 0;
+  overflow: hidden;
+}
+
+/* 시뮬레이터 헤더 */
+.sim-head {
+  background: var(--bg-soft);
+  padding: 12px 18px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.sim-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: -0.01em;
+}
+.sim-step-info {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--text-mute);
+}
+
+/* SVG 무대 */
+.sim-stage {
+  background: var(--bg);
+  padding: 24px 16px;
+  position: relative;
+  overflow-x: auto;
+}
+.sim-stage svg {
+  display: block;
+  margin: 0 auto;
+  max-width: 100%;
+  height: auto;
+}
+
+/* 코드 표시 영역 (현재 실행 중인 줄 강조) */
+.sim-code {
+  background: #2b2b2b;
+  padding: 14px 20px;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  font-family: 'JetBrains Mono', 'D2Coding', monospace;
+  font-size: 13.5px;
+  line-height: 1.85;
+  color: #a9b7c6;
+}
+.sim-code-line {
+  display: block;
+  padding: 1px 8px;
+  border-radius: 3px;
+  transition: background 0.3s, color 0.3s;
+}
+.sim-code-line.active {
+  background: #214283;
+  color: #ffffff;
+  font-weight: 600;
+}
+.sim-code-line.done {
+  opacity: 0.55;
+}
+
+/* 단계별 설명 */
+.sim-explain {
+  padding: 16px 20px;
+  background: var(--bg-soft);
+  border-bottom: 1px solid var(--border);
+  min-height: 80px;
+  font-size: 14.5px;
+  line-height: 1.7;
+  color: var(--text);
+}
+.sim-explain .sim-explain-title {
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+/* 컨트롤 바 */
+.sim-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 18px;
+  background: var(--bg-card);
+}
+.sim-btn {
+  background: transparent;
+  border: 1px solid var(--border-strong);
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-family: inherit;
+  font-size: 13px;
+  color: var(--text);
+  cursor: pointer;
+  transition: all var(--t-fast);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.sim-btn:hover:not(:disabled) {
+  background: var(--bg-soft);
+  border-color: var(--text);
+}
+.sim-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.sim-btn.primary {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+}
+.sim-btn.primary:hover:not(:disabled) {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+}
+
+/* 진행 점 (오른쪽) */
+.sim-progress {
+  display: flex;
+  gap: 5px;
+  margin-left: auto;
+  align-items: center;
+}
+.sim-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--border-strong);
+  transition: background var(--t-fast), transform var(--t-fast);
+}
+.sim-dot.done { background: var(--text-mute); }
+.sim-dot.active {
+  background: var(--accent);
+  transform: scale(1.4);
+}
+
+/* 단축키 안내 */
+.sim-kbd-hint {
+  font-size: 11px;
+  color: var(--text-mute);
+  font-family: 'JetBrains Mono', monospace;
+  margin-right: 4px;
+}
+
+/* 시뮬레이터 안의 SVG 요소들 (다크 모드 가독성 핵심) */
+.sim-stage .obj-box {
+  fill: var(--bg-card);
+  stroke: var(--accent);
+  stroke-width: 2;
+}
+.sim-stage .var-box {
+  fill: var(--bg-card);
+  stroke: #3b82c4;
+  stroke-width: 1.5;
+}
+.sim-stage .obj-text { fill: var(--text); font-weight: 600; }
+.sim-stage .var-text { fill: var(--text); font-weight: 500; }
+.sim-stage .meta-text { fill: var(--text-mute); }
+.sim-stage .pointer {
+  stroke: var(--accent);
+  stroke-width: 2;
+  fill: none;
+}
+
+/* 새로 등장하는 요소의 입장 애니메이션 */
+@keyframes pop-in {
+  from { opacity: 0; transform: scale(0.7); }
+  to   { opacity: 1; transform: scale(1); }
+}
+.sim-stage [data-pop] {
+  animation: pop-in 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
