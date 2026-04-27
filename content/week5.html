@@ -143,9 +143,11 @@
       <text x="550" y="141" text-anchor="middle" font-size="13" class="svg-mono">HTTP / HTTPS</text>
       <text x="550" y="157" text-anchor="middle" font-size="13" class="svg-mono">응답: JSON</text>
 
-      <!-- 화살표 -->
-      <line x1="340" y1="136" x2="395" y2="136" stroke="var(--text-soft,#555)" stroke-width="2" marker-end="url(#ar)"/>
-      <line x1="705" y1="136" x2="650" y2="136" stroke="var(--text-soft,#555)" stroke-width="2" marker-end="url(#ar)"/>
+      <!-- 화살표: Frontend → 통신박스 / 통신박스 ← Backend (응답) -->
+      <!-- 요청: Frontend에서 통신박스 왼쪽 경계로 -->
+      <line x1="340" y1="128" x2="388" y2="128" stroke="var(--text-soft,#555)" stroke-width="2" marker-end="url(#ar)"/>
+      <!-- 응답: 통신박스 오른쪽 경계에서 Backend 방향으로 (역방향) -->
+      <line x1="712" y1="144" x2="654" y2="144" stroke="var(--text-soft,#555)" stroke-width="2" marker-end="url(#ar)"/>
 
       <!-- ===== Backend: 서버 ===== -->
       <rect x="395" y="188" width="310" height="185" rx="10" class="svg-box-be"/>
