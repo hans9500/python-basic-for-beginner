@@ -75,9 +75,9 @@
   </p>
 
   <div class="figure">
-    <svg viewBox="0 0 2200 1400" xmlns="http://www.w3.org/2000/svg" role="img"
+    <svg viewBox="0 0 900 1600" xmlns="http://www.w3.org/2000/svg" role="img"
          aria-label="IT 산업 큰 그림 — Frontend, Backend, Database"
-         style="font-family: Pretendard, -apple-system, sans-serif;">
+         style="width:100%; height:auto;">
       <defs>
         <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
           <path d="M0,0 L10,5 L0,10 z" fill="var(--text-soft,#666)"/>
@@ -89,128 +89,101 @@
           .svg-box-fe  { fill: rgba(8,145,178,0.15); stroke: #0891b2; stroke-width: 3; }
           .svg-box-be  { fill: rgba(193,68,14,0.15); stroke: #c1440e; stroke-width: 3; }
           .svg-box-db  { fill: rgba(124,58,237,0.15); stroke: #7c3aed; stroke-width: 3; }
-          .svg-box-comm{ fill: rgba(100,100,100,0.1); stroke: var(--border,#999); stroke-width: 2; stroke-dasharray: 7 5; }
+          .svg-box-comm{ fill: rgba(100,100,100,0.1); stroke: var(--border,#999); stroke-width: 2; stroke-dasharray: 6 4; }
         </style>
       </defs>
 
-      <!-- 영역 헤더 (Frontend 중앙=370, Backend 중앙=1100, Database 중앙=1840) -->
-      <text x="370"  y="48"  text-anchor="middle" font-size="40" font-weight="800" fill="#0891b2">Frontend</text>
-      <text x="370"  y="80"  text-anchor="middle" font-size="24" class="svg-sub">사용자가 보는 화면</text>
-      <text x="1100" y="48"  text-anchor="middle" font-size="40" font-weight="800" fill="var(--accent,#c1440e)">Backend</text>
-      <text x="1100" y="80"  text-anchor="middle" font-size="24" class="svg-sub">보이지 않는 처리</text>
-      <text x="1840" y="48"  text-anchor="middle" font-size="40" font-weight="800" fill="#7c3aed">Database / 뒷단 서비스</text>
-      <text x="1840" y="80"  text-anchor="middle" font-size="24" class="svg-sub">데이터 보관 + 위성 서비스</text>
+      <!-- ===== FRONTEND ===== -->
+      <text x="450" y="36" text-anchor="middle" font-size="26" font-weight="800" fill="#0891b2">Frontend — 사용자가 보는 화면</text>
 
-      <!-- 구분선 (Frontend 끝=740, Backend 끝=1460) -->
-      <line x1="740"  y1="96" x2="740"  y2="1380" stroke="var(--border,#999)" stroke-width="2" stroke-dasharray="8 6"/>
-      <line x1="1460" y1="96" x2="1460" y2="1380" stroke="var(--border,#999)" stroke-width="2" stroke-dasharray="8 6"/>
+      <!-- Web -->
+      <rect x="20" y="52" width="860" height="260" rx="12" class="svg-box-fe"/>
+      <text x="44" y="84" font-size="18" font-weight="700" fill="#0891b2">🌐 Web</text>
+      <text x="44" y="106" font-size="14" class="svg-sub">크롬·사파리에서 도는 화면</text>
+      <text x="44" y="136" font-size="15" font-weight="700" class="svg-text">기초 3종</text>
+      <text x="60" y="158" font-size="14" class="svg-mono">• HTML (뼈대)  • CSS (옷)  • JavaScript (움직임)</text>
+      <text x="44" y="190" font-size="15" font-weight="700" class="svg-text">프레임워크</text>
+      <text x="60" y="212" font-size="14" class="svg-mono">React · Vue · Angular · Svelte · Next.js</text>
 
-      <!-- ===================== FRONTEND ===================== -->
-      <!-- Web (x=40, width=640, y=106~500) -->
-      <rect x="40" y="106" width="640" height="394" rx="14" class="svg-box-fe"/>
-      <text x="72" y="150" font-size="26" font-weight="700" fill="#0891b2">🌐 Web</text>
-      <text x="72" y="180" font-size="22" class="svg-sub">크롬·사파리에서 도는 화면</text>
-      <text x="72" y="228" font-size="23" font-weight="700" class="svg-text">기초 3종</text>
-      <text x="96" y="262" font-size="22" class="svg-mono">• HTML  (뼈대)</text>
-      <text x="96" y="296" font-size="22" class="svg-mono">• CSS   (옷)</text>
-      <text x="96" y="330" font-size="22" class="svg-mono">• JavaScript (움직임)</text>
-      <text x="72" y="374" font-size="23" font-weight="700" class="svg-text">프레임워크</text>
-      <text x="96" y="408" font-size="22" class="svg-mono">React · Vue · Angular · Svelte</text>
+      <!-- 모바일 앱 -->
+      <rect x="20" y="328" width="420" height="240" rx="12" class="svg-box-fe"/>
+      <text x="44" y="360" font-size="18" font-weight="700" fill="#0891b2">📱 모바일 앱</text>
+      <text x="44" y="382" font-size="14" class="svg-sub">스마트폰에 설치하는 프로그램</text>
+      <text x="44" y="412" font-size="15" font-weight="700" class="svg-text">네이티브 (각 OS 전용)</text>
+      <text x="60" y="434" font-size="14" class="svg-mono">• iOS — Swift</text>
+      <text x="60" y="456" font-size="14" class="svg-mono">• Android — Kotlin</text>
+      <text x="44" y="484" font-size="15" font-weight="700" class="svg-text">크로스 플랫폼</text>
+      <text x="60" y="506" font-size="14" class="svg-mono">React Native · Flutter</text>
 
-      <!-- 모바일 앱 (y=520~840) -->
-      <rect x="40" y="520" width="640" height="320" rx="14" class="svg-box-fe"/>
-      <text x="72" y="564" font-size="26" font-weight="700" fill="#0891b2">📱 모바일 앱</text>
-      <text x="72" y="594" font-size="22" class="svg-sub">스마트폰에 설치하는 프로그램</text>
-      <text x="72" y="638" font-size="23" font-weight="700" class="svg-text">네이티브 (각 OS 전용)</text>
-      <text x="96" y="672" font-size="22" class="svg-mono">• iOS — Swift</text>
-      <text x="96" y="706" font-size="22" class="svg-mono">• Android — Kotlin</text>
-      <text x="72" y="748" font-size="23" font-weight="700" class="svg-text">크로스 플랫폼 (한 번에 둘 다)</text>
-      <text x="96" y="782" font-size="22" class="svg-mono">React Native · Flutter</text>
+      <!-- 데스크톱 앱 -->
+      <rect x="460" y="328" width="420" height="240" rx="12" class="svg-box-fe"/>
+      <text x="484" y="360" font-size="18" font-weight="700" fill="#0891b2">🖥️ 데스크톱 앱</text>
+      <text x="484" y="382" font-size="14" class="svg-sub">PC에 설치하는 프로그램</text>
+      <text x="484" y="420" font-size="15" font-weight="700" class="svg-text">Electron</text>
+      <text x="500" y="442" font-size="14" class="svg-mono">HTML+CSS+JS로 데스크톱 앱</text>
+      <text x="500" y="466" font-size="14" class="svg-sub">VS Code · Slack · Discord</text>
 
-      <!-- 데스크톱 앱 (y=860~1100) -->
-      <rect x="40" y="860" width="640" height="240" rx="14" class="svg-box-fe"/>
-      <text x="72" y="904" font-size="26" font-weight="700" fill="#0891b2">🖥️ 데스크톱 앱</text>
-      <text x="72" y="934" font-size="22" class="svg-sub">PC에 설치하는 프로그램</text>
-      <text x="96" y="984" font-size="22" class="svg-mono">• Electron (HTML+CSS+JS로)</text>
-      <text x="96" y="1018" font-size="22" class="svg-sub">VS Code · Slack · Discord 등</text>
+      <!-- 화살표: Frontend → Backend -->
+      <line x1="450" y1="584" x2="450" y2="618" stroke="var(--text-soft,#666)" stroke-width="3" marker-end="url(#ar)"/>
+      <text x="470" y="606" font-size="13" class="svg-sub">API / HTTP</text>
 
-      <!-- ===================== BACKEND ===================== -->
-      <!-- 통신 박스 (x=780, width=640, y=106~260) -->
-      <text x="1100" y="130" text-anchor="middle" font-size="24" font-weight="700" class="svg-text">통신</text>
-      <rect x="780" y="144" width="640" height="130" rx="12" class="svg-box-comm"/>
-      <text x="1100" y="188" text-anchor="middle" font-size="24" font-weight="700" class="svg-mono">API (GET, POST, PUT, DELETE)</text>
-      <text x="1100" y="220" text-anchor="middle" font-size="22" class="svg-mono">HTTP / HTTPS</text>
-      <text x="1100" y="252" text-anchor="middle" font-size="22" class="svg-mono">응답: JSON</text>
+      <!-- ===== BACKEND ===== -->
+      <text x="450" y="650" text-anchor="middle" font-size="26" font-weight="800" fill="var(--accent,#c1440e)">Backend — 보이지 않는 처리</text>
 
-      <!-- 화살표: 통신박스 y중앙=209, 박스경계 x=780/x=1420 바깥 -->
-      <line x1="680" y1="209" x2="773" y2="209" stroke="var(--text-soft,#666)" stroke-width="3" marker-end="url(#ar)"/>
-      <line x1="1427" y1="209" x2="1454" y2="209" stroke="var(--text-soft,#666)" stroke-width="3" marker-end="url(#ar)"/>
+      <!-- 서버 -->
+      <rect x="20" y="666" width="860" height="260" rx="12" class="svg-box-be"/>
+      <text x="44" y="700" font-size="18" font-weight="700" fill="var(--accent,#c1440e)">⚙️ Server (서버)</text>
+      <text x="44" y="722" font-size="14" class="svg-sub">listen — 요청 대기 · 처리 · 응답</text>
+      <text x="44" y="754" font-size="15" font-weight="700" class="svg-text">하는 일</text>
+      <text x="60" y="776" font-size="14" class="svg-text">① 요청 받기  ② 인증 확인  ③ 비즈니스 로직  ④ DB 입출력  ⑤ 응답 반환</text>
+      <text x="44" y="810" font-size="15" font-weight="700" class="svg-text">통신 방식</text>
+      <text x="60" y="832" font-size="14" class="svg-mono">API (GET, POST, PUT, DELETE)  ·  HTTP/HTTPS  ·  응답: JSON</text>
+      <text x="44" y="864" font-size="15" font-weight="700" class="svg-text">서버 언어</text>
+      <text x="60" y="886" font-size="14" class="svg-mono">Python · Java · JavaScript · Go · Ruby · PHP · C# · Rust</text>
 
-      <!-- 서버 (y=294~620) -->
-      <rect x="780" y="294" width="640" height="326" rx="14" class="svg-box-be"/>
-      <text x="1100" y="336" text-anchor="middle" font-size="28" font-weight="700" fill="var(--accent,#c1440e)">⚙️ Server (서버)</text>
-      <text x="1100" y="364" text-anchor="middle" font-size="22" class="svg-sub">listen — 요청 대기 · 처리 · 응답</text>
-      <text x="806" y="410" font-size="23" font-weight="700" class="svg-text">하는 일</text>
-      <text x="830" y="444" font-size="22" class="svg-text">① 요청 받기  ② 인증 확인</text>
-      <text x="830" y="478" font-size="22" class="svg-text">③ 비즈니스 로직 처리</text>
-      <text x="830" y="512" font-size="22" class="svg-text">④ DB 입출력  ⑤ 응답 반환</text>
-      <text x="806" y="558" font-size="23" font-weight="700" class="svg-text">서버 언어</text>
-      <text x="830" y="592" font-size="22" class="svg-mono">Python · Java · JavaScript · Go</text>
+      <!-- 프레임워크 -->
+      <rect x="20" y="942" width="860" height="220" rx="12" class="svg-box-be" style="stroke-dasharray: 7 4;"/>
+      <text x="44" y="976" font-size="17" font-weight="700" fill="var(--accent,#c1440e)">서버 프레임워크</text>
+      <text x="44" y="1010" font-size="15" font-weight="700" class="svg-text">Python ★</text>
+      <text x="180" y="1010" font-size="14" class="svg-mono">Flask · FastAPI · Django</text>
+      <text x="44" y="1044" font-size="15" font-weight="700" class="svg-text">Java</text>
+      <text x="180" y="1044" font-size="14" class="svg-mono">Spring Boot  (한국 대기업 표준)</text>
+      <text x="44" y="1078" font-size="15" font-weight="700" class="svg-text">JavaScript</text>
+      <text x="180" y="1078" font-size="14" class="svg-mono">Node.js · Express</text>
+      <text x="44" y="1112" font-size="15" font-weight="700" class="svg-text">기타</text>
+      <text x="180" y="1112" font-size="14" class="svg-mono">Go(Gin) · Ruby(Rails) · PHP</text>
 
-      <!-- 프레임워크 (y=644~1100) -->
-      <rect x="780" y="644" width="640" height="456" rx="14" class="svg-box-be" style="stroke-dasharray: 8 5;"/>
-      <text x="1100" y="688" text-anchor="middle" font-size="26" font-weight="700" fill="var(--accent,#c1440e)">서버 프레임워크</text>
-      <text x="806" y="730" font-size="24" font-weight="700" class="svg-text">Python ★</text>
-      <text x="830" y="762" font-size="22" class="svg-mono">Flask · FastAPI · Django</text>
-      <text x="806" y="810" font-size="24" font-weight="700" class="svg-text">Java (한국 대기업 표준)</text>
-      <text x="830" y="842" font-size="22" class="svg-mono">Spring Boot</text>
-      <text x="806" y="890" font-size="24" font-weight="700" class="svg-text">JavaScript</text>
-      <text x="830" y="922" font-size="22" class="svg-mono">Node.js · Express</text>
-      <text x="806" y="970" font-size="24" font-weight="700" class="svg-text">기타</text>
-      <text x="830" y="1002" font-size="22" class="svg-mono">Go(Gin) · Ruby(Rails) · PHP</text>
+      <!-- 화살표: Backend → Database -->
+      <line x1="450" y1="1178" x2="450" y2="1212" stroke="var(--text-soft,#666)" stroke-width="3" marker-end="url(#ar)"/>
+      <text x="470" y="1200" font-size="13" class="svg-sub">SQL</text>
 
-      <!-- Backend → DB 화살표 (서버 y중앙=457, DB 박스 시작 x=1500 바깥) -->
-      <line x1="1420" y1="457" x2="1493" y2="457" stroke="var(--text-soft,#666)" stroke-width="3" marker-end="url(#ar)"/>
-      <text x="1456" y="444" text-anchor="middle" font-size="20" class="svg-sub">SQL</text>
+      <!-- ===== DATABASE / 뒷단 ===== -->
+      <text x="450" y="1244" text-anchor="middle" font-size="26" font-weight="800" fill="#7c3aed">Database / 뒷단 서비스</text>
 
-      <!-- ===================== DATABASE ===================== -->
-      <!-- Database (x=1500, width=660, y=106~420) -->
-      <rect x="1500" y="106" width="660" height="314" rx="14" class="svg-box-db"/>
-      <text x="1530" y="150" font-size="26" font-weight="700" fill="#7c3aed">🗄️ Database</text>
-      <text x="1530" y="180" font-size="22" class="svg-sub">데이터 보관 창고 — 표 형태</text>
-      <text x="1530" y="224" font-size="23" font-weight="700" class="svg-text">관계형 (RDB)</text>
-      <text x="1554" y="256" font-size="22" class="svg-mono">MySQL · PostgreSQL · Oracle</text>
-      <text x="1530" y="298" font-size="23" font-weight="700" class="svg-text">NoSQL (표가 아닌 방식)</text>
-      <text x="1554" y="330" font-size="22" class="svg-mono">MongoDB · Cassandra · DynamoDB</text>
-      <text x="1530" y="376" font-size="21" class="svg-sub" font-style="italic">접근 언어: SQL — 다음 학습 목표</text>
+      <!-- Database -->
+      <rect x="20" y="1260" width="420" height="300" rx="12" class="svg-box-db"/>
+      <text x="44" y="1294" font-size="18" font-weight="700" fill="#7c3aed">🗄️ Database</text>
+      <text x="44" y="1326" font-size="15" font-weight="700" class="svg-text">관계형 (RDB)</text>
+      <text x="60" y="1348" font-size="14" class="svg-mono">MySQL · PostgreSQL · Oracle</text>
+      <text x="44" y="1378" font-size="15" font-weight="700" class="svg-text">NoSQL</text>
+      <text x="60" y="1400" font-size="14" class="svg-mono">MongoDB · Cassandra · DynamoDB</text>
+      <text x="44" y="1432" font-size="14" class="svg-sub" font-style="italic">다음 학습: SQL 언어</text>
+      <text x="60" y="1454" font-size="13" class="svg-mono">SELECT * FROM users WHERE age &gt;= 30;</text>
 
-      <!-- 뒷단 서비스들 (y=444~1360) -->
-      <rect x="1500" y="444" width="660" height="916" rx="14" class="svg-box-db" style="stroke-dasharray: 8 5;"/>
-      <text x="1530" y="488" font-size="26" font-weight="700" fill="#7c3aed">🔧 백엔드 뒷단 서비스들</text>
-
-      <text x="1530" y="538" font-size="24" font-weight="700" class="svg-text">⚡ 캐시 (빨리 꺼내기)</text>
-      <text x="1554" y="570" font-size="22" class="svg-mono">Redis · Memcached</text>
-
-      <text x="1530" y="618" font-size="24" font-weight="700" class="svg-text">📨 메시지 큐 (시스템 간 우편함)</text>
-      <text x="1554" y="650" font-size="22" class="svg-mono">Kafka · RabbitMQ</text>
-
-      <text x="1530" y="698" font-size="24" font-weight="700" class="svg-text">🔍 검색 엔진</text>
-      <text x="1554" y="730" font-size="22" class="svg-mono">Elasticsearch</text>
-
-      <text x="1530" y="778" font-size="24" font-weight="700" class="svg-text">💳 결제 (PG사)</text>
-      <text x="1554" y="810" font-size="22" class="svg-mono">KCP · 토스페이먼츠 · 이니시스</text>
-
-      <text x="1530" y="858" font-size="24" font-weight="700" class="svg-text">🔔 푸시 알림</text>
-      <text x="1554" y="890" font-size="22" class="svg-mono">FCM (Android) · APNs (iOS)</text>
-
-      <text x="1530" y="938" font-size="24" font-weight="700" class="svg-text">☁️ 클라우드 (서버 빌려쓰기)</text>
-      <text x="1554" y="970" font-size="22" class="svg-mono">AWS · Azure · GCP · 네이버클라우드</text>
-
-      <text x="1530" y="1018" font-size="24" font-weight="700" class="svg-text">🤖 AI 서비스 ★</text>
-      <text x="1554" y="1050" font-size="22" class="svg-mono">Claude · ChatGPT · Gemini</text>
-
-      <text x="1530" y="1110" font-size="21" class="svg-sub">📦 컨테이너: Docker · Kubernetes</text>
+      <!-- 뒷단 서비스들 -->
+      <rect x="460" y="1260" width="420" height="300" rx="12" class="svg-box-db" style="stroke-dasharray: 7 4;"/>
+      <text x="484" y="1294" font-size="18" font-weight="700" fill="#7c3aed">🔧 뒷단 서비스들</text>
+      <text x="484" y="1322" font-size="14" class="svg-text">⚡ 캐시 — Redis · Memcached</text>
+      <text x="484" y="1348" font-size="14" class="svg-text">📨 메시지 큐 — Kafka · RabbitMQ</text>
+      <text x="484" y="1374" font-size="14" class="svg-text">🔍 검색 — Elasticsearch</text>
+      <text x="484" y="1400" font-size="14" class="svg-text">💳 결제 — KCP · 토스페이먼츠</text>
+      <text x="484" y="1426" font-size="14" class="svg-text">🔔 푸시 — FCM · APNs</text>
+      <text x="484" y="1452" font-size="14" class="svg-text">☁️ 클라우드 — AWS · Azure · GCP</text>
+      <text x="484" y="1478" font-size="14" class="svg-text">🤖 AI — Claude · ChatGPT · Gemini</text>
+      <text x="484" y="1504" font-size="13" class="svg-sub">📦 Docker · Kubernetes</text>
     </svg>
+    <div class="caption">그림 5.1 — IT 산업 한 장. Frontend → Backend → Database/뒷단</div>
+  </div>
     <div class="caption">그림 5.1 — IT 산업 한 장. Frontend(왼쪽) ↔ Backend(가운데) ↔ Database/뒷단(오른쪽)</div>
   </div>
   <p>
