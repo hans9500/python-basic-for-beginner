@@ -5,176 +5,124 @@
 <title>시뮬레이터 — 변수와 객체</title>
 <style>
 :root {
-  --bg: #ffffff;
-  --bg-soft: #f7f7f5;
-  --bg-card: #fcfcfa;
-  --border: #e5e5e0;
-  --text: #1a1a1a;
-  --text-soft: #4a4a4a;
-  --text-mute: #888880;
-  --accent: #c1440e;
-  --heap-bg: #eaf3fb;
-  --heap-border: #3b6ea8;
-  --heap-text: #1e5a8e;
-  --names-bg: #fef3e8;
-  --names-border: #d97706;
-  --names-text: #7a3a10;
-  --cpu-bg: #f0e8f5;
-  --cpu-border: #7c3aed;
-  --cpu-text: #5b21b6;
-  --code-bg: #2b2b2b;
-  --code-text: #a9b7c6;
-  --code-keyword: #cc7832;
-  --code-number: #6897bb;
-  --code-comment: #808080;
-  --code-builtin: #ffc66d;
+  --bg:#ffffff; --bg-soft:#f7f7f5; --bg-card:#fcfcfa;
+  --border:#e5e5e0; --text:#1a1a1a; --text-soft:#4a4a4a; --text-mute:#888880;
+  --accent:#c1440e;
+  --heap-bg:#eaf3fb; --heap-border:#3b6ea8; --heap-text:#1e5a8e;
+  --names-bg:#fef3e8; --names-border:#d97706; --names-text:#7a3a10;
+  --cpu-bg:#f0e8f5; --cpu-border:#7c3aed; --cpu-text:#5b21b6;
+  --code-bg:#2b2b2b; --code-text:#a9b7c6;
+  --code-kw:#cc7832; --code-num:#6897bb; --code-com:#808080; --code-fn:#ffc66d;
 }
 [data-theme="dark"] {
-  --bg: #1a1a1a;
-  --bg-soft: #232320;
-  --bg-card: #252522;
-  --border: #3a3a35;
-  --text: #ececec;
-  --text-soft: #c4c4c0;
-  --text-mute: #888880;
-  --accent: #e07a4f;
-  --heap-bg: #1f3650;
-  --heap-border: #5b8fc5;
-  --heap-text: #92c5f0;
-  --names-bg: #3a2a18;
-  --names-border: #d97706;
-  --names-text: #f4b070;
-  --cpu-bg: #2a1f3d;
-  --cpu-border: #a78bfa;
-  --cpu-text: #c4b5fd;
+  --bg:#1a1a1a; --bg-soft:#232320; --bg-card:#252522;
+  --border:#3a3a35; --text:#ececec; --text-soft:#c4c4c0; --text-mute:#888880;
+  --accent:#e07a4f;
+  --heap-bg:#1f3650; --heap-border:#5b8fc5; --heap-text:#92c5f0;
+  --names-bg:#3a2a18; --names-border:#d97706; --names-text:#f4b070;
+  --cpu-bg:#2a1f3d; --cpu-border:#a78bfa; --cpu-text:#c4b5fd;
 }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-html, body { width: 100%; height: 100%; overflow: hidden; }
+* { box-sizing:border-box; margin:0; padding:0; }
+html, body { width:100%; height:720px; overflow:hidden; }
 body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
+  background:var(--bg); color:var(--text);
+  font-family:'Pretendard',-apple-system,BlinkMacSystemFont,sans-serif;
+  display:flex; flex-direction:column;
 }
+
+/* 헤더: 고정 56px */
 .sim-head {
-  padding: 12px 20px;
-  border-bottom: 2px solid var(--accent);
-  background: var(--bg-card);
-  flex-shrink: 0;
+  height:56px; min-height:56px; max-height:56px;
+  padding:8px 20px;
+  border-bottom:2px solid var(--accent);
+  background:var(--bg-card);
+  display:flex; flex-direction:column; justify-content:center;
 }
-.sim-head h2 { margin: 0 0 2px; font-size: 15px; font-weight: 700; }
-.sim-head .desc { margin: 0; color: var(--text-soft); font-size: 12px; }
+.sim-head h2 { font-size:14px; font-weight:700; line-height:1.3; }
+.sim-head .desc { font-size:11px; color:var(--text-soft); margin-top:2px; }
 
+/* 본문: 고정 530px */
 .sim-main {
-  display: flex;
-  flex: 1;
-  overflow: hidden;
-  min-height: 0;
+  height:530px; min-height:530px; max-height:530px;
+  display:flex; overflow:hidden;
 }
 
-/* 왼쪽: 코드 패널 */
+/* 코드 패널: 고정 210px 너비 */
 .code-pane {
-  width: 210px;
-  flex-shrink: 0;
-  background: var(--code-bg);
-  padding: 16px 14px;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 13px;
-  line-height: 2;
-  color: var(--code-text);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+  width:210px; min-width:210px; max-width:210px;
+  height:530px;
+  background:var(--code-bg);
+  padding:0 14px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:13.5px; line-height:2.1;
+  color:var(--code-text);
+  display:flex; flex-direction:column; justify-content:center;
 }
 .code-line {
-  display: block;
-  padding: 2px 8px;
-  border-radius: 3px;
-  transition: background 0.3s, opacity 0.3s;
-  opacity: 0.4;
-  white-space: pre;
+  display:block; padding:2px 8px; border-radius:3px;
+  opacity:0.4; white-space:pre;
+  /* 높이 고정 — 절대 변하지 않음 */
+  height:30px; line-height:30px;
 }
 .code-line.active {
-  background: rgba(255,198,109,0.15);
-  opacity: 1;
-  border-left: 3px solid #ffc66d;
-  margin-left: -3px;
+  background:rgba(255,198,109,.15); opacity:1;
+  border-left:3px solid #ffc66d; margin-left:-3px;
 }
-.code-line.done { opacity: 0.65; }
-.tk-kw  { color: var(--code-keyword); font-weight: bold; }
-.tk-num { color: var(--code-number); }
-.tk-com { color: var(--code-comment); font-style: italic; }
-.tk-fn  { color: var(--code-builtin); }
+.code-line.done { opacity:0.65; }
+.tk-kw  { color:var(--code-kw); font-weight:bold; }
+.tk-num { color:var(--code-num); }
+.tk-com { color:var(--code-com); font-style:italic; }
+.tk-fn  { color:var(--code-fn); }
 
-/* 오른쪽: SVG 캔버스 — 나머지 전부 */
+/* SVG 캔버스: 나머지 너비, 고정 높이 */
 .canvas-pane {
-  flex: 1;
-  background: var(--bg-soft);
-  overflow: hidden;
-  display: flex;
-  align-items: stretch;
+  flex:1; height:530px;
+  background:var(--bg-soft);
+  overflow:hidden;
 }
 .canvas-pane svg {
-  width: 100%;
-  height: 100%;
+  width:100%; height:530px;
+  display:block;
 }
 
-/* 하단: 설명 + 컨트롤 */
+/* 설명: 고정 82px */
 .explain {
-  padding: 10px 20px;
-  border-top: 1px solid var(--border);
-  background: var(--bg);
-  flex-shrink: 0;
+  height:82px; min-height:82px; max-height:82px;
+  padding:8px 20px;
+  border-top:1px solid var(--border);
+  background:var(--bg);
+  overflow:hidden;
 }
 .explain .step-num {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 9px;
-  letter-spacing: 0.18em;
-  color: var(--accent);
-  font-weight: 700;
-  text-transform: uppercase;
+  font-family:'JetBrains Mono',monospace; font-size:9px;
+  letter-spacing:.18em; color:var(--accent); font-weight:700;
+  text-transform:uppercase;
 }
-.explain .step-title {
-  font-size: 14px;
-  font-weight: 600;
-  margin: 2px 0 3px;
-}
-.explain .step-text {
-  font-size: 12.5px;
-  color: var(--text-soft);
-  line-height: 1.55;
-}
+.explain .step-title { font-size:13px; font-weight:600; margin:2px 0 3px; }
+.explain .step-text  { font-size:12px; color:var(--text-soft); line-height:1.5; }
+
+/* 컨트롤: 고정 52px */
 .controls {
-  padding: 8px 20px 10px;
-  background: var(--bg-card);
-  border-top: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-shrink: 0;
+  height:52px; min-height:52px; max-height:52px;
+  padding:0 20px;
+  background:var(--bg-card);
+  border-top:1px solid var(--border);
+  display:flex; align-items:center; gap:10px;
 }
 .btn {
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  padding: 6px 12px;
-  font-family: inherit;
-  font-size: 12px;
-  cursor: pointer;
-  color: var(--text);
-  font-weight: 500;
+  background:var(--bg); border:1px solid var(--border); border-radius:6px;
+  padding:5px 12px; font-family:inherit; font-size:12px;
+  cursor:pointer; color:var(--text); font-weight:500; white-space:nowrap;
 }
-.btn:hover { background: var(--bg-soft); border-color: var(--accent); }
-.btn:disabled { opacity: 0.4; cursor: not-allowed; }
-.btn-primary { background: var(--accent); color: white; border-color: var(--accent); }
-.btn-icon { width: 32px; padding: 6px 0; text-align: center; }
-.dots { display: flex; gap: 5px; margin-left: auto; }
-.dot { width: 7px; height: 7px; border-radius: 50%; background: var(--border); transition: background 0.2s, transform 0.2s; }
-.dot.active { background: var(--accent); transform: scale(1.4); }
-.dot.done { background: var(--text-mute); }
-.kbd-hint { font-size: 10px; color: var(--text-mute); font-family: 'JetBrains Mono', monospace; }
+.btn:hover { background:var(--bg-soft); border-color:var(--accent); }
+.btn:disabled { opacity:.4; cursor:not-allowed; }
+.btn-primary { background:var(--accent); color:white; border-color:var(--accent); }
+.btn-icon { width:32px; padding:5px 0; text-align:center; }
+.dots { display:flex; gap:5px; margin-left:auto; }
+.dot { width:7px; height:7px; border-radius:50%; background:var(--border); }
+.dot.active { background:var(--accent); transform:scale(1.4); }
+.dot.done   { background:var(--text-mute); }
+.kbd-hint   { font-size:10px; color:var(--text-mute); font-family:'JetBrains Mono',monospace; }
 </style>
 </head>
 <body>
@@ -186,52 +134,55 @@ body {
 
 <div class="sim-main">
   <div class="code-pane">
-    <span class="code-line" data-line="0"><span class="tk-com"># 객체를 만들고</span></span>
-    <span class="code-line" data-line="0"><span class="tk-com"># x가 가리키게 합니다</span></span>
+    <span class="code-line" data-line="0"><span class="tk-com"># x = 2 + 3 실행</span></span>
     <span class="code-line" data-line="1">x <span class="tk-kw">=</span> <span class="tk-num">2</span> <span class="tk-kw">+</span> <span class="tk-num">3</span></span>
     <span class="code-line" data-line="2"><span class="tk-fn">print</span>(x)</span>
     <span class="code-line" data-line="3"><span class="tk-fn">print</span>(<span class="tk-fn">id</span>(x))</span>
   </div>
   <div class="canvas-pane">
-    <svg id="memory-svg" viewBox="0 0 560 360" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
+    <!-- viewBox = 캔버스 너비는 가변이지만 높이는 530으로 고정 -->
+    <svg id="mem-svg" viewBox="0 0 620 530"
+         preserveAspectRatio="xMidYMid meet"
+         xmlns="http://www.w3.org/2000/svg">
 
       <!-- 영역 라벨 -->
-      <text x="80" y="22" text-anchor="middle" font-family="Pretendard,sans-serif"
-            font-size="12" font-weight="700" fill="currentColor" letter-spacing="2" opacity="0.85">CPU</text>
-      <text x="80" y="36" text-anchor="middle" font-family="Pretendard,sans-serif"
-            font-size="11" fill="currentColor" opacity="0.55">계산 · 판단</text>
+      <text x="90" y="24" text-anchor="middle" font-family="Pretendard,sans-serif"
+            font-size="13" font-weight="700" fill="currentColor" letter-spacing="2" opacity=".85">CPU</text>
+      <text x="90" y="40" text-anchor="middle" font-family="Pretendard,sans-serif"
+            font-size="12" fill="currentColor" opacity=".55">계산 · 판단</text>
 
-      <text x="230" y="22" text-anchor="middle" font-family="Pretendard,sans-serif"
-            font-size="12" font-weight="700" fill="currentColor" letter-spacing="2" opacity="0.85">VARIABLES</text>
-      <text x="230" y="36" text-anchor="middle" font-family="Pretendard,sans-serif"
-            font-size="11" fill="currentColor" opacity="0.55">변수 (이름표)</text>
+      <text x="280" y="24" text-anchor="middle" font-family="Pretendard,sans-serif"
+            font-size="13" font-weight="700" fill="currentColor" letter-spacing="2" opacity=".85">VARIABLES</text>
+      <text x="280" y="40" text-anchor="middle" font-family="Pretendard,sans-serif"
+            font-size="12" fill="currentColor" opacity=".55">변수 (이름표)</text>
 
-      <text x="430" y="22" text-anchor="middle" font-family="Pretendard,sans-serif"
-            font-size="12" font-weight="700" fill="currentColor" letter-spacing="2" opacity="0.85">HEAP</text>
-      <text x="430" y="36" text-anchor="middle" font-family="Pretendard,sans-serif"
-            font-size="11" fill="currentColor" opacity="0.55">객체들이 사는 곳</text>
+      <text x="500" y="24" text-anchor="middle" font-family="Pretendard,sans-serif"
+            font-size="13" font-weight="700" fill="currentColor" letter-spacing="2" opacity=".85">HEAP</text>
+      <text x="500" y="40" text-anchor="middle" font-family="Pretendard,sans-serif"
+            font-size="12" fill="currentColor" opacity=".55">객체들이 사는 곳</text>
 
-      <!-- 영역 박스 -->
-      <rect x="10"  y="46" width="140" height="300" rx="8"
-            fill="var(--cpu-bg)"   stroke="var(--cpu-border)"   stroke-width="1.5" stroke-dasharray="4 3" opacity="0.45"/>
-      <rect x="160" y="46" width="140" height="300" rx="8"
-            fill="var(--names-bg)" stroke="var(--names-border)" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.5"/>
-      <rect x="310" y="46" width="240" height="300" rx="8"
-            fill="var(--heap-bg)"  stroke="var(--heap-border)"  stroke-width="1.5" stroke-dasharray="4 3" opacity="0.45"/>
+      <!-- 영역 박스 — 높이 고정 470 -->
+      <rect x="10"  y="50" width="160" height="470" rx="8"
+            fill="var(--cpu-bg)"   stroke="var(--cpu-border)"   stroke-width="1.5" stroke-dasharray="4 3" opacity=".4"/>
+      <rect x="180" y="50" width="200" height="470" rx="8"
+            fill="var(--names-bg)" stroke="var(--names-border)" stroke-width="1.5" stroke-dasharray="4 3" opacity=".45"/>
+      <rect x="390" y="50" width="220" height="470" rx="8"
+            fill="var(--heap-bg)"  stroke="var(--heap-border)"  stroke-width="1.5" stroke-dasharray="4 3" opacity=".4"/>
 
-      <g id="dynamic"></g>
+      <!-- 동적 콘텐츠 -->
+      <g id="dyn"></g>
     </svg>
   </div>
 </div>
 
 <div class="explain">
-  <div class="step-num" id="step-num">STEP 1 / 7</div>
-  <div class="step-title" id="step-title">시작 — 빈 메모리</div>
-  <p class="step-text" id="step-text">아직 아무것도 없습니다.</p>
+  <div class="step-num" id="s-num">STEP 1 / 7</div>
+  <div class="step-title" id="s-title"></div>
+  <p class="step-text" id="s-text"></p>
 </div>
 
 <div class="controls">
-  <button class="btn btn-icon" id="btn-restart" title="처음부터">⟲</button>
+  <button class="btn btn-icon" id="btn-restart">⟲</button>
   <button class="btn btn-icon" id="btn-prev">←</button>
   <button class="btn btn-primary" id="btn-next">다음 →</button>
   <button class="btn" id="btn-auto">▶ 자동재생</button>
@@ -240,326 +191,284 @@ body {
 </div>
 
 <script>
-(function() {
-  'use strict';
-  const SVG_NS = 'http://www.w3.org/2000/svg';
-  const dynamic = document.getElementById('dynamic');
+(function(){
+'use strict';
+const NS = 'http://www.w3.org/2000/svg';
+const dyn = document.getElementById('dyn');
 
-  function el(tag, attrs, children) {
-    const e = document.createElementNS(SVG_NS, tag);
-    if (attrs) Object.keys(attrs).forEach(k => e.setAttribute(k, attrs[k]));
-    if (children) (Array.isArray(children) ? children : [children]).forEach(c => {
-      if (typeof c === 'string') e.appendChild(document.createTextNode(c));
-      else if (c) e.appendChild(c);
-    });
-    return e;
-  }
-
-  // 객체 박스: 130×72, 폰트 크게
-  function drawObject(opts) {
-    const g = el('g', { transform: `translate(${opts.x},${opts.y})` });
-    g.appendChild(el('rect', {
-      x:0, y:0, width:130, height:72, rx:6,
-      fill:'var(--bg)', stroke:'var(--heap-border)', 'stroke-width':2
-    }));
-    g.appendChild(el('text', {
-      x:8, y:16,
-      'font-family':'JetBrains Mono,monospace', 'font-size':13,
-      fill:'var(--heap-text)', 'font-weight':600
-    }, opts.label || 'int'));
-    g.appendChild(el('text', {
-      x:65, y:50, 'text-anchor':'middle',
-      'font-family':'JetBrains Mono,monospace', 'font-size':28,
-      'font-weight':700, fill:'currentColor'
-    }, String(opts.value)));
-    if (opts.addr) {
-      g.appendChild(el('text', {
-        x:122, y:68, 'text-anchor':'end',
-        'font-family':'JetBrains Mono,monospace', 'font-size':11,
-        fill:'currentColor', opacity:0.45
-      }, '@'+opts.addr));
-    }
-    return g;
-  }
-
-  // 이름표
-  function drawNameTag(opts) {
-    const g = el('g', { transform: `translate(${opts.x},${opts.y})` });
-    g.appendChild(el('path', {
-      d:'M 0,14 L 12,0 L 108,0 L 108,28 L 12,28 Z',
-      fill:'var(--names-bg)', stroke:'var(--names-border)', 'stroke-width':1.5
-    }));
-    g.appendChild(el('text', {
-      x:58, y:20, 'text-anchor':'middle',
-      'font-family':'JetBrains Mono,monospace', 'font-size':16,
-      'font-weight':700, fill:'var(--names-text)'
-    }, opts.name));
-    return g;
-  }
-
-  let arrowCnt = 0;
-  function drawArrow(opts) {
-    const g = el('g');
-    const color = opts.color || 'var(--accent)';
-    const mid = 'arr-'+(++arrowCnt);
-    const defs = el('defs');
-    defs.appendChild(el('marker', {
-      id:mid, viewBox:'0 0 10 10', refX:9, refY:5,
-      markerWidth:6, markerHeight:6, orient:'auto'
-    }, [el('path', { d:'M0,0 L10,5 L0,10 z', fill:color })]));
-    g.appendChild(defs);
-    const cx = (opts.x1+opts.x2)/2;
-    g.appendChild(el('path', {
-      d:`M ${opts.x1} ${opts.y1} Q ${cx} ${opts.y1} ${opts.x2} ${opts.y2}`,
-      fill:'none', stroke:color, 'stroke-width':2.5,
-      'marker-end':`url(#${mid})`
-    }));
-    return g;
-  }
-
-  function drawLabel(x, y, text, color) {
-    return el('text', {
-      x, y, 'text-anchor':'middle',
-      'font-family':'Pretendard,sans-serif', 'font-size':12,
-      fill: color || 'currentColor', opacity: color ? 1 : 0.7
-    }, text);
-  }
-
-  function drawOutput(x, y, w, text) {
-    const g = el('g');
-    g.appendChild(el('rect', { x, y, width:w, height:34, rx:4, fill:'#2b2b2b', stroke:'#4ec9b0', 'stroke-width':1 }));
-    g.appendChild(el('text', {
-      x: x+w/2, y: y+23, 'text-anchor':'middle',
-      'font-family':'JetBrains Mono,monospace', 'font-size':15, fill:'#d4d4d4'
-    }, String(text)));
-    g.appendChild(el('text', {
-      x: x-8, y: y+23, 'text-anchor':'end',
-      'font-family':'Pretendard,sans-serif', 'font-size':11, fill:'currentColor', opacity:0.6
-    }, '화면 →'));
-    return g;
-  }
-
-  // CPU 내부
-  function drawCpu(mode, opts) {
-    opts = opts||{};
-    const g = el('g');
-    const cx = 80;
-    if (mode === 'idle') {
-      g.appendChild(el('text', { x:cx, y:200, 'text-anchor':'middle',
-        'font-family':'JetBrains Mono,monospace', 'font-size':13,
-        fill:'currentColor', opacity:0.3 }, '+ - × ÷'));
-      g.appendChild(el('text', { x:cx, y:220, 'text-anchor':'middle',
-        'font-family':'Pretendard,sans-serif', 'font-size':12,
-        fill:'currentColor', opacity:0.35 }, '대기 중'));
-    } else if (mode === 'creating') {
-      g.appendChild(el('rect', { x:25, y:165, width:110, height:55, rx:6,
-        fill:'var(--cpu-bg)', stroke:'var(--cpu-border)', 'stroke-width':1.5, opacity:0.8 }));
-      g.appendChild(el('text', { x:cx, y:183, 'text-anchor':'middle',
-        'font-family':'JetBrains Mono,monospace', 'font-size':10,
-        fill:'var(--cpu-text)', 'font-weight':700, 'letter-spacing':1 }, 'CPU'));
-      g.appendChild(el('text', { x:cx, y:207, 'text-anchor':'middle',
-        'font-family':'Pretendard,sans-serif', 'font-size':13,
-        fill:'currentColor', opacity:0.9 }, opts.label||'생성 중'));
-    } else if (mode === 'computing') {
-      g.appendChild(el('rect', { x:20, y:140, width:120, height:130, rx:6,
-        fill:'var(--cpu-bg)', stroke:'var(--cpu-border)', 'stroke-width':2 }));
-      g.appendChild(el('text', { x:cx, y:158, 'text-anchor':'middle',
-        'font-family':'JetBrains Mono,monospace', 'font-size':10,
-        fill:'var(--cpu-text)', 'font-weight':700, 'letter-spacing':1 }, 'ALU'));
-      g.appendChild(el('text', { x:cx, y:193, 'text-anchor':'middle',
-        'font-family':'JetBrains Mono,monospace', 'font-size':26,
-        'font-weight':700, fill:'currentColor' }, '2 + 3'));
-      g.appendChild(el('text', { x:cx, y:218, 'text-anchor':'middle',
-        'font-family':'JetBrains Mono,monospace', 'font-size':14,
-        fill:'currentColor', opacity:0.5 }, '↓'));
-      g.appendChild(el('text', { x:cx, y:248, 'text-anchor':'middle',
-        'font-family':'JetBrains Mono,monospace', 'font-size':26,
-        'font-weight':700, fill:'var(--accent)' }, '5'));
-    } else if (mode === 'following') {
-      g.appendChild(el('rect', { x:25, y:155, width:110, height:80, rx:6,
-        fill:'var(--cpu-bg)', stroke:'var(--cpu-border)', 'stroke-width':1.5, opacity:0.85 }));
-      g.appendChild(el('text', { x:cx, y:174, 'text-anchor':'middle',
-        'font-family':'JetBrains Mono,monospace', 'font-size':10,
-        fill:'var(--cpu-text)', 'font-weight':700, 'letter-spacing':1 }, 'CPU'));
-      g.appendChild(el('text', { x:cx, y:200, 'text-anchor':'middle',
-        'font-family':'Pretendard,sans-serif', 'font-size':14,
-        fill:'currentColor', 'font-weight':600 }, opts.label||''));
-      g.appendChild(el('text', { x:cx, y:222, 'text-anchor':'middle',
-        'font-family':'JetBrains Mono,monospace', 'font-size':13,
-        fill:'currentColor', opacity:0.7 }, opts.detail||''));
-    }
-    return g;
-  }
-
-  // 객체 배치: 박스 130×72
-  // obj2: x=320, y=70  → 우측끝 450
-  // obj3: x=320, y=190 → 수직으로 배치 (겹침 없음)
-  // obj5: x=320, y=190 이후 (obj3 대체 아님, obj5는 아래)
-  // 실제: obj2(x=320,y=65), obj3(x=320,y=180), obj5(x=320,y=65) — 단계별 표시
-  function objects(stage) {
-    const arr = [];
-    if (stage >= 1) arr.push(drawObject({ x:322, y:65,  value:2, addr:'0x7f01' }));
-    if (stage >= 2) arr.push(drawObject({ x:322, y:175, value:3, addr:'0x7f02' }));
-    if (stage >= 3) arr.push(drawObject({ x:322, y:290, value:5, addr:'0x7f0c' }));
-    return arr;
-  }
-
-  const STEPS = [
-    {
-      line: -1,
-      title: '시작 — 빈 메모리',
-      text: '아직 아무것도 만들어지지 않았습니다. CPU는 계산·판단, 가운데는 변수(이름표) 영역, 오른쪽 HEAP은 객체들이 사는 곳입니다.',
-      render() {
-        dynamic.appendChild(drawCpu('idle'));
-      }
-    },
-    {
-      line: 1,
-      title: '1단계 — 정수 객체 2 생성',
-      text: '오른쪽 식부터 평가합니다. CPU가 HEAP에 정수 객체 2를 만듭니다. 고유 주소(id)가 부여됩니다.',
-      render() {
-        dynamic.appendChild(drawCpu('creating', { label:'객체 2 생성' }));
-        objects(1).forEach(o => dynamic.appendChild(o));
-        dynamic.appendChild(drawArrow({ x1:148, y1:100, x2:320, y2:100, color:'var(--cpu-border)' }));
-      }
-    },
-    {
-      line: 1,
-      title: '2단계 — 정수 객체 3 생성',
-      text: 'CPU가 HEAP에 정수 객체 3을 만듭니다. 별개의 객체라 주소도 다릅니다.',
-      render() {
-        dynamic.appendChild(drawCpu('creating', { label:'객체 3 생성' }));
-        objects(2).forEach(o => dynamic.appendChild(o));
-        dynamic.appendChild(drawArrow({ x1:148, y1:100, x2:320, y2:210, color:'var(--cpu-border)' }));
-      }
-    },
-    {
-      line: 1,
-      title: '3단계 — CPU가 2+3 계산, 객체 5 생성',
-      text: 'CPU가 두 객체의 값을 읽어 더합니다. 결과 5는 새 객체로 HEAP에 만들어집니다. 2와 3 객체는 그대로 남아있습니다.',
-      render() {
-        dynamic.appendChild(drawCpu('computing'));
-        objects(3).forEach(o => dynamic.appendChild(o));
-        dynamic.appendChild(drawArrow({ x1:320, y1:101, x2:148, y2:195, color:'var(--heap-border)' }));
-        dynamic.appendChild(drawArrow({ x1:320, y1:211, x2:148, y2:215, color:'var(--heap-border)' }));
-        dynamic.appendChild(drawArrow({ x1:148, y1:255, x2:320, y2:326, color:'var(--accent)' }));
-        dynamic.appendChild(drawLabel(230, 170, '값 읽기'));
-        dynamic.appendChild(drawLabel(230, 295, '결과 쓰기', 'var(--accent)'));
-      }
-    },
-    {
-      line: 1,
-      title: '4단계 — 이름표 x 가 객체 5를 가리킴',
-      text: 'x = 부분이 실행됩니다. 변수 x라는 이름표가 만들어지고 객체 5를 가리킵니다. x 안에 5가 담긴 게 아니라, x가 5 객체를 가리키는 것입니다.',
-      render() {
-        dynamic.appendChild(drawCpu('creating', { label:'이름표 x 연결' }));
-        objects(3).forEach(o => dynamic.appendChild(o));
-        dynamic.appendChild(drawNameTag({ x:175, y:312 }));
-        dynamic.appendChild(drawArrow({ x1:285, y1:326, x2:320, y2:326, color:'var(--accent)' }));
-      }
-    },
-    {
-      line: 2,
-      title: '5단계 — print(x) 가 5를 출력',
-      text: 'CPU가 x 이름표를 따라가 객체 5의 값을 읽고 화면에 출력합니다.',
-      render() {
-        dynamic.appendChild(drawCpu('following', { label:'print(x)', detail:'x → 5' }));
-        objects(3).forEach(o => dynamic.appendChild(o));
-        dynamic.appendChild(drawNameTag({ x:175, y:312 }));
-        dynamic.appendChild(drawArrow({ x1:285, y1:326, x2:320, y2:326, color:'var(--accent)' }));
-        dynamic.appendChild(drawOutput(170, 200, 120, '5'));
-      }
-    },
-    {
-      line: 3,
-      title: '6단계 — id(x) 는 객체의 고유 번호',
-      text: 'id(x)는 x가 가리키는 객체의 메모리 주소를 알려줍니다. 같은 객체면 항상 같은 번호가 나옵니다.',
-      render() {
-        dynamic.appendChild(drawCpu('following', { label:'id(x)', detail:'주소 반환' }));
-        objects(3).forEach(o => dynamic.appendChild(o));
-        dynamic.appendChild(drawNameTag({ x:175, y:312 }));
-        dynamic.appendChild(drawArrow({ x1:285, y1:326, x2:320, y2:326, color:'var(--accent)' }));
-        dynamic.appendChild(drawOutput(155, 200, 200, '140288751120'));
-      }
-    }
-  ];
-
-  let cur = 0, autoTimer = null;
-
-  const dotsEl = document.getElementById('dots');
-  STEPS.forEach(() => {
-    const d = document.createElement('div');
-    d.className = 'dot';
-    dotsEl.appendChild(d);
+function el(tag, a, ch) {
+  const e = document.createElementNS(NS, tag);
+  if (a) Object.keys(a).forEach(k => e.setAttribute(k, a[k]));
+  if (ch) [].concat(ch).forEach(c => {
+    if (typeof c === 'string') e.appendChild(document.createTextNode(c));
+    else if (c) e.appendChild(c);
   });
+  return e;
+}
 
-  function render() {
-    const lines = document.querySelectorAll('.code-line');
-    lines.forEach(el => { el.classList.remove('active','done'); });
-    const ln = STEPS[cur].line;
-    lines.forEach(el => {
-      const l = parseInt(el.dataset.line);
-      if (l === ln) el.classList.add('active');
-      else if (l < ln) el.classList.add('done');
-    });
+// 객체 박스 140×76
+function obj(x, y, val, type, addr) {
+  const g = el('g', {transform:`translate(${x},${y})`});
+  g.appendChild(el('rect',{x:0,y:0,width:140,height:76,rx:7,
+    fill:'var(--bg)',stroke:'var(--heap-border)','stroke-width':2.5}));
+  g.appendChild(el('text',{x:9,y:18,'font-family':'JetBrains Mono,monospace',
+    'font-size':14,fill:'var(--heap-text)','font-weight':700}, type||'int'));
+  g.appendChild(el('text',{x:70,y:56,'text-anchor':'middle',
+    'font-family':'JetBrains Mono,monospace','font-size':32,
+    'font-weight':700,fill:'currentColor'}, String(val)));
+  if (addr) g.appendChild(el('text',{x:131,y:72,'text-anchor':'end',
+    'font-family':'JetBrains Mono,monospace','font-size':11,
+    fill:'currentColor',opacity:.4}, '@'+addr));
+  return g;
+}
 
-    while (dynamic.firstChild) dynamic.removeChild(dynamic.firstChild);
-    STEPS[cur].render();
+// 이름표 120×30
+function tag(x, y, name) {
+  const g = el('g', {transform:`translate(${x},${y})`});
+  g.appendChild(el('path',{d:'M 0,15 L 13,0 L 120,0 L 120,30 L 13,30 Z',
+    fill:'var(--names-bg)',stroke:'var(--names-border)','stroke-width':1.5}));
+  g.appendChild(el('text',{x:64,y:21,'text-anchor':'middle',
+    'font-family':'JetBrains Mono,monospace','font-size':17,
+    'font-weight':700,fill:'var(--names-text)'}, name));
+  return g;
+}
 
-    document.getElementById('step-num').textContent = `STEP ${cur+1} / ${STEPS.length}`;
-    document.getElementById('step-title').textContent = STEPS[cur].title;
-    document.getElementById('step-text').textContent = STEPS[cur].text;
+let ac=0;
+function arrow(x1,y1,x2,y2,color) {
+  const id='a'+(++ac), col=color||'var(--accent)';
+  const g=el('g');
+  const df=el('defs');
+  df.appendChild(el('marker',{id,viewBox:'0 0 10 10',refX:9,refY:5,
+    markerWidth:7,markerHeight:7,orient:'auto'},
+    [el('path',{d:'M0,0 L10,5 L0,10 z',fill:col})]));
+  g.appendChild(df);
+  const cx=(x1+x2)/2;
+  g.appendChild(el('path',{
+    d:`M ${x1} ${y1} Q ${cx} ${y1} ${x2} ${y2}`,
+    fill:'none',stroke:col,'stroke-width':2.8,'marker-end':`url(#${id})`}));
+  return g;
+}
 
-    document.querySelectorAll('.dot').forEach((d,i) => {
-      d.classList.remove('active','done');
-      if (i===cur) d.classList.add('active');
-      else if (i<cur) d.classList.add('done');
-    });
+function lbl(x,y,text,col) {
+  return el('text',{x,y,'text-anchor':'middle',
+    'font-family':'Pretendard,sans-serif','font-size':13,
+    fill:col||'currentColor',opacity:col?1:.7}, text);
+}
 
-    document.getElementById('btn-prev').disabled = cur===0;
-    const nb = document.getElementById('btn-next');
-    if (cur===STEPS.length-1) { nb.textContent='완료'; nb.disabled=true; }
-    else { nb.textContent='다음 →'; nb.disabled=false; }
+function out(x,y,w,text) {
+  const g=el('g');
+  g.appendChild(el('rect',{x,y,width:w,height:36,rx:4,
+    fill:'#2b2b2b',stroke:'#4ec9b0','stroke-width':1.2}));
+  g.appendChild(el('text',{x:x+w/2,y:y+24,'text-anchor':'middle',
+    'font-family':'JetBrains Mono,monospace','font-size':16,fill:'#d4d4d4'}, String(text)));
+  g.appendChild(el('text',{x:x-8,y:y+24,'text-anchor':'end',
+    'font-family':'Pretendard,sans-serif','font-size':12,fill:'currentColor',opacity:.6}, '화면 →'));
+  return g;
+}
+
+// CPU 패널 — 고정 위치/크기 (x:15~155, y:60~500)
+function cpu(mode, opts) {
+  opts=opts||{};
+  const g=el('g'), cx=90;
+  if (mode==='idle') {
+    g.appendChild(el('text',{x:cx,y:260,'text-anchor':'middle',
+      'font-family':'JetBrains Mono,monospace','font-size':15,fill:'currentColor',opacity:.25},'+ - × ÷'));
+    g.appendChild(el('text',{x:cx,y:285,'text-anchor':'middle',
+      'font-family':'Pretendard,sans-serif','font-size':13,fill:'currentColor',opacity:.3},'대기 중'));
+  } else if (mode==='making') {
+    g.appendChild(el('rect',{x:25,y:195,width:130,height:65,rx:6,
+      fill:'var(--cpu-bg)',stroke:'var(--cpu-border)','stroke-width':1.8,opacity:.85}));
+    g.appendChild(el('text',{x:cx,y:215,'text-anchor':'middle',
+      'font-family':'JetBrains Mono,monospace','font-size':11,
+      fill:'var(--cpu-text)','font-weight':700,'letter-spacing':1},'CPU'));
+    g.appendChild(el('text',{x:cx,y:245,'text-anchor':'middle',
+      'font-family':'Pretendard,sans-serif','font-size':14,fill:'currentColor',opacity:.9},
+      opts.label||'생성 중'));
+  } else if (mode==='calc') {
+    g.appendChild(el('rect',{x:18,y:160,width:144,height:150,rx:6,
+      fill:'var(--cpu-bg)',stroke:'var(--cpu-border)','stroke-width':2.2}));
+    g.appendChild(el('text',{x:cx,y:182,'text-anchor':'middle',
+      'font-family':'JetBrains Mono,monospace','font-size':11,
+      fill:'var(--cpu-text)','font-weight':700,'letter-spacing':1},'ALU'));
+    g.appendChild(el('text',{x:cx,y:225,'text-anchor':'middle',
+      'font-family':'JetBrains Mono,monospace','font-size':28,'font-weight':700,fill:'currentColor'},'2 + 3'));
+    g.appendChild(el('text',{x:cx,y:255,'text-anchor':'middle',
+      'font-family':'JetBrains Mono,monospace','font-size':16,fill:'currentColor',opacity:.5},'↓'));
+    g.appendChild(el('text',{x:cx,y:293,'text-anchor':'middle',
+      'font-family':'JetBrains Mono,monospace','font-size':28,'font-weight':700,fill:'var(--accent)'},'5'));
+  } else if (mode==='read') {
+    g.appendChild(el('rect',{x:25,y:185,width:130,height:90,rx:6,
+      fill:'var(--cpu-bg)',stroke:'var(--cpu-border)','stroke-width':1.8,opacity:.85}));
+    g.appendChild(el('text',{x:cx,y:206,'text-anchor':'middle',
+      'font-family':'JetBrains Mono,monospace','font-size':11,
+      fill:'var(--cpu-text)','font-weight':700,'letter-spacing':1},'CPU'));
+    g.appendChild(el('text',{x:cx,y:237,'text-anchor':'middle',
+      'font-family':'Pretendard,sans-serif','font-size':15,fill:'currentColor','font-weight':600},
+      opts.label||''));
+    g.appendChild(el('text',{x:cx,y:262,'text-anchor':'middle',
+      'font-family':'JetBrains Mono,monospace','font-size':14,fill:'currentColor',opacity:.7},
+      opts.detail||''));
   }
+  return g;
+}
 
-  function next() { if (cur<STEPS.length-1) { cur++; render(); } }
-  function prev() { if (cur>0) { cur--; render(); } }
-  function restart() { stopAuto(); cur=0; render(); }
-  function startAuto() {
-    if (autoTimer) return;
-    document.getElementById('btn-auto').textContent='⏸ 일시정지';
-    autoTimer = setInterval(() => { if (cur<STEPS.length-1) next(); else stopAuto(); }, 2200);
-  }
-  function stopAuto() {
-    if (autoTimer) { clearInterval(autoTimer); autoTimer=null; document.getElementById('btn-auto').textContent='▶ 자동재생'; }
-  }
+// 객체 좌표 — 세 개 수직 배치, HEAP 영역 안
+// obj2: (400, 70),  obj3: (400, 200), obj5: (400, 330)
+const POS = {
+  o2:  {x:400, y:70},
+  o3:  {x:400, y:200},
+  o5:  {x:400, y:330},
+  tag: {x:193, y:335},
+};
 
-  document.getElementById('btn-next').addEventListener('click', ()=>{ stopAuto(); next(); });
-  document.getElementById('btn-prev').addEventListener('click', ()=>{ stopAuto(); prev(); });
-  document.getElementById('btn-restart').addEventListener('click', restart);
-  document.getElementById('btn-auto').addEventListener('click', ()=>{ if (autoTimer) stopAuto(); else startAuto(); });
-  document.addEventListener('keydown', e => {
-    if (e.key==='ArrowRight') { stopAuto(); next(); e.preventDefault(); }
-    else if (e.key==='ArrowLeft') { stopAuto(); prev(); e.preventDefault(); }
-    else if (e.key==='r'||e.key==='R') { restart(); e.preventDefault(); }
-  });
+function drawObjs(n) {
+  const arr=[];
+  if (n>=1) arr.push(obj(POS.o2.x, POS.o2.y,  2, 'int', '0x7f01'));
+  if (n>=2) arr.push(obj(POS.o3.x, POS.o3.y,  3, 'int', '0x7f02'));
+  if (n>=3) arr.push(obj(POS.o5.x, POS.o5.y,  5, 'int', '0x7f0c'));
+  return arr;
+}
 
-  function syncTheme() {
-    try {
-      const t = window.parent&&window.parent.document&&
-                window.parent.document.documentElement.getAttribute('data-theme');
-      if (t) document.documentElement.setAttribute('data-theme', t);
-    } catch(e) {
-      if (window.matchMedia('(prefers-color-scheme: dark)').matches)
-        document.documentElement.setAttribute('data-theme','dark');
+const STEPS = [
+  { line:-1, title:'시작 — 빈 메모리',
+    text:'아직 아무것도 만들어지지 않았습니다. CPU는 계산·판단, 가운데는 변수(이름표) 영역, 오른쪽 HEAP은 객체들이 사는 곳입니다.',
+    fn() { dyn.appendChild(cpu('idle')); }
+  },
+  { line:1, title:'1단계 — 정수 객체 2 생성',
+    text:'오른쪽 식부터 평가합니다. CPU가 HEAP에 정수 객체 2를 만듭니다. 각 객체에는 고유한 주소(id)가 부여됩니다.',
+    fn() {
+      dyn.appendChild(cpu('making',{label:'객체 2 생성'}));
+      drawObjs(1).forEach(o=>dyn.appendChild(o));
+      dyn.appendChild(arrow(172,108, 398,108, 'var(--cpu-border)'));
     }
-  }
-  syncTheme();
-  window.addEventListener('message', e => {
-    if (e.data&&e.data.theme) document.documentElement.setAttribute('data-theme', e.data.theme);
-  });
+  },
+  { line:1, title:'2단계 — 정수 객체 3 생성',
+    text:'CPU가 HEAP에 정수 객체 3을 만듭니다. 별개의 객체라 주소도 다릅니다.',
+    fn() {
+      dyn.appendChild(cpu('making',{label:'객체 3 생성'}));
+      drawObjs(2).forEach(o=>dyn.appendChild(o));
+      dyn.appendChild(arrow(172,108, 398,238, 'var(--cpu-border)'));
+    }
+  },
+  { line:1, title:'3단계 — CPU가 2+3 계산 후 객체 5 생성',
+    text:'CPU가 두 객체의 값을 읽어 더합니다. 결과 5는 새 객체로 HEAP에 만들어집니다. 2와 3 객체는 그대로 남아있습니다.',
+    fn() {
+      dyn.appendChild(cpu('calc'));
+      drawObjs(3).forEach(o=>dyn.appendChild(o));
+      dyn.appendChild(arrow(398,108, 170,230, 'var(--heap-border)'));
+      dyn.appendChild(arrow(398,238, 172,245, 'var(--heap-border)'));
+      dyn.appendChild(arrow(172,318, 398,368, 'var(--accent)'));
+      dyn.appendChild(lbl(285,195,'값 읽기'));
+      dyn.appendChild(lbl(285,358,'결과 쓰기','var(--accent)'));
+    }
+  },
+  { line:1, title:'4단계 — 이름표 x 가 객체 5를 가리킴',
+    text:'x = 부분이 실행됩니다. 변수 x라는 이름표가 만들어지고 객체 5를 가리킵니다. x 안에 5가 담긴 게 아니라, x가 5 객체를 "가리키는" 것입니다.',
+    fn() {
+      dyn.appendChild(cpu('making',{label:'이름표 x 연결'}));
+      drawObjs(3).forEach(o=>dyn.appendChild(o));
+      dyn.appendChild(tag(POS.tag.x, POS.tag.y));
+      dyn.appendChild(arrow(315,350, 398,368, 'var(--accent)'));
+    }
+  },
+  { line:2, title:'5단계 — print(x) 가 5를 출력',
+    text:'CPU가 x 이름표를 따라가 객체 5의 값을 읽고 화면에 출력합니다. 이름표 x → 5 객체 → 출력.',
+    fn() {
+      dyn.appendChild(cpu('read',{label:'print(x)',detail:'x → 5'}));
+      drawObjs(3).forEach(o=>dyn.appendChild(o));
+      dyn.appendChild(tag(POS.tag.x, POS.tag.y));
+      dyn.appendChild(arrow(315,350, 398,368, 'var(--accent)'));
+      dyn.appendChild(out(195,440, 130,'5'));
+    }
+  },
+  { line:3, title:'6단계 — id(x) 는 객체의 고유 번호',
+    text:'id(x)는 x가 가리키는 객체의 메모리 주소를 알려줍니다. 같은 객체면 항상 같은 번호가 나옵니다.',
+    fn() {
+      dyn.appendChild(cpu('read',{label:'id(x)',detail:'주소 반환'}));
+      drawObjs(3).forEach(o=>dyn.appendChild(o));
+      dyn.appendChild(tag(POS.tag.x, POS.tag.y));
+      dyn.appendChild(arrow(315,350, 398,368, 'var(--accent)'));
+      dyn.appendChild(out(185,440, 380,'140288751120'));
+    }
+  },
+];
 
-  render();
+let cur=0, timer=null;
+
+// dots
+const dotsEl=document.getElementById('dots');
+STEPS.forEach(()=>{
+  const d=document.createElement('div'); d.className='dot'; dotsEl.appendChild(d);
+});
+
+function render(){
+  // 코드 하이라이트
+  document.querySelectorAll('.code-line').forEach(el=>{
+    el.classList.remove('active','done');
+    const l=parseInt(el.dataset.line);
+    const sl=STEPS[cur].line;
+    if(l===sl) el.classList.add('active');
+    else if(l<sl && sl>=0) el.classList.add('done');
+  });
+  // SVG 갱신
+  while(dyn.firstChild) dyn.removeChild(dyn.firstChild);
+  STEPS[cur].fn();
+  // 텍스트
+  document.getElementById('s-num').textContent=`STEP ${cur+1} / ${STEPS.length}`;
+  document.getElementById('s-title').textContent=STEPS[cur].title;
+  document.getElementById('s-text').textContent=STEPS[cur].text;
+  // dots
+  document.querySelectorAll('.dot').forEach((d,i)=>{
+    d.classList.remove('active','done');
+    if(i===cur) d.classList.add('active');
+    else if(i<cur) d.classList.add('done');
+  });
+  // 버튼
+  document.getElementById('btn-prev').disabled=(cur===0);
+  const nb=document.getElementById('btn-next');
+  if(cur===STEPS.length-1){nb.textContent='완료';nb.disabled=true;}
+  else{nb.textContent='다음 →';nb.disabled=false;}
+}
+
+function next(){ if(cur<STEPS.length-1){cur++;render();} }
+function prev(){ if(cur>0){cur--;render();} }
+function restart(){ stopAuto();cur=0;render(); }
+function startAuto(){
+  if(timer)return;
+  document.getElementById('btn-auto').textContent='⏸ 일시정지';
+  timer=setInterval(()=>{if(cur<STEPS.length-1)next();else stopAuto();},2200);
+}
+function stopAuto(){
+  if(timer){clearInterval(timer);timer=null;
+    document.getElementById('btn-auto').textContent='▶ 자동재생';}
+}
+
+document.getElementById('btn-next').addEventListener('click',()=>{stopAuto();next();});
+document.getElementById('btn-prev').addEventListener('click',()=>{stopAuto();prev();});
+document.getElementById('btn-restart').addEventListener('click',restart);
+document.getElementById('btn-auto').addEventListener('click',()=>{if(timer)stopAuto();else startAuto();});
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'){stopAuto();next();e.preventDefault();}
+  else if(e.key==='ArrowLeft'){stopAuto();prev();e.preventDefault();}
+  else if(e.key==='r'||e.key==='R'){restart();e.preventDefault();}
+});
+
+function syncTheme(){
+  try{
+    const t=window.parent&&window.parent.document&&
+      window.parent.document.documentElement.getAttribute('data-theme');
+    if(t)document.documentElement.setAttribute('data-theme',t);
+  }catch(e){
+    if(window.matchMedia('(prefers-color-scheme: dark)').matches)
+      document.documentElement.setAttribute('data-theme','dark');
+  }
+}
+syncTheme();
+window.addEventListener('message',e=>{
+  if(e.data&&e.data.theme)document.documentElement.setAttribute('data-theme',e.data.theme);
+});
+
+render();
 })();
 </script>
 </body>
