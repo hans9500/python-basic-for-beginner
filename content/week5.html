@@ -57,7 +57,7 @@
   <ul>
     <li><strong>Frontend</strong> — 사용자가 보는 화면</li>
     <li><strong>Backend</strong> — 보이지 않는 처리</li>
-    <li><strong>Database / 뒷단 서비스</strong> — 데이터 보관 + 위성 서비스</li>
+    <li><strong>Database / 뒷단 서비스</strong> — 데이터 보관 + 주변 서비스</li>
   </ul>
 
   <p>
@@ -89,7 +89,7 @@
       <text x="550"  y="30" text-anchor="middle" font-size="30" font-weight="800" fill="var(--accent,#c1440e)">Backend</text>
       <text x="550"  y="48" text-anchor="middle" font-size="20" class="svg-sub">보이지 않는 처리</text>
       <text x="920"  y="30" text-anchor="middle" font-size="30" font-weight="800" fill="#7c3aed">Database / 뒷단</text>
-      <text x="920"  y="48" text-anchor="middle" font-size="17" class="svg-sub">데이터 보관 + 위성 서비스</text>
+      <text x="920"  y="48" text-anchor="middle" font-size="17" class="svg-sub">데이터 보관 + 주변 서비스</text>
 
       <!-- 구분선 — 원래 그대로 -->
       <line x1="365" y1="60" x2="365" y2="1042" stroke="var(--border,#aaa)" stroke-width="1" stroke-dasharray="5 4"/>
@@ -240,7 +240,7 @@
 
   <ul>
     <li><strong>iOS</strong> (아이폰) — <strong>Swift</strong>. 애플이 만든 언어.</li>
-    <li><strong>Android</strong> (삼성·LG 등) — <strong>Kotlin</strong>. 구글이 미는 언어.</li>
+    <li><strong>Android</strong> (삼성·LG 등) — <strong>Kotlin</strong>. 구글의 공식 언어.</li>
   </ul>
 
   <p>
@@ -392,7 +392,7 @@
 
   <ul>
     <li><strong>MongoDB</strong> — JSON 형태. 상품마다 속성이 다른 쇼핑몰에 적합.</li>
-    <li><strong>Cassandra</strong> — 여러 서버에 분산. 인스타·Netflix처럼 폭발적 데이터.</li>
+    <li><strong>Cassandra</strong> — 여러 서버에 분산. 인스타·Netflix처럼 대용량·급증 데이터.</li>
     <li><strong>DynamoDB</strong> — AWS의 관리형 DB.</li>
   </ul>
 
@@ -434,7 +434,7 @@
     <li>로그인 세션 보관</li>
     <li>실시간 순위 (게임 점수판, 인기 상품)</li>
     <li>작은 메시지 큐 흉내</li>
-    <li>여러 서버 동기화용 신호등 (분산 락)</li>
+    <li>여러 서버 간 동시 접근 제어 (분산 락)</li>
   </ul>
 
   <h3>메시지 큐</h3>
