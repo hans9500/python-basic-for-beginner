@@ -72,16 +72,15 @@ body {
 .sim-head h2 { margin: 0 0 4px; font-size: 18px; font-weight: 700; }
 .sim-head .desc { margin: 0; color: var(--text-soft); font-size: 13px; }
 .sim-body {
-  display: grid;
-  grid-template-columns: 1fr 1.4fr;
+  display: flex;
+  flex-direction: column;
 }
-@media (max-width: 720px) { .sim-body { grid-template-columns: 1fr; } }
 .code-pane {
   background: var(--code-bg);
-  padding: 20px 24px;
+  padding: 14px 24px;
   font-family: 'JetBrains Mono', 'D2Coding', 'Consolas', monospace;
   font-size: 14px;
-  line-height: 1.9;
+  line-height: 1.8;
   color: var(--code-text);
 }
 .code-line {
@@ -106,13 +105,9 @@ body {
 .tk-fn { color: var(--code-builtin); }
 .canvas-pane {
   background: var(--bg-soft);
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  min-height: 380px;
+  padding: 20px 24px;
 }
-.canvas-pane svg { width: 100%; height: auto; max-height: 400px; }
+.canvas-pane svg { width: 100%; height: auto; }
 .explain {
   padding: 18px 28px;
   border-top: 1px solid var(--border);
@@ -198,14 +193,14 @@ body {
     </div>
 
     <div class="canvas-pane">
-      <svg id="memory-svg" viewBox="0 0 720 400" xmlns="http://www.w3.org/2000/svg">
+      <svg id="memory-svg" viewBox="0 0 780 380" xmlns="http://www.w3.org/2000/svg">
         <!-- CPU 영역 -->
         <text x="90" y="28" text-anchor="middle" font-family="Pretendard, sans-serif"
               font-size="11" font-weight="700" fill="currentColor" letter-spacing="2"
               opacity="0.85">CPU</text>
         <text x="90" y="44" text-anchor="middle" font-family="Pretendard, sans-serif"
               font-size="11" fill="currentColor" opacity="0.6">계산 · 판단</text>
-        <rect id="cpu-box" x="20" y="58" width="140" height="320" rx="8"
+        <rect id="cpu-box" x="20" y="58" width="140" height="300" rx="8"
               fill="var(--cpu-bg)" stroke="var(--cpu-border)" stroke-width="1.5"
               stroke-dasharray="4 3" opacity="0.45"/>
 
@@ -215,17 +210,17 @@ body {
               opacity="0.85">VARIABLES</text>
         <text x="270" y="44" text-anchor="middle" font-family="Pretendard, sans-serif"
               font-size="11" fill="currentColor" opacity="0.6">변수 (이름표)</text>
-        <rect x="190" y="58" width="160" height="320" rx="8"
+        <rect x="190" y="58" width="160" height="300" rx="8"
               fill="var(--names-bg)" stroke="var(--names-border)" stroke-width="1.5"
               stroke-dasharray="4 3" opacity="0.5"/>
 
         <!-- 객체 영역 -->
-        <text x="540" y="28" text-anchor="middle" font-family="Pretendard, sans-serif"
+        <text x="560" y="28" text-anchor="middle" font-family="Pretendard, sans-serif"
               font-size="11" font-weight="700" fill="currentColor" letter-spacing="2"
               opacity="0.85">OBJECTS (HEAP)</text>
-        <text x="540" y="44" text-anchor="middle" font-family="Pretendard, sans-serif"
+        <text x="560" y="44" text-anchor="middle" font-family="Pretendard, sans-serif"
               font-size="11" fill="currentColor" opacity="0.6">객체들이 사는 곳</text>
-        <rect x="380" y="58" width="320" height="320" rx="8"
+        <rect x="380" y="58" width="380" height="300" rx="8"
               fill="var(--heap-bg)" stroke="var(--heap-border)" stroke-width="1.5"
               stroke-dasharray="4 3" opacity="0.45"/>
 
@@ -269,23 +264,23 @@ body {
   function drawObject(opts) {
     const g = el('g', { transform: `translate(${opts.x}, ${opts.y})` });
     g.appendChild(el('rect', {
-      x: 0, y: 0, width: 110, height: 60, rx: 6,
+      x: 0, y: 0, width: 130, height: 72, rx: 6,
       fill: 'var(--bg)', stroke: 'var(--heap-border)', 'stroke-width': 2
     }));
     g.appendChild(el('text', {
-      x: 8, y: 14,
-      'font-family': 'JetBrains Mono, monospace', 'font-size': 9,
+      x: 8, y: 16,
+      'font-family': 'JetBrains Mono, monospace', 'font-size': 12,
       fill: 'var(--heap-text)', 'font-weight': 600
     }, opts.label || 'int'));
     g.appendChild(el('text', {
-      x: 55, y: 40, 'text-anchor': 'middle',
-      'font-family': 'JetBrains Mono, monospace', 'font-size': 22,
+      x: 65, y: 48, 'text-anchor': 'middle',
+      'font-family': 'JetBrains Mono, monospace', 'font-size': 26,
       'font-weight': 700, fill: 'currentColor'
     }, String(opts.value)));
     if (opts.addr) {
       g.appendChild(el('text', {
-        x: 102, y: 55, 'text-anchor': 'end',
-        'font-family': 'JetBrains Mono, monospace', 'font-size': 8,
+        x: 122, y: 67, 'text-anchor': 'end',
+        'font-family': 'JetBrains Mono, monospace', 'font-size': 10,
         fill: 'currentColor', opacity: 0.45
       }, '@' + opts.addr));
     }
@@ -442,8 +437,8 @@ body {
   function objects(stage) {
     const arr = [];
     if (stage >= 1) arr.push(drawObject({ x: 400, y: 80, value: 2, addr: '0x7f01' }));
-    if (stage >= 2) arr.push(drawObject({ x: 540, y: 80, value: 3, addr: '0x7f02' }));
-    if (stage >= 3) arr.push(drawObject({ x: 450, y: 210, value: 5, addr: '0x7f0c' }));
+    if (stage >= 2) arr.push(drawObject({ x: 560, y: 80, value: 3, addr: '0x7f02' }));
+    if (stage >= 3) arr.push(drawObject({ x: 480, y: 210, value: 5, addr: '0x7f0c' }));
     return arr;
   }
 
@@ -465,7 +460,7 @@ body {
         objects(1).forEach(o => dynamic.appendChild(o));
         // CPU → 객체 2 (만들기 화살표)
         dynamic.appendChild(drawArrow({
-          fromX: 145, fromY: 110, toX: 395, toY: 110, color: 'var(--cpu-border)'
+          fromX: 145, fromY: 110, toX: 398, toY: 110, color: 'var(--cpu-border)'
         }));
       }
     },
@@ -477,7 +472,7 @@ body {
         dynamic.appendChild(drawCpuContent('creating', { label: '객체 3 생성' }));
         objects(2).forEach(o => dynamic.appendChild(o));
         dynamic.appendChild(drawArrow({
-          fromX: 145, fromY: 110, toX: 535, toY: 110, color: 'var(--cpu-border)'
+          fromX: 145, fromY: 110, toX: 558, toY: 110, color: 'var(--cpu-border)'
         }));
       }
     },
@@ -490,25 +485,25 @@ body {
         objects(3).forEach(o => dynamic.appendChild(o));
         // 2 → CPU (값 읽기, 들어오는 화살표)
         dynamic.appendChild(drawArrow({
-          fromX: 395, fromY: 110, toX: 150, toY: 200, color: 'var(--heap-border)'
+          fromX: 398, fromY: 116, toX: 150, toY: 200, color: 'var(--heap-border)'
         }));
         // 3 → CPU (값 읽기)
         dynamic.appendChild(drawArrow({
-          fromX: 535, fromY: 110, toX: 152, toY: 215, color: 'var(--heap-border)'
+          fromX: 558, fromY: 116, toX: 152, toY: 215, color: 'var(--heap-border)'
         }));
         // CPU → 5 (결과 쓰기)
         dynamic.appendChild(drawArrow({
-          fromX: 150, fromY: 260, toX: 445, toY: 240, color: 'var(--accent)'
+          fromX: 150, fromY: 260, toX: 478, toY: 245, color: 'var(--accent)'
         }));
         // 라벨
         dynamic.appendChild(el('text', {
-          x: 270, y: 145, 'text-anchor': 'middle',
-          'font-family': 'Pretendard, sans-serif', 'font-size': 10,
+          x: 290, y: 148, 'text-anchor': 'middle',
+          'font-family': 'Pretendard, sans-serif', 'font-size': 11,
           fill: 'currentColor', opacity: 0.7
         }, '값 읽기'));
         dynamic.appendChild(el('text', {
-          x: 290, y: 290, 'text-anchor': 'middle',
-          'font-family': 'Pretendard, sans-serif', 'font-size': 10,
+          x: 300, y: 295, 'text-anchor': 'middle',
+          'font-family': 'Pretendard, sans-serif', 'font-size': 11,
           fill: 'var(--accent)', 'font-weight': 600
         }, '결과 쓰기'));
       }
@@ -522,7 +517,7 @@ body {
         objects(3).forEach(o => dynamic.appendChild(o));
         dynamic.appendChild(drawNameTag({ x: 230, y: 230, name: 'x' }));
         dynamic.appendChild(drawArrow({
-          fromX: 325, fromY: 242, toX: 450, toY: 240, color: 'var(--accent)'
+          fromX: 325, fromY: 242, toX: 478, toY: 246, color: 'var(--accent)'
         }));
       }
     },
@@ -535,9 +530,9 @@ body {
         objects(3).forEach(o => dynamic.appendChild(o));
         dynamic.appendChild(drawNameTag({ x: 230, y: 230, name: 'x' }));
         dynamic.appendChild(drawArrow({
-          fromX: 325, fromY: 242, toX: 450, toY: 240, color: 'var(--accent)'
+          fromX: 325, fromY: 242, toX: 478, toY: 246, color: 'var(--accent)'
         }));
-        dynamic.appendChild(drawOutput({ x: 455, y: 320, w: 100, text: '5' }));
+        dynamic.appendChild(drawOutput({ x: 480, y: 320, w: 100, text: '5' }));
       }
     },
     {
@@ -549,18 +544,18 @@ body {
         objects(3).forEach(o => dynamic.appendChild(o));
         dynamic.appendChild(drawNameTag({ x: 230, y: 230, name: 'x' }));
         dynamic.appendChild(drawArrow({
-          fromX: 325, fromY: 242, toX: 450, toY: 240, color: 'var(--accent)'
+          fromX: 325, fromY: 242, toX: 478, toY: 246, color: 'var(--accent)'
         }));
         dynamic.appendChild(el('rect', {
-          x: 540, y: 256, width: 28, height: 14, rx: 3,
+          x: 482, y: 278, width: 36, height: 16, rx: 3,
           fill: 'var(--accent)', opacity: 0.85
         }));
         dynamic.appendChild(el('text', {
-          x: 554, y: 266, 'text-anchor': 'middle',
-          'font-family': 'JetBrains Mono, monospace', 'font-size': 8,
+          x: 500, y: 290, 'text-anchor': 'middle',
+          'font-family': 'JetBrains Mono, monospace', 'font-size': 10,
           fill: 'white', 'font-weight': 700
         }, 'id'));
-        dynamic.appendChild(drawOutput({ x: 410, y: 320, w: 200, text: '140288751120140' }));
+        dynamic.appendChild(drawOutput({ x: 430, y: 335, w: 220, text: '140288751120140' }));
       }
     }
   ];
