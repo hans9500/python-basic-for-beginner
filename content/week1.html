@@ -870,6 +870,8 @@ print("PI =", 3.14159)
     C 언어에서는 변수가 <strong>값을 담는 상자</strong>처럼 동작합니다.
     <code class="inline">int x = 5;</code>라고 쓰면 메모리에 "x"라는 이름의
     네모난 공간이 생기고, 그 안에 5가 직접 들어갑니다.
+    여기서 <code class="inline">int</code>는 "정수만 담을 수 있는 상자"라는 선언입니다 —
+    한 번 정수 상자로 만들면 나중에 문자열을 넣을 수 없습니다.
   </p>
 
   <div class="figure">
@@ -978,6 +980,69 @@ print("PI =", 3.14159)
     <div class="caption">그림 1.6 — 파이썬 변수: 객체를 가리키는 이름표</div>
   </div>
 
+
+  <h3>파이썬의 이름표는 어떤 객체든 가리킬 수 있다</h3>
+
+  <p>
+    이름표 모델의 핵심 차이가 여기서 나옵니다.
+    C 언어는 상자를 만들 때 "어떤 종류의 값만 담을 수 있는지" 미리 선언해야 합니다.
+    파이썬의 이름표는 그런 제약이 없습니다 — <strong>어떤 타입의 객체든 가리킬 수 있고, 나중에 바꿀 수도 있습니다.</strong>
+  </p>
+
+  <div class="editor-block">
+    <div class="editor-tab-bar">
+      <span class="editor-tab"><span class="py-icon"></span>dynamic.py</span>
+    </div>
+    <textarea class="editor-source">x = 5          # 정수 객체를 가리킴
+print(type(x))  # <class 'int'>
+
+x = "hello"    # 이제 문자열 객체를 가리킴
+print(type(x))  # <class 'str'>
+
+x = [1, 2, 3]  # 이번엔 리스트 객체를 가리킴
+print(type(x))  # <class 'list'>
+
+x = 3.14       # 실수 객체로도 바꿀 수 있음
+print(type(x))  # <class 'float'>
+</textarea>
+    <div class="run-bar">
+      <span class="left"><span class="file-name">📄 dynamic.py</span></span>
+      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+      <button class="run-btn"><span class="play">▶</span> Run</button>
+    </div>
+  </div>
+  <div class="terminal">
+    <div class="terminal-head">
+      <span class="label">실행 결과</span>
+      <span class="status">대기 중</span>
+    </div>
+    <div class="terminal-body empty"></div>
+  </div>
+
+  <p>
+    C 언어라면 <code class="inline">x = "hello"</code>는 컴파일 에러입니다.
+    정수 상자에 문자열을 넣으려 했으니까요.
+    파이썬에서는 <code class="inline">x</code>가 단지 이름표라서,
+    다른 객체로 이름표를 옮기는 것뿐입니다 — 에러가 나지 않습니다.
+  </p>
+
+  <p>
+    이를 <strong>동적 타이핑(dynamic typing)</strong>이라고 합니다.
+    변수의 타입이 코드를 실행하는 시점에 결정되고, 언제든 바뀔 수 있다는 의미입니다.
+    C, Java 같은 언어는 미리 타입을 선언하는 <strong>정적 타이핑(static typing)</strong>입니다.
+  </p>
+
+  <div class="callout info">
+    <div class="label">💡 편리하지만 주의할 점</div>
+    <p>
+      동적 타이핑은 코드를 빠르게 작성할 수 있어서 편리합니다.
+      하지만 변수에 어떤 타입이 들어있는지 실수로 헷갈리면 예상치 못한 에러가 납니다.
+      예: 숫자가 들어있다고 생각했는데 실제로는 문자열이어서 덧셈이 안 되는 경우.
+      그래서 변수 이름을 <code class="inline">age</code>, <code class="inline">name</code>처럼
+      의미있게 짓는 게 중요합니다.
+    </p>
+  </div>
+
   <h3>왜 이렇게 다를까?</h3>
 
   <p>
@@ -1082,6 +1147,7 @@ print(id(x), "vs", id(y))  # 이제 다른 객체
       <li><code class="inline">x = 5</code> = 정수 객체 5를 만들고, x 이름표가 그것을 가리키게 한다.</li>
       <li><code class="inline">y = x</code> = 같은 객체에 y라는 이름표 하나 더 붙인다 (id 같음).</li>
       <li><code class="inline">x = 10</code> = x 이름표를 새 객체로 옮긴다 (기존 객체는 그대로).</li>
+      <li><strong>동적 타이핑</strong> — 이름표는 어떤 타입의 객체든 가리킬 수 있고 나중에 바꿀 수도 있다. C/Java와 다른 점.</li>
     </ul>
   </div>
 </section>
