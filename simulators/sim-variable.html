@@ -367,7 +367,7 @@ const STEPS = [
     fn() {
       dyn.appendChild(cpu('making',{label:'이름표 x 연결'}));
       drawObjs(3).forEach(o=>dyn.appendChild(o));
-      dyn.appendChild(tag(POS.tag.x, POS.tag.y));
+      dyn.appendChild(tag(POS.tag.x, POS.tag.y, 'x'));
       dyn.appendChild(arrow(315,350, 398,368, 'var(--accent)'));
     }
   },
@@ -376,7 +376,7 @@ const STEPS = [
     fn() {
       dyn.appendChild(cpu('read',{label:'print(x)',detail:'x → 5'}));
       drawObjs(3).forEach(o=>dyn.appendChild(o));
-      dyn.appendChild(tag(POS.tag.x, POS.tag.y));
+      dyn.appendChild(tag(POS.tag.x, POS.tag.y, 'x'));
       dyn.appendChild(arrow(315,350, 398,368, 'var(--accent)'));
       dyn.appendChild(out(195,440, 130,'5'));
     }
@@ -386,7 +386,7 @@ const STEPS = [
     fn() {
       dyn.appendChild(cpu('read',{label:'id(x)',detail:'주소 반환'}));
       drawObjs(3).forEach(o=>dyn.appendChild(o));
-      dyn.appendChild(tag(POS.tag.x, POS.tag.y));
+      dyn.appendChild(tag(POS.tag.x, POS.tag.y, 'x'));
       dyn.appendChild(arrow(315,350, 398,368, 'var(--accent)'));
       dyn.appendChild(out(185,440, 380,'140288751120'));
     }
