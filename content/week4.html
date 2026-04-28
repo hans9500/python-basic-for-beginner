@@ -278,7 +278,7 @@ print(add_student("최민수", existing))
   <h2>리스트 심화</h2>
 
   <p>
-    3주차에서 다룬 리스트 도구를 조금 더 알려드립니다. 새 개념이 아니라
+    3주차에서 다룬 리스트 도구를 조금 더 살펴봅니다. 새 개념이 아니라
     <strong>이미 아는 도구의 옵션</strong>들입니다.
   </p>
 
@@ -806,6 +806,11 @@ with open("students.csv", "r", encoding="utf-8") as f:
     <div class="terminal-body empty"></div>
   </div>
 
+  <div class="callout info">
+    <div class="label">💡 이 강의 환경에서 파일 실행 시 주의</div>
+    <p>브라우저 안에서 Python이 실행되므로, 코드로 만든 파일은 실행이 끝나면 사라집니다. 실제 내 컴퓨터에 저장되지 않습니다. 파일 I/O 코드는 로컬 Python 환경(VS Code 등)에서 실행할 때 진짜 파일이 만들어집니다.</p>
+  </div>
+
   <p>
     실제 엑셀 파일(<code class="inline">.xlsx</code>)을 다루려면
     <code class="inline">openpyxl</code>이라는 외부 라이브러리가 필요합니다.
@@ -830,7 +835,7 @@ with open("students.csv", "r", encoding="utf-8") as f:
   <h2>JSON과 실시간 API</h2>
 
   <p>
-    드디어 4주 동안 배운 모든 것이 만나는 곳입니다. 이번 섹션이 끝나면 여러분의 코드는
+    4주 동안 배운 모든 것이 만나는 곳입니다. 이번 섹션이 끝나면 여러분의 코드는
     실제 인터넷의 서버와 통신해서 진짜 데이터를 가져올 수 있게 됩니다.
   </p>
 
@@ -996,7 +1001,7 @@ print(f"\n주간 평균 최고기온: {avg:.1f}°C")
   <h3>★ 진짜 인터넷에서 가져오기</h3>
 
   <p>
-    드디어 진짜입니다. 위에서 본 미리 준비된 데이터를 <strong>실제 open-meteo 서버에서 받아옵니다.</strong>
+    진짜입니다. 위에서 본 미리 준비된 데이터를 <strong>실제 open-meteo 서버에서 받아옵니다.</strong>
     open-meteo는 무료 날씨 API로 키도 필요 없고 누구나 쓸 수 있습니다.
   </p>
 
@@ -1009,7 +1014,7 @@ print(f"\n주간 평균 최고기온: {avg:.1f}°C")
     </p>
     <p>
       <strong>지금은 "이런 표시가 있구나" 정도만 알아두시면 됩니다.</strong>
-      자세한 건 다음 단계 학습에서 만나게 됩니다 (s5에서 안내).
+      자세한 건 다음 단계 학습에서 만나게 됩니다.
     </p>
   </div>
 
@@ -1255,7 +1260,7 @@ print(get_temp_lambda(data))  # 22.5
       <li><strong>1주차</strong>: 객체와 변수, 첫 코드, print, 문자열, f-string</li>
       <li><strong>2주차</strong>: input, 형 변환, 비교/논리, if/elif/else, for, while, break/continue</li>
       <li><strong>3주차</strong>: 리스트/튜플/딕셔너리, 가변/불변, 함수 def, 매개변수</li>
-      <li><strong>4주차</strong>: None, 정렬/문자열 도구, JSON, 실시간 API</li>
+      <li><strong>4주차</strong>: None, 정렬/문자열 도구, 파일 읽기/쓰기, JSON, 실시간 API, 프롬프트 엔지니어링</li>
     </ul>
   </div>
 
@@ -1363,8 +1368,7 @@ print(get_temp_lambda(data))  # 22.5
     <li><strong>제너레이터 / yield</strong> — 값을 한꺼번에 만들지 않고 필요할 때마다 하나씩.</li>
     <li><strong>비동기 / async ★</strong> — 4주차에서 만난 <code class="inline">await</code>가 이쪽의 입구. <code class="inline">async def</code>, 동시 처리 등이 본격 등장.</li>
     <li><strong>타입 힌트</strong> — <code class="inline">def f(x: int) -> str:</code>. 코드의 의도를 명시. 큰 프로젝트에서 가독성 큰 도움.</li>
-    <li><strong>try/except 심화</strong> — 에러 종류별로 다르게 처리. 4주차 s3에서 잠깐 본 try/except의 깊이.</li>
-    <li><strong>파일 I/O</strong> — 디스크의 파일을 읽고 쓰기. 실무에서 매우 흔함.</li>
+    <li><strong>try/except 심화</strong> — 에러 종류별로 다르게 처리. 2주차 s2b에서 기초를 봤으니 이미 시작했습니다.</li>
     <li><strong>모듈 / 패키지</strong> — 내 코드를 여러 파일로 나눠 관리. <code class="inline">import</code>의 깊이.</li>
     <li><strong>정규식</strong> — 문자열 패턴 검색의 끝판. 4주차 s3 이메일 검증을 진짜 정밀하게 하려면 이게 필요.</li>
     <li><strong>가상환경 / pip</strong> — 프로젝트마다 분리된 라이브러리 관리.</li>
@@ -1468,7 +1472,7 @@ print(get_temp_lambda(data))  # 22.5
       1주차 s0에서 우리는 이런 약속으로 시작했습니다:
     </p>
     <p style="margin-top: 8px;">
-      "AI 시대에는 'AI에게 일 시키는 사람'과 'AI가 일 시키는 사람'이 나뉜다. 코딩을 알면 전자가 된다."
+      "AI 시대에는 'AI에게 일을 시키는 사람'과 'AI가 일을 시키는 사람'이 나뉩니다. 코딩 기초를 아는 쪽이 전자입니다."
     </p>
   </div>
 
