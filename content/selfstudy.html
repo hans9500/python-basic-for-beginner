@@ -1015,7 +1015,1113 @@ python -m pip list
 # 전통적인 의존성 목록 저장
 python -m pip freeze &gt; requirements.txt</code></pre><div class="callout info"><strong>왜 <code>python -m pip</code>?</strong><br>현재 사용 중인 Python 인터프리터에 연결된 pip를 명시적으로 실행하기 쉬운 형태입니다. 실제 팀 프로젝트에서는 <code>pyproject.toml</code> 기반 도구도 자주 사용합니다.</div></section>
 
-<section class="section" id="ss11"><div class="section-num">SELF STUDY 11 · ★★~★★★</div><h2>현대 Python 코드에서 만날 문법</h2><p>여기서는 지금 당장 모두 쓰기보다, 기존 코드에서 봤을 때 의미를 알아보는 것이 목표입니다.</p><p class="study-note">단순 값 분기부터 match/case 모양에 익숙해집니다.</p>
+
+<section class="section" id="ss11"><div class="section-num">SELF STUDY 11 · ★★</div><h2>변수 범위와 LEGB — Python은 이름을 어디서 찾을까?</h2><p>함수와 closure를 제대로 이해하려면 “변수가 어디에 저장되나”보다 <strong>이 이름을 어느 범위에서 찾는가</strong>를 이해하는 편이 중요합니다. Python은 Local → Enclosing → Global → Built-in 순으로 이름을 찾습니다.</p><div class="study-diagram"><svg viewBox="0 0 780 280" role="img" aria-label="LEGB 이름 검색 순서"><defs><marker id="legbArrow" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="currentColor"/></marker></defs><text class="svg-title" x="25" y="35">이름을 찾는 순서: L → E → G → B</text><g class="svg-box"><rect x="40" y="80" width="140" height="80" rx="12"/><text x="110" y="110">Local</text><text x="110" y="135">현재 함수</text></g><g class="svg-box"><rect x="225" y="80" width="140" height="80" rx="12"/><text x="295" y="110">Enclosing</text><text x="295" y="135">바깥 함수</text></g><g class="svg-box"><rect x="410" y="80" width="140" height="80" rx="12"/><text x="480" y="110">Global</text><text x="480" y="135">모듈</text></g><g class="svg-box"><rect x="595" y="80" width="140" height="80" rx="12"/><text x="665" y="110">Built-in</text><text x="665" y="135">print, len...</text></g><path class="svg-arrow" d="M180 120 H220" marker-end="url(#legbArrow)"/><path class="svg-arrow" d="M365 120 H405" marker-end="url(#legbArrow)"/><path class="svg-arrow" d="M550 120 H590" marker-end="url(#legbArrow)"/><text x="390" y="215" text-anchor="middle">가장 가까운 범위에서 이름을 찾으면 검색을 멈춥니다.</text></svg></div><div class="key-points"><div class="title">먼저 기억할 것</div><ul><li>대입하면 보통 현재 함수의 local 이름이 됩니다.</li><li><code class="inline">global</code>은 모듈 전역 이름을 다시 연결할 때 사용합니다.</li><li><code class="inline">nonlocal</code>은 가장 가까운 바깥 함수의 이름을 다시 연결할 때 사용합니다.</li><li>global/nonlocal은 필요할 때만 사용하고, 함수의 입력/반환으로 상태를 전달하는 방식이 더 읽기 쉬운 경우가 많습니다.</li></ul></div><p class="study-note">같은 이름 x가 여러 범위에 있을 때 가장 가까운 local 값이 선택됩니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>legb_lookup.py</span></div>
+  <textarea class="editor-source">x = &quot;global&quot;
+
+def outer():
+    x = &quot;enclosing&quot;
+
+    def inner():
+        x = &quot;local&quot;
+        print(x)
+
+    inner()
+
+outer()
+print(x)
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 legb_lookup.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">inner에 message가 없으면 enclosing 함수의 message를 찾습니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>enclosing_lookup.py</span></div>
+  <textarea class="editor-source">message = &quot;전역 메시지&quot;
+
+def make_printer():
+    message = &quot;바깥 함수 메시지&quot;
+
+    def show():
+        print(message)
+
+    return show
+
+printer = make_printer()
+printer()
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 enclosing_lookup.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">closure의 상태를 갱신해야 할 때 nonlocal이 실제로 필요해집니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>nonlocal_counter.py</span></div>
+  <textarea class="editor-source">def make_counter():
+    count = 0
+
+    def increase():
+        nonlocal count
+        count += 1
+        return count
+
+    return increase
+
+counter = make_counter()
+print(counter())
+print(counter())
+print(counter())
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 nonlocal_counter.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">global의 동작을 확인합니다. 실무에서는 전역 상태 변경을 과도하게 쓰지 않는 것이 좋습니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>global_config.py</span></div>
+  <textarea class="editor-source">mode = &quot;development&quot;
+
+def switch_to_production():
+    global mode
+    mode = &quot;production&quot;
+
+print(&quot;변경 전:&quot;, mode)
+switch_to_production()
+print(&quot;변경 후:&quot;, mode)
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 global_config.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">built-in 이름을 변수명으로 덮어쓰면 이후 코드를 읽고 디버깅하기 어려워집니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>shadow_builtin.py</span></div>
+  <textarea class="editor-source">numbers = [10, 20, 30]
+print(&quot;정상 len:&quot;, len(numbers))
+
+# len = 100  # 이 줄의 주석을 풀면 아래 len(...) 호출이 실패합니다.
+print(&quot;이름을 지을 때 built-in 이름도 피하는 습관이 좋습니다.&quot;)
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 shadow_builtin.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><details class="study-exercise"><summary>직접 해보기 — LEGB 결과 예상</summary><div class="study-exercise-body"><p>아래 코드에서 <code>show()</code>가 무엇을 출력할지 먼저 예상한 뒤, <code>nonlocal</code>을 사용해 두 번째 호출에서 값이 바뀌도록 만들어보세요.</p><details><summary>해설 보기</summary><pre class="code-static"><code>def outer():
+    level = 1
+    def show():
+        nonlocal level
+        level += 1
+        print(level)
+    show()
+    show()
+
+outer()</code></pre></details></div></details></section>
+
+
+<section class="section" id="ss12"><div class="section-num">SELF STUDY 12 · ★★</div><h2>객체 참조와 복사 심화 — shallow copy와 deepcopy</h2><p>Week 3에서 배운 “변수는 객체를 가리키는 이름” 모델을 실제 버그와 연결합니다. 특히 리스트 안에 리스트, dict 안에 dict처럼 <strong>중첩된 mutable 객체</strong>가 있을 때 얕은 복사의 의미가 중요합니다.</p><div class="study-diagram"><svg viewBox="0 0 800 310" role="img" aria-label="대입 얕은 복사 깊은 복사 비교"><defs><marker id="copyArrow" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="currentColor"/></marker></defs><text class="svg-title" x="20" y="32">중첩 리스트에서 무엇이 공유되는가?</text><text x="65" y="82">b = a</text><text x="305" y="82">b = a.copy()</text><text x="575" y="82">deepcopy(a)</text><g class="svg-box"><rect x="35" y="105" width="170" height="80" rx="12"/><text x="120" y="135">바깥 리스트도 공유</text><text x="120" y="160">안쪽 리스트도 공유</text></g><g class="svg-box"><rect x="275" y="105" width="210" height="80" rx="12"/><text x="380" y="135">바깥 리스트는 새 객체</text><text x="380" y="160">안쪽 리스트는 공유</text></g><g class="svg-box"><rect x="555" y="105" width="210" height="80" rx="12"/><text x="660" y="135">바깥 리스트 새 객체</text><text x="660" y="160">안쪽 객체도 복사</text></g><text x="400" y="245" text-anchor="middle">copy 방식은 “무엇을 독립시켜야 하는가?”를 보고 선택합니다.</text></svg></div><div class="callout info"><strong>핵심</strong><br><code>b = a</code>는 복사가 아닙니다. 두 이름이 같은 객체를 가리킵니다. <code>copy()</code>는 바깥 컨테이너만 새로 만들기 때문에 중첩된 mutable 객체는 여전히 공유될 수 있습니다.</div><p class="study-note">대입은 별명(alias)을 하나 더 만드는 상황입니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>assignment_alias.py</span></div>
+  <textarea class="editor-source">settings = {&quot;theme&quot;: &quot;dark&quot;, &quot;alerts&quot;: True}
+backup = settings
+backup[&quot;alerts&quot;] = False
+print(settings)
+print(settings is backup)
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 assignment_alias.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">얕은 복사는 바깥 리스트는 분리하지만 내부 리스트는 공유합니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>shallow_copy_list.py</span></div>
+  <textarea class="editor-source">original = [[&quot;api-01&quot;, &quot;api-02&quot;], [&quot;db-01&quot;]]
+copied = original.copy()
+
+copied.append([&quot;cache-01&quot;])
+print(&quot;바깥 추가 후 원본:&quot;, original)
+
+copied[0].append(&quot;api-03&quot;)
+print(&quot;안쪽 변경 후 원본:&quot;, original)
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 shallow_copy_list.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">dict.copy()도 같은 얕은 복사입니다. 중첩 dict는 공유될 수 있습니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>shallow_copy_dict.py</span></div>
+  <textarea class="editor-source">config = {
+    &quot;server&quot;: {&quot;host&quot;: &quot;localhost&quot;, &quot;port&quot;: 8000},
+    &quot;debug&quot;: True,
+}
+copy_config = config.copy()
+copy_config[&quot;debug&quot;] = False
+copy_config[&quot;server&quot;][&quot;port&quot;] = 9000
+
+print(&quot;원본 debug:&quot;, config[&quot;debug&quot;])
+print(&quot;원본 port:&quot;, config[&quot;server&quot;][&quot;port&quot;])
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 shallow_copy_dict.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">중첩 객체까지 독립적으로 변경해야 하는 설정 복사 예제입니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>deepcopy_config.py</span></div>
+  <textarea class="editor-source">from copy import deepcopy
+
+config = {
+    &quot;server&quot;: {&quot;host&quot;: &quot;localhost&quot;, &quot;port&quot;: 8000},
+    &quot;features&quot;: [&quot;login&quot;, &quot;search&quot;],
+}
+new_config = deepcopy(config)
+new_config[&quot;server&quot;][&quot;port&quot;] = 9000
+new_config[&quot;features&quot;].append(&quot;payment&quot;)
+
+print(&quot;원본:&quot;, config)
+print(&quot;복사본:&quot;, new_config)
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 deepcopy_config.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">복사 방법은 무조건 deepcopy가 좋은 것이 아니라 변경 범위를 보고 선택합니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>copy_decision.py</span></div>
+  <textarea class="editor-source">from copy import deepcopy
+
+template = {&quot;title&quot;: &quot;주간 보고&quot;, &quot;sections&quot;: [&quot;요약&quot;, &quot;이슈&quot;]}
+
+# 읽기만 할 별명
+view = template
+
+# 바깥 key만 바꿀 복사
+renamed = template.copy()
+renamed[&quot;title&quot;] = &quot;월간 보고&quot;
+
+# 내부 sections까지 독립적으로 바꿀 복사
+custom = deepcopy(template)
+custom[&quot;sections&quot;].append(&quot;다음 계획&quot;)
+
+print(view)
+print(renamed)
+print(custom)
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 copy_decision.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><details class="study-exercise"><summary>직접 해보기 — 중첩 사용자 설정 복사</summary><div class="study-exercise-body"><p>원본 사용자 설정의 알림 채널 목록은 보존하면서 복사본에 <code>sms</code>만 추가해보세요. 얕은 복사와 깊은 복사 결과를 각각 확인해보세요.</p><details><summary>해설 보기</summary><pre class="code-static"><code>from copy import deepcopy
+
+original = {&quot;user&quot;: &quot;kim&quot;, &quot;notifications&quot;: [&quot;email&quot;, &quot;push&quot;]}
+shallow = original.copy()
+shallow[&quot;notifications&quot;].append(&quot;sms&quot;)
+print(&quot;얕은 복사 후 원본:&quot;, original)
+
+original = {&quot;user&quot;: &quot;kim&quot;, &quot;notifications&quot;: [&quot;email&quot;, &quot;push&quot;]}
+deep = deepcopy(original)
+deep[&quot;notifications&quot;].append(&quot;sms&quot;)
+print(&quot;깊은 복사 후 원본:&quot;, original)
+print(&quot;깊은 복사본:&quot;, deep)</code></pre></details></div></details></section>
+
+
+<section class="section" id="ss13"><div class="section-num">SELF STUDY 13 · ★★★</div><h2>Class 한 단계 더 — property, classmethod, staticmethod, 표현 메서드</h2><p>클래스 코드를 읽다 보면 <code>@property</code>, <code>@classmethod</code>, <code>@staticmethod</code>, <code>__str__</code>, <code>__repr__</code>를 자주 만납니다. 전부 외우기보다 <strong>각 도구가 어떤 책임을 표현하는지</strong> 예제로 구분합니다.</p><div class="study-diagram"><svg viewBox="0 0 800 320" role="img" aria-label="클래스 메서드 종류"><text class="svg-title" x="20" y="34">한 클래스 안에서도 역할이 다릅니다</text><g class="svg-box"><rect x="30" y="80" width="220" height="145" rx="14"/><text x="140" y="112">instance method</text><text x="140" y="145">self</text><text x="140" y="175">한 객체의 상태 사용</text><text x="140" y="200">deposit()</text></g><g class="svg-box"><rect x="290" y="80" width="220" height="145" rx="14"/><text x="400" y="112">classmethod</text><text x="400" y="145">cls</text><text x="400" y="175">클래스 자체 사용</text><text x="400" y="200">from_text()</text></g><g class="svg-box"><rect x="550" y="80" width="220" height="145" rx="14"/><text x="660" y="112">staticmethod</text><text x="660" y="145">self/cls 없음</text><text x="660" y="175">관련 유틸리티</text><text x="660" y="200">validate()</text></g><text x="400" y="280" text-anchor="middle">property는 method를 attribute처럼 읽게 해주는 별도의 도구입니다.</text></svg></div><p>이 섹션은 클래스를 “만들 줄 안다”에서 “실제 라이브러리 클래스를 읽을 수 있다”로 한 단계 올립니다.</p><p class="study-note">class attribute와 instance attribute가 각각 어떤 데이터를 나타내는지 봅니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>class_and_instance_attr.py</span></div>
+  <textarea class="editor-source">class ApiClient:
+    default_timeout = 3  # class attribute
+
+    def __init__(self, name, timeout=None):
+        self.name = name
+        self.timeout = timeout or self.default_timeout
+
+a = ApiClient(&quot;service-a&quot;)
+b = ApiClient(&quot;service-b&quot;, 10)
+print(a.timeout, b.timeout)
+print(ApiClient.default_timeout)
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 class_and_instance_attr.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">계산 메서드를 괄호 없이 속성처럼 읽고 싶을 때 property가 자연스러운 경우가 있습니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>property_temperature.py</span></div>
+  <textarea class="editor-source">class Temperature:
+    def __init__(self, celsius):
+        self._celsius = celsius
+
+    @property
+    def celsius(self):
+        return self._celsius
+
+    @property
+    def fahrenheit(self):
+        return self._celsius * 9 / 5 + 32
+
+t = Temperature(25)
+print(t.celsius)
+print(t.fahrenheit)
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 property_temperature.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">attribute 대입 모양을 유지하면서 검증 로직을 넣는 예입니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>property_validation.py</span></div>
+  <textarea class="editor-source">class Product:
+    def __init__(self, name, price):
+        self.name = name
+        self.price = price
+
+    @property
+    def price(self):
+        return self._price
+
+    @price.setter
+    def price(self, value):
+        if value &lt; 0:
+            raise ValueError(&quot;가격은 0 이상이어야 합니다.&quot;)
+        self._price = value
+
+p = Product(&quot;Keyboard&quot;, 89000)
+print(p.price)
+p.price = 79000
+print(p.price)
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 property_validation.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">classmethod의 대표적인 실무 사용법인 alternate constructor 패턴입니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>classmethod_from_text.py</span></div>
+  <textarea class="editor-source">class Server:
+    def __init__(self, host, port):
+        self.host = host
+        self.port = port
+
+    @classmethod
+    def from_address(cls, address):
+        host, port = address.split(&quot;:&quot;)
+        return cls(host, int(port))
+
+server = Server.from_address(&quot;api.example.com:443&quot;)
+print(server.host, server.port)
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 classmethod_from_text.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">객체 상태나 클래스 상태가 필요 없지만 그 클래스 주제와 밀접한 검증 함수를 묶는 예입니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>staticmethod_validate.py</span></div>
+  <textarea class="editor-source">class Username:
+    @staticmethod
+    def is_valid(value):
+        return value.isalnum() and 3 &lt;= len(value) &lt;= 12
+
+for name in [&quot;kim&quot;, &quot;ab&quot;, &quot;user_01&quot;, &quot;python2026&quot;]:
+    print(name, Username.is_valid(name))
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 staticmethod_validate.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">__str__은 사람이 보기 좋은 표현, __repr__은 개발자가 객체 상태를 파악하기 좋은 표현을 만들 때 사용합니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>repr_str.py</span></div>
+  <textarea class="editor-source">class Job:
+    def __init__(self, job_id, status):
+        self.job_id = job_id
+        self.status = status
+
+    def __str__(self):
+        return f&quot;작업 {self.job_id}: {self.status}&quot;
+
+    def __repr__(self):
+        return f&quot;Job(job_id={self.job_id!r}, status={self.status!r})&quot;
+
+job = Job(&quot;deploy-42&quot;, &quot;running&quot;)
+print(job)
+print(repr(job))
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 repr_str.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><details class="study-exercise"><summary>직접 해보기 — CSV 한 줄에서 객체 만들기</summary><div class="study-exercise-body"><p><code>"mouse,45000"</code> 형태 문자열을 받아 Product 객체를 만드는 <code>from_csv()</code> classmethod를 작성해보세요.</p><details><summary>해설 보기</summary><pre class="code-static"><code>class Product:
+    def __init__(self, name, price):
+        self.name = name
+        self.price = price
+
+    @classmethod
+    def from_csv(cls, line):
+        name, price = line.split(&quot;,&quot;)
+        return cls(name, int(price))
+
+p = Product.from_csv(&quot;mouse,45000&quot;)
+print(p.name, p.price)</code></pre></details></div></details></section>
+
+
+<section class="section" id="ss14"><div class="section-num">SELF STUDY 14 · ★★</div><h2>dataclass — 데이터 중심 클래스를 간결하게</h2><p><code>dataclasses</code>는 Python 표준 라이브러리입니다. 필드가 중심인 클래스를 만들 때 반복적인 <code>__init__</code>·표현·비교 코드를 줄여주고, type hint와도 자연스럽게 결합됩니다.</p><div class="study-diagram"><svg viewBox="0 0 780 250" role="img" aria-label="일반 클래스와 dataclass 비교"><text class="svg-title" x="20" y="32">데이터 중심 클래스의 반복 코드를 줄이기</text><g class="svg-box"><rect x="40" y="70" width="290" height="130" rx="14"/><text x="185" y="102">일반 class</text><text x="185" y="135">__init__ 직접 작성</text><text x="185" y="165">repr / 비교도 직접 결정</text></g><g class="svg-box"><rect x="450" y="70" width="290" height="130" rx="14"/><text x="595" y="102">@dataclass</text><text x="595" y="135">필드 선언 중심</text><text x="595" y="165">반복 메서드 자동 생성</text></g></svg></div><div class="callout info"><strong>언제?</strong><br>상태를 저장하는 필드가 중심이고 복잡한 생명주기 로직이 많지 않은 객체라면 dataclass가 코드를 훨씬 간결하게 만들 수 있습니다.</div><p class="study-note">__init__과 보기 좋은 repr을 직접 작성하지 않아도 됩니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>dataclass_product.py</span></div>
+  <textarea class="editor-source">from dataclasses import dataclass
+
+@dataclass
+class Product:
+    name: str
+    price: int
+
+p = Product(&quot;Keyboard&quot;, 89000)
+print(p)
+print(p.name, p.price)
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 dataclass_product.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">dataclass는 필드 값을 기준으로 비교하는 __eq__도 기본 생성합니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>dataclass_equality.py</span></div>
+  <textarea class="editor-source">from dataclasses import dataclass
+
+@dataclass
+class Point:
+    x: int
+    y: int
+
+a = Point(10, 20)
+b = Point(10, 20)
+print(a == b)
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 dataclass_equality.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">mutable 기본값 문제를 피하기 위해 default_factory를 사용하는 중요한 패턴입니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>dataclass_default_factory.py</span></div>
+  <textarea class="editor-source">from dataclasses import dataclass, field
+
+@dataclass
+class Order:
+    order_id: str
+    items: list[str] = field(default_factory=list)
+
+a = Order(&quot;A-100&quot;)
+b = Order(&quot;B-200&quot;)
+a.items.append(&quot;keyboard&quot;)
+print(a)
+print(b)
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 dataclass_default_factory.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">생성 후 간단한 정규화나 검증이 필요하면 __post_init__을 활용할 수 있습니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>dataclass_post_init.py</span></div>
+  <textarea class="editor-source">from dataclasses import dataclass
+
+@dataclass
+class User:
+    name: str
+    email: str
+
+    def __post_init__(self):
+        self.email = self.email.strip().lower()
+
+u = User(&quot;Kim&quot;, &quot; KIM@EXAMPLE.COM &quot;)
+print(u)
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 dataclass_post_init.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">변경하지 않을 값 객체를 표현할 때 frozen=True를 고려할 수 있습니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>frozen_dataclass.py</span></div>
+  <textarea class="editor-source">from dataclasses import dataclass
+
+@dataclass(frozen=True)
+class ApiEndpoint:
+    host: str
+    port: int
+
+endpoint = ApiEndpoint(&quot;api.example.com&quot;, 443)
+print(endpoint)
+# endpoint.port = 80  # FrozenInstanceError
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 frozen_dataclass.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><details class="study-exercise"><summary>직접 해보기 — 배포 정보 dataclass</summary><div class="study-exercise-body"><p>서비스명, 버전, replicas를 가진 Deployment dataclass를 만들고 두 객체를 출력해보세요.</p><details><summary>해설 보기</summary><pre class="code-static"><code>from dataclasses import dataclass
+
+@dataclass
+class Deployment:
+    service: str
+    version: str
+    replicas: int = 1
+
+a = Deployment(&quot;api&quot;, &quot;1.2.0&quot;, 3)
+b = Deployment(&quot;worker&quot;, &quot;1.2.0&quot;)
+print(a)
+print(b)</code></pre></details></div></details></section>
+
+
+<section class="section" id="ss15"><div class="section-num">SELF STUDY 15 · ★★</div><h2>collections — Counter, defaultdict, deque</h2><p>기본 <code>dict</code>와 <code>list</code>만으로도 구현할 수 있지만, Python 표준 라이브러리의 <code>collections</code>에는 특정 문제를 더 직접적으로 표현하는 컨테이너가 있습니다.</p><div class="study-diagram"><svg viewBox="0 0 800 280" role="img" aria-label="collections 세 도구"><text class="svg-title" x="20" y="34">문제에 맞는 컨테이너를 고르면 코드가 단순해집니다</text><g class="svg-box"><rect x="35" y="80" width="220" height="130" rx="14"/><text x="145" y="112">Counter</text><text x="145" y="145">몇 번?</text><text x="145" y="175">로그 상태 집계</text></g><g class="svg-box"><rect x="290" y="80" width="220" height="130" rx="14"/><text x="400" y="112">defaultdict</text><text x="400" y="145">키별 묶기</text><text x="400" y="175">부서별 사용자</text></g><g class="svg-box"><rect x="545" y="80" width="220" height="130" rx="14"/><text x="655" y="112">deque</text><text x="655" y="145">양쪽 빠른 처리</text><text x="655" y="175">queue / 최근 기록</text></g></svg></div><p class="study-note">HTTP 상태 코드나 이벤트 종류처럼 빈도를 세는 데 Counter가 잘 맞습니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>counter_status.py</span></div>
+  <textarea class="editor-source">from collections import Counter
+
+statuses = [200, 200, 404, 200, 500, 404, 200]
+counts = Counter(statuses)
+print(counts)
+print(&quot;가장 흔한 상태:&quot;, counts.most_common(2))
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 counter_status.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">문자열 이벤트 로그에서 발생 횟수를 집계합니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>counter_words.py</span></div>
+  <textarea class="editor-source">from collections import Counter
+
+log = &quot;login search login logout login search&quot;
+counts = Counter(log.split())
+for event, count in counts.most_common():
+    print(event, count)
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 counter_words.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">키가 처음 나타날 때 빈 리스트를 자동으로 준비하므로 그룹핑 코드가 단순해집니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>defaultdict_group.py</span></div>
+  <textarea class="editor-source">from collections import defaultdict
+
+users = [
+    {&quot;name&quot;: &quot;Kim&quot;, &quot;team&quot;: &quot;backend&quot;},
+    {&quot;name&quot;: &quot;Lee&quot;, &quot;team&quot;: &quot;frontend&quot;},
+    {&quot;name&quot;: &quot;Park&quot;, &quot;team&quot;: &quot;backend&quot;},
+]
+by_team = defaultdict(list)
+for user in users:
+    by_team[user[&quot;team&quot;]].append(user[&quot;name&quot;])
+
+print(dict(by_team))
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 defaultdict_group.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">고객별 누적 금액처럼 숫자 집계에도 사용할 수 있습니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>defaultdict_sum.py</span></div>
+  <textarea class="editor-source">from collections import defaultdict
+
+orders = [(&quot;A&quot;, 12000), (&quot;B&quot;, 9000), (&quot;A&quot;, 5000), (&quot;B&quot;, 3000)]
+totals = defaultdict(int)
+for customer, price in orders:
+    totals[customer] += price
+print(dict(totals))
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 defaultdict_sum.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">앞에서 꺼내고 뒤에 넣는 FIFO queue는 list보다 deque가 자연스럽습니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>deque_queue.py</span></div>
+  <textarea class="editor-source">from collections import deque
+
+queue = deque([&quot;job-1&quot;, &quot;job-2&quot;])
+queue.append(&quot;job-3&quot;)
+while queue:
+    job = queue.popleft()
+    print(&quot;처리:&quot;, job)
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 deque_queue.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">최근 N개 기록처럼 고정 길이 버퍼에도 deque가 유용합니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>deque_recent.py</span></div>
+  <textarea class="editor-source">from collections import deque
+
+recent = deque(maxlen=3)
+for event in [&quot;login&quot;, &quot;search&quot;, &quot;order&quot;, &quot;logout&quot;, &quot;login&quot;]:
+    recent.append(event)
+    print(list(recent))
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 deque_recent.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><details class="study-exercise"><summary>직접 해보기 — 에러 종류 집계</summary><div class="study-exercise-body"><p>에러 코드 목록에서 가장 많이 발생한 에러 2개를 Counter로 출력해보세요.</p><details><summary>해설 보기</summary><pre class="code-static"><code>from collections import Counter
+
+errors = [&quot;timeout&quot;, &quot;auth&quot;, &quot;timeout&quot;, &quot;db&quot;, &quot;timeout&quot;, &quot;auth&quot;]
+counts = Counter(errors)
+print(counts.most_common(2))</code></pre></details></div></details></section>
+
+
+<section class="section" id="ss16"><div class="section-num">SELF STUDY 16 · ★★~★★★</div><h2>itertools — 반복 데이터를 조립하는 표준 도구</h2><p>Iterator/Generator를 배운 이유가 여기서 더 분명해집니다. <code>itertools</code>는 여러 iterable을 연결하거나 필요한 일부만 꺼내거나 조합을 만드는 함수를 제공합니다.</p><div class="study-diagram"><svg viewBox="0 0 800 270" role="img" aria-label="itertools 데이터 흐름"><text class="svg-title" x="20" y="34">iterator를 연결·자르기·조합하기</text><g class="svg-box"><rect x="35" y="90" width="200" height="110" rx="14"/><text x="135" y="123">chain</text><text x="135" y="153">여러 흐름 연결</text></g><g class="svg-box"><rect x="300" y="90" width="200" height="110" rx="14"/><text x="400" y="123">islice</text><text x="400" y="153">일부만 꺼내기</text></g><g class="svg-box"><rect x="565" y="90" width="200" height="110" rx="14"/><text x="665" y="123">product / combinations</text><text x="665" y="153">조합 만들기</text></g></svg></div><p><code>itertools</code>의 함수 대부분은 iterator를 반환하므로, 데이터를 한꺼번에 복사하지 않고 흐름으로 연결하기 좋습니다.</p><p class="study-note">여러 iterable을 하나의 연속된 흐름처럼 순회합니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>chain_logs.py</span></div>
+  <textarea class="editor-source">from itertools import chain
+
+morning = [&quot;login&quot;, &quot;search&quot;]
+afternoon = [&quot;order&quot;, &quot;logout&quot;]
+for event in chain(morning, afternoon):
+    print(event)
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 chain_logs.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">끝이 없는 generator에서도 앞부분 몇 개만 안전하게 꺼낼 수 있습니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>islice_generator.py</span></div>
+  <textarea class="editor-source">from itertools import islice
+
+def ticket_ids():
+    n = 1
+    while True:
+        yield f&quot;T-{n:04d}&quot;
+        n += 1
+
+print(list(islice(ticket_ids(), 5)))
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 islice_generator.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">배포 지역 × 환경처럼 가능한 모든 조합을 만들 때 product가 의미 있습니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>product_options.py</span></div>
+  <textarea class="editor-source">from itertools import product
+
+regions = [&quot;seoul&quot;, &quot;tokyo&quot;]
+envs = [&quot;dev&quot;, &quot;prod&quot;]
+for region, env in product(regions, envs):
+    print(region, env)
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 product_options.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">두 서비스 조합을 모두 테스트해야 하는 상황처럼 순서를 무시한 조합에 combinations를 씁니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>combinations_pair.py</span></div>
+  <textarea class="editor-source">from itertools import combinations
+
+services = [&quot;api&quot;, &quot;worker&quot;, &quot;db&quot;, &quot;cache&quot;]
+for a, b in combinations(services, 2):
+    print(a, &quot;+&quot;, b)
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 combinations_pair.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">groupby는 인접한 같은 key를 묶습니다. 보통 grouping key 기준으로 정렬된 데이터에 사용합니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>groupby_status.py</span></div>
+  <textarea class="editor-source">from itertools import groupby
+
+records = [
+    (&quot;backend&quot;, &quot;api-1&quot;),
+    (&quot;backend&quot;, &quot;api-2&quot;),
+    (&quot;frontend&quot;, &quot;web-1&quot;),
+    (&quot;worker&quot;, &quot;job-1&quot;),
+]
+for team, group in groupby(records, key=lambda row: row[0]):
+    print(team, [name for _, name in group])
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 groupby_status.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><details class="study-exercise"><summary>직접 해보기 — 페이지 조합 만들기</summary><div class="study-exercise-body"><p>언어 <code>["ko","en"]</code>와 테마 <code>["light","dark"]</code>의 모든 조합을 product로 출력하세요.</p><details><summary>해설 보기</summary><pre class="code-static"><code>from itertools import product
+
+for lang, theme in product([&quot;ko&quot;, &quot;en&quot;], [&quot;light&quot;, &quot;dark&quot;]):
+    print(lang, theme)</code></pre></details></div></details></section>
+
+
+<section class="section" id="ss17"><div class="section-num">SELF STUDY 17 · ★★</div><h2>pathlib 실전 — 파일 경로를 문자열이 아닌 객체로 다루기</h2><p>파일 자동화를 시작하면 경로 결합, 존재 확인, 파일 찾기가 반복됩니다. <code>pathlib.Path</code>는 운영체제별 경로 차이를 직접 문자열로 조작하는 일을 줄여줍니다.</p><div class="study-diagram"><svg viewBox="0 0 800 270" role="img" aria-label="pathlib 경로 객체"><text class="svg-title" x="20" y="34">문자열 경로보다 Path 객체로 의도를 표현</text><g class="svg-box"><rect x="45" y="85" width="200" height="115" rx="14"/><text x="145" y="120">Path("data")</text><text x="145" y="153">경로 객체</text></g><text x="310" y="145">/</text><g class="svg-box"><rect x="350" y="85" width="180" height="115" rx="14"/><text x="440" y="120">"users.json"</text><text x="440" y="153">하위 경로</text></g><text x="585" y="145">→</text><g class="svg-box"><rect x="630" y="85" width="140" height="115" rx="14"/><text x="700" y="120">Path</text><text x="700" y="153">결과</text></g></svg></div><p class="study-note">경로 결합과 파일명/확장자/부모 경로를 문자열 자르기 없이 다룹니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>path_parts.py</span></div>
+  <textarea class="editor-source">from pathlib import Path
+
+path = Path(&quot;logs&quot;) / &quot;2026&quot; / &quot;application.log&quot;
+print(path)
+print(path.name)
+print(path.stem)
+print(path.suffix)
+print(path.parent)
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 path_parts.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">파일/디렉터리 존재 여부를 확인하는 가장 기본적인 자동화 패턴입니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>path_check.py</span></div>
+  <textarea class="editor-source">from pathlib import Path
+
+for value in [&quot;.&quot;, &quot;README.md&quot;, &quot;missing.txt&quot;]:
+    path = Path(value)
+    print(value, &quot;exists=&quot;, path.exists(), &quot;file=&quot;, path.is_file(), &quot;dir=&quot;, path.is_dir())
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 path_check.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">간단한 텍스트 파일은 Path의 read_text/write_text로 다룰 수도 있습니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>path_write_read.py</span></div>
+  <textarea class="editor-source">from pathlib import Path
+
+path = Path(&quot;study_note.txt&quot;)
+path.write_text(&quot;Python pathlib 연습\n&quot;, encoding=&quot;utf-8&quot;)
+print(path.read_text(encoding=&quot;utf-8&quot;))
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 path_write_read.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">glob 패턴으로 특정 확장자의 파일만 찾는 자동화 예제입니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>glob_txt.py</span></div>
+  <textarea class="editor-source">from pathlib import Path
+
+base = Path(&quot;demo_files&quot;)
+base.mkdir(exist_ok=True)
+(base / &quot;a.txt&quot;).write_text(&quot;A&quot;, encoding=&quot;utf-8&quot;)
+(base / &quot;b.log&quot;).write_text(&quot;B&quot;, encoding=&quot;utf-8&quot;)
+(base / &quot;c.txt&quot;).write_text(&quot;C&quot;, encoding=&quot;utf-8&quot;)
+
+for path in sorted(base.glob(&quot;*.txt&quot;)):
+    print(path.name)
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 glob_txt.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">하위 디렉터리까지 재귀적으로 파일을 찾을 때 rglob이 편리합니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>rglob_project.py</span></div>
+  <textarea class="editor-source">from pathlib import Path
+
+base = Path(&quot;mini_project&quot;)
+(base / &quot;app&quot;).mkdir(parents=True, exist_ok=True)
+(base / &quot;tests&quot;).mkdir(parents=True, exist_ok=True)
+(base / &quot;app&quot; / &quot;main.py&quot;).write_text(&quot;print(&#x27;app&#x27;)&quot;, encoding=&quot;utf-8&quot;)
+(base / &quot;tests&quot; / &quot;test_app.py&quot;).write_text(&quot;# test&quot;, encoding=&quot;utf-8&quot;)
+
+for path in sorted(base.rglob(&quot;*.py&quot;)):
+    print(path.as_posix())
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 rglob_project.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><details class="study-exercise"><summary>직접 해보기 — 로그 파일 이름 만들기</summary><div class="study-exercise-body"><p>Path를 사용해 <code>logs/app-20260821.log</code> 경로를 만들고 name, suffix, parent를 출력하세요.</p><details><summary>해설 보기</summary><pre class="code-static"><code>from pathlib import Path
+
+path = Path(&quot;logs&quot;) / &quot;app-20260821.log&quot;
+print(path.name)
+print(path.suffix)
+print(path.parent)</code></pre></details></div></details></section>
+
+
+<section class="section" id="ss18"><div class="section-num">SELF STUDY 18 · ★★</div><h2>datetime — 날짜와 시간을 파싱하고 계산하기</h2><p>로그, API, 파일명, 예약, 만료시간 등 실무 데이터에는 날짜와 시간이 자주 등장합니다. 문자열 그대로 비교하기보다 <code>datetime</code> 객체로 변환하면 계산과 형식 변경이 쉬워집니다.</p><div class="study-diagram"><svg viewBox="0 0 800 270" role="img" aria-label="datetime 문자열 변환"><text class="svg-title" x="20" y="34">문자열 ↔ datetime ↔ 표시 문자열</text><g class="svg-box"><rect x="30" y="90" width="210" height="100" rx="14"/><text x="135" y="123">"2026-08-21"</text><text x="135" y="153">문자열</text></g><text x="275" y="145">strptime →</text><g class="svg-box"><rect x="365" y="90" width="180" height="100" rx="14"/><text x="455" y="123">datetime</text><text x="455" y="153">날짜/시간 객체</text></g><text x="575" y="145">→ strftime</text><g class="svg-box"><rect x="650" y="90" width="120" height="100" rx="14"/><text x="710" y="123">"08/21"</text><text x="710" y="153">표시용</text></g></svg></div><p class="study-note">현재 날짜/시간 객체에서 필요한 부분을 꺼냅니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>datetime_now.py</span></div>
+  <textarea class="editor-source">from datetime import datetime
+
+now = datetime.now()
+print(now)
+print(now.year, now.month, now.day)
+print(now.hour, now.minute)
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 datetime_now.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">로그 문자열을 계산 가능한 datetime 객체로 바꾸고 다시 원하는 형식으로 표시합니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>parse_log_time.py</span></div>
+  <textarea class="editor-source">from datetime import datetime
+
+text = &quot;2026-08-21 11:30:45&quot;
+dt = datetime.strptime(text, &quot;%Y-%m-%d %H:%M:%S&quot;)
+print(dt)
+print(dt.strftime(&quot;%Y/%m/%d %H:%M&quot;))
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 parse_log_time.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">캐시 만료나 예약 시간처럼 기준 시각에서 일정 시간을 더하는 예입니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>timedelta_expire.py</span></div>
+  <textarea class="editor-source">from datetime import datetime, timedelta
+
+created = datetime(2026, 8, 21, 10, 0)
+expires = created + timedelta(hours=2)
+print(&quot;생성:&quot;, created)
+print(&quot;만료:&quot;, expires)
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 timedelta_expire.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">두 시각의 차이를 timedelta로 계산합니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>duration_measure.py</span></div>
+  <textarea class="editor-source">from datetime import datetime
+
+started = datetime(2026, 8, 21, 9, 15)
+finished = datetime(2026, 8, 21, 11, 5)
+elapsed = finished - started
+print(elapsed)
+print(&quot;분:&quot;, elapsed.total_seconds() / 60)
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 duration_measure.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">API와 서버에서는 시간대를 가진 aware datetime을 다루는 경우가 많다는 맛보기입니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>timezone_aware.py</span></div>
+  <textarea class="editor-source">from datetime import datetime, timezone
+
+now_utc = datetime.now(timezone.utc)
+print(now_utc)
+print(&quot;timezone aware:&quot;, now_utc.tzinfo is not None)
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 timezone_aware.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><details class="study-exercise"><summary>직접 해보기 — 문자열 날짜 포맷 변경</summary><div class="study-exercise-body"><p><code>"2026-12-25"</code>를 datetime으로 변환한 뒤 <code>"2026년 12월 25일"</code> 형태로 출력하세요.</p><details><summary>해설 보기</summary><pre class="code-static"><code>from datetime import datetime
+
+dt = datetime.strptime(&quot;2026-12-25&quot;, &quot;%Y-%m-%d&quot;)
+print(dt.strftime(&quot;%Y년 %m월 %d일&quot;))</code></pre></details></div></details></section>
+
+
+<section class="section" id="ss19"><div class="section-num">SELF STUDY 19 · ★★~★★★</div><h2>정규표현식 re — 규칙이 있는 텍스트 찾기와 치환</h2><p>문자열 메서드만으로 복잡해지는 패턴 검색에는 정규표현식이 유용할 수 있습니다. 여기서는 <code>search</code>, <code>findall</code>, <code>sub</code>, 그룹 정도까지만 실제 예제로 익힙니다.</p><div class="study-diagram"><svg viewBox="0 0 800 270" role="img" aria-label="정규표현식 검색 흐름"><text class="svg-title" x="20" y="34">텍스트 + 패턴 → 찾기 / 모두 찾기 / 바꾸기</text><g class="svg-box"><rect x="40" y="80" width="210" height="120" rx="14"/><text x="145" y="113">원본 텍스트</text><text x="145" y="145">ORD-20260821-1234</text></g><g class="svg-box"><rect x="315" y="80" width="180" height="120" rx="14"/><text x="405" y="113">정규식 패턴</text><text x="405" y="145">ORD-\d{8}-\d{4}</text></g><g class="svg-box"><rect x="560" y="80" width="200" height="120" rx="14"/><text x="660" y="113">match 결과</text><text x="660" y="145">필요한 부분</text></g></svg></div><div class="callout info"><strong>정규식은 작은 언어입니다.</strong><br>한 번에 복잡한 패턴을 외우지 말고, 실제 텍스트에서 “무엇을 찾고 싶은가?”를 먼저 정한 뒤 조금씩 만드세요.</div><p class="study-note">주문번호처럼 일정한 형식을 가진 텍스트 하나를 찾습니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>regex_search_order.py</span></div>
+  <textarea class="editor-source">import re
+
+text = &quot;주문번호: ORD-20260821-1234&quot;
+match = re.search(r&quot;ORD-\d{8}-\d{4}&quot;, text)
+if match:
+    print(match.group())
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 regex_search_order.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">로그 한 줄에서 여러 IP 모양을 모두 찾는 예입니다. 여기서는 형식 검색이며 실제 IP 유효성 검증까지 하지는 않습니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>regex_findall_ips.py</span></div>
+  <textarea class="editor-source">import re
+
+log = &quot;client=10.0.0.12 proxy=192.168.0.5 backend=10.0.0.33&quot;
+ips = re.findall(r&quot;\b\d{1,3}(?:\.\d{1,3}){3}\b&quot;, log)
+print(ips)
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 regex_findall_ips.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">개인정보 전체를 노출하지 않도록 전화번호 일부를 마스킹합니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>regex_sub_mask.py</span></div>
+  <textarea class="editor-source">import re
+
+text = &quot;문의: 010-1234-5678, 긴급: 010-9876-5432&quot;
+masked = re.sub(r&quot;(010)-\d{4}-(\d{4})&quot;, r&quot;\1-****-\2&quot;, text)
+print(masked)
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 regex_sub_mask.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">괄호 그룹을 사용해 로그의 날짜/레벨/메시지를 구조화합니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>regex_groups.py</span></div>
+  <textarea class="editor-source">import re
+
+line = &quot;2026-08-21 ERROR database timeout&quot;
+match = re.match(r&quot;(\d{4}-\d{2}-\d{2})\s+(INFO|WARN|ERROR)\s+(.+)&quot;, line)
+if match:
+    date, level, message = match.groups()
+    print(date)
+    print(level)
+    print(message)
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 regex_groups.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">같은 패턴을 반복해서 사용할 때 re.compile로 이름을 붙여둘 수 있습니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>regex_compile.py</span></div>
+  <textarea class="editor-source">import re
+
+order_pattern = re.compile(r&quot;ORD-\d{8}-\d{4}&quot;)
+lines = [
+    &quot;created ORD-20260821-0001&quot;,
+    &quot;health check ok&quot;,
+    &quot;cancel ORD-20260821-0002&quot;,
+]
+for line in lines:
+    match = order_pattern.search(line)
+    if match:
+        print(match.group())
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 regex_compile.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><details class="study-exercise"><summary>직접 해보기 — 에러 코드 찾기</summary><div class="study-exercise-body"><p>문장 <code>"failed E102, retry E205, ignored OK"</code>에서 E로 시작하고 숫자 3개가 붙은 코드만 모두 찾으세요.</p><details><summary>해설 보기</summary><pre class="code-static"><code>import re
+
+text = &quot;failed E102, retry E205, ignored OK&quot;
+print(re.findall(r&quot;E\d{3}&quot;, text))</code></pre></details></div></details></section>
+
+
+<section class="section" id="ss20"><div class="section-num">SELF STUDY 20 · ★★</div><h2>logging과 환경변수 — 운영 가능한 코드의 기본 습관</h2><p>실제 프로그램에서는 상태를 기록하기 위해 <code>logging</code>을 사용하고, 서버 주소·모드·비밀값 같은 설정을 소스 코드에서 분리하기 위해 환경변수를 자주 사용합니다.</p><div class="study-diagram"><svg viewBox="0 0 800 280" role="img" aria-label="logging과 환경변수"><text class="svg-title" x="20" y="34">코드와 운영 설정을 분리하기</text><g class="svg-box"><rect x="35" y="85" width="220" height="120" rx="14"/><text x="145" y="118">Python 코드</text><text x="145" y="150">logging</text><text x="145" y="178">os.environ.get()</text></g><g class="svg-box"><rect x="305" y="85" width="190" height="120" rx="14"/><text x="400" y="118">환경변수</text><text x="400" y="150">API_URL</text><text x="400" y="178">API_KEY</text></g><g class="svg-box"><rect x="545" y="85" width="220" height="120" rx="14"/><text x="655" y="118">실행 환경</text><text x="655" y="150">dev / prod</text><text x="655" y="178">값을 다르게 주입</text></g></svg></div><p class="study-note">print보다 로그 레벨과 형식을 가진 logging이 운영 코드에서 유용합니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>logging_levels.py</span></div>
+  <textarea class="editor-source">import logging
+
+logging.basicConfig(level=logging.INFO, format=&quot;%(levelname)s: %(message)s&quot;)
+logging.debug(&quot;상세 디버깅&quot;)
+logging.info(&quot;서비스 시작&quot;)
+logging.warning(&quot;응답이 느립니다&quot;)
+logging.error(&quot;요청 처리 실패&quot;)
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 logging_levels.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">모듈/서비스별 logger 이름을 사용하면 로그 출처를 구분하기 쉽습니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>logger_module.py</span></div>
+  <textarea class="editor-source">import logging
+
+logging.basicConfig(level=logging.INFO, format=&quot;%(name)s | %(levelname)s | %(message)s&quot;)
+logger = logging.getLogger(&quot;order-service&quot;)
+
+order_id = &quot;ORD-42&quot;
+logger.info(&quot;주문 처리 시작: %s&quot;, order_id)
+logger.warning(&quot;재고 확인 지연: %s&quot;, order_id)
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 logger_module.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">환경변수가 없을 때 사용할 안전한 기본값을 줄 수 있습니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>env_default.py</span></div>
+  <textarea class="editor-source">import os
+
+api_url = os.environ.get(&quot;API_URL&quot;, &quot;http://localhost:8000&quot;)
+mode = os.environ.get(&quot;APP_MODE&quot;, &quot;development&quot;)
+print(&quot;API:&quot;, api_url)
+print(&quot;MODE:&quot;, mode)
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 env_default.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">필수 설정이 없으면 프로그램 시작 시 명확하게 실패시키는 패턴입니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>env_required.py</span></div>
+  <textarea class="editor-source">import os
+
+def require_env(name):
+    value = os.environ.get(name)
+    if not value:
+        raise RuntimeError(f&quot;필수 환경변수가 없습니다: {name}&quot;)
+    return value
+
+# 브라우저 실습에서는 임시 환경변수를 직접 넣어 테스트합니다.
+os.environ[&quot;DEMO_TOKEN&quot;] = &quot;sample-token&quot;
+print(require_env(&quot;DEMO_TOKEN&quot;))
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 env_required.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">민감한 값을 로그에 그대로 남기지 않는 실무 습관을 함께 봅니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>secret_mask.py</span></div>
+  <textarea class="editor-source">def mask_secret(value):
+    if len(value) &lt;= 4:
+        return &quot;*&quot; * len(value)
+    return value[:2] + &quot;*&quot; * (len(value) - 4) + value[-2:]
+
+api_key = &quot;sk-example-secret-1234&quot;
+print(mask_secret(api_key))
+print(&quot;실제 secret 전체를 로그에 출력하지 않는 습관이 중요합니다.&quot;)
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 secret_mask.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><details class="study-exercise"><summary>직접 해보기 — 환경별 로그 레벨</summary><div class="study-exercise-body"><p>APP_MODE가 development면 DEBUG, 그 외에는 INFO 레벨을 선택하는 코드를 작성해보세요.</p><details><summary>해설 보기</summary><pre class="code-static"><code>import os
+import logging
+
+os.environ[&quot;APP_MODE&quot;] = &quot;development&quot;
+mode = os.environ.get(&quot;APP_MODE&quot;, &quot;production&quot;)
+level = logging.DEBUG if mode == &quot;development&quot; else logging.INFO
+logging.basicConfig(level=level)
+logging.debug(&quot;개발 환경 상세 로그&quot;)
+logging.info(&quot;공통 정보 로그&quot;)</code></pre></details></div></details></section>
+
+
+<section class="section" id="ss21"><div class="section-num">SELF STUDY 21 · ★★</div><h2>테스트 — 코드를 바꿔도 동작이 유지되는지 확인하기</h2><p><code>assert</code>의 실제 가치가 테스트와 연결될 때 선명해집니다. 정상 입력뿐 아니라 경계값과 실패해야 하는 입력도 자동으로 반복 확인하는 습관을 익힙니다.</p><div class="study-diagram"><svg viewBox="0 0 800 270" role="img" aria-label="테스트 구조"><text class="svg-title" x="20" y="34">입력 → 함수 → 기대 결과를 자동으로 확인</text><g class="svg-box"><rect x="40" y="90" width="180" height="100" rx="14"/><text x="130" y="125">입력</text><text x="130" y="155">10000, 0.1</text></g><text x="260" y="145">→</text><g class="svg-box"><rect x="305" y="90" width="190" height="100" rx="14"/><text x="400" y="125">함수</text><text x="400" y="155">discount()</text></g><text x="535" y="145">→</text><g class="svg-box"><rect x="580" y="90" width="180" height="100" rx="14"/><text x="670" y="125">기대</text><text x="670" y="155">9000</text></g></svg></div><p>테스트는 “한 번 실행해봤더니 됐다”에서 끝나지 않고, 코드를 바꾼 뒤에도 중요한 동작이 계속 유지되는지 자동으로 확인하는 장치입니다.</p><p class="study-note">가장 작은 테스트는 함수 호출 결과를 assert로 확인하는 것부터 시작할 수 있습니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>assert_function.py</span></div>
+  <textarea class="editor-source">def add(a, b):
+    return a + b
+
+assert add(2, 3) == 5
+assert add(-1, 1) == 0
+print(&quot;모든 검사 통과&quot;)
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 assert_function.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">테스트 함수 이름에 어떤 상황을 검사하는지 의미를 담는 습관을 봅니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>test_discount.py</span></div>
+  <textarea class="editor-source">def calculate_discount(price, rate):
+    if price &lt; 0:
+        raise ValueError(&quot;가격은 0 이상&quot;)
+    return int(price * (1 - rate))
+
+def test_normal_price():
+    assert calculate_discount(10000, 0.1) == 9000
+
+def test_zero_price():
+    assert calculate_discount(0, 0.1) == 0
+
+test_normal_price()
+test_zero_price()
+print(&quot;테스트 통과&quot;)
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 test_discount.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">실패해야 정상인 입력도 테스트해야 합니다. pytest에서는 pytest.raises 같은 더 편한 도구가 있습니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>test_exception.py</span></div>
+  <textarea class="editor-source">def parse_port(text):
+    port = int(text)
+    if not 1 &lt;= port &lt;= 65535:
+        raise ValueError(&quot;포트 범위 오류&quot;)
+    return port
+
+for bad in [&quot;0&quot;, &quot;70000&quot;]:
+    try:
+        parse_port(bad)
+    except ValueError:
+        print(bad, &quot;예상대로 실패&quot;)
+    else:
+        raise AssertionError(&quot;예외가 발생해야 합니다&quot;)
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 test_exception.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">여러 입력/기대값을 표처럼 모아 같은 함수를 반복 검증합니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>table_tests.py</span></div>
+  <textarea class="editor-source">def normalize_name(name):
+    return name.strip().title()
+
+cases = [
+    (&quot; kim &quot;, &quot;Kim&quot;),
+    (&quot;LEE&quot;, &quot;Lee&quot;),
+    (&quot; park&quot;, &quot;Park&quot;),
+]
+for raw, expected in cases:
+    actual = normalize_name(raw)
+    assert actual == expected, (raw, actual, expected)
+print(&quot;3개 케이스 통과&quot;)
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 table_tests.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">실제 버그를 고친 뒤 그 입력을 테스트로 남기면 같은 문제가 다시 생기는 것을 막는 데 도움이 됩니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>regression_test.py</span></div>
+  <textarea class="editor-source">def shipping_fee(total):
+    if total &gt;= 50000:
+        return 0
+    return 3000
+
+# 과거에 50000원 경계에서 버그가 있었다고 가정한 회귀 테스트
+assert shipping_fee(49999) == 3000
+assert shipping_fee(50000) == 0
+assert shipping_fee(50001) == 0
+print(&quot;경계값 회귀 테스트 통과&quot;)
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 regression_test.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><h3>pytest는 어디서 등장하나요?</h3><pre class="code-static"><code>python -m pip install pytest
+pytest</code></pre><p>실제 프로젝트에서는 테스트 검색, 실패 보고, fixture, 예외 검사 등을 제공하는 <strong>pytest</strong>를 많이 사용합니다. 이 브라우저 과정에서는 테스트의 사고방식을 먼저 익히고, 로컬 프로젝트에서 pytest로 확장하세요.</p><details class="study-exercise"><summary>직접 해보기 — 경계값 테스트 만들기</summary><div class="study-exercise-body"><p>0~100 사이 점수만 허용하는 <code>validate_score()</code> 함수에 대해 0, 100, -1, 101을 검사해보세요.</p><details><summary>해설 보기</summary><pre class="code-static"><code>def validate_score(score):
+    if not 0 &lt;= score &lt;= 100:
+        raise ValueError(&quot;점수 범위 오류&quot;)
+    return score
+
+assert validate_score(0) == 0
+assert validate_score(100) == 100
+for bad in [-1, 101]:
+    try:
+        validate_score(bad)
+    except ValueError:
+        pass
+    else:
+        raise AssertionError(&quot;ValueError가 필요합니다&quot;)
+print(&quot;경계값 테스트 통과&quot;)</code></pre></details></div></details></section>
+
+
+<section class="section" id="ss22"><div class="section-num">SELF STUDY 22 · ★★★</div><h2>asyncio 한 단계 더 — 순차 대기와 동시 대기</h2><p>Week 4에서 <code>await</code>의 모양을 봤다면 여기서는 <code>asyncio.gather()</code>, Task, timeout, Queue를 통해 왜 비동기 코드가 필요한지 조금 더 구체적으로 확인합니다.</p><div class="study-diagram"><svg viewBox="0 0 820 330" role="img" aria-label="순차 대기와 async 동시 대기 비교"><text class="svg-title" x="20" y="34">I/O 대기 시간을 겹쳐서 활용하기</text><text x="45" y="85">순차</text><rect x="120" y="65" width="180" height="38" rx="8" class="svg-box"/><rect x="305" y="65" width="180" height="38" rx="8" class="svg-box"/><rect x="490" y="65" width="180" height="38" rx="8" class="svg-box"/><text x="210" y="90">A 기다림</text><text x="395" y="90">B 기다림</text><text x="580" y="90">C 기다림</text><text x="45" y="185">동시 대기</text><rect x="120" y="135" width="300" height="38" rx="8" class="svg-box"/><rect x="120" y="185" width="300" height="38" rx="8" class="svg-box"/><rect x="120" y="235" width="300" height="38" rx="8" class="svg-box"/><text x="270" y="160">A 기다림</text><text x="270" y="210">B 기다림</text><text x="270" y="260">C 기다림</text><text x="560" y="205">CPU 작업을 3배 빠르게 한다는 뜻이 아니라
+대기 가능한 I/O 작업의 시간을 겹치는 개념</text></svg></div><div class="callout warning"><strong>중요</strong><br><code>asyncio</code>는 CPU 계산을 자동으로 병렬 처리하는 도구가 아닙니다. 네트워크·타이머처럼 기다리는 시간이 있는 작업을 한 스레드의 event loop에서 효율적으로 다루는 데 주로 사용됩니다.</div><p class="study-note">async 함수라도 await를 하나씩 하면 순차적으로 기다릴 수 있습니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>async_sequential.py</span></div>
+  <textarea class="editor-source">import asyncio
+import time
+
+async def job(name, delay):
+    await asyncio.sleep(delay)
+    return f&quot;{name} 완료&quot;
+
+async def main():
+    start = time.perf_counter()
+    print(await job(&quot;A&quot;, 0.05))
+    print(await job(&quot;B&quot;, 0.05))
+    print(await job(&quot;C&quot;, 0.05))
+    print(&quot;걸린 시간(약):&quot;, round(time.perf_counter() - start, 2))
+
+await main()
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 async_sequential.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">gather로 여러 대기 작업을 함께 진행해 전체 대기 시간을 겹칩니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>async_gather.py</span></div>
+  <textarea class="editor-source">import asyncio
+import time
+
+async def job(name, delay):
+    await asyncio.sleep(delay)
+    return f&quot;{name} 완료&quot;
+
+async def main():
+    start = time.perf_counter()
+    results = await asyncio.gather(
+        job(&quot;A&quot;, 0.05),
+        job(&quot;B&quot;, 0.05),
+        job(&quot;C&quot;, 0.05),
+    )
+    print(results)
+    print(&quot;걸린 시간(약):&quot;, round(time.perf_counter() - start, 2))
+
+await main()
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 async_gather.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">create_task는 coroutine을 Task로 예약하고 나중에 await할 수 있게 합니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>async_tasks.py</span></div>
+  <textarea class="editor-source">import asyncio
+
+async def worker(name, delay):
+    print(name, &quot;시작&quot;)
+    await asyncio.sleep(delay)
+    print(name, &quot;완료&quot;)
+    return name
+
+async def main():
+    task_a = asyncio.create_task(worker(&quot;A&quot;, 0.03))
+    task_b = asyncio.create_task(worker(&quot;B&quot;, 0.01))
+    print(&quot;다른 준비 작업&quot;)
+    print(await task_a, await task_b)
+
+await main()
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 async_tasks.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">외부 I/O에는 무한정 기다리지 않도록 timeout 정책이 중요한 경우가 많습니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>async_timeout.py</span></div>
+  <textarea class="editor-source">import asyncio
+
+async def slow_api():
+    await asyncio.sleep(0.05)
+    return &quot;응답&quot;
+
+async def main():
+    try:
+        result = await asyncio.wait_for(slow_api(), timeout=0.01)
+        print(result)
+    except asyncio.TimeoutError:
+        print(&quot;API 응답 시간 초과&quot;)
+
+await main()
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 async_timeout.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">async Queue를 이용한 작은 producer/consumer 구조를 맛봅니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>async_queue.py</span></div>
+  <textarea class="editor-source">import asyncio
+
+async def consumer(queue):
+    while True:
+        job = await queue.get()
+        if job is None:
+            break
+        print(&quot;처리:&quot;, job)
+        queue.task_done()
+
+async def main():
+    queue = asyncio.Queue()
+    worker = asyncio.create_task(consumer(queue))
+    for job in [&quot;resize&quot;, &quot;email&quot;, &quot;report&quot;]:
+        await queue.put(job)
+    await queue.join()
+    await queue.put(None)
+    await worker
+
+await main()
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 async_queue.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><details class="study-exercise"><summary>직접 해보기 — 세 API 요청 흉내내기</summary><div class="study-exercise-body"><p>0.02초, 0.03초, 0.01초를 기다리는 세 coroutine을 만들고 gather로 동시에 기다린 결과를 출력하세요.</p><details><summary>해설 보기</summary><pre class="code-static"><code>import asyncio
+
+async def api(name, delay):
+    await asyncio.sleep(delay)
+    return name
+
+async def main():
+    results = await asyncio.gather(
+        api(&quot;users&quot;, 0.02),
+        api(&quot;orders&quot;, 0.03),
+        api(&quot;products&quot;, 0.01),
+    )
+    print(results)
+
+await main()</code></pre></details></div></details></section>
+
+<section class="section" id="ss23"><div class="section-num">SELF STUDY 23 · ★★~★★★</div><h2>현대 Python 코드에서 만날 문법</h2><p>여기서는 지금 당장 모두 쓰기보다, 기존 코드에서 봤을 때 의미를 알아보는 것이 목표입니다.</p><p class="study-note">단순 값 분기부터 match/case 모양에 익숙해집니다.</p>
 <div class="editor-block">
   <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>match_command.py</span></div>
   <textarea class="editor-source">command = &quot;deploy&quot;
@@ -1092,4 +2198,4 @@ await main()
 </div>
 <div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div></section>
 
-<section class="section" id="ss12"><div class="section-num">SELF STUDY 12</div><h2>다음 공부는 문법 목록보다 작은 프로젝트로</h2><div class="concept-grid"><div class="concept-card"><strong>Backend / Web</strong><p>FastAPI, Django, HTTP, Database, 인증, 테스트</p></div><div class="concept-card"><strong>Data</strong><p>NumPy, pandas, Jupyter, SQL, 시각화</p></div><div class="concept-card"><strong>AI</strong><p>API 활용, 데이터 전처리, 모델 SDK, RAG/Agent</p></div><div class="concept-card"><strong>Automation</strong><p>파일, Excel, 웹 요청, 스케줄링, 업무 자동화</p></div></div><div class="callout info"><strong>추천</strong><br>예를 들어 “로그 분석기”, “CSV 정리 도구”, “간단한 REST API”, “파일 이름 일괄 변경기”처럼 작지만 끝까지 완성할 수 있는 프로젝트를 하나 선택하세요. 필요한 문법이 생길 때 이 자습 탭과 공식 문서를 다시 찾는 방식이 가장 오래 남습니다.</div></section>
+<section class="section" id="ss24"><div class="section-num">SELF STUDY 24</div><h2>다음 공부는 문법 목록보다 작은 프로젝트로</h2><div class="concept-grid"><div class="concept-card"><strong>Backend / Web</strong><p>FastAPI, Django, HTTP, Database, 인증, 테스트</p></div><div class="concept-card"><strong>Data</strong><p>NumPy, pandas, Jupyter, SQL, 시각화</p></div><div class="concept-card"><strong>AI</strong><p>API 활용, 데이터 전처리, 모델 SDK, RAG/Agent</p></div><div class="concept-card"><strong>Automation</strong><p>파일, Excel, 웹 요청, 스케줄링, 업무 자동화</p></div></div><div class="callout info"><strong>추천</strong><br>예를 들어 “로그 분석기”, “CSV 정리 도구”, “간단한 REST API”, “파일 이름 일괄 변경기”처럼 작지만 끝까지 완성할 수 있는 프로젝트를 하나 선택하세요. 필요한 문법이 생길 때 이 자습 탭과 공식 문서를 다시 찾는 방식이 가장 오래 남습니다.</div></section>
