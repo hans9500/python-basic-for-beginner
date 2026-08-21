@@ -73,7 +73,14 @@
       const item = document.createElement('button');
       item.className = 'section-nav-item';
       item.dataset.sectionId = sec.id;
-      item.innerHTML = '<span class="sn-id">' + (sec.label || sec.id) + '</span>' +
+
+      // 최종 방어선: 사이드바 번호 칸에는 어떤 탭이든 숫자만 표시한다.
+      // 예: 'SECTION 04 · 핵심' → '04', 'SELF STUDY 03' / 'SELF 03' → '03'
+      const rawLabel = String(sec.label || sec.id || '').trim();
+      const numberMatch = rawLabel.match(/(?:SECTION|SELF(?:\s+STUDY)?)?\s*(\d+)/i);
+      const navLabel = numberMatch ? numberMatch[1].padStart(2, '0') : rawLabel;
+
+      item.innerHTML = '<span class="sn-id">' + navLabel + '</span>' +
                        '<span class="sn-title">' + sec.title + '</span>';
       item.addEventListener('click', function() {
         scrollToSection(sec.id);

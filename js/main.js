@@ -139,8 +139,10 @@
       const labelEl = sec.querySelector('.section-num');
       const title = titleEl ? titleEl.textContent.trim() : id;
       let label = labelEl ? labelEl.textContent.trim() : id;
-      // 사이드바에는 내부 id(s4b, ss7)가 아니라 사람이 읽는 섹션 번호를 표시한다.
-      label = label.replace(/^SECTION\s+/i, '').replace(/^SELF\s+STUDY\s+/i, 'SELF ');
+      // 사이드바에는 내부 id가 아니라 사람이 읽는 순수 섹션 번호만 표시한다.
+      // 사이드바 번호 칸에는 SECTION/SELF STUDY의 순수 번호만 표시한다.
+      const m = label.match(/(?:SECTION|SELF\s+STUDY)\s+(\d+)/i);
+      label = m ? m[1].padStart(2, '0') : label;
       result.push({ id: id, label: label, title: title });
     });
     return result;

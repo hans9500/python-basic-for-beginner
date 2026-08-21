@@ -6,7 +6,6 @@
        3. 사실 정확성 — 출처 있는 것만, 추측은 추측이라 명시
        4. 통계·매출 X — 회사·도구 이름만
      ============================================================ -->
-
 <div class="lesson-title">Week 5 · Lesson 1 · 부록</div>
 <h1>실무 IT 산업의 큰 그림</h1>
 <p class="subtitle">
@@ -14,60 +13,49 @@
   그림 한 장에 모든 것이 들어 있어요. "이걸 다 알아야 하나?" 부담 없이,
   <strong>"이런 세계가 있구나"</strong> 정도만 보시면 됩니다.
 </p>
-
 <!-- ==================== s1: 도입 ==================== -->
 <section class="section" id="s1">
-  <div class="section-num">SECTION 01</div>
-  <h2>왜 큰 그림을 봐야 할까요?</h2>
-
-  <p>
+<div class="section-num">SECTION 01</div>
+<h2>왜 큰 그림을 봐야 할까요?</h2>
+<p>
     여러분이 매일 쓰는 인스타, 카톡, 배달의민족, 유튜브 — 이 서비스들은
     <strong>Python 한 가지 언어로만 만들어지지 않습니다</strong>.
   </p>
-
-  <p>
+<p>
     수십 개의 언어, 수백 개의 도구가 함께 움직여서 "주문하기" 버튼 한 번이 작동해요.
     이걸 <strong>한 사람이 다 다루지는 않습니다</strong>.
     백엔드·프론트엔드·DevOps·데이터 엔지니어가 각자 한두 영역에 집중하고 협력합니다.
   </p>
-
-  <h3>그래서 왜 큰 그림을 봐야 하느냐</h3>
-
-  <p>
+<h3>그래서 왜 큰 그림을 봐야 하느냐</h3>
+<p>
     "백엔드", "DB", "API", "캐시" 같은 단어를 들었을 때
     <strong>어디 자리에 있는 도구인지 안다는 것</strong>이 큰 차이를 만듭니다.
   </p>
-
-  <p>
+<p>
     AI가 "Redis 써서 캐시 처리하시면 됩니다"라고 답했을 때,
     <strong>"왜 캐시가 필요한지"</strong> 알면 그 답을 검증할 수 있어요.
   </p>
-
 </section>
-
 <!-- ==================== s2: 큰 그림 ==================== -->
 <section class="section" id="s2">
-  <div class="section-num">SECTION 02 · Frontend</div>
-  <h2>한 장으로 보는 IT 산업</h2>
-
-  <p>
+<div class="section-num">SECTION 02</div>
+<h2>한 장으로 보는 IT 산업</h2>
+<p>
     초보자가 큰 그림을 잡기 위해 인터넷 서비스를 우선 <strong>3개 영역으로 단순화</strong>해 보겠습니다. 실제 서비스는 네트워크·보안·운영·데이터 파이프라인 등 더 많은 영역이 함께 움직입니다.
   </p>
-
-  <ul>
-    <li><strong>Frontend</strong> — 사용자가 직접 보고 조작하는 부분</li>
-    <li><strong>Backend</strong> — 요청을 받아 규칙에 따라 처리하는 서버 쪽 프로그램</li>
-    <li><strong>Database / 뒷단 서비스</strong> — 데이터를 저장하거나 백엔드의 일을 돕는 시스템</li>
-  </ul>
-
-  <div class="callout info">
-    <div class="label">먼저 이것만 기억하세요 — 요청과 응답</div>
-    <p>
+<ul>
+<li><strong>Frontend</strong> — 사용자가 직접 보고 조작하는 부분</li>
+<li><strong>Backend</strong> — 요청을 받아 규칙에 따라 처리하는 서버 쪽 프로그램</li>
+<li><strong>Database / 뒷단 서비스</strong> — 데이터를 저장하거나 백엔드의 일을 돕는 시스템</li>
+</ul>
+<div class="callout info">
+<div class="label">먼저 이것만 기억하세요 — 요청과 응답</div>
+<p>
       사용자가 버튼을 누르면 Frontend가 Backend에 <strong>요청(Request)</strong>을 보냅니다.
       Backend는 필요한 데이터를 읽거나 처리한 뒤 <strong>응답(Response)</strong>을 돌려줍니다.
       이때 Backend가 DB·캐시·메시징·외부 API 같은 다른 시스템과 협력할 수 있습니다.
     </p>
-    <pre class="ascii-diagram">사용자
+<pre class="ascii-diagram">사용자
   ↓ 클릭
 Frontend
   │  HTTP 요청
@@ -80,24 +68,20 @@ Backend ─────→ Database / Cache / 외부 API
 Frontend
   ↓
 화면에 결과 표시</pre>
-    <p>
+<p>
       실제 시스템은 훨씬 복잡할 수 있지만, 처음에는 <strong>"요청이 어디로 가고, 누가 처리하고, 결과가 어디로 돌아오는가"</strong>를 따라가면 됩니다.
     </p>
-  </div>
-
-  <p>
+</div>
+<p>
     아래 한 장에 모든 것이 들어 있어요.
   </p>
-
-  <div class="figure">
-    <svg viewBox="0 0 1100 1052" xmlns="http://www.w3.org/2000/svg" role="img"
-         aria-label="IT 산업 큰 그림 — Frontend, Backend, Database"
-         style="width:100%; height:auto;">
-      <defs>
-        <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
-          <path d="M0,0 L10,5 L0,10 z" fill="var(--text-soft,#666)"/>
-        </marker>
-        <style>
+<div class="figure">
+<svg aria-label="IT 산업 큰 그림 — Frontend, Backend, Database" role="img" style="width:100%; height:auto;" viewbox="0 0 1100 1052" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<marker id="ar" markerheight="7" markerwidth="7" orient="auto" refx="9" refy="5" viewbox="0 0 10 10">
+<path d="M0,0 L10,5 L0,10 z" fill="var(--text-soft,#666)"></path>
+</marker>
+<style>
           .svg-text { fill: var(--text, #1a1a1a); font-family: Pretendard, -apple-system, sans-serif; }
           .svg-mono { fill: var(--text, #1a1a1a); font-family: 'JetBrains Mono', monospace; }
           .svg-sub  { fill: var(--text-soft, #555); font-family: Pretendard, -apple-system, sans-serif; }
@@ -106,656 +90,569 @@ Frontend
           .svg-box-db  { fill: rgba(124,58,237,0.15); stroke: #7c3aed; stroke-width: 2.5; }
           .svg-box-comm{ fill: rgba(100,100,100,0.1); stroke: var(--border,#999); stroke-width: 1.5; stroke-dasharray: 5 4; }
         </style>
-      </defs>
-
-      <!-- 헤더 — 원래 위치 그대로 -->
-      <text x="180"  y="30" text-anchor="middle" font-size="20" font-weight="800" fill="#0891b2">Frontend</text>
-      <text x="180"  y="48" text-anchor="middle" font-size="20" class="svg-sub">사용자가 보는 화면</text>
-      <text x="550"  y="30" text-anchor="middle" font-size="30" font-weight="800" fill="var(--accent,#c1440e)">Backend</text>
-      <text x="550"  y="48" text-anchor="middle" font-size="20" class="svg-sub">보이지 않는 처리</text>
-      <text x="920"  y="30" text-anchor="middle" font-size="30" font-weight="800" fill="#7c3aed">Database / 뒷단</text>
-      <text x="920"  y="48" text-anchor="middle" font-size="17" class="svg-sub">데이터 보관 + 주변 서비스</text>
-
-      <!-- 구분선 — 원래 그대로 -->
-      <line x1="365" y1="60" x2="365" y2="1042" stroke="var(--border,#aaa)" stroke-width="1" stroke-dasharray="5 4"/>
-      <line x1="735" y1="60" x2="735" y2="1042" stroke="var(--border,#aaa)" stroke-width="1" stroke-dasharray="5 4"/>
-
-      <!-- ===== FRONTEND ===== -->
-      <!-- Web 박스 — width/x 원래대로, height만 텍스트에 맞게 -->
-      <rect x="20" y="68" width="326" height="380" rx="10" class="svg-box-fe"/>
-      <text x="40" y="132"  font-size="26" font-weight="700" fill="#0891b2">🌐 Web</text>
-      <text x="40" y="162" font-size="20" class="svg-sub">크롬·사파리에서 도는 화면</text>
-      <text x="40" y="210" font-size="21" font-weight="700" class="svg-text">기초 3종</text>
-      <text x="56" y="243" font-size="21" class="svg-mono">• HTML  (뼈대)</text>
-      <text x="56" y="276" font-size="21" class="svg-mono">• CSS   (옷)</text>
-      <text x="56" y="309" font-size="21" class="svg-mono">• JavaScript (움직임)</text>
-      <text x="40" y="357" font-size="21" font-weight="700" class="svg-text">프레임워크</text>
-      <text x="56" y="390" font-size="21" class="svg-mono">React · Vue · Angular</text>
-      <text x="56" y="423" font-size="21" class="svg-mono">Svelte · Next.js</text>
-
-      <!-- 모바일 앱 -->
-      <rect x="20" y="462" width="326" height="340" rx="10" class="svg-box-fe"/>
-      <text x="40" y="492" font-size="26" font-weight="700" fill="#0891b2">📱 모바일 앱</text>
-      <text x="40" y="522" font-size="20" class="svg-sub">스마트폰에 설치하는 프로그램</text>
-      <text x="40" y="570" font-size="21" font-weight="700" class="svg-text">네이티브</text>
-      <text x="56" y="603" font-size="21" class="svg-mono">• iOS — Swift</text>
-      <text x="56" y="636" font-size="21" class="svg-mono">• Android — Kotlin</text>
-      <text x="40" y="684" font-size="21" font-weight="700" class="svg-text">크로스 플랫폼</text>
-      <text x="56" y="717" font-size="21" class="svg-mono">React Native · Flutter</text>
-
-      <!-- 데스크톱 앱 -->
-      <rect x="20" y="816" width="326" height="220" rx="10" class="svg-box-fe"/>
-      <text x="40" y="846" font-size="26" font-weight="700" fill="#0891b2">🖥️ 데스크톱 앱</text>
-      <text x="40" y="876" font-size="20" class="svg-sub">PC에 설치하는 프로그램</text>
-      <text x="56" y="927" font-size="21" class="svg-mono">• Electron (HTML+CSS+JS)</text>
-      <text x="56" y="963" font-size="20" class="svg-sub">VS Code · Slack · Discord</text>
-
-      <!-- ===== BACKEND ===== -->
-      <!-- 통신 박스 — x=375~725 원래대로 -->
-      <text x="550" y="87" text-anchor="middle" font-size="14" font-weight="700" class="svg-text">통신</text>
-      <rect x="375" y="68" width="350" height="130" rx="8" class="svg-box-comm"/>
-      <text x="550" y="108" text-anchor="middle" font-size="14" font-weight="700" class="svg-mono">API (GET, POST, PUT, DELETE)</text>
-      <text x="550" y="134" text-anchor="middle" font-size="13" class="svg-mono">HTTP / HTTPS</text>
-      <text x="550" y="160" text-anchor="middle" font-size="13" class="svg-mono">응답: JSON</text>
-      <text x="550" y="183" text-anchor="middle" font-size="11" class="svg-sub">← 요청 · 응답 →</text>
-
-      <!-- 화살표: 통신박스 y중앙=148, 왼쪽경계x=375, 오른쪽경계x=725 -->
-      <line x1="346" y1="133" x2="368" y2="133" stroke="var(--text-soft,#666)" stroke-width="2" marker-end="url(#ar)"/>
-      <line x1="732" y1="133" x2="756" y2="133" stroke="var(--text-soft,#666)" stroke-width="2" marker-end="url(#ar)"/>
-
-      <!-- 서버 -->
-      <rect x="375" y="224" width="350" height="360" rx="10" class="svg-box-be"/>
-      <text x="550" y="258" text-anchor="middle" font-size="26" font-weight="700" fill="var(--accent,#c1440e)">⚙️ Server (서버)</text>
-      <text x="550" y="288" text-anchor="middle" font-size="20" class="svg-sub">listen — 요청 대기 · 처리 · 응답</text>
-      <text x="394" y="339" font-size="21" font-weight="700" class="svg-text">하는 일</text>
-      <text x="410" y="372" font-size="21" class="svg-text">① 요청 받기  ② 인증 확인</text>
-      <text x="410" y="405" font-size="21" class="svg-text">③ 비즈니스 로직 처리</text>
-      <text x="410" y="438" font-size="21" class="svg-text">④ DB 입출력  ⑤ 응답 반환</text>
-      <text x="394" y="495" font-size="21" font-weight="700" class="svg-text">서버 언어</text>
-      <text x="410" y="528" font-size="21" class="svg-mono">Python · Java · JS · Go</text>
-      <text x="410" y="561" font-size="21" class="svg-mono">Ruby · PHP · C# · Rust</text>
-
-      <!-- 프레임워크 -->
-      <rect x="375" y="600" width="350" height="436" rx="10" class="svg-box-be" style="stroke-dasharray: 6 4;"/>
-      <text x="550" y="634" text-anchor="middle" font-size="24" font-weight="700" fill="var(--accent,#c1440e)">서버 프레임워크</text>
-      <text x="394" y="685" font-size="21" font-weight="700" class="svg-text">Python ★</text>
-      <text x="410" y="718" font-size="21" class="svg-mono">Flask · FastAPI · Django</text>
-      <text x="394" y="769" font-size="21" font-weight="700" class="svg-text">Java (한국 대기업 표준)</text>
-      <text x="410" y="802" font-size="21" class="svg-mono">Spring Boot</text>
-      <text x="394" y="853" font-size="21" font-weight="700" class="svg-text">JavaScript</text>
-      <text x="410" y="886" font-size="21" class="svg-mono">Node.js · Express</text>
-      <text x="394" y="937" font-size="21" font-weight="700" class="svg-text">기타</text>
-      <text x="410" y="970" font-size="21" class="svg-mono">Go(Gin) / Ruby(Rails) / PHP</text>
-
-      <!-- Backend → DB 화살표: 서버 y중앙=404, DB박스 왼쪽x=745 바깥 -->
-      <line x1="725" y1="423" x2="748" y2="423" stroke="var(--text-soft,#666)" stroke-width="2" marker-end="url(#ar)"/>
-      <text x="736" y="413" text-anchor="middle" font-size="12" class="svg-sub">SQL</text>
-
-      <!-- ===== DATABASE ===== -->
-      <!-- Database -->
-      <rect x="745" y="68" width="336" height="380" rx="10" class="svg-box-db"/>
-      <text x="765" y="113"  font-size="22" font-weight="700" fill="#7c3aed">🗄️ Database</text>
-      <text x="765" y="139" font-size="17" class="svg-sub">데이터 보관 창고</text>
-      <text x="765" y="181" font-size="18" font-weight="700" class="svg-text">관계형 (RDB)</text>
-      <text x="781" y="210" font-size="18" class="svg-mono">MySQL · PostgreSQL</text>
-      <text x="781" y="239" font-size="18" class="svg-mono">Oracle · SQL Server</text>
-      <text x="765" y="281" font-size="18" font-weight="700" class="svg-text">NoSQL</text>
-      <text x="781" y="310" font-size="18" class="svg-mono">MongoDB · Cassandra</text>
-      <text x="781" y="339" font-size="18" class="svg-mono">DynamoDB · Redis</text>
-      <text x="765" y="386" font-size="17" class="svg-sub" font-style="italic">다음 학습: SQL</text>
-      <text x="765" y="415" font-size="17" class="svg-mono">SELECT * FROM users</text>
-      <text x="765" y="441" font-size="17" class="svg-mono">WHERE age &gt;= 30;</text>
-
-      <!-- 뒷단 서비스들 -->
-      <rect x="745" y="462" width="336" height="574" rx="10" class="svg-box-db" style="stroke-dasharray: 6 4;"/>
-      <text x="765" y="494" font-size="22" font-weight="700" fill="#7c3aed">🔧 뒷단 서비스들</text>
-      <text x="765" y="538" font-size="18" font-weight="700" class="svg-text">⚡ 캐시</text>
-      <text x="781" y="567" font-size="18" class="svg-mono">Redis · Memcached</text>
-      <text x="765" y="606" font-size="18" font-weight="700" class="svg-text">📨 메시지 큐</text>
-      <text x="781" y="635" font-size="18" class="svg-mono">Kafka · RabbitMQ</text>
-      <text x="765" y="674" font-size="18" font-weight="700" class="svg-text">🔍 검색 엔진</text>
-      <text x="781" y="703" font-size="18" class="svg-mono">Elasticsearch</text>
-      <text x="765" y="742" font-size="18" font-weight="700" class="svg-text">💳 결제 (PG사)</text>
-      <text x="781" y="771" font-size="18" class="svg-mono">KCP · 토스페이먼츠</text>
-      <text x="765" y="810" font-size="18" font-weight="700" class="svg-text">🔔 푸시 알림</text>
-      <text x="781" y="839" font-size="18" class="svg-mono">FCM · APNs</text>
-      <text x="765" y="878" font-size="18" font-weight="700" class="svg-text">☁️ 클라우드</text>
-      <text x="781" y="907" font-size="18" class="svg-mono">AWS · Azure · GCP</text>
-      <text x="765" y="946" font-size="18" font-weight="700" class="svg-text">🤖 AI 서비스 ★</text>
-      <text x="781" y="975" font-size="18" class="svg-mono">Claude · ChatGPT · Gemini</text>
-      <text x="765" y="1022" font-size="16" class="svg-sub">📦 Docker · Kubernetes</text>
-    </svg>
-    <div class="caption">그림 5.1 — IT 산업 한 장. Frontend(왼쪽) ↔ Backend(가운데) ↔ Database/뒷단(오른쪽)</div>
-  </div>
-
-  <h3>Web 기초 3종 세트</h3>
-
-  <p>
+</defs>
+<!-- 헤더 — 원래 위치 그대로 -->
+<text fill="#0891b2" font-size="20" font-weight="800" text-anchor="middle" x="180" y="30">Frontend</text>
+<text class="svg-sub" font-size="20" text-anchor="middle" x="180" y="48">사용자가 보는 화면</text>
+<text fill="var(--accent,#c1440e)" font-size="30" font-weight="800" text-anchor="middle" x="550" y="30">Backend</text>
+<text class="svg-sub" font-size="20" text-anchor="middle" x="550" y="48">보이지 않는 처리</text>
+<text fill="#7c3aed" font-size="30" font-weight="800" text-anchor="middle" x="920" y="30">Database / 뒷단</text>
+<text class="svg-sub" font-size="17" text-anchor="middle" x="920" y="48">데이터 보관 + 주변 서비스</text>
+<!-- 구분선 — 원래 그대로 -->
+<line stroke="var(--border,#aaa)" stroke-dasharray="5 4" stroke-width="1" x1="365" x2="365" y1="60" y2="1042"></line>
+<line stroke="var(--border,#aaa)" stroke-dasharray="5 4" stroke-width="1" x1="735" x2="735" y1="60" y2="1042"></line>
+<!-- ===== FRONTEND ===== -->
+<!-- Web 박스 — width/x 원래대로, height만 텍스트에 맞게 -->
+<rect class="svg-box-fe" height="380" rx="10" width="326" x="20" y="68"></rect>
+<text fill="#0891b2" font-size="26" font-weight="700" x="40" y="132">🌐 Web</text>
+<text class="svg-sub" font-size="20" x="40" y="162">크롬·사파리에서 도는 화면</text>
+<text class="svg-text" font-size="21" font-weight="700" x="40" y="210">기초 3종</text>
+<text class="svg-mono" font-size="21" x="56" y="243">• HTML  (뼈대)</text>
+<text class="svg-mono" font-size="21" x="56" y="276">• CSS   (옷)</text>
+<text class="svg-mono" font-size="21" x="56" y="309">• JavaScript (움직임)</text>
+<text class="svg-text" font-size="21" font-weight="700" x="40" y="357">프레임워크</text>
+<text class="svg-mono" font-size="21" x="56" y="390">React · Vue · Angular</text>
+<text class="svg-mono" font-size="21" x="56" y="423">Svelte · Next.js</text>
+<!-- 모바일 앱 -->
+<rect class="svg-box-fe" height="340" rx="10" width="326" x="20" y="462"></rect>
+<text fill="#0891b2" font-size="26" font-weight="700" x="40" y="492">📱 모바일 앱</text>
+<text class="svg-sub" font-size="20" x="40" y="522">스마트폰에 설치하는 프로그램</text>
+<text class="svg-text" font-size="21" font-weight="700" x="40" y="570">네이티브</text>
+<text class="svg-mono" font-size="21" x="56" y="603">• iOS — Swift</text>
+<text class="svg-mono" font-size="21" x="56" y="636">• Android — Kotlin</text>
+<text class="svg-text" font-size="21" font-weight="700" x="40" y="684">크로스 플랫폼</text>
+<text class="svg-mono" font-size="21" x="56" y="717">React Native · Flutter</text>
+<!-- 데스크톱 앱 -->
+<rect class="svg-box-fe" height="220" rx="10" width="326" x="20" y="816"></rect>
+<text fill="#0891b2" font-size="26" font-weight="700" x="40" y="846">🖥️ 데스크톱 앱</text>
+<text class="svg-sub" font-size="20" x="40" y="876">PC에 설치하는 프로그램</text>
+<text class="svg-mono" font-size="21" x="56" y="927">• Electron (HTML+CSS+JS)</text>
+<text class="svg-sub" font-size="20" x="56" y="963">VS Code · Slack · Discord</text>
+<!-- ===== BACKEND ===== -->
+<!-- 통신 박스 — x=375~725 원래대로 -->
+<text class="svg-text" font-size="14" font-weight="700" text-anchor="middle" x="550" y="87">통신</text>
+<rect class="svg-box-comm" height="130" rx="8" width="350" x="375" y="68"></rect>
+<text class="svg-mono" font-size="14" font-weight="700" text-anchor="middle" x="550" y="108">API (GET, POST, PUT, DELETE)</text>
+<text class="svg-mono" font-size="13" text-anchor="middle" x="550" y="134">HTTP / HTTPS</text>
+<text class="svg-mono" font-size="13" text-anchor="middle" x="550" y="160">응답: JSON</text>
+<text class="svg-sub" font-size="11" text-anchor="middle" x="550" y="183">← 요청 · 응답 →</text>
+<!-- 화살표: 통신박스 y중앙=148, 왼쪽경계x=375, 오른쪽경계x=725 -->
+<line marker-end="url(#ar)" stroke="var(--text-soft,#666)" stroke-width="2" x1="346" x2="368" y1="133" y2="133"></line>
+<line marker-end="url(#ar)" stroke="var(--text-soft,#666)" stroke-width="2" x1="732" x2="756" y1="133" y2="133"></line>
+<!-- 서버 -->
+<rect class="svg-box-be" height="360" rx="10" width="350" x="375" y="224"></rect>
+<text fill="var(--accent,#c1440e)" font-size="26" font-weight="700" text-anchor="middle" x="550" y="258">⚙️ Server (서버)</text>
+<text class="svg-sub" font-size="20" text-anchor="middle" x="550" y="288">listen — 요청 대기 · 처리 · 응답</text>
+<text class="svg-text" font-size="21" font-weight="700" x="394" y="339">하는 일</text>
+<text class="svg-text" font-size="21" x="410" y="372">① 요청 받기  ② 인증 확인</text>
+<text class="svg-text" font-size="21" x="410" y="405">③ 비즈니스 로직 처리</text>
+<text class="svg-text" font-size="21" x="410" y="438">④ DB 입출력  ⑤ 응답 반환</text>
+<text class="svg-text" font-size="21" font-weight="700" x="394" y="495">서버 언어</text>
+<text class="svg-mono" font-size="21" x="410" y="528">Python · Java · JS · Go</text>
+<text class="svg-mono" font-size="21" x="410" y="561">Ruby · PHP · C# · Rust</text>
+<!-- 프레임워크 -->
+<rect class="svg-box-be" height="436" rx="10" style="stroke-dasharray: 6 4;" width="350" x="375" y="600"></rect>
+<text fill="var(--accent,#c1440e)" font-size="24" font-weight="700" text-anchor="middle" x="550" y="634">서버 프레임워크</text>
+<text class="svg-text" font-size="21" font-weight="700" x="394" y="685">Python </text>
+<text class="svg-mono" font-size="21" x="410" y="718">Flask · FastAPI · Django</text>
+<text class="svg-text" font-size="21" font-weight="700" x="394" y="769">Java (한국 대기업 표준)</text>
+<text class="svg-mono" font-size="21" x="410" y="802">Spring Boot</text>
+<text class="svg-text" font-size="21" font-weight="700" x="394" y="853">JavaScript</text>
+<text class="svg-mono" font-size="21" x="410" y="886">Node.js · Express</text>
+<text class="svg-text" font-size="21" font-weight="700" x="394" y="937">기타</text>
+<text class="svg-mono" font-size="21" x="410" y="970">Go(Gin) / Ruby(Rails) / PHP</text>
+<!-- Backend → DB 화살표: 서버 y중앙=404, DB박스 왼쪽x=745 바깥 -->
+<line marker-end="url(#ar)" stroke="var(--text-soft,#666)" stroke-width="2" x1="725" x2="748" y1="423" y2="423"></line>
+<text class="svg-sub" font-size="12" text-anchor="middle" x="736" y="413">SQL</text>
+<!-- ===== DATABASE ===== -->
+<!-- Database -->
+<rect class="svg-box-db" height="380" rx="10" width="336" x="745" y="68"></rect>
+<text fill="#7c3aed" font-size="22" font-weight="700" x="765" y="113">🗄️ Database</text>
+<text class="svg-sub" font-size="17" x="765" y="139">데이터 보관 창고</text>
+<text class="svg-text" font-size="18" font-weight="700" x="765" y="181">관계형 (RDB)</text>
+<text class="svg-mono" font-size="18" x="781" y="210">MySQL · PostgreSQL</text>
+<text class="svg-mono" font-size="18" x="781" y="239">Oracle · SQL Server</text>
+<text class="svg-text" font-size="18" font-weight="700" x="765" y="281">NoSQL</text>
+<text class="svg-mono" font-size="18" x="781" y="310">MongoDB · Cassandra</text>
+<text class="svg-mono" font-size="18" x="781" y="339">DynamoDB · Redis</text>
+<text class="svg-sub" font-size="17" font-style="italic" x="765" y="386">다음 학습: SQL</text>
+<text class="svg-mono" font-size="17" x="765" y="415">SELECT * FROM users</text>
+<text class="svg-mono" font-size="17" x="765" y="441">WHERE age &gt;= 30;</text>
+<!-- 뒷단 서비스들 -->
+<rect class="svg-box-db" height="574" rx="10" style="stroke-dasharray: 6 4;" width="336" x="745" y="462"></rect>
+<text fill="#7c3aed" font-size="22" font-weight="700" x="765" y="494">🔧 뒷단 서비스들</text>
+<text class="svg-text" font-size="18" font-weight="700" x="765" y="538">⚡ 캐시</text>
+<text class="svg-mono" font-size="18" x="781" y="567">Redis · Memcached</text>
+<text class="svg-text" font-size="18" font-weight="700" x="765" y="606">📨 메시지 큐</text>
+<text class="svg-mono" font-size="18" x="781" y="635">Kafka · RabbitMQ</text>
+<text class="svg-text" font-size="18" font-weight="700" x="765" y="674">🔍 검색 엔진</text>
+<text class="svg-mono" font-size="18" x="781" y="703">Elasticsearch</text>
+<text class="svg-text" font-size="18" font-weight="700" x="765" y="742">💳 결제 (PG사)</text>
+<text class="svg-mono" font-size="18" x="781" y="771">KCP · 토스페이먼츠</text>
+<text class="svg-text" font-size="18" font-weight="700" x="765" y="810">🔔 푸시 알림</text>
+<text class="svg-mono" font-size="18" x="781" y="839">FCM · APNs</text>
+<text class="svg-text" font-size="18" font-weight="700" x="765" y="878">☁️ 클라우드</text>
+<text class="svg-mono" font-size="18" x="781" y="907">AWS · Azure · GCP</text>
+<text class="svg-text" font-size="18" font-weight="700" x="765" y="946">🤖 AI 서비스 </text>
+<text class="svg-mono" font-size="18" x="781" y="975">Claude · ChatGPT · Gemini</text>
+<text class="svg-sub" font-size="16" x="765" y="1022">📦 Docker · Kubernetes</text>
+</svg>
+<div class="caption">그림 5.1 — IT 산업 한 장. Frontend(왼쪽) ↔ Backend(가운데) ↔ Database/뒷단(오른쪽)</div>
+</div>
+<h3>Web 기초 3종 세트</h3>
+<p>
     Web을 배우려면 <strong>HTML, CSS, JavaScript</strong> 셋이 한 묶음입니다.
   </p>
-
-  <ul>
-    <li><strong>HTML</strong> — 뼈대. 어떤 글·이미지·버튼이 있는지.</li>
-    <li><strong>CSS</strong> — 옷. 색깔·크기·위치 같은 모양.</li>
-    <li><strong>JavaScript</strong> — 움직임. 버튼 누르면 반응하는 등.</li>
-  </ul>
-
-  <p>
+<ul>
+<li><strong>HTML</strong> — 뼈대. 어떤 글·이미지·버튼이 있는지.</li>
+<li><strong>CSS</strong> — 옷. 색깔·크기·위치 같은 모양.</li>
+<li><strong>JavaScript</strong> — 움직임. 버튼 누르면 반응하는 등.</li>
+</ul>
+<p>
     건물에 비유하면 골조 / 외관 / 전기·엘리베이터입니다.
   </p>
-
-  <h3>규모가 커질수록 프레임워크·라이브러리가 도움됩니다</h3>
-
-  <p>
+<h3>규모가 커질수록 프레임워크·라이브러리가 도움됩니다</h3>
+<p>
     HTML/CSS/JavaScript만으로도 웹사이트를 만들 수 있습니다. 다만 화면과 상태가 많아질수록 코드 관리가 복잡해질 수 있어, React·Vue 같은 <strong>라이브러리/프레임워크</strong>의 도움을 받는 경우가 많습니다.
   </p>
-
-  <ul>
-    <li><strong>React</strong> — Meta가 주도해 온 UI 라이브러리. 대규모 웹 서비스에서 널리 사용.</li>
-    <li><strong>Vue</strong> — 비교적 접근하기 쉬운 웹 프레임워크로 다양한 프로젝트에서 사용.</li>
-    <li><strong>Angular</strong> — Google이 주도하는 프레임워크. 큰 애플리케이션에서도 사용.</li>
-    <li><strong>Svelte</strong> — 컴파일 방식이 특징인 웹 프레임워크.</li>
-  </ul>
-
-  <h3>모바일 앱 — iOS와 Android</h3>
-
-  <p>
+<ul>
+<li><strong>React</strong> — Meta가 주도해 온 UI 라이브러리. 대규모 웹 서비스에서 널리 사용.</li>
+<li><strong>Vue</strong> — 비교적 접근하기 쉬운 웹 프레임워크로 다양한 프로젝트에서 사용.</li>
+<li><strong>Angular</strong> — Google이 주도하는 프레임워크. 큰 애플리케이션에서도 사용.</li>
+<li><strong>Svelte</strong> — 컴파일 방식이 특징인 웹 프레임워크.</li>
+</ul>
+<h3>모바일 앱 — iOS와 Android</h3>
+<p>
     각 OS마다 전용 언어가 있습니다.
   </p>
-
-  <ul>
-    <li><strong>iOS</strong> (아이폰) — <strong>Swift</strong>. 애플이 만든 언어.</li>
-    <li><strong>Android</strong> (삼성·LG 등) — <strong>Kotlin</strong>. 구글의 공식 언어.</li>
-  </ul>
-
-  <p>
+<ul>
+<li><strong>iOS</strong> (아이폰) — <strong>Swift</strong>. 애플이 만든 언어.</li>
+<li><strong>Android</strong> (삼성·LG 등) — <strong>Kotlin</strong>. 구글의 공식 언어.</li>
+</ul>
+<p>
     같은 앱을 두 번 만들기 부담스러우면 <strong>크로스 플랫폼</strong> 도구를 씁니다.
   </p>
-
-  <ul>
-    <li><strong>React Native</strong> — JavaScript로. 페이스북.</li>
-    <li><strong>Flutter</strong> — Dart 언어로. 구글.</li>
-  </ul>
-
-  <h3>데스크톱 앱 — Electron</h3>
-
-  <p>
+<ul>
+<li><strong>React Native</strong> — JavaScript로. 페이스북.</li>
+<li><strong>Flutter</strong> — Dart 언어로. 구글.</li>
+</ul>
+<h3>데스크톱 앱 — Electron</h3>
+<p>
     PC 프로그램은 요즘 <strong>Electron</strong>(웹 기술로 데스크톱 앱)으로 많이 만듭니다.
   </p>
-
-  <p>
+<p>
     VS Code, Slack, Discord처럼 웹 기술을 이용해 만든 대표적인 데스크톱 앱들이 있습니다.
   </p>
 </section>
-
 <!-- ==================== s4: Backend ==================== -->
 <section class="section" id="s3">
-  <div class="section-num">SECTION 03 · Backend</div>
-  <h2>Backend — Python이 사는 곳</h2>
-
-  <p>
+<div class="section-num">SECTION 03</div>
+<h2>Backend — Python이 사는 곳</h2>
+<h3> 버튼 한 번의 Request / Response 흐름</h3>
+<pre><code>사용자 → Frontend → HTTP Request → Backend
+                                ├→ 인증/검증
+                                ├→ DB/Cache
+                                ├→ 외부 API
+                                └→ 비즈니스 로직
+사용자 ← Frontend ← HTTP Response ← Backend</code></pre>
+<p>Request는 "이 일을 해 달라"는 메시지, Response는 "처리 결과" 메시지입니다. GET/POST/PUT·PATCH/DELETE는 흔히 조회/생성·작업/변경/삭제 의도를 표현합니다.</p>
+<h3>한 요청 내부에서는 Week 1~4가 그대로 실행됩니다</h3>
+<pre><code>POST /orders → 인증 → 입력 검증 → if/함수/리스트·dict 처리 → DB 저장 → JSON 응답</code></pre>
+<p>
     인스타에서 좋아요 버튼을 누르면, 그 정보가 <strong>인스타 회사의 서버 컴퓨터</strong>까지 갑니다.
   </p>
-
-  <p>
+<p>
     그 서버에서 데이터베이스에 저장되고, 작성자에게 알림이 보내지고, 피드 정렬이 다시 계산됩니다.
     이 모든 처리가 <strong>Backend</strong>의 일이에요.
   </p>
-
-  <h3>"서버"라는 단어 두 가지 의미</h3>
-
-  <ul>
-    <li><strong>서버 컴퓨터</strong> — 다른 프로그램이나 사용자에게 서비스를 제공하도록 운영되는 컴퓨터(물리 서버일 수도 있고 클라우드의 가상 서버일 수도 있음).</li>
-    <li><strong>서버 소프트웨어</strong> — 그 컴퓨터에서 도는 백엔드 프로그램.</li>
-  </ul>
-
-  <p>
+<h3>"서버"라는 단어 두 가지 의미</h3>
+<ul>
+<li><strong>서버 컴퓨터</strong> — 다른 프로그램이나 사용자에게 서비스를 제공하도록 운영되는 컴퓨터(물리 서버일 수도 있고 클라우드의 가상 서버일 수도 있음).</li>
+<li><strong>서버 소프트웨어</strong> — 그 컴퓨터에서 도는 백엔드 프로그램.</li>
+</ul>
+<p>
     보통 둘 다를 묶어서 "서버"라 부릅니다.
   </p>
-
-  <h3>Backend의 5가지 일</h3>
-
-  <ol>
-    <li>요청 받기 (Frontend의 API 요청을 받음)</li>
-    <li>인증 확인 (진짜 본인인가? 토큰 검증)</li>
-    <li>비즈니스 로직 처리 (할인 쿠폰 적용 같은 규칙)</li>
-    <li>DB 입출력 (데이터 저장·조회)</li>
-    <li>응답 반환 (결과를 JSON으로 돌려줌)</li>
-  </ol>
-
-  <h3>Backend 언어들</h3>
-
-  <p>
+<h3>Backend의 5가지 일</h3>
+<ol>
+<li>요청 받기 (Frontend의 API 요청을 받음)</li>
+<li>인증 확인 (진짜 본인인가? 토큰 검증)</li>
+<li>비즈니스 로직 처리 (할인 쿠폰 적용 같은 규칙)</li>
+<li>DB 입출력 (데이터 저장·조회)</li>
+<li>응답 반환 (결과를 JSON으로 돌려줌)</li>
+</ol>
+<h3>Backend 언어들</h3>
+<p>
     Backend는 다양한 언어로 만들 수 있어요.
   </p>
-
-  <ul>
-    <li><strong>Python ★</strong> — <strong>이번 과정에서 배운 언어.</strong> Django/Flask/FastAPI. 데이터·AI 연계 강점. Instagram·Netflix 등에서 사용합니다.</li>
-    <li><strong>Java</strong> — 한국 기업 표준. Spring Boot. 네이버·카카오·토스·배민 모두 사용.</li>
-    <li><strong>JavaScript/TypeScript</strong> — Node.js. Frontend와 같은 언어로 백엔드.</li>
-    <li><strong>Go</strong> — 구글이 만듦. 동시 처리 강함.</li>
-    <li><strong>Ruby</strong> — Ruby on Rails. GitHub·Airbnb·Shopify가 시작.</li>
-    <li><strong>PHP</strong> — 오랫동안 웹 백엔드에 널리 사용되어 온 언어. 현재도 많은 서비스와 CMS에서 사용.</li>
-    <li><strong>C#</strong> — 마이크로소프트의 .NET.</li>
-    <li><strong>Rust</strong> — 메모리 안전성과 성능을 중시하는 시스템 언어로, 일부 백엔드 영역에서도 사용.</li>
-  </ul>
-
-  <h3>Python으로 시작하는 백엔드</h3>
-
-  <p>
+<ul>
+<li><strong>Python </strong> — <strong>이번 과정에서 배운 언어.</strong> Django/Flask/FastAPI. 데이터·AI 연계 강점. Instagram·Netflix 등에서 사용합니다.</li>
+<li><strong>Java</strong> — 한국 기업 표준. Spring Boot. 네이버·카카오·토스·배민 모두 사용.</li>
+<li><strong>JavaScript/TypeScript</strong> — Node.js. Frontend와 같은 언어로 백엔드.</li>
+<li><strong>Go</strong> — 구글이 만듦. 동시 처리 강함.</li>
+<li><strong>Ruby</strong> — Ruby on Rails. GitHub·Airbnb·Shopify가 시작.</li>
+<li><strong>PHP</strong> — 오랫동안 웹 백엔드에 널리 사용되어 온 언어. 현재도 많은 서비스와 CMS에서 사용.</li>
+<li><strong>C#</strong> — 마이크로소프트의 .NET.</li>
+<li><strong>Rust</strong> — 메모리 안전성과 성능을 중시하는 시스템 언어로, 일부 백엔드 영역에서도 사용.</li>
+</ul>
+<h3>Python으로 시작하는 백엔드</h3>
+<p>
     Python을 계속 백엔드 방향으로 공부한다면 다음과 같은 웹 프레임워크를 만나게 됩니다.
   </p>
-
-  <ul>
-    <li><strong>Flask</strong> — 가장 작고 학습용으로 좋음.</li>
-    <li><strong>FastAPI</strong> — 타입 힌트와 비동기 지원을 잘 활용하는 현대적인 API 프레임워크.</li>
-    <li><strong>Django</strong> — 큰 사이트용. Instagram도 사용.</li>
-  </ul>
-
-  <h3>큰 백엔드는 여러 구조를 선택합니다 — 마이크로서비스도 그중 하나</h3>
-
-  <p>
+<ul>
+<li><strong>Flask</strong> — 가장 작고 학습용으로 좋음.</li>
+<li><strong>FastAPI</strong> — 타입 힌트와 비동기 지원을 잘 활용하는 현대적인 API 프레임워크.</li>
+<li><strong>Django</strong> — 큰 사이트용. Instagram도 사용.</li>
+</ul>
+<h3>큰 백엔드는 여러 구조를 선택합니다 — 마이크로서비스도 그중 하나</h3>
+<p>
     규모가 큰 서비스는 하나의 큰 애플리케이션(모놀리스)으로 운영하기도 하고, 기능을 <strong>작은 서비스들로 나누어</strong> 운영하기도 합니다. 후자의 대표적인 방식이 <strong>마이크로서비스</strong>입니다.
   </p>
-
-  <p>
+<p>
     예: 회원 서비스 / 가게 서비스 / 주문 서비스 / 결제 서비스 / 배달 서비스 / 알림 서비스.
     잘 분리하면 한 부분의 장애가 전체로 번지는 범위를 줄일 수 있습니다. 하지만 서비스끼리 의존하므로 설계가 나쁘면 장애가 전파될 수도 있습니다.
   </p>
-
-  <div class="callout info">
-    <div class="label">모놀리스가 나쁘고 마이크로서비스가 좋은 건 아닙니다</div>
-    <p>
+<div class="callout info">
+<div class="label">모놀리스가 나쁘고 마이크로서비스가 좋은 건 아닙니다</div>
+<p>
       작은 서비스는 하나의 애플리케이션으로 시작하는 편이 개발·배포가 더 단순할 수 있습니다.
       서비스와 조직이 커지면서 독립 배포나 확장이 필요해질 때 마이크로서비스를 선택하기도 합니다.
       <strong>아키텍처는 유행이 아니라 문제에 맞춰 고르는 선택</strong>입니다.
     </p>
-  </div>
-
-  <p>
+</div>
+<p>
     배달의민족은 마이크로서비스 + Java/Spring 조합으로 운영됩니다 (출처: 우아한형제들 기술블로그 2016).
   </p>
 </section>
-
 <!-- ==================== s5: Database / 뒷단 ==================== -->
 <section class="section" id="s4">
-  <div class="section-num">SECTION 04 · Database / 뒷단</div>
-  <h2>Database / 뒷단 서비스 — 백엔드 뒤의 세계</h2>
+<div class="section-num">SECTION 04</div>
+<h2>Database / 뒷단 서비스 — 백엔드 뒤의 세계</h2>
+<h3>메모리의 변수와 Database의 가장 큰 차이 — persistence</h3>
+<p>실행 중 Python 객체는 프로세스가 끝나면 사라질 수 있지만 Database는 프로그램 재시작 이후에도 필요한 데이터를 지속적으로 보관하기 위한 시스템입니다.</p>
+<h3>NoSQL을 "스키마가 없는 DB"라고 외우지 마세요</h3>
+<p>NoSQL은 하나의 데이터 모델이 아니라 Key-Value, Document, Wide-column, Graph 등 서로 다른 모델을 아우르는 범주입니다. Document DB가 문서별 필드를 유연하게 허용할 수 있다고 해서 schema가 전혀 없다는 뜻은 아닙니다.</p>
+<pre><code>RDB: users(id, name, age)
+→ table/column 구조를 DB가 강하게 관리
 
-  <p>
+Document 예:
+{"name":"Kim", "age":30}
+{"name":"Lee", "age":25, "interests":["python"]}
+→ 구조를 더 유연하게 허용할 수 있음</code></pre>
+<p>Document DB도 schema validation을 둘 수 있고 애플리케이션이 기대하는 논리적 schema는 여전히 존재합니다. 핵심은 <strong>스키마를 어디에서 얼마나 엄격히 강제하는지가 모델/제품에 따라 다르다</strong>는 점입니다.</p>
+<div class="concept-grid"><div class="concept-card"><strong>Key-Value</strong><p>key로 값 조회</p></div><div class="concept-card"><strong>Document</strong><p>문서 단위 데이터</p></div><div class="concept-card"><strong>Wide-column</strong><p>분산·대규모 접근 패턴</p></div><div class="concept-card"><strong>Graph</strong><p>노드와 관계 탐색</p></div></div>
+<p>RDB와 NoSQL 중 하나가 무조건 우월한 것이 아니라 데이터 모델, 일관성 요구, 조회/쓰기 패턴, 운영 특성으로 선택합니다.</p>
+<h3>Cache HIT / MISS와 stale 데이터</h3>
+<pre><code>요청 → Cache 조회
+        ├─ HIT  → 바로 사용
+        └─ MISS → DB 조회 → Cache 저장 → 사용</code></pre>
+<p>캐시는 보통 원본 그 자체가 아니라 빠른 재사용을 위한 데이터입니다. DB는 바뀌었는데 캐시에 옛 값이 남는 stale 문제 때문에 TTL, 삭제/갱신 같은 invalidation 전략이 필요합니다.</p>
+<h3>동기 호출과 메시징</h3>
+<pre><code>동기: Order → Payment → 결과 기다림 → 다음 처리
+메시징: Order → OrderCreated 발행 → 자신의 흐름 진행
+                           ↓ Broker ↓
+                         알림/분석/기타</code></pre>
+<p>비동기 구조는 사용자가 모든 후속 완료를 기다리지 않게 할 수 있지만 전체 작업 시간이 무조건 짧아진다는 뜻은 아닙니다.</p>
+<h3>Image / Container / Kubernetes를 원리로 보기</h3>
+<pre><code>Docker Image → 실행 → Container A / B / C
+
+Kubernetes
+원하는 상태 3개
+실제 상태   2개
+    ↓ 차이 감지
+1개 추가 → 상태를 맞춤</code></pre>
+<p>Kubernetes의 핵심 아이디어 하나는 원하는 상태(desired state)와 실제 상태(actual state)를 계속 맞추는 reconciliation입니다. 컨테이너는 일반 VM과 동일한 개념이 아니며 보통 호스트 커널을 공유하며 프로세스를 격리합니다.</p>
+<p>
     백엔드는 혼자 일하지 않습니다.
     뒤에는 <strong>데이터 보관·캐시·메시지 전달·결제·AI</strong> 등이 줄지어 있어요.
   </p>
-
-  <div class="callout info">
-    <div class="label">그림에 안 보이는 중요한 영역도 있습니다</div>
-    <p>
+<div class="callout info">
+<div class="label">그림에 안 보이는 중요한 영역도 있습니다</div>
+<p>
       실무에는 네트워크, 보안, 로그·모니터링, 배포 자동화, 백업 같은 운영 영역도 매우 중요합니다.
       Week 5에서는 처음 보는 분이 전체 흐름을 놓치지 않도록 우선 애플리케이션과 데이터 흐름에 집중합니다.
     </p>
-  </div>
-
-  <h3>Database</h3>
-
-  <p>
+</div>
+<h3>Database</h3>
+<p>
     회원 정보, 게시글, 주문 내역처럼 <strong>오래 보관해야 하는 데이터</strong>는 보통 DB에 저장합니다. 모든 데이터를 무조건 DB에 넣는 것은 아니며, 목적에 따라 파일·객체 스토리지·캐시 등 다른 저장소도 함께 사용합니다.
   </p>
-
-  <p>
+<p>
     입문 단계에서는 먼저 <strong>관계형 DB와 NoSQL 계열</strong>이라는 큰 구분으로 살펴보겠습니다. 실제 데이터베이스 분류는 더 다양합니다.
   </p>
-
-  <h4>관계형 DB (RDB)</h4>
-
-  <p>
+<h4>관계형 DB (RDB)</h4>
+<p>
     데이터를 <strong>표(테이블)</strong>로 저장합니다. 표끼리 서로 연결지을 수 있어서 "관계형"입니다.
   </p>
-
-  <p>
+<p>
     배달앱이라면 users 표 / stores 표 / orders 표 같은 식. orders가 user_id로 users를 가리키는 구조예요.
   </p>
-
-  <p>
-    <strong>은행·쇼핑몰·예약 시스템</strong>처럼 데이터가 정확하게 맞아야 하는 곳에 강합니다.
+<p>
+<strong>은행·쇼핑몰·예약 시스템</strong>처럼 데이터가 정확하게 맞아야 하는 곳에 강합니다.
   </p>
-
-  <ul>
-    <li><strong>MySQL</strong> — 가장 흔함. <strong>배달의민족도 AWS Aurora MySQL 사용</strong> (출처: 우아한형제들 기술블로그 2019).</li>
-    <li><strong>PostgreSQL</strong> — 기능 풍부. 새 프로젝트가 많이 선택.</li>
-    <li><strong>Oracle</strong> — 유료. 대형 은행·금융권.</li>
-  </ul>
-
-  <h4>NoSQL</h4>
-
-  <p>
-    <strong>유연한 구조</strong>가 강점입니다.
+<ul>
+<li><strong>MySQL</strong> — 가장 흔함. <strong>배달의민족도 AWS Aurora MySQL 사용</strong> (출처: 우아한형제들 기술블로그 2019).</li>
+<li><strong>PostgreSQL</strong> — 기능 풍부. 새 프로젝트가 많이 선택.</li>
+<li><strong>Oracle</strong> — 유료. 대형 은행·금융권.</li>
+</ul>
+<h4>NoSQL</h4>
+<p>
+<strong>제품과 데이터 모델에 따라 스키마를 더 유연하게 다룰 수 있다는 점</strong>이 강점이 될 수 있습니다. "스키마가 아예 없다"는 뜻은 아닙니다.
   </p>
-
-  <ul>
-    <li><strong>MongoDB</strong> — 문서(document) 형태로 데이터를 저장. 구조가 자주 달라지는 데이터를 다룰 때 선택할 수 있음.</li>
-    <li><strong>Cassandra</strong> — 여러 서버에 분산해 대규모 데이터를 처리하도록 설계된 데이터베이스.</li>
-    <li><strong>DynamoDB</strong> — AWS의 관리형 DB.</li>
-  </ul>
-
-  <div class="callout info">
-    <div class="label">SQL — 백엔드의 다음 학습</div>
-    <p>
+<ul>
+<li><strong>MongoDB</strong> — 문서(document) 형태로 데이터를 저장. 구조가 자주 달라지는 데이터를 다룰 때 선택할 수 있음.</li>
+<li><strong>Cassandra</strong> — 여러 서버에 분산해 대규모 데이터를 처리하도록 설계된 데이터베이스.</li>
+<li><strong>DynamoDB</strong> — AWS의 관리형 DB.</li>
+</ul>
+<div class="callout info">
+<div class="label">SQL — 백엔드의 다음 학습</div>
+<p>
       관계형 DB에 접근하려면 <strong>SQL</strong>이라는 언어를 씁니다.
       예: <code class="inline">SELECT * FROM users WHERE age &gt;= 30;</code> (30살 이상 다 찾기).
     </p>
-    <p>
+<p>
       MySQL·PostgreSQL·Oracle 같은 대표적인 관계형 DB는 SQL을 사용합니다.
       <strong>백엔드 개발자가 다음으로 배워야 할 가장 중요한 한 가지</strong>가 SQL입니다.
     </p>
-  </div>
-
-  <h3>캐시</h3>
-
-  <p>
-    <strong>캐시(Cache)</strong>는 자주 쓰는 데이터를 미리 빠른 곳에 저장해두는 방법입니다.
+</div>
+<h3>캐시</h3>
+<p>
+<strong>캐시(Cache)</strong>는 자주 쓰는 데이터를 미리 빠른 곳에 저장해두는 방법입니다.
   </p>
-
-  <p>
+<p>
     인스타 피드를 매번 DB에서 처음부터 계산하면 너무 느려요.
     한 번 계산한 결과를 <strong>더 빠르게 접근할 수 있는 저장소에 잠깐 보관</strong>하면 같은 요청을 다시 처리할 때 DB 조회나 계산을 줄일 수 있습니다.
   </p>
-
-  <p>
+<p>
     대표적으로 <strong>Redis</strong>를 많이 사용합니다.
   </p>
-
-  <h4>Redis로 자주 하는 일</h4>
-
-  <p>
+<h4>Redis로 자주 하는 일</h4>
+<p>
     Redis는 메모리 기반 데이터 저장소로, 빠른 접근이 필요한 여러 상황에 활용됩니다. 모든 서비스가 반드시 Redis를 사용하는 것은 아닙니다.
   </p>
-
-  <ul>
-    <li>자주 쓰는 데이터 빨리 꺼내기 (캐시 — 가장 흔한 용도)</li>
-    <li>로그인 세션 보관</li>
-    <li>실시간 순위 (게임 점수판, 인기 상품)</li>
-    <li>Pub/Sub, Streams 등을 이용한 메시지 전달</li>
-    <li>여러 서버 간 동시 접근 제어 (분산 락)</li>
-  </ul>
-
-  <h3>메시지 큐</h3>
-
-  <p>
+<ul>
+<li>자주 쓰는 데이터 빨리 꺼내기 (캐시 — 가장 흔한 용도)</li>
+<li>로그인 세션 보관</li>
+<li>실시간 순위 (게임 점수판, 인기 상품)</li>
+<li>Pub/Sub, Streams 등을 이용한 메시지 전달</li>
+<li>여러 서버 간 동시 접근 제어 (분산 락)</li>
+</ul>
+<h3>메시지 큐</h3>
+<p>
     먼저 두 방식을 비교해 봅시다. <strong>동기 호출</strong>은 상대 시스템의 답을 기다리는 방식이고,
     <strong>비동기 메시징</strong>은 일을 맡겼다는 메시지를 남겨두고 각 시스템이 나중에 처리할 수 있게 하는 방식입니다.
     모든 작업을 메시지 큐로 바꾸는 것은 아니며, 즉시 결과가 필요한 요청은 동기 호출이 더 자연스럽습니다.
   </p>
-
-  <p>
+<p>
     메시징 시스템은 한 프로그램이 다른 프로그램의 처리가 끝날 때까지 꼭 붙잡고 기다리지 않도록 <strong>메시지를 중간에서 받아 전달하는 우편함/중계소</strong> 역할을 합니다.
   </p>
-
-  <div class="callout info">
-    <div class="label">왜 필요한가?</div>
-    <p>
+<div class="callout info">
+<div class="label">왜 필요한가?</div>
+<p>
       배민에 주문이 들어오면 백엔드가 <strong>매장·라이더·푸시·분석 4곳</strong>에 알려야 해요.
     </p>
-    <p>
+<p>
       직접 차례로 호출하면 한 곳이라도 멈추면 다 멈추고 응답이 늦어집니다.
     </p>
-    <p>
+<p>
       메시징 시스템에 <strong>"주문이 생성됐다"는 이벤트를 발행</strong>하면 필요한 시스템들이 각자의 방식으로 받아 처리하도록 설계할 수 있습니다. 한 소비자가 느리거나 일시적으로 멈춰도 전체 요청 흐름을 직접 호출 방식보다 느슨하게 연결할 수 있습니다.
     </p>
-  </div>
-
-  <p>
+</div>
+<p>
     대표적인 도구 중 하나가 <strong>Apache Kafka</strong>입니다. Kafka는 단순한 작업 큐라기보다 많은 이벤트를 지속적으로 기록하고 여러 소비자가 읽을 수 있는 <strong>이벤트 스트리밍 플랫폼</strong>에 가깝습니다.
   </p>
-
-  <p>
+<p>
     LinkedIn·Netflix·Uber·<strong>배달의민족</strong>이 모두 사용합니다
     (출처: 우아한형제들 기술블로그 2025.6).
   </p>
-
-  <p>
+<p>
     작업 큐나 메시지 라우팅이 중심인 시스템에서는 <strong>RabbitMQ</strong> 같은 메시지 브로커도 많이 사용합니다. Kafka와 RabbitMQ는 규모만으로 나누기보다 필요한 처리 방식에 따라 선택합니다.
   </p>
-
-  <h3>검색 엔진</h3>
-
-  <p>
+<h3>검색 엔진</h3>
+<p>
     관계형 DB도 텍스트 검색 기능을 제공합니다. 하지만 <strong>대규모 전문 검색, 관련도 계산, 형태소 분석, 복잡한 검색 경험</strong>이 필요하면 검색 전용 시스템을 따로 두기도 합니다.
   </p>
-
-  <p>
+<p>
     예: 배민에서 "치킨" 검색 시 가게명·메뉴명·비슷한 단어·오타 보정·인기순 정렬이 동시에 필요해요.
     이런 요구가 커질수록 검색 전용 인덱스와 기능을 활용하는 편이 유리할 수 있습니다.
   </p>
-
-  <p>
+<p>
     대표적인 검색·분석 엔진으로 <strong>Elasticsearch</strong>가 있습니다. 실제 서비스에서는 요구사항에 따라 DB의 검색 기능이나 다른 검색 엔진을 선택하기도 합니다.
   </p>
-
-  <h3>결제 — PG사</h3>
-
-  <p>
-    <strong>PG사</strong>(Payment Gateway, 결제 대행사)는 온라인 결제를 대신 처리하는 전문 회사입니다.
+<h3>결제 — PG사</h3>
+<p>
+<strong>PG사</strong>(Payment Gateway, 결제 대행사)는 온라인 결제를 대신 처리하는 전문 회사입니다.
   </p>
-
-  <p>
+<p>
     카드 정보는 보안과 결제 산업의 규정 준수가 매우 중요하기 때문에, 많은 서비스가 <strong>PG사나 결제 전문 사업자의 안전한 결제 기능</strong>을 연동하는 구조를 사용합니다.
   </p>
-
-  <p>
+<p>
     흐름: 쇼핑몰 → PG사 → 카드사 → 은행 → PG사 → 쇼핑몰.
   </p>
-
-  <p>
+<p>
     한국에는 <strong>NHN KCP, KG이니시스, 토스페이먼츠, 나이스페이먼츠</strong> 같은 회사가 있어요.
   </p>
-
-  <p>
+<p>
     그 외에 <strong>간편결제</strong>로 카카오페이·네이버페이·페이코도 있습니다.
   </p>
-
-  <h3>푸시 알림</h3>
-
-  <p>
+<h3>푸시 알림</h3>
+<p>
     앱이 닫혀있어도 화면 위에 뜨는 메시지 (카톡 알림 같은 것).
   </p>
-
-  <p>
+<p>
     일반적인 모바일 앱의 원격 푸시는 운영체제 생태계가 제공하는 <strong>푸시 전달 서비스</strong>를 통해 기기로 전달됩니다.
   </p>
-
-  <ul>
-    <li><strong>Android</strong> — 구글의 <strong>FCM</strong> (Firebase Cloud Messaging). 무료.</li>
-    <li><strong>iOS</strong> — 애플의 <strong>APNs</strong> (Apple Push Notification service). 무료.</li>
-  </ul>
-
-  <h3>클라우드</h3>
-
-  <p>
+<ul>
+<li><strong>Android</strong> — 구글의 <strong>FCM</strong> (Firebase Cloud Messaging). 무료.</li>
+<li><strong>iOS</strong> — 애플의 <strong>APNs</strong> (Apple Push Notification service). 무료.</li>
+</ul>
+<h3>클라우드</h3>
+<p>
     회사가 서버를 직접 구입해 운영할 수도 있고, <strong>클라우드 사업자의 컴퓨팅·저장소·DB 같은 자원을 빌려 사용할 수도</strong> 있습니다. 오늘날에는 두 방식을 함께 쓰는 경우도 많습니다.
   </p>
-
-  <p>
+<p>
     클라우드는 필요한 IT 자원을 API나 콘솔로 빠르게 만들고 줄일 수 있다는 장점이 있습니다. 서비스에 따라 사용량 기반, 예약형, 정액형 등 여러 과금 방식이 있습니다.
   </p>
-
-  <p>
+<p>
     세계적으로 AWS, Microsoft Azure, Google Cloud가 대표적인 대형 클라우드 사업자입니다.
   </p>
-
-  <ul>
-    <li><strong>AWS</strong> (Amazon Web Services) — 컴퓨팅·스토리지·DB 등 매우 다양한 클라우드 서비스를 제공.</li>
-    <li><strong>Azure</strong> (Microsoft) — Microsoft 생태계 및 기업 환경과 폭넓게 연계.</li>
-    <li><strong>Google Cloud</strong> — 데이터·AI를 포함한 다양한 클라우드 서비스를 제공.</li>
-  </ul>
-
-  <p>
+<ul>
+<li><strong>AWS</strong> (Amazon Web Services) — 컴퓨팅·스토리지·DB 등 매우 다양한 클라우드 서비스를 제공.</li>
+<li><strong>Azure</strong> (Microsoft) — Microsoft 생태계 및 기업 환경과 폭넓게 연계.</li>
+<li><strong>Google Cloud</strong> — 데이터·AI를 포함한 다양한 클라우드 서비스를 제공.</li>
+</ul>
+<p>
     국내에도 <strong>NAVER Cloud, NHN Cloud</strong> 등 여러 클라우드 사업자가 있습니다.
   </p>
-
-  <h3>컨테이너</h3>
-
-  <div class="callout info">
-    <div class="label">"내 컴에선 잘 돌았는데요"</div>
-    <p>
+<h3>컨테이너</h3>
+<div class="callout info">
+<div class="label">"내 컴에선 잘 돌았는데요"</div>
+<p>
       개발자 노트북에선 코드가 잘 돌았는데 회사 서버에선 안 도는 경우가 많았어요.
       Python 버전·라이브러리·환경이 달라서요.
     </p>
-    <p>
-      <strong>Docker</strong>를 사용하면 애플리케이션과 필요한 파일·라이브러리·설정을 <strong>이미지</strong>로 묶고, 이를 격리된 <strong>컨테이너</strong>로 실행할 수 있습니다. 호환되는 환경 사이의 차이를 크게 줄여 주지만, CPU 구조·운영체제 기능·외부 설정까지 모든 차이를 없애 주는 것은 아닙니다.
+<p>
+<strong>Docker</strong>를 사용하면 애플리케이션과 필요한 파일·라이브러리·설정을 <strong>이미지</strong>로 묶고, 이를 격리된 <strong>컨테이너</strong>로 실행할 수 있습니다. 호환되는 환경 사이의 차이를 크게 줄여 주지만, CPU 구조·운영체제 기능·외부 설정까지 모든 차이를 없애 주는 것은 아닙니다.
     </p>
-    <p>
-      <strong>Kubernetes</strong>(쿠버네티스, k8s)는 많은 컨테이너화된 애플리케이션을 원하는 상태로 운영하도록 돕는 오케스트레이션 시스템입니다. 실패한 워크로드를 다시 실행하거나 교체하는 <strong>self-healing</strong> 기능이 있고, 설정하면 부하에 따라 수평 확장도 할 수 있습니다.
+<p>
+<strong>Kubernetes</strong>(쿠버네티스, k8s)는 많은 컨테이너화된 애플리케이션을 원하는 상태로 운영하도록 돕는 오케스트레이션 시스템입니다. 실패한 워크로드를 다시 실행하거나 교체하는 <strong>self-healing</strong> 기능이 있고, 설정하면 부하에 따라 수평 확장도 할 수 있습니다.
     </p>
-  </div>
-
-  <h3>★ AI 서비스</h3>
-
-  <p>
+</div>
+<h3> AI 서비스</h3>
+<p>
     최근에는 기존 서비스에 <strong>AI 모델이나 AI API</strong>를 연결하는 사례도 빠르게 늘고 있습니다.
   </p>
-
-  <p>
+<p>
     백엔드가 외부 AI API를 호출하거나 자체 모델을 서비스에 연결해 요약·검색·추천·대화 같은 기능을 추가할 수 있습니다.
   </p>
-
-  <ul>
-    <li><strong>Anthropic Claude</strong> — 대화·문서·코딩 등 다양한 작업에 활용되는 AI 모델/서비스.</li>
-    <li><strong>OpenAI</strong> — GPT 계열 모델과 API를 제공하며 다양한 애플리케이션에서 활용.</li>
-    <li><strong>Google Gemini</strong> — 텍스트와 이미지 등 여러 형태의 입력을 다루는 모델과 API를 제공.</li>
-    <li><strong>Meta Llama</strong> — 공개 가중치 모델 계열로, 라이선스 조건에 따라 자체 환경에서 운영할 수 있음.</li>
-  </ul>
-
-  <p>
-    <strong>여러분이 배운 Python으로 AI API를 호출하는 작은 프로젝트</strong>는 파일·JSON·API·함수를 한 번에 복습하기 좋은 실습 주제가 될 수 있습니다.
+<ul>
+<li><strong>Anthropic Claude</strong> — 대화·문서·코딩 등 다양한 작업에 활용되는 AI 모델/서비스.</li>
+<li><strong>OpenAI</strong> — GPT 계열 모델과 API를 제공하며 다양한 애플리케이션에서 활용.</li>
+<li><strong>Google Gemini</strong> — 텍스트와 이미지 등 여러 형태의 입력을 다루는 모델과 API를 제공.</li>
+<li><strong>Meta Llama</strong> — 공개 가중치 모델 계열로, 라이선스 조건에 따라 자체 환경에서 운영할 수 있음.</li>
+</ul>
+<p>
+<strong>여러분이 배운 Python으로 AI API를 호출하는 작은 프로젝트</strong>는 파일·JSON·API·함수를 한 번에 복습하기 좋은 실습 주제가 될 수 있습니다.
   </p>
-
-  <p>
+<p>
     4주차 브라우저 실습에서는 <code class="inline">pyfetch</code>를 사용했지만, 일반적인 로컬 Python 프로그램에서는 <code class="inline">requests</code>나 <code class="inline">httpx</code> 같은 HTTP 라이브러리를 사용하는 경우가 많습니다.
   </p>
 </section>
-
 <!-- ==================== s6: 시뮬레이터 ==================== -->
 <section class="section" id="s5">
-  <div class="section-num">SECTION 05</div>
-  <h2>시뮬레이터 — 배달앱 주문 흐름 예시</h2>
-
-  <p>
+<div class="section-num">SECTION 05</div>
+<h2>시뮬레이터 — 배달앱 주문 흐름 예시</h2>
+<div class="callout info"><div class="label">시뮬레이터를 볼 때 화살표의 의미를 읽으세요</div><p>App→Backend는 HTTP 요청, Backend→DB는 조회/저장, Backend→PG는 외부 API 호출, Backend→Broker는 이벤트 발행처럼 <strong>같은 화살표라도 무엇이 이동하는지</strong>가 다릅니다. 동기 호출과 메시지 발행도 구분해서 보세요.</p></div>
+<p>
     위에서 본 모든 게 어떻게 함께 움직이는지 시뮬레이터로 따라가 봅시다.
   </p>
-
-  <p>
-    <strong>배달앱에서 주문 한 번</strong>이 여러 시스템을 거칠 수 있는 예를 10단계로 보여드려요.
+<p>
+<strong>배달앱에서 주문 한 번</strong>이 여러 시스템을 거칠 수 있는 예를 10단계로 보여드려요.
   </p>
-
-  <div class="callout warn">
-    <div class="label">교육용 예시입니다</div>
-    <p>
+<div class="callout warn">
+<div class="label">교육용 예시입니다</div>
+<p>
       일부 기술은 우아한형제들이 과거 공개한 기술 자료를 참고하고, 나머지는 일반적인 IT 아키텍처 패턴을 이용해 연결했습니다.
       <strong>현재 배달의민족의 실제 주문 내부 구조를 그대로 재현한 그림은 아닙니다.</strong> 실무 시스템은 계속 바뀌고 내부 세부 구조도 공개되지 않는 경우가 많습니다.
     </p>
-  </div>
-
-  <div style="margin: 24px 0;">
-    <iframe src="simulators/sim-services.html"
-            title="배달앱 주문 흐름 교육용 시뮬레이터"
-            style="display: block; width: 100%; height: 720px; border: 1px solid var(--border); border-radius: 12px; background: var(--bg-card);"></iframe>
-  </div>
-
-  <h3>주문 한 번에 8개 시스템 협력</h3>
-
-  <p>
+</div>
+<div style="margin: 24px 0;">
+<iframe src="simulators/sim-services.html" style="display: block; width: 100%; height: 720px; border: 1px solid var(--border); border-radius: 12px; background: var(--bg-card);" title="배달앱 주문 흐름 교육용 시뮬레이터"></iframe>
+</div>
+<h3>주문 한 번에 8개 시스템 협력</h3>
+<p>
     이 교육용 예에서는 모바일 앱 + 백엔드 + DB + 결제 + 메시징 + 매장 + 라이더 + 푸시처럼 <strong>여러 시스템</strong>이 협력합니다.
   </p>
-
-  <p>
+<p>
     실제 서비스에서는 여기에 네트워크·클라우드·결제 사업자·푸시 전달 서비스·로그/모니터링 등 더 많은 구성 요소가 추가될 수 있습니다.
   </p>
-
-  <p>
+<p>
     사진 업로드, 메시지 전송, 동영상 재생 같은 다른 서비스도 세부 구조는 다르지만 여러 시스템이 요청·저장·처리를 나눠 맡는다는 공통점을 가집니다.
   </p>
-
-  <h3>"내가 다 알아야 하나?" — 아닙니다</h3>
-
-  <p>
-    <strong>한 사람이 다 다루지 않습니다</strong>.
+<h3>"내가 다 알아야 하나?" — 아닙니다</h3>
+<p>
+<strong>한 사람이 다 다루지 않습니다</strong>.
     백엔드·프론트엔드·DevOps·데이터·모바일 개발자가 각자 한두 영역에 집중하고 협력해요.
   </p>
-
-  <p>
+<p>
     여러분이 Python으로 시작했다면 <strong>Backend 또는 뒷단 일부</strong>에 자연스럽게 닿게 됩니다.
   </p>
 </section>
-
 <!-- ==================== s7: 마무리 ==================== -->
 <section class="section" id="s6">
-  <div class="section-num">SECTION 06</div>
-  <h2>여기까지 — 그리고 앞으로</h2>
-
-  <p>
+<div class="section-num">SECTION 06</div>
+<h2>여기까지 — 그리고 앞으로</h2>
+<p>
     부록까지 따라오시느라 수고 많으셨습니다.
   </p>
-
-  <p>
+<p>
     이제 여러분은 단순히 Python 문법을 아는 사람이 아니라,
     <strong>"인터넷 서비스가 어떻게 돌아가는지 큰 그림을 본 사람"</strong>입니다.
   </p>
-
-  <h3>1주차에서 시작한 이야기 — AI 시대</h3>
-
-  <p>
+<h3>1주차에서 시작한 이야기 — AI 시대</h3>
+<p>
     1주차 s0에서 "AI 시대에는 'AI에게 일 시키는 사람'과 'AI가 일 시키는 사람'이 나뉜다"는 이야기로 시작했습니다.
   </p>
-
-
-  <ul>
-    <li>AI가 만들어준 코드가 <strong>어디에 들어가는지</strong> 알아야 검증할 수 있어요.</li>
-    <li>"백엔드", "DB", "API", "캐시" 같은 단어를 들으면 어느 자리인지 안다는 게 큰 차이예요.</li>
-    <li>AI가 "Redis 써서 캐시 처리하시면 됩니다"라고 답해도, 여러분은 <strong>왜 캐시가 필요한지</strong> 알 수 있죠.</li>
-    <li>AI 서비스(Claude·ChatGPT·Gemini) 자체도 결국 <strong>백엔드가 호출하는 뒷단 서비스</strong>예요.</li>
-  </ul>
-
-  <h3>다음에 갈 수 있는 길</h3>
-
-  <ul>
-    <li><strong>Python 더 깊이</strong> — 4주차에서 맛본 클래스·데코레이터·제너레이터·비동기·타입 힌트를 하나씩 깊게 공부하기.</li>
-    <li><strong>백엔드 시작</strong> — Flask 또는 FastAPI로 작은 API 서버 만들기.</li>
-    <li><strong>SQL과 데이터베이스</strong> — PostgreSQL이나 MySQL로 직접 표 만들고 쿼리.</li>
-    <li><strong>Frontend</strong> — HTML/CSS/JS 기초 → React.</li>
-    <li><strong>AI 활용</strong> — Claude나 OpenAI API를 Python으로 호출하는 작은 프로젝트.</li>
-    <li><strong>클라우드</strong> — AWS 무료 계정으로 작은 서버 띄우고 코드 돌려보기.</li>
-  </ul>
-
-  <h3>마지막으로</h3>
-
-  <p>
+<ul>
+<li>AI가 만들어준 코드가 <strong>어디에 들어가는지</strong> 알아야 검증할 수 있어요.</li>
+<li>"백엔드", "DB", "API", "캐시" 같은 단어를 들으면 어느 자리인지 안다는 게 큰 차이예요.</li>
+<li>AI가 "Redis 써서 캐시 처리하시면 됩니다"라고 답해도, 여러분은 <strong>왜 캐시가 필요한지</strong> 알 수 있죠.</li>
+<li>AI 서비스(Claude·ChatGPT·Gemini) 자체도 결국 <strong>백엔드가 호출하는 뒷단 서비스</strong>예요.</li>
+</ul>
+<h3>다음에 갈 수 있는 길</h3>
+<ul>
+<li><strong>Python 더 깊이</strong> — 4주차에서 맛본 클래스·데코레이터·제너레이터·비동기·타입 힌트를 하나씩 깊게 공부하기.</li>
+<li><strong>백엔드 시작</strong> — Flask 또는 FastAPI로 작은 API 서버 만들기.</li>
+<li><strong>SQL과 데이터베이스</strong> — PostgreSQL이나 MySQL로 직접 표 만들고 쿼리.</li>
+<li><strong>Frontend</strong> — HTML/CSS/JS 기초 → React.</li>
+<li><strong>AI 활용</strong> — Claude나 OpenAI API를 Python으로 호출하는 작은 프로젝트.</li>
+<li><strong>클라우드</strong> — AWS 무료 계정으로 작은 서버 띄우고 코드 돌려보기.</li>
+</ul>
+<h3>마지막으로</h3>
+<p>
     실무 IT 산업에는 끝없이 새로운 도구가 나옵니다.
     5년 후엔 지금 본 도구들 중 일부는 사라지고 새 도구가 자리잡을 거예요.
   </p>
-
-  <p>
+<p>
     도구와 구조는 계속 바뀌지만, <strong>사용자와 상호작용하는 부분 ↔ 요청을 처리하는 부분 ↔ 데이터를 저장·전달하는 부분</strong>처럼 역할을 나누어 생각하는 관점은 새로운 기술을 이해할 때 계속 도움이 됩니다.
   </p>
-
-  <p>
+<p>
     Week 1~4에서 배운 <strong>변수·함수·반복·조건·자료구조</strong>도 마찬가지입니다.
     언어마다 표현은 달라도 변수·조건·반복·함수·자료구조 같은 기본 개념은 다른 프로그래밍 언어를 배울 때도 계속 도움이 됩니다.
   </p>
-
-  <p>
+<p>
     수고 많으셨습니다. 다음 단계로 가는 길에서 또 만나요.
   </p>
-
-  <div class="key-points">
-    <div class="title">5주차 핵심 정리</div>
-    <ul>
-      <li>인터넷 서비스의 큰 그림: <strong>Frontend ↔ Backend ↔ Database/뒷단</strong>.</li>
-      <li>Frontend: HTML/CSS/JS, React, Vue, Swift, Kotlin, Flutter.</li>
-      <li>Backend: Python, Java, JavaScript/TypeScript, Go, Ruby, PHP, C#, Rust 등. 구조는 모놀리스·마이크로서비스 등 요구사항에 따라 선택.</li>
-      <li>Database: MySQL, PostgreSQL, MongoDB, Oracle.</li>
-      <li>뒷단: 캐시(Redis), 메시지 큐(Kafka), 검색(Elasticsearch), 결제(KCP/토스페이먼츠), 푸시(FCM/APNs), 클라우드(AWS), AI(Claude/ChatGPT/Gemini).</li>
-      <li>주문 1번에 8개 이상 시스템 협력.</li>
-      <li>한 사람이 다 다루지 않음. 시작점이 중요.</li>
-    </ul>
-  </div>
+<div class="key-points">
+<div class="title">5주차 핵심 정리</div>
+<ul>
+<li>인터넷 서비스의 큰 그림: <strong>Frontend ↔ Backend ↔ Database/뒷단</strong>.</li>
+<li>Frontend: HTML/CSS/JS, React, Vue, Swift, Kotlin, Flutter.</li>
+<li>Backend: Python, Java, JavaScript/TypeScript, Go, Ruby, PHP, C#, Rust 등. 구조는 모놀리스·마이크로서비스 등 요구사항에 따라 선택.</li>
+<li>Database: MySQL, PostgreSQL, MongoDB, Oracle.</li>
+<li>뒷단: 캐시(Redis), 메시지 큐(Kafka), 검색(Elasticsearch), 결제(KCP/토스페이먼츠), 푸시(FCM/APNs), 클라우드(AWS), AI(Claude/ChatGPT/Gemini).</li>
+<li>주문 1번에 8개 이상 시스템 협력.</li>
+<li>한 사람이 다 다루지 않음. 시작점이 중요.</li>
+</ul>
+</div>
 </section>

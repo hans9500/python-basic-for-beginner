@@ -7,7 +7,6 @@
        4. 튜플의 진실 — 슬롯은 잠겼지만 참조 대상은 변할 수 있음
        5. 다크 모드 가독성 — currentColor / CSS 변수
      ============================================================ -->
-
 <div class="lesson-title">Week 3 · Lesson 1</div>
 <h1>묶음과 함수 — 리스트, 튜플, 딕셔너리, def</h1>
 <p class="subtitle">
@@ -15,24 +14,20 @@
   나만의 함수로 만들어봅니다. 그 과정에서 1주차에서 배운 "객체와 이름표" 모델이
   다시 등장하며 더 깊어집니다 — 가변과 불변, 그리고 튜플의 의외의 진실.
 </p>
-
 <!-- ==================== s1: 리스트 ==================== -->
 <section class="section" id="s1">
-  <div class="section-num">SECTION 01</div>
-  <h2>리스트 — 여러 값을 한 줄로</h2>
-
-  <p>
+<div class="section-num">SECTION 01</div>
+<h2>리스트 — 여러 값을 한 줄로</h2>
+<p>
     학생 이름 30명, 점수 100개, 장바구니에 담은 물건들 — 이런 걸 변수 30, 100, n개씩
     만들 순 없습니다. <strong>리스트(list)</strong>는 여러 값을 한 줄로 묶어주는 묶음입니다.
   </p>
-
-  <h3>가장 단순한 형태</h3>
-
-  <div class="editor-block">
-    <div class="editor-tab-bar">
-      <span class="editor-tab"><span class="py-icon"></span>list_basic.py</span>
-    </div>
-    <textarea class="editor-source">scores = [85, 92, 78, 100, 67]
+<h3>가장 단순한 형태</h3>
+<div class="editor-block">
+<div class="editor-tab-bar">
+<span class="editor-tab"><span class="py-icon"></span>list_basic.py</span>
+</div>
+<textarea class="editor-source">scores = [85, 92, 78, 100, 67]
 print(scores)
 print(type(scores))    # &lt;class 'list'&gt;
 print(len(scores))     # 5
@@ -42,304 +37,195 @@ mixed = [1, "안녕", 3.14, True]
 print(mixed)
 print(type(mixed))     # 같은 list
 </textarea>
-    <div class="run-bar">
-      <span class="left"><span class="file-name">📄 list_basic.py</span></span>
-      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
-      <button class="run-btn"><span class="play">▶</span> Run</button>
-    </div>
-  </div>
-  <div class="terminal">
-    <div class="terminal-head">
-      <span class="label">실행 결과</span>
-      <span class="status">대기 중</span>
-    </div>
-    <div class="terminal-body empty"></div>
-  </div>
-
-  <p>
+<div class="run-bar">
+<span class="left"><span class="file-name">📄 list_basic.py</span></span>
+<span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+<button class="run-btn"><span class="play">▶</span> Run</button>
+</div>
+</div>
+<div class="terminal">
+<div class="terminal-head">
+<span class="label">실행 결과</span>
+<span class="status">대기 중</span>
+</div>
+<div class="terminal-body empty"></div>
+</div>
+<p>
     대괄호 <code class="inline">[</code> ... <code class="inline">]</code>로 감싸고 쉼표로 구분합니다.
     <strong>다른 타입이 섞여 있어도 됩니다</strong> — 정수와 문자열이 한 리스트 안에 공존 가능합니다.
   </p>
-
-  <h3>리스트의 진짜 모습 — 가장 중요한 그림</h3>
-
-  <p>
+<h3>리스트의 진짜 모습 — 가장 중요한 그림</h3>
+<p>
     비전공자가 보통 떠올리는 모습과 <strong>실제 메모리 모습은 다릅니다.</strong>
     여기를 잡으면 앞으로 나올 모든 것이 자연스럽게 풀립니다.
   </p>
-
-  <div class="figure">
-    <svg viewBox="0 0 720 320" xmlns="http://www.w3.org/2000/svg" role="img"
-         aria-label="리스트의 잘못된 상상 vs 실제 메모리 구조">
-      <text x="360" y="22" text-anchor="middle" font-family="Pretendard, sans-serif"
-            font-size="11" font-weight="700" fill="currentColor" opacity="0.85" letter-spacing="2">
+<div class="figure">
+<svg aria-label="리스트의 잘못된 상상 vs 실제 메모리 구조" role="img" viewbox="0 0 720 320" xmlns="http://www.w3.org/2000/svg">
+<text fill="currentColor" font-family="Pretendard, sans-serif" font-size="11" font-weight="700" letter-spacing="2" opacity="0.85" text-anchor="middle" x="360" y="22">
         nums = [1, "안녕", 3.14] — 비전공자의 상상 vs 실제
       </text>
-
-      <!-- 잘못된 상상 -->
-      <text x="180" y="56" text-anchor="middle" font-family="Pretendard, sans-serif"
-            font-size="12" font-weight="700" fill="currentColor" opacity="0.8">잘못된 상상</text>
-
-      <rect x="60" y="80" width="240" height="50" rx="6"
-            fill="currentColor" opacity="0.05" stroke="currentColor" stroke-width="1.3"
-            stroke-dasharray="4 3"/>
-      <line x1="140" y1="80" x2="140" y2="130" stroke="currentColor" stroke-opacity="0.3"/>
-      <line x1="220" y1="80" x2="220" y2="130" stroke="currentColor" stroke-opacity="0.3"/>
-      <text x="100" y="110" text-anchor="middle" font-family="JetBrains Mono, monospace"
-            font-size="14" font-weight="700" fill="currentColor">1</text>
-      <text x="180" y="110" text-anchor="middle" font-family="JetBrains Mono, monospace"
-            font-size="13" font-weight="700" fill="currentColor">"안녕"</text>
-      <text x="260" y="110" text-anchor="middle" font-family="JetBrains Mono, monospace"
-            font-size="13" font-weight="700" fill="currentColor">3.14</text>
-
-      <text x="180" y="160" text-anchor="middle" font-family="Pretendard, sans-serif"
-            font-size="11" fill="currentColor" opacity="0.65" font-style="italic">
+<!-- 잘못된 상상 -->
+<text fill="currentColor" font-family="Pretendard, sans-serif" font-size="12" font-weight="700" opacity="0.8" text-anchor="middle" x="180" y="56">잘못된 상상</text>
+<rect fill="currentColor" height="50" opacity="0.05" rx="6" stroke="currentColor" stroke-dasharray="4 3" stroke-width="1.3" width="240" x="60" y="80"></rect>
+<line stroke="currentColor" stroke-opacity="0.3" x1="140" x2="140" y1="80" y2="130"></line>
+<line stroke="currentColor" stroke-opacity="0.3" x1="220" x2="220" y1="80" y2="130"></line>
+<text fill="currentColor" font-family="JetBrains Mono, monospace" font-size="14" font-weight="700" text-anchor="middle" x="100" y="110">1</text>
+<text fill="currentColor" font-family="JetBrains Mono, monospace" font-size="13" font-weight="700" text-anchor="middle" x="180" y="110">"안녕"</text>
+<text fill="currentColor" font-family="JetBrains Mono, monospace" font-size="13" font-weight="700" text-anchor="middle" x="260" y="110">3.14</text>
+<text fill="currentColor" font-family="Pretendard, sans-serif" font-size="11" font-style="italic" opacity="0.65" text-anchor="middle" x="180" y="160">
         "값이 직접 들어 있다"
       </text>
-      <text x="180" y="180" text-anchor="middle" font-family="Pretendard, sans-serif"
-            font-size="11" fill="#f48771" font-weight="700">✗ 사실이 아님</text>
-
-      <!-- 실제 -->
-      <text x="540" y="56" text-anchor="middle" font-family="Pretendard, sans-serif"
-            font-size="12" font-weight="700" fill="var(--accent)">실제</text>
-
-      <!-- list 객체 -->
-      <rect x="400" y="80" width="180" height="60" rx="6"
-            fill="currentColor" opacity="0.06"
-            stroke="var(--accent)" stroke-width="1.8"/>
-      <text x="408" y="94" font-family="JetBrains Mono, monospace" font-size="9"
-            fill="currentColor" opacity="0.7" font-weight="600">list 객체</text>
-      <!-- 슬롯 3개 -->
-      <g>
-        <rect x="412" y="100" width="48" height="32" rx="3"
-              fill="currentColor" opacity="0.04" stroke="currentColor" stroke-opacity="0.35"/>
-        <text x="436" y="111" text-anchor="middle" font-family="JetBrains Mono, monospace"
-              font-size="8" fill="currentColor" opacity="0.55">[0]</text>
-        <circle cx="436" cy="124" r="3" fill="var(--accent)"/>
-
-        <rect x="464" y="100" width="48" height="32" rx="3"
-              fill="currentColor" opacity="0.04" stroke="currentColor" stroke-opacity="0.35"/>
-        <text x="488" y="111" text-anchor="middle" font-family="JetBrains Mono, monospace"
-              font-size="8" fill="currentColor" opacity="0.55">[1]</text>
-        <circle cx="488" cy="124" r="3" fill="var(--accent)"/>
-
-        <rect x="516" y="100" width="48" height="32" rx="3"
-              fill="currentColor" opacity="0.04" stroke="currentColor" stroke-opacity="0.35"/>
-        <text x="540" y="111" text-anchor="middle" font-family="JetBrains Mono, monospace"
-              font-size="8" fill="currentColor" opacity="0.55">[2]</text>
-        <circle cx="540" cy="124" r="3" fill="var(--accent)"/>
-      </g>
-
-      <!-- 별개 객체들 -->
-      <defs>
-        <marker id="arr-list-1" viewBox="0 0 10 10" refX="9" refY="5"
-                markerWidth="6" markerHeight="6" orient="auto">
-          <path d="M0,0 L10,5 L0,10 z" fill="var(--accent)" opacity="0.7"/>
-        </marker>
-      </defs>
-
-      <rect x="400" y="180" width="50" height="34" rx="5"
-            fill="currentColor" opacity="0.06" stroke="currentColor" stroke-width="1.2"/>
-      <text x="406" y="192" font-family="JetBrains Mono, monospace" font-size="8"
-            fill="currentColor" opacity="0.65">int</text>
-      <text x="425" y="206" text-anchor="middle" font-family="JetBrains Mono, monospace"
-            font-size="14" font-weight="700" fill="currentColor">1</text>
-
-      <rect x="465" y="220" width="60" height="34" rx="5"
-            fill="currentColor" opacity="0.06" stroke="currentColor" stroke-width="1.2"/>
-      <text x="471" y="232" font-family="JetBrains Mono, monospace" font-size="8"
-            fill="currentColor" opacity="0.65">str</text>
-      <text x="495" y="246" text-anchor="middle" font-family="JetBrains Mono, monospace"
-            font-size="13" font-weight="700" fill="currentColor">"안녕"</text>
-
-      <rect x="540" y="180" width="60" height="34" rx="5"
-            fill="currentColor" opacity="0.06" stroke="currentColor" stroke-width="1.2"/>
-      <text x="546" y="192" font-family="JetBrains Mono, monospace" font-size="8"
-            fill="currentColor" opacity="0.65">float</text>
-      <text x="570" y="206" text-anchor="middle" font-family="JetBrains Mono, monospace"
-            font-size="13" font-weight="700" fill="currentColor">3.14</text>
-
-      <!-- 화살표 -->
-      <line x1="436" y1="128" x2="425" y2="180"
-            stroke="var(--accent)" stroke-width="1.5" opacity="0.85" marker-end="url(#arr-list-1)"/>
-      <line x1="488" y1="128" x2="495" y2="220"
-            stroke="var(--accent)" stroke-width="1.5" opacity="0.85" marker-end="url(#arr-list-1)"/>
-      <line x1="540" y1="128" x2="570" y2="180"
-            stroke="var(--accent)" stroke-width="1.5" opacity="0.85" marker-end="url(#arr-list-1)"/>
-
-      <text x="490" y="285" text-anchor="middle" font-family="Pretendard, sans-serif"
-            font-size="11" fill="currentColor" opacity="0.75" font-style="italic">
+<text fill="#f48771" font-family="Pretendard, sans-serif" font-size="11" font-weight="700" text-anchor="middle" x="180" y="180">✗ 사실이 아님</text>
+<!-- 실제 -->
+<text fill="var(--accent)" font-family="Pretendard, sans-serif" font-size="12" font-weight="700" text-anchor="middle" x="540" y="56">실제</text>
+<!-- list 객체 -->
+<rect fill="currentColor" height="60" opacity="0.06" rx="6" stroke="var(--accent)" stroke-width="1.8" width="180" x="400" y="80"></rect>
+<text fill="currentColor" font-family="JetBrains Mono, monospace" font-size="9" font-weight="600" opacity="0.7" x="408" y="94">list 객체</text>
+<!-- 슬롯 3개 -->
+<g>
+<rect fill="currentColor" height="32" opacity="0.04" rx="3" stroke="currentColor" stroke-opacity="0.35" width="48" x="412" y="100"></rect>
+<text fill="currentColor" font-family="JetBrains Mono, monospace" font-size="8" opacity="0.55" text-anchor="middle" x="436" y="111">[0]</text>
+<circle cx="436" cy="124" fill="var(--accent)" r="3"></circle>
+<rect fill="currentColor" height="32" opacity="0.04" rx="3" stroke="currentColor" stroke-opacity="0.35" width="48" x="464" y="100"></rect>
+<text fill="currentColor" font-family="JetBrains Mono, monospace" font-size="8" opacity="0.55" text-anchor="middle" x="488" y="111">[1]</text>
+<circle cx="488" cy="124" fill="var(--accent)" r="3"></circle>
+<rect fill="currentColor" height="32" opacity="0.04" rx="3" stroke="currentColor" stroke-opacity="0.35" width="48" x="516" y="100"></rect>
+<text fill="currentColor" font-family="JetBrains Mono, monospace" font-size="8" opacity="0.55" text-anchor="middle" x="540" y="111">[2]</text>
+<circle cx="540" cy="124" fill="var(--accent)" r="3"></circle>
+</g>
+<!-- 별개 객체들 -->
+<defs>
+<marker id="arr-list-1" markerheight="6" markerwidth="6" orient="auto" refx="9" refy="5" viewbox="0 0 10 10">
+<path d="M0,0 L10,5 L0,10 z" fill="var(--accent)" opacity="0.7"></path>
+</marker>
+</defs>
+<rect fill="currentColor" height="34" opacity="0.06" rx="5" stroke="currentColor" stroke-width="1.2" width="50" x="400" y="180"></rect>
+<text fill="currentColor" font-family="JetBrains Mono, monospace" font-size="8" opacity="0.65" x="406" y="192">int</text>
+<text fill="currentColor" font-family="JetBrains Mono, monospace" font-size="14" font-weight="700" text-anchor="middle" x="425" y="206">1</text>
+<rect fill="currentColor" height="34" opacity="0.06" rx="5" stroke="currentColor" stroke-width="1.2" width="60" x="465" y="220"></rect>
+<text fill="currentColor" font-family="JetBrains Mono, monospace" font-size="8" opacity="0.65" x="471" y="232">str</text>
+<text fill="currentColor" font-family="JetBrains Mono, monospace" font-size="13" font-weight="700" text-anchor="middle" x="495" y="246">"안녕"</text>
+<rect fill="currentColor" height="34" opacity="0.06" rx="5" stroke="currentColor" stroke-width="1.2" width="60" x="540" y="180"></rect>
+<text fill="currentColor" font-family="JetBrains Mono, monospace" font-size="8" opacity="0.65" x="546" y="192">float</text>
+<text fill="currentColor" font-family="JetBrains Mono, monospace" font-size="13" font-weight="700" text-anchor="middle" x="570" y="206">3.14</text>
+<!-- 화살표 -->
+<line marker-end="url(#arr-list-1)" opacity="0.85" stroke="var(--accent)" stroke-width="1.5" x1="436" x2="425" y1="128" y2="180"></line>
+<line marker-end="url(#arr-list-1)" opacity="0.85" stroke="var(--accent)" stroke-width="1.5" x1="488" x2="495" y1="128" y2="220"></line>
+<line marker-end="url(#arr-list-1)" opacity="0.85" stroke="var(--accent)" stroke-width="1.5" x1="540" x2="570" y1="128" y2="180"></line>
+<text fill="currentColor" font-family="Pretendard, sans-serif" font-size="11" font-style="italic" opacity="0.75" text-anchor="middle" x="490" y="285">
         list 객체 안에는 "각 요소를 가리키는 참조"만 있음
       </text>
-      <text x="490" y="300" text-anchor="middle" font-family="Pretendard, sans-serif"
-            font-size="11" fill="var(--accent)" font-weight="700">
+<text fill="var(--accent)" font-family="Pretendard, sans-serif" font-size="11" font-weight="700" text-anchor="middle" x="490" y="300">
         ✓ 그래서 다른 타입이 섞여도 OK
       </text>
-    </svg>
-    <div class="caption">그림 3.1 — 리스트의 진짜 모습: 박스 안에는 참조만, 값은 별개 객체로</div>
-  </div>
-
-  <p>
-    <strong>핵심 사실</strong> 세 가지를 짚어둡시다:
+</svg>
+<div class="caption">그림 3.1 — 리스트의 진짜 모습: 박스 안에는 참조만, 값은 별개 객체로</div>
+</div>
+<p>
+<strong>핵심 사실</strong> 세 가지를 짚어둡시다:
   </p>
-  <ul>
-    <li>리스트 자체도 <strong>하나의 객체</strong>입니다.</li>
-    <li>개념적으로 리스트는 <strong>각 요소 객체를 가리키는 참조들의 순서</strong>를 관리한다고 이해하면 좋습니다.</li>
-    <li>각 요소 역시 Python 객체이며, 여러 위치가 같은 객체를 가리킬 수도 있습니다.</li>
-  </ul>
-
-  <h3>변수와 함께 보면</h3>
-
-  <div class="figure">
-    <svg viewBox="0 0 720 220" xmlns="http://www.w3.org/2000/svg" role="img"
-         aria-label="변수 nums 와 list 객체 그리고 요소들">
-      <text x="360" y="22" text-anchor="middle" font-family="Pretendard, sans-serif"
-            font-size="11" font-weight="700" fill="currentColor" opacity="0.85" letter-spacing="2">
+<ul>
+<li>리스트 자체도 <strong>하나의 객체</strong>입니다.</li>
+<li>개념적으로 리스트는 <strong>각 요소 객체를 가리키는 참조들의 순서</strong>를 관리한다고 이해하면 좋습니다.</li>
+<li>각 요소 역시 Python 객체이며, 여러 위치가 같은 객체를 가리킬 수도 있습니다.</li>
+</ul>
+<h3>변수와 함께 보면</h3>
+<div class="figure">
+<svg aria-label="변수 nums 와 list 객체 그리고 요소들" role="img" viewbox="0 0 720 220" xmlns="http://www.w3.org/2000/svg">
+<text fill="currentColor" font-family="Pretendard, sans-serif" font-size="11" font-weight="700" letter-spacing="2" opacity="0.85" text-anchor="middle" x="360" y="22">
         nums = [1, "안녕", 3.14] 의 전체 모습
       </text>
-
-      <!-- 변수 영역 -->
-      <rect x="20" y="50" width="120" height="140" rx="8"
-            fill="currentColor" opacity="0.04" stroke="currentColor" stroke-opacity="0.4"
-            stroke-width="1" stroke-dasharray="4 3"/>
-      <text x="80" y="68" text-anchor="middle" font-family="Pretendard, sans-serif"
-            font-size="9" fill="currentColor" opacity="0.65" font-weight="600" letter-spacing="1">VARIABLES</text>
-
-      <!-- nums 이름표 -->
-      <path d="M 30,124 L 40,112 L 120,112 L 120,136 L 40,136 Z"
-            fill="currentColor" opacity="0.08"
-            stroke="currentColor" stroke-width="1.5"/>
-      <text x="80" y="129" text-anchor="middle" font-family="JetBrains Mono, monospace"
-            font-size="13" font-weight="700" fill="currentColor">nums</text>
-
-      <!-- Python 객체 영역 -->
-      <rect x="160" y="50" width="540" height="140" rx="8"
-            fill="currentColor" opacity="0.04" stroke="currentColor" stroke-opacity="0.4"
-            stroke-width="1" stroke-dasharray="4 3"/>
-      <text x="430" y="68" text-anchor="middle" font-family="Pretendard, sans-serif"
-            font-size="9" fill="currentColor" opacity="0.65" font-weight="600" letter-spacing="1">PYTHON OBJECTS</text>
-
-      <!-- list 객체 -->
-      <rect x="190" y="100" width="160" height="56" rx="6"
-            fill="currentColor" opacity="0.06" stroke="var(--accent)" stroke-width="1.8"/>
-      <text x="198" y="114" font-family="JetBrains Mono, monospace" font-size="9"
-            fill="currentColor" opacity="0.7" font-weight="600">list</text>
-      <g>
-        <rect x="200" y="120" width="42" height="30" rx="3"
-              fill="currentColor" opacity="0.04" stroke="currentColor" stroke-opacity="0.35"/>
-        <circle cx="221" cy="138" r="3" fill="var(--accent)"/>
-        <text x="221" y="129" text-anchor="middle" font-family="JetBrains Mono, monospace"
-              font-size="7" fill="currentColor" opacity="0.55">[0]</text>
-
-        <rect x="246" y="120" width="42" height="30" rx="3"
-              fill="currentColor" opacity="0.04" stroke="currentColor" stroke-opacity="0.35"/>
-        <circle cx="267" cy="138" r="3" fill="var(--accent)"/>
-        <text x="267" y="129" text-anchor="middle" font-family="JetBrains Mono, monospace"
-              font-size="7" fill="currentColor" opacity="0.55">[1]</text>
-
-        <rect x="292" y="120" width="42" height="30" rx="3"
-              fill="currentColor" opacity="0.04" stroke="currentColor" stroke-opacity="0.35"/>
-        <circle cx="313" cy="138" r="3" fill="var(--accent)"/>
-        <text x="313" y="129" text-anchor="middle" font-family="JetBrains Mono, monospace"
-              font-size="7" fill="currentColor" opacity="0.55">[2]</text>
-      </g>
-
-      <!-- 요소 객체들 -->
-      <defs>
-        <marker id="arr-l2" viewBox="0 0 10 10" refX="9" refY="5"
-                markerWidth="6" markerHeight="6" orient="auto">
-          <path d="M0,0 L10,5 L0,10 z" fill="var(--accent)" opacity="0.7"/>
-        </marker>
-      </defs>
-
-      <rect x="430" y="80" width="50" height="32" rx="5"
-            fill="currentColor" opacity="0.06" stroke="currentColor" stroke-width="1.2"/>
-      <text x="455" y="100" text-anchor="middle" font-family="JetBrains Mono, monospace"
-            font-size="14" font-weight="700" fill="currentColor">1</text>
-
-      <rect x="500" y="125" width="60" height="32" rx="5"
-            fill="currentColor" opacity="0.06" stroke="currentColor" stroke-width="1.2"/>
-      <text x="530" y="145" text-anchor="middle" font-family="JetBrains Mono, monospace"
-            font-size="13" font-weight="700" fill="currentColor">"안녕"</text>
-
-      <rect x="580" y="80" width="60" height="32" rx="5"
-            fill="currentColor" opacity="0.06" stroke="currentColor" stroke-width="1.2"/>
-      <text x="610" y="100" text-anchor="middle" font-family="JetBrains Mono, monospace"
-            font-size="13" font-weight="700" fill="currentColor">3.14</text>
-
-      <!-- 화살표 -->
-      <line x1="120" y1="124" x2="190" y2="128" stroke="var(--accent)" stroke-width="2.2"
-            marker-end="url(#arr-l2)"/>
-      <line x1="221" y1="142" x2="430" y2="98" stroke="var(--accent)"
-            stroke-width="1.3" opacity="0.7" marker-end="url(#arr-l2)"/>
-      <line x1="267" y1="142" x2="500" y2="142" stroke="var(--accent)"
-            stroke-width="1.3" opacity="0.7" marker-end="url(#arr-l2)"/>
-      <line x1="313" y1="142" x2="580" y2="100" stroke="var(--accent)"
-            stroke-width="1.3" opacity="0.7" marker-end="url(#arr-l2)"/>
-
-      <text x="360" y="208" text-anchor="middle" font-family="Pretendard, sans-serif"
-            font-size="11" fill="currentColor" opacity="0.75" font-style="italic">
+<!-- 변수 영역 -->
+<rect fill="currentColor" height="140" opacity="0.04" rx="8" stroke="currentColor" stroke-dasharray="4 3" stroke-opacity="0.4" stroke-width="1" width="120" x="20" y="50"></rect>
+<text fill="currentColor" font-family="Pretendard, sans-serif" font-size="9" font-weight="600" letter-spacing="1" opacity="0.65" text-anchor="middle" x="80" y="68">VARIABLES</text>
+<!-- nums 이름표 -->
+<path d="M 30,124 L 40,112 L 120,112 L 120,136 L 40,136 Z" fill="currentColor" opacity="0.08" stroke="currentColor" stroke-width="1.5"></path>
+<text fill="currentColor" font-family="JetBrains Mono, monospace" font-size="13" font-weight="700" text-anchor="middle" x="80" y="129">nums</text>
+<!-- Python 객체 영역 -->
+<rect fill="currentColor" height="140" opacity="0.04" rx="8" stroke="currentColor" stroke-dasharray="4 3" stroke-opacity="0.4" stroke-width="1" width="540" x="160" y="50"></rect>
+<text fill="currentColor" font-family="Pretendard, sans-serif" font-size="9" font-weight="600" letter-spacing="1" opacity="0.65" text-anchor="middle" x="430" y="68">PYTHON OBJECTS</text>
+<!-- list 객체 -->
+<rect fill="currentColor" height="56" opacity="0.06" rx="6" stroke="var(--accent)" stroke-width="1.8" width="160" x="190" y="100"></rect>
+<text fill="currentColor" font-family="JetBrains Mono, monospace" font-size="9" font-weight="600" opacity="0.7" x="198" y="114">list</text>
+<g>
+<rect fill="currentColor" height="30" opacity="0.04" rx="3" stroke="currentColor" stroke-opacity="0.35" width="42" x="200" y="120"></rect>
+<circle cx="221" cy="138" fill="var(--accent)" r="3"></circle>
+<text fill="currentColor" font-family="JetBrains Mono, monospace" font-size="7" opacity="0.55" text-anchor="middle" x="221" y="129">[0]</text>
+<rect fill="currentColor" height="30" opacity="0.04" rx="3" stroke="currentColor" stroke-opacity="0.35" width="42" x="246" y="120"></rect>
+<circle cx="267" cy="138" fill="var(--accent)" r="3"></circle>
+<text fill="currentColor" font-family="JetBrains Mono, monospace" font-size="7" opacity="0.55" text-anchor="middle" x="267" y="129">[1]</text>
+<rect fill="currentColor" height="30" opacity="0.04" rx="3" stroke="currentColor" stroke-opacity="0.35" width="42" x="292" y="120"></rect>
+<circle cx="313" cy="138" fill="var(--accent)" r="3"></circle>
+<text fill="currentColor" font-family="JetBrains Mono, monospace" font-size="7" opacity="0.55" text-anchor="middle" x="313" y="129">[2]</text>
+</g>
+<!-- 요소 객체들 -->
+<defs>
+<marker id="arr-l2" markerheight="6" markerwidth="6" orient="auto" refx="9" refy="5" viewbox="0 0 10 10">
+<path d="M0,0 L10,5 L0,10 z" fill="var(--accent)" opacity="0.7"></path>
+</marker>
+</defs>
+<rect fill="currentColor" height="32" opacity="0.06" rx="5" stroke="currentColor" stroke-width="1.2" width="50" x="430" y="80"></rect>
+<text fill="currentColor" font-family="JetBrains Mono, monospace" font-size="14" font-weight="700" text-anchor="middle" x="455" y="100">1</text>
+<rect fill="currentColor" height="32" opacity="0.06" rx="5" stroke="currentColor" stroke-width="1.2" width="60" x="500" y="125"></rect>
+<text fill="currentColor" font-family="JetBrains Mono, monospace" font-size="13" font-weight="700" text-anchor="middle" x="530" y="145">"안녕"</text>
+<rect fill="currentColor" height="32" opacity="0.06" rx="5" stroke="currentColor" stroke-width="1.2" width="60" x="580" y="80"></rect>
+<text fill="currentColor" font-family="JetBrains Mono, monospace" font-size="13" font-weight="700" text-anchor="middle" x="610" y="100">3.14</text>
+<!-- 화살표 -->
+<line marker-end="url(#arr-l2)" stroke="var(--accent)" stroke-width="2.2" x1="120" x2="190" y1="124" y2="128"></line>
+<line marker-end="url(#arr-l2)" opacity="0.7" stroke="var(--accent)" stroke-width="1.3" x1="221" x2="430" y1="142" y2="98"></line>
+<line marker-end="url(#arr-l2)" opacity="0.7" stroke="var(--accent)" stroke-width="1.3" x1="267" x2="500" y1="142" y2="142"></line>
+<line marker-end="url(#arr-l2)" opacity="0.7" stroke="var(--accent)" stroke-width="1.3" x1="313" x2="580" y1="142" y2="100"></line>
+<text fill="currentColor" font-family="Pretendard, sans-serif" font-size="11" font-style="italic" opacity="0.75" text-anchor="middle" x="360" y="208">
         nums 이름표 → list 객체 → (참조 슬롯들) → 별개의 요소 객체들
       </text>
-    </svg>
-    <div class="caption">그림 3.2 — 변수와 리스트, 그리고 요소 객체들의 관계</div>
-  </div>
-
-  <h3>인덱싱 — 0부터 시작</h3>
-
-  <p>
+</svg>
+<div class="caption">그림 3.2 — 변수와 리스트, 그리고 요소 객체들의 관계</div>
+</div>
+<h3>인덱싱 — 0부터 시작</h3>
+<p>
     1주차 문자열에서 본 인덱싱과 동일한 규칙입니다 — 0부터 시작, 음수도 가능.
   </p>
-
-  <div class="figure">
-    <svg viewBox="0 0 600 180" xmlns="http://www.w3.org/2000/svg"
-         aria-label="리스트 인덱싱: 양수와 음수">
-      <text x="300" y="22" text-anchor="middle" font-family="Pretendard, sans-serif"
-            font-size="11" font-weight="700" fill="currentColor" opacity="0.85" letter-spacing="2">
+<div class="figure">
+<svg aria-label="리스트 인덱싱: 양수와 음수" viewbox="0 0 600 180" xmlns="http://www.w3.org/2000/svg">
+<text fill="currentColor" font-family="Pretendard, sans-serif" font-size="11" font-weight="700" letter-spacing="2" opacity="0.85" text-anchor="middle" x="300" y="22">
         scores = [85, 92, 78, 100, 67]
       </text>
-
-      <g font-family="JetBrains Mono, monospace" font-size="16" font-weight="700" fill="currentColor">
-        <rect x="100" y="50" width="76" height="50" rx="4" fill="currentColor" opacity="0.06" stroke="currentColor" stroke-width="1.5"/>
-        <text x="138" y="82" text-anchor="middle">85</text>
-        <rect x="180" y="50" width="76" height="50" rx="4" fill="currentColor" opacity="0.06" stroke="currentColor" stroke-width="1.5"/>
-        <text x="218" y="82" text-anchor="middle">92</text>
-        <rect x="260" y="50" width="76" height="50" rx="4" fill="currentColor" opacity="0.06" stroke="currentColor" stroke-width="1.5"/>
-        <text x="298" y="82" text-anchor="middle">78</text>
-        <rect x="340" y="50" width="76" height="50" rx="4" fill="currentColor" opacity="0.06" stroke="currentColor" stroke-width="1.5"/>
-        <text x="378" y="82" text-anchor="middle">100</text>
-        <rect x="420" y="50" width="76" height="50" rx="4" fill="currentColor" opacity="0.06" stroke="currentColor" stroke-width="1.5"/>
-        <text x="458" y="82" text-anchor="middle">67</text>
-      </g>
-
-      <g font-family="JetBrains Mono, monospace" font-size="13" fill="var(--accent)" font-weight="700">
-        <text x="138" y="120" text-anchor="middle">[0]</text>
-        <text x="218" y="120" text-anchor="middle">[1]</text>
-        <text x="298" y="120" text-anchor="middle">[2]</text>
-        <text x="378" y="120" text-anchor="middle">[3]</text>
-        <text x="458" y="120" text-anchor="middle">[4]</text>
-      </g>
-      <text x="55" y="120" font-family="Pretendard, sans-serif" font-size="11"
-            fill="currentColor" opacity="0.65" font-weight="600">앞에서:</text>
-
-      <g font-family="JetBrains Mono, monospace" font-size="11" fill="currentColor" opacity="0.6">
-        <text x="138" y="148" text-anchor="middle">[-5]</text>
-        <text x="218" y="148" text-anchor="middle">[-4]</text>
-        <text x="298" y="148" text-anchor="middle">[-3]</text>
-        <text x="378" y="148" text-anchor="middle">[-2]</text>
-        <text x="458" y="148" text-anchor="middle">[-1]</text>
-      </g>
-      <text x="55" y="148" font-family="Pretendard, sans-serif" font-size="11"
-            fill="currentColor" opacity="0.6" font-weight="600">뒤에서:</text>
-    </svg>
-    <div class="caption">그림 3.3 — 리스트 인덱싱 (1주차 문자열과 동일한 규칙)</div>
-  </div>
-
-  <div class="editor-block">
-    <div class="editor-tab-bar">
-      <span class="editor-tab"><span class="py-icon"></span>list_index.py</span>
-    </div>
-    <textarea class="editor-source">scores = [85, 92, 78, 100, 67]
+<g fill="currentColor" font-family="JetBrains Mono, monospace" font-size="16" font-weight="700">
+<rect fill="currentColor" height="50" opacity="0.06" rx="4" stroke="currentColor" stroke-width="1.5" width="76" x="100" y="50"></rect>
+<text text-anchor="middle" x="138" y="82">85</text>
+<rect fill="currentColor" height="50" opacity="0.06" rx="4" stroke="currentColor" stroke-width="1.5" width="76" x="180" y="50"></rect>
+<text text-anchor="middle" x="218" y="82">92</text>
+<rect fill="currentColor" height="50" opacity="0.06" rx="4" stroke="currentColor" stroke-width="1.5" width="76" x="260" y="50"></rect>
+<text text-anchor="middle" x="298" y="82">78</text>
+<rect fill="currentColor" height="50" opacity="0.06" rx="4" stroke="currentColor" stroke-width="1.5" width="76" x="340" y="50"></rect>
+<text text-anchor="middle" x="378" y="82">100</text>
+<rect fill="currentColor" height="50" opacity="0.06" rx="4" stroke="currentColor" stroke-width="1.5" width="76" x="420" y="50"></rect>
+<text text-anchor="middle" x="458" y="82">67</text>
+</g>
+<g fill="var(--accent)" font-family="JetBrains Mono, monospace" font-size="13" font-weight="700">
+<text text-anchor="middle" x="138" y="120">[0]</text>
+<text text-anchor="middle" x="218" y="120">[1]</text>
+<text text-anchor="middle" x="298" y="120">[2]</text>
+<text text-anchor="middle" x="378" y="120">[3]</text>
+<text text-anchor="middle" x="458" y="120">[4]</text>
+</g>
+<text fill="currentColor" font-family="Pretendard, sans-serif" font-size="11" font-weight="600" opacity="0.65" x="55" y="120">앞에서:</text>
+<g fill="currentColor" font-family="JetBrains Mono, monospace" font-size="11" opacity="0.6">
+<text text-anchor="middle" x="138" y="148">[-5]</text>
+<text text-anchor="middle" x="218" y="148">[-4]</text>
+<text text-anchor="middle" x="298" y="148">[-3]</text>
+<text text-anchor="middle" x="378" y="148">[-2]</text>
+<text text-anchor="middle" x="458" y="148">[-1]</text>
+</g>
+<text fill="currentColor" font-family="Pretendard, sans-serif" font-size="11" font-weight="600" opacity="0.6" x="55" y="148">뒤에서:</text>
+</svg>
+<div class="caption">그림 3.3 — 리스트 인덱싱 (1주차 문자열과 동일한 규칙)</div>
+</div>
+<div class="editor-block">
+<div class="editor-tab-bar">
+<span class="editor-tab"><span class="py-icon"></span>list_index.py</span>
+</div>
+<textarea class="editor-source">scores = [85, 92, 78, 100, 67]
 
 print(scores[0])    # 85 (첫 번째)
 print(scores[2])    # 78
@@ -350,33 +236,30 @@ print(scores[-2])   # 100
 scores[0] = 90
 print(scores)        # [90, 92, 78, 100, 67]
 </textarea>
-    <div class="run-bar">
-      <span class="left"><span class="file-name">📄 list_index.py</span></span>
-      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
-      <button class="run-btn"><span class="play">▶</span> Run</button>
-    </div>
-  </div>
-  <div class="terminal">
-    <div class="terminal-head">
-      <span class="label">실행 결과</span>
-      <span class="status">대기 중</span>
-    </div>
-    <div class="terminal-body empty"></div>
-  </div>
-
-  <p>
+<div class="run-bar">
+<span class="left"><span class="file-name">📄 list_index.py</span></span>
+<span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+<button class="run-btn"><span class="play">▶</span> Run</button>
+</div>
+</div>
+<div class="terminal">
+<div class="terminal-head">
+<span class="label">실행 결과</span>
+<span class="status">대기 중</span>
+</div>
+<div class="terminal-body empty"></div>
+</div>
+<p>
     여기서 핵심 한 가지 — <code class="inline">scores[0] = 90</code>이 가능했습니다.
     이게 1주차 문자열과 다른 점입니다 (문자열은 글자 하나만 바꿀 수 없었죠).
     리스트는 <strong>가변(mutable)</strong>입니다. s4에서 자세히 다룹니다.
   </p>
-
-  <h3>요소 추가 — append</h3>
-
-  <div class="editor-block">
-    <div class="editor-tab-bar">
-      <span class="editor-tab"><span class="py-icon"></span>list_append.py</span>
-    </div>
-    <textarea class="editor-source">cart = []           # 빈 리스트
+<h3>요소 추가 — append</h3>
+<div class="editor-block">
+<div class="editor-tab-bar">
+<span class="editor-tab"><span class="py-icon"></span>list_append.py</span>
+</div>
+<textarea class="editor-source">cart = []           # 빈 리스트
 print(len(cart))    # 0
 
 cart.append("사과")
@@ -386,25 +269,24 @@ cart.append("빵")
 print(cart)          # ['사과', '우유', '빵']
 print(len(cart))     # 3
 </textarea>
-    <div class="run-bar">
-      <span class="left"><span class="file-name">📄 list_append.py</span></span>
-      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
-      <button class="run-btn"><span class="play">▶</span> Run</button>
-    </div>
-  </div>
-  <div class="terminal">
-    <div class="terminal-head">
-      <span class="label">실행 결과</span>
-      <span class="status">대기 중</span>
-    </div>
-    <div class="terminal-body empty"></div>
-  </div>
-
-  <h3>실무에서 자주 쓰는 리스트 메서드 — append 다음 단계</h3>
-  <p><code class="inline">append()</code> 하나만 알아도 시작할 수 있지만, 실제 코드에서는 다음 메서드도 자주 만납니다. 지금 모두 외우기보다 <strong>추가·삭제·복사</strong> 세 묶음으로 기억하세요.</p>
+<div class="run-bar">
+<span class="left"><span class="file-name">📄 list_append.py</span></span>
+<span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+<button class="run-btn"><span class="play">▶</span> Run</button>
+</div>
+</div>
+<div class="terminal">
+<div class="terminal-head">
+<span class="label">실행 결과</span>
+<span class="status">대기 중</span>
+</div>
+<div class="terminal-body empty"></div>
+</div>
+<h3>실무에서 자주 쓰는 리스트 메서드 — append 다음 단계</h3>
+<p><code class="inline">append()</code> 하나만 알아도 시작할 수 있지만, 실제 코드에서는 다음 메서드도 자주 만납니다. 지금 모두 외우기보다 <strong>추가·삭제·복사</strong> 세 묶음으로 기억하세요.</p>
 <div class="editor-block">
-  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>list_methods.py</span></div>
-  <textarea class="editor-source">items = ["사과", "우유"]
+<div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>list_methods.py</span></div>
+<textarea class="editor-source">items = ["사과", "우유"]
 
 items.append("빵")                 # 값 하나를 끝에 추가
 items.extend(["커피", "물"])       # 여러 값을 펼쳐서 추가
@@ -419,104 +301,78 @@ print(items)
 copied = items.copy()               # 새로운 리스트(얕은 복사)
 print(copied)
 </textarea>
-  <div class="run-bar"><span class="left"><span class="file-name">📄 list_methods.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+<div class="run-bar"><span class="left"><span class="file-name">📄 list_methods.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
 </div>
 <div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div>
-  <div class="callout info"><strong>append와 extend 차이</strong><br><code class="inline">append([3, 4])</code>는 리스트 자체를 한 요소로 넣고, <code class="inline">extend([3, 4])</code>는 3과 4를 각각 추가합니다. <code class="inline">remove()</code>는 값을 찾아 지우고, <code class="inline">pop()</code>은 값을 꺼내면서 지웁니다.</div>
-  <div class="key-points">
-    <div class="title">이 섹션의 핵심</div>
-    <ul>
-      <li>리스트는 <code class="inline">[]</code>로 만들고 쉼표로 구분 — 다른 타입 섞여 OK.</li>
-      <li>리스트 객체는 <strong>참조의 묶음</strong> — 요소들은 별개 객체.</li>
-      <li>인덱싱: 0부터 시작, 음수는 뒤에서. <code class="inline">[i] = 값</code>으로 변경 가능.</li>
-      <li><code class="inline">.append(값)</code>으로 끝에 추가, <code class="inline">len()</code>으로 길이.</li>
-    </ul>
-  </div>
-
-<div class="callout info"><strong>다음 단계</strong><br>중첩 리스트·딕셔너리에서 <code>copy()</code>가 어디까지 복사하는지는 <a href="#selfstudy/ss12">Python 한 단계 더 → shallow copy와 deepcopy</a>에서 실제 참조 관계를 비교합니다.</div>
+<div class="callout info"><strong>append와 extend 차이</strong><br/><code class="inline">append([3, 4])</code>는 리스트 자체를 한 요소로 넣고, <code class="inline">extend([3, 4])</code>는 3과 4를 각각 추가합니다. <code class="inline">remove()</code>는 값을 찾아 지우고, <code class="inline">pop()</code>은 값을 꺼내면서 지웁니다.</div>
+<div class="key-points">
+<div class="title">이 섹션의 핵심</div>
+<ul>
+<li>리스트는 <code class="inline">[]</code>로 만들고 쉼표로 구분 — 다른 타입 섞여 OK.</li>
+<li>리스트 객체는 <strong>참조의 묶음</strong> — 요소들은 별개 객체.</li>
+<li>인덱싱: 0부터 시작, 음수는 뒤에서. <code class="inline">[i] = 값</code>으로 변경 가능.</li>
+<li><code class="inline">.append(값)</code>으로 끝에 추가, <code class="inline">len()</code>으로 길이.</li>
+</ul>
+</div>
+<div class="callout info"><strong>다음 단계</strong><br/>중첩 리스트·딕셔너리에서 <code>copy()</code>가 어디까지 복사하는지는 <a href="#selfstudy/ss14">Python 한 단계 더 → shallow copy와 deepcopy</a>에서 실제 참조 관계를 비교합니다.</div>
 </section>
-
 <!-- ==================== s2: 리스트 다루기 ==================== -->
 <section class="section" id="s2">
-  <div class="section-num">SECTION 02</div>
-  <h2>리스트 다루기 — 슬라이싱, 정렬, in, for</h2>
-
-  <h3>슬라이싱 — 일부만 잘라내기</h3>
-
-  <p>
-    <code class="inline">[start:stop]</code> 형태로 일부 구간을 잘라낼 수 있습니다.
+<div class="section-num">SECTION 02</div>
+<h2>리스트 다루기 — 슬라이싱, 정렬, in, for</h2>
+<h3>슬라이싱 — 일부만 잘라내기</h3>
+<p>
+<code class="inline">[start:stop]</code> 형태로 일부 구간을 잘라낼 수 있습니다.
     2주차 <code class="inline">range</code>와 같은 규칙 — <strong>stop은 미포함</strong>.
   </p>
-
-  <div class="figure">
-    <svg viewBox="0 0 600 200" xmlns="http://www.w3.org/2000/svg"
-         aria-label="리스트 슬라이싱">
-      <text x="300" y="22" text-anchor="middle" font-family="Pretendard, sans-serif"
-            font-size="11" font-weight="700" fill="currentColor" opacity="0.85" letter-spacing="2">
+<div class="figure">
+<svg aria-label="리스트 슬라이싱" viewbox="0 0 600 200" xmlns="http://www.w3.org/2000/svg">
+<text fill="currentColor" font-family="Pretendard, sans-serif" font-size="11" font-weight="700" letter-spacing="2" opacity="0.85" text-anchor="middle" x="300" y="22">
         SLICING — [start : stop : step]
       </text>
-
-      <text x="60" y="56" font-family="JetBrains Mono, monospace" font-size="13"
-            font-weight="700" fill="currentColor">scores =</text>
-
-      <g font-family="JetBrains Mono, monospace" font-size="14" font-weight="700">
-        <rect x="160" y="42" width="50" height="32" rx="3" fill="currentColor" opacity="0.06" stroke="currentColor"/>
-        <text x="185" y="63" text-anchor="middle" fill="currentColor">85</text>
-        <rect x="214" y="42" width="50" height="32" rx="3" fill="currentColor" opacity="0.06" stroke="currentColor"/>
-        <text x="239" y="63" text-anchor="middle" fill="currentColor">92</text>
-        <rect x="268" y="42" width="50" height="32" rx="3" fill="currentColor" opacity="0.06" stroke="currentColor"/>
-        <text x="293" y="63" text-anchor="middle" fill="currentColor">78</text>
-        <rect x="322" y="42" width="50" height="32" rx="3" fill="currentColor" opacity="0.06" stroke="currentColor"/>
-        <text x="347" y="63" text-anchor="middle" fill="currentColor">100</text>
-        <rect x="376" y="42" width="50" height="32" rx="3" fill="currentColor" opacity="0.06" stroke="currentColor"/>
-        <text x="401" y="63" text-anchor="middle" fill="currentColor">67</text>
-      </g>
-      <g font-family="JetBrains Mono, monospace" font-size="11" fill="currentColor" opacity="0.6">
-        <text x="185" y="90" text-anchor="middle">0</text>
-        <text x="239" y="90" text-anchor="middle">1</text>
-        <text x="293" y="90" text-anchor="middle">2</text>
-        <text x="347" y="90" text-anchor="middle">3</text>
-        <text x="401" y="90" text-anchor="middle">4</text>
-      </g>
-
-      <!-- scores[1:4] -->
-      <text x="60" y="125" font-family="JetBrains Mono, monospace" font-size="12"
-            fill="var(--accent)" font-weight="700">scores[1:4]</text>
-      <rect x="214" y="113" width="160" height="24" rx="3" fill="var(--accent)" opacity="0.18"
-            stroke="var(--accent)" stroke-width="1.5"/>
-      <text x="294" y="129" text-anchor="middle" font-family="JetBrains Mono, monospace"
-            font-size="11" font-weight="700" fill="currentColor">[92, 78, 100]</text>
-      <text x="450" y="129" font-family="Pretendard, sans-serif" font-size="11"
-            fill="currentColor" opacity="0.7">← 1, 2, 3 (4 미포함)</text>
-
-      <!-- scores[:3] -->
-      <text x="60" y="160" font-family="JetBrains Mono, monospace" font-size="12"
-            fill="var(--accent)" font-weight="700">scores[:3]</text>
-      <rect x="160" y="148" width="160" height="24" rx="3" fill="var(--accent)" opacity="0.18"
-            stroke="var(--accent)" stroke-width="1.5"/>
-      <text x="240" y="164" text-anchor="middle" font-family="JetBrains Mono, monospace"
-            font-size="11" font-weight="700" fill="currentColor">[85, 92, 78]</text>
-      <text x="450" y="164" font-family="Pretendard, sans-serif" font-size="11"
-            fill="currentColor" opacity="0.7">← 처음부터 3 직전까지</text>
-
-      <!-- scores[2:] -->
-      <text x="60" y="190" font-family="JetBrains Mono, monospace" font-size="12"
-            fill="var(--accent)" font-weight="700">scores[2:]</text>
-      <rect x="268" y="178" width="160" height="20" rx="3" fill="var(--accent)" opacity="0.18"
-            stroke="var(--accent)" stroke-width="1.5"/>
-      <text x="348" y="193" text-anchor="middle" font-family="JetBrains Mono, monospace"
-            font-size="11" font-weight="700" fill="currentColor">[78, 100, 67]</text>
-      <text x="450" y="193" font-family="Pretendard, sans-serif" font-size="11"
-            fill="currentColor" opacity="0.7">← 2부터 끝까지</text>
-    </svg>
-    <div class="caption">그림 3.4 — 슬라이싱: stop은 미포함, start나 stop은 생략 가능</div>
-  </div>
-
-  <div class="editor-block">
-    <div class="editor-tab-bar">
-      <span class="editor-tab"><span class="py-icon"></span>slicing.py</span>
-    </div>
-    <textarea class="editor-source">scores = [85, 92, 78, 100, 67]
+<text fill="currentColor" font-family="JetBrains Mono, monospace" font-size="13" font-weight="700" x="60" y="56">scores =</text>
+<g font-family="JetBrains Mono, monospace" font-size="14" font-weight="700">
+<rect fill="currentColor" height="32" opacity="0.06" rx="3" stroke="currentColor" width="50" x="160" y="42"></rect>
+<text fill="currentColor" text-anchor="middle" x="185" y="63">85</text>
+<rect fill="currentColor" height="32" opacity="0.06" rx="3" stroke="currentColor" width="50" x="214" y="42"></rect>
+<text fill="currentColor" text-anchor="middle" x="239" y="63">92</text>
+<rect fill="currentColor" height="32" opacity="0.06" rx="3" stroke="currentColor" width="50" x="268" y="42"></rect>
+<text fill="currentColor" text-anchor="middle" x="293" y="63">78</text>
+<rect fill="currentColor" height="32" opacity="0.06" rx="3" stroke="currentColor" width="50" x="322" y="42"></rect>
+<text fill="currentColor" text-anchor="middle" x="347" y="63">100</text>
+<rect fill="currentColor" height="32" opacity="0.06" rx="3" stroke="currentColor" width="50" x="376" y="42"></rect>
+<text fill="currentColor" text-anchor="middle" x="401" y="63">67</text>
+</g>
+<g fill="currentColor" font-family="JetBrains Mono, monospace" font-size="11" opacity="0.6">
+<text text-anchor="middle" x="185" y="90">0</text>
+<text text-anchor="middle" x="239" y="90">1</text>
+<text text-anchor="middle" x="293" y="90">2</text>
+<text text-anchor="middle" x="347" y="90">3</text>
+<text text-anchor="middle" x="401" y="90">4</text>
+</g>
+<!-- scores[1:4] -->
+<text fill="var(--accent)" font-family="JetBrains Mono, monospace" font-size="12" font-weight="700" x="60" y="125">scores[1:4]</text>
+<rect fill="var(--accent)" height="24" opacity="0.18" rx="3" stroke="var(--accent)" stroke-width="1.5" width="160" x="214" y="113"></rect>
+<text fill="currentColor" font-family="JetBrains Mono, monospace" font-size="11" font-weight="700" text-anchor="middle" x="294" y="129">[92, 78, 100]</text>
+<text fill="currentColor" font-family="Pretendard, sans-serif" font-size="11" opacity="0.7" x="450" y="129">← 1, 2, 3 (4 미포함)</text>
+<!-- scores[:3] -->
+<text fill="var(--accent)" font-family="JetBrains Mono, monospace" font-size="12" font-weight="700" x="60" y="160">scores[:3]</text>
+<rect fill="var(--accent)" height="24" opacity="0.18" rx="3" stroke="var(--accent)" stroke-width="1.5" width="160" x="160" y="148"></rect>
+<text fill="currentColor" font-family="JetBrains Mono, monospace" font-size="11" font-weight="700" text-anchor="middle" x="240" y="164">[85, 92, 78]</text>
+<text fill="currentColor" font-family="Pretendard, sans-serif" font-size="11" opacity="0.7" x="450" y="164">← 처음부터 3 직전까지</text>
+<!-- scores[2:] -->
+<text fill="var(--accent)" font-family="JetBrains Mono, monospace" font-size="12" font-weight="700" x="60" y="190">scores[2:]</text>
+<rect fill="var(--accent)" height="20" opacity="0.18" rx="3" stroke="var(--accent)" stroke-width="1.5" width="160" x="268" y="178"></rect>
+<text fill="currentColor" font-family="JetBrains Mono, monospace" font-size="11" font-weight="700" text-anchor="middle" x="348" y="193">[78, 100, 67]</text>
+<text fill="currentColor" font-family="Pretendard, sans-serif" font-size="11" opacity="0.7" x="450" y="193">← 2부터 끝까지</text>
+</svg>
+<div class="caption">그림 3.4 — 슬라이싱: stop은 미포함, start나 stop은 생략 가능</div>
+</div>
+<div class="editor-block">
+<div class="editor-tab-bar">
+<span class="editor-tab"><span class="py-icon"></span>slicing.py</span>
+</div>
+<textarea class="editor-source">scores = [85, 92, 78, 100, 67]
 
 print(scores[1:4])     # [92, 78, 100]
 print(scores[:3])      # [85, 92, 78]
@@ -527,35 +383,32 @@ print(scores[:])       # 전체 복사 (새 리스트!)
 print(scores[::2])     # [85, 78, 67] (한 칸씩 건너뜀)
 print(scores[::-1])    # [67, 100, 78, 92, 85] (역순)
 </textarea>
-    <div class="run-bar">
-      <span class="left"><span class="file-name">📄 slicing.py</span></span>
-      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
-      <button class="run-btn"><span class="play">▶</span> Run</button>
-    </div>
-  </div>
-  <div class="terminal">
-    <div class="terminal-head">
-      <span class="label">실행 결과</span>
-      <span class="status">대기 중</span>
-    </div>
-    <div class="terminal-body empty"></div>
-  </div>
-
-  <div class="callout info">
-    <div class="label">중요한 사실</div>
-    <p>
-      <code class="inline">scores[:]</code>는 단순히 같은 리스트를 가리키는 게 아니라
+<div class="run-bar">
+<span class="left"><span class="file-name">📄 slicing.py</span></span>
+<span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+<button class="run-btn"><span class="play">▶</span> Run</button>
+</div>
+</div>
+<div class="terminal">
+<div class="terminal-head">
+<span class="label">실행 결과</span>
+<span class="status">대기 중</span>
+</div>
+<div class="terminal-body empty"></div>
+</div>
+<div class="callout info">
+<div class="label">중요한 사실</div>
+<p>
+<code class="inline">scores[:]</code>는 단순히 같은 리스트를 가리키는 게 아니라
       <strong>새 리스트 객체</strong>를 만듭니다. 이를 얕은 복사(shallow copy)라고 합니다 — 리스트 자체는 새로 만들어지지만, 안에 든 요소 객체들은 복사하지 않고 그대로 가리킵니다. s4에서 다시 봅니다.
     </p>
-  </div>
-
-  <h3>유용한 함수들 — sum, max, min, sorted</h3>
-
-  <div class="editor-block">
-    <div class="editor-tab-bar">
-      <span class="editor-tab"><span class="py-icon"></span>list_funcs.py</span>
-    </div>
-    <textarea class="editor-source">scores = [85, 92, 78, 100, 67]
+</div>
+<h3>유용한 함수들 — sum, max, min, sorted</h3>
+<div class="editor-block">
+<div class="editor-tab-bar">
+<span class="editor-tab"><span class="py-icon"></span>list_funcs.py</span>
+</div>
+<textarea class="editor-source">scores = [85, 92, 78, 100, 67]
 
 print(sum(scores))      # 422 — 합
 print(max(scores))      # 100 — 최댓값
@@ -574,30 +427,28 @@ print(scores)           # 원본 그대로!
 scores.sort()
 print(scores)           # 이제 원본도 정렬됨
 </textarea>
-    <div class="run-bar">
-      <span class="left"><span class="file-name">📄 list_funcs.py</span></span>
-      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
-      <button class="run-btn"><span class="play">▶</span> Run</button>
-    </div>
-  </div>
-  <div class="terminal">
-    <div class="terminal-head">
-      <span class="label">실행 결과</span>
-      <span class="status">대기 중</span>
-    </div>
-    <div class="terminal-body empty"></div>
-  </div>
-
-  <p>
-    <strong><code class="inline">sorted()</code> vs <code class="inline">.sort()</code></strong> 차이가 보이시나요?
+<div class="run-bar">
+<span class="left"><span class="file-name">📄 list_funcs.py</span></span>
+<span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+<button class="run-btn"><span class="play">▶</span> Run</button>
+</div>
+</div>
+<div class="terminal">
+<div class="terminal-head">
+<span class="label">실행 결과</span>
+<span class="status">대기 중</span>
+</div>
+<div class="terminal-body empty"></div>
+</div>
+<p>
+<strong><code class="inline">sorted()</code> vs <code class="inline">.sort()</code></strong> 차이가 보이시나요?
     같은 정렬이지만 sorted는 새 리스트를 만들고, sort는 원본을 직접 변경합니다.
   </p>
-
-  <h3>sort()와 sorted() — 원본을 바꾸는가?</h3>
-  <p>둘 다 정렬하지만 동작 방식은 다릅니다. 이 차이는 앞에서 배운 <strong>가변(mutable)</strong> 개념과 연결됩니다.</p>
+<h3>sort()와 sorted() — 원본을 바꾸는가?</h3>
+<p>둘 다 정렬하지만 동작 방식은 다릅니다. 이 차이는 앞에서 배운 <strong>가변(mutable)</strong> 개념과 연결됩니다.</p>
 <div class="editor-block">
-  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>sort_vs_sorted.py</span></div>
-  <textarea class="editor-source">numbers = [3, 1, 2]
+<div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>sort_vs_sorted.py</span></div>
+<textarea class="editor-source">numbers = [3, 1, 2]
 
 new_numbers = sorted(numbers)
 print("원본:", numbers)
@@ -607,22 +458,20 @@ result = numbers.sort()
 print("sort 후 원본:", numbers)
 print("sort 반환값:", result)
 </textarea>
-  <div class="run-bar"><span class="left"><span class="file-name">📄 sort_vs_sorted.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+<div class="run-bar"><span class="left"><span class="file-name">📄 sort_vs_sorted.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
 </div>
 <div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div>
-  <div class="key-points"><div class="title">한 줄 정리</div><ul><li><code class="inline">sorted(iterable)</code> → 정렬된 <strong>새 리스트를 반환</strong></li><li><code class="inline">list.sort()</code> → <strong>원본 리스트 자체를 변경</strong>하고 반환값은 <code class="inline">None</code></li></ul></div>
-  <h3>in 연산자 — 안에 있나?</h3>
-
-  <p>
+<div class="key-points"><div class="title">한 줄 정리</div><ul><li><code class="inline">sorted(iterable)</code> → 정렬된 <strong>새 리스트를 반환</strong></li><li><code class="inline">list.sort()</code> → <strong>원본 리스트 자체를 변경</strong>하고 반환값은 <code class="inline">None</code></li></ul></div>
+<h3>in 연산자 — 안에 있나?</h3>
+<p>
     어떤 값이 리스트 안에 있는지 검사할 때 <code class="inline">in</code> 연산자를 씁니다.
     결과는 bool 객체.
   </p>
-
-  <div class="editor-block">
-    <div class="editor-tab-bar">
-      <span class="editor-tab"><span class="py-icon"></span>list_in.py</span>
-    </div>
-    <textarea class="editor-source">fruits = ["사과", "바나나", "딸기"]
+<div class="editor-block">
+<div class="editor-tab-bar">
+<span class="editor-tab"><span class="py-icon"></span>list_in.py</span>
+</div>
+<textarea class="editor-source">fruits = ["사과", "바나나", "딸기"]
 
 print("사과" in fruits)      # True
 print("포도" in fruits)      # False
@@ -632,32 +481,29 @@ print("포도" not in fruits)  # True
 print("py" in "python")      # True
 print("Z" in "python")       # False
 </textarea>
-    <div class="run-bar">
-      <span class="left"><span class="file-name">📄 list_in.py</span></span>
-      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
-      <button class="run-btn"><span class="play">▶</span> Run</button>
-    </div>
-  </div>
-  <div class="terminal">
-    <div class="terminal-head">
-      <span class="label">실행 결과</span>
-      <span class="status">대기 중</span>
-    </div>
-    <div class="terminal-body empty"></div>
-  </div>
-
-  <h3>for로 리스트 순회</h3>
-
-  <p>
+<div class="run-bar">
+<span class="left"><span class="file-name">📄 list_in.py</span></span>
+<span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+<button class="run-btn"><span class="play">▶</span> Run</button>
+</div>
+</div>
+<div class="terminal">
+<div class="terminal-head">
+<span class="label">실행 결과</span>
+<span class="status">대기 중</span>
+</div>
+<div class="terminal-body empty"></div>
+</div>
+<h3>for로 리스트 순회</h3>
+<p>
     2주차에서 본 <code class="inline">for</code>가 리스트에서도 그대로 동작합니다.
     문자열에서 글자 하나씩 돌았듯, 리스트에서는 요소 하나씩 돕니다.
   </p>
-
-  <div class="editor-block">
-    <div class="editor-tab-bar">
-      <span class="editor-tab"><span class="py-icon"></span>list_for.py</span>
-    </div>
-    <textarea class="editor-source">scores = [85, 92, 78, 100, 67]
+<div class="editor-block">
+<div class="editor-tab-bar">
+<span class="editor-tab"><span class="py-icon"></span>list_for.py</span>
+</div>
+<textarea class="editor-source">scores = [85, 92, 78, 100, 67]
 
 # 합계 직접 구하기
 total = 0
@@ -677,30 +523,28 @@ for s in scores:
 for i, s in enumerate(scores, start=1):
     print(f"{i}번 학생: {s}점")
 </textarea>
-    <div class="run-bar">
-      <span class="left"><span class="file-name">📄 list_for.py</span></span>
-      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
-      <button class="run-btn"><span class="play">▶</span> Run</button>
-    </div>
-  </div>
-  <div class="terminal">
-    <div class="terminal-head">
-      <span class="label">실행 결과</span>
-      <span class="status">대기 중</span>
-    </div>
-    <div class="terminal-body empty"></div>
-  </div>
-
-  <p>
-    <code class="inline">enumerate()</code>는 "번호와 값을 같이" 받고 싶을 때 쓰는 도구입니다.
+<div class="run-bar">
+<span class="left"><span class="file-name">📄 list_for.py</span></span>
+<span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+<button class="run-btn"><span class="play">▶</span> Run</button>
+</div>
+</div>
+<div class="terminal">
+<div class="terminal-head">
+<span class="label">실행 결과</span>
+<span class="status">대기 중</span>
+</div>
+<div class="terminal-body empty"></div>
+</div>
+<p>
+<code class="inline">enumerate()</code>는 "번호와 값을 같이" 받고 싶을 때 쓰는 도구입니다.
     기본 번호는 0부터 시작하지만 <code class="inline">start=1</code>처럼 시작 번호를 정할 수 있습니다.
     실무에서도 <code class="inline">range(len(...))</code>로 인덱스를 직접 만드는 대신 자주 사용합니다.
   </p>
-
-  <h3>any()와 all() — 하나라도? 전부?</h3>
+<h3>any()와 all() — 하나라도? 전부?</h3>
 <div class="editor-block">
-  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>any_all.py</span></div>
-  <textarea class="editor-source">checks = [True, True, False]
+<div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>any_all.py</span></div>
+<textarea class="editor-source">checks = [True, True, False]
 
 print(any(checks))   # 하나라도 True면 True
 print(all(checks))   # 모두 True여야 True
@@ -709,22 +553,20 @@ scores = [80, 90, 55]
 print(any(score &gt;= 90 for score in scores))
 print(all(score &gt;= 50 for score in scores))
 </textarea>
-  <div class="run-bar"><span class="left"><span class="file-name">📄 any_all.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+<div class="run-bar"><span class="left"><span class="file-name">📄 any_all.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
 </div>
 <div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div>
-  <p><code class="inline">any()</code>와 <code class="inline">all()</code>은 여러 조건 결과를 한 번에 검사할 때 유용합니다. 마지막 두 줄의 괄호 표현은 뒤에서 다시 소개할 <strong>generator expression</strong>과 같은 계열이며, 자습 탭에서 더 자세히 설명합니다.</p>
-  <h3>두 묶음을 나란히 순회 — zip()</h3>
-
-  <p>
+<p><code class="inline">any()</code>와 <code class="inline">all()</code>은 여러 조건 결과를 한 번에 검사할 때 유용합니다. 마지막 두 줄의 괄호 표현은 뒤에서 다시 소개할 <strong>generator expression</strong>과 같은 계열이며, 자습 탭에서 더 자세히 설명합니다.</p>
+<h3>두 묶음을 나란히 순회 — zip()</h3>
+<p>
     이름 목록과 점수 목록처럼 <strong>두 개 이상의 반복 가능한 대상을 같은 위치끼리 묶어</strong> 처리할 때
     <code class="inline">zip()</code>을 사용합니다. 인덱스를 직접 계산할 필요가 없어 코드가 읽기 쉬워집니다.
   </p>
-
-  <div class="editor-block">
-    <div class="editor-tab-bar">
-      <span class="editor-tab"><span class="py-icon"></span>zip_basic.py</span>
-    </div>
-    <textarea class="editor-source">names = ["철수", "영희", "민수"]
+<div class="editor-block">
+<div class="editor-tab-bar">
+<span class="editor-tab"><span class="py-icon"></span>zip_basic.py</span>
+</div>
+<textarea class="editor-source">names = ["철수", "영희", "민수"]
 scores = [85, 92, 78]
 
 for name, score in zip(names, scores):
@@ -735,46 +577,41 @@ a = [1, 2, 3]
 b = ["A", "B"]
 print(list(zip(a, b)))   # [(1, 'A'), (2, 'B')]
 </textarea>
-    <div class="run-bar">
-      <span class="left"><span class="file-name">📄 zip_basic.py</span></span>
-      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
-      <button class="run-btn"><span class="play">▶</span> Run</button>
-    </div>
-  </div>
-  <div class="terminal">
-    <div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div>
-    <div class="terminal-body empty"></div>
-  </div>
-
-  <div class="key-points">
-    <div class="title">이 섹션의 핵심</div>
-    <ul>
-      <li>슬라이싱: <code class="inline">[start:stop:step]</code> — stop 미포함, 새 리스트 생성.</li>
-      <li><code class="inline">sum, max, min, len, sorted</code> — 새 값/리스트 반환.</li>
-      <li><code class="inline">.sort()</code>는 원본 변경, <code class="inline">sorted()</code>는 새 리스트.</li>
-      <li><code class="inline">in</code> 연산자로 포함 여부 검사.</li>
-      <li><code class="inline">for x in 리스트:</code>로 순회, <code class="inline">enumerate()</code>로 번호 동반.</li>
-      <li><code class="inline">zip()</code>으로 여러 반복 대상을 같은 위치끼리 묶어 순회.</li>
-    </ul>
-  </div>
+<div class="run-bar">
+<span class="left"><span class="file-name">📄 zip_basic.py</span></span>
+<span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+<button class="run-btn"><span class="play">▶</span> Run</button>
+</div>
+</div>
+<div class="terminal">
+<div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div>
+<div class="terminal-body empty"></div>
+</div>
+<div class="key-points">
+<div class="title">이 섹션의 핵심</div>
+<ul>
+<li>슬라이싱: <code class="inline">[start:stop:step]</code> — stop 미포함, 새 리스트 생성.</li>
+<li><code class="inline">sum, max, min, len, sorted</code> — 새 값/리스트 반환.</li>
+<li><code class="inline">.sort()</code>는 원본 변경, <code class="inline">sorted()</code>는 새 리스트.</li>
+<li><code class="inline">in</code> 연산자로 포함 여부 검사.</li>
+<li><code class="inline">for x in 리스트:</code>로 순회, <code class="inline">enumerate()</code>로 번호 동반.</li>
+<li><code class="inline">zip()</code>으로 여러 반복 대상을 같은 위치끼리 묶어 순회.</li>
+</ul>
+</div>
 </section>
-
-<section class="section" id="s2b">
-  <div class="section-num">SECTION 02-B · 참고</div>
-  <h2>한 줄로 리스트 만들기 — 컴프리헨션 맛보기</h2>
-
-
-  <p>
+<section class="section" id="s3">
+<div class="section-num">SECTION 03</div>
+<h2>한 줄로 리스트 만들기 — 컴프리헨션 맛보기</h2>
+<p>
     for 루프로 리스트를 만드는 패턴이 워낙 자주 쓰이다 보니,
     파이썬에는 이걸 한 줄로 쓰는 문법이 있습니다 — <strong>리스트 컴프리헨션</strong>입니다.
     AI가 만들어주는 코드에 자주 등장하니 읽을 줄은 알아야 합니다.
   </p>
-
-  <div class="editor-block">
-    <div class="editor-tab-bar">
-      <span class="editor-tab"><span class="py-icon"></span>comprehension.py</span>
-    </div>
-    <textarea class="editor-source"># 1~5의 제곱수 리스트 만들기
+<div class="editor-block">
+<div class="editor-tab-bar">
+<span class="editor-tab"><span class="py-icon"></span>comprehension.py</span>
+</div>
+<textarea class="editor-source"># 1~5의 제곱수 리스트 만들기
 
 # 우리가 아는 방법 — for 루프
 squares = []
@@ -790,43 +627,38 @@ print(squares)   # [1, 4, 9, 16, 25]
 evens = [n for n in range(1, 11) if n % 2 == 0]
 print(evens)     # [2, 4, 6, 8, 10]
 </textarea>
-    <div class="run-bar">
-      <span class="left"><span class="file-name">📄 comprehension.py</span></span>
-      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
-      <button class="run-btn"><span class="play">▶</span> Run</button>
-    </div>
-  </div>
-  <div class="terminal">
-    <div class="terminal-head">
-      <span class="label">실행 결과</span>
-      <span class="status">대기 중</span>
-    </div>
-    <div class="terminal-body empty"></div>
-  </div>
-
-  <p>
+<div class="run-bar">
+<span class="left"><span class="file-name">📄 comprehension.py</span></span>
+<span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+<button class="run-btn"><span class="play">▶</span> Run</button>
+</div>
+</div>
+<div class="terminal">
+<div class="terminal-head">
+<span class="label">실행 결과</span>
+<span class="status">대기 중</span>
+</div>
+<div class="terminal-body empty"></div>
+</div>
+<p>
     구조: <code class="inline">[표현식 for 변수 in 반복가능객체]</code>.
     어렵게 느껴지면 for 루프로 써도 됩니다 — 결과는 같습니다.
     지금은 "이런 게 있구나, AI 코드에서 보면 이 의미다"를 아는 것으로 충분합니다.
   </p>
-
 </section>
-
 <!-- ==================== s3: 튜플 ==================== -->
-<section class="section" id="s3">
-  <div class="section-num">SECTION 03</div>
-  <h2>튜플 — 잠긴 묶음</h2>
-
-  <p>
+<section class="section" id="s4">
+<div class="section-num">SECTION 04</div>
+<h2>튜플 — 잠긴 묶음</h2>
+<p>
     튜플(tuple)은 리스트와 거의 같지만 <strong>한 번 만들면 바꿀 수 없습니다</strong>.
     <code class="inline">()</code> 괄호로 만듭니다.
   </p>
-
-  <div class="editor-block">
-    <div class="editor-tab-bar">
-      <span class="editor-tab"><span class="py-icon"></span>tuple_basic.py</span>
-    </div>
-    <textarea class="editor-source">point = (3, 7)
+<div class="editor-block">
+<div class="editor-tab-bar">
+<span class="editor-tab"><span class="py-icon"></span>tuple_basic.py</span>
+</div>
+<textarea class="editor-source">point = (3, 7)
 print(point)
 print(type(point))     # &lt;class 'tuple'&gt;
 print(point[0], point[1])
@@ -835,109 +667,79 @@ print(point[0], point[1])
 # point[0] = 5    # TypeError!
 # point.append(9) # AttributeError! (그런 메서드 없음)
 </textarea>
-    <div class="run-bar">
-      <span class="left"><span class="file-name">📄 tuple_basic.py</span></span>
-      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
-      <button class="run-btn"><span class="play">▶</span> Run</button>
-    </div>
-  </div>
-  <div class="terminal">
-    <div class="terminal-head">
-      <span class="label">실행 결과</span>
-      <span class="status">대기 중</span>
-    </div>
-    <div class="terminal-body empty"></div>
-  </div>
-
-  <h3>리스트 vs 튜플</h3>
-
-  <div class="figure">
-    <svg viewBox="0 0 720 220" xmlns="http://www.w3.org/2000/svg"
-         aria-label="리스트와 튜플 비교">
-      <text x="360" y="22" text-anchor="middle" font-family="Pretendard, sans-serif"
-            font-size="11" font-weight="700" fill="currentColor" opacity="0.85" letter-spacing="2">
+<div class="run-bar">
+<span class="left"><span class="file-name">📄 tuple_basic.py</span></span>
+<span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+<button class="run-btn"><span class="play">▶</span> Run</button>
+</div>
+</div>
+<div class="terminal">
+<div class="terminal-head">
+<span class="label">실행 결과</span>
+<span class="status">대기 중</span>
+</div>
+<div class="terminal-body empty"></div>
+</div>
+<h3>리스트 vs 튜플</h3>
+<div class="figure">
+<svg aria-label="리스트와 튜플 비교" viewbox="0 0 720 220" xmlns="http://www.w3.org/2000/svg">
+<text fill="currentColor" font-family="Pretendard, sans-serif" font-size="11" font-weight="700" letter-spacing="2" opacity="0.85" text-anchor="middle" x="360" y="22">
         같은 데이터, 다른 잠금 상태
       </text>
-
-      <!-- 리스트 -->
-      <text x="180" y="52" text-anchor="middle" font-family="Pretendard, sans-serif"
-            font-size="13" font-weight="700" fill="var(--accent)">list (mutable)</text>
-      <text x="180" y="72" text-anchor="middle" font-family="JetBrains Mono, monospace"
-            font-size="12" fill="currentColor">[1, 2, 3]</text>
-
-      <rect x="60" y="90" width="240" height="74" rx="6"
-            fill="currentColor" opacity="0.06" stroke="var(--accent)" stroke-width="1.8"/>
-      <text x="68" y="104" font-family="JetBrains Mono, monospace" font-size="9"
-            fill="currentColor" opacity="0.7" font-weight="600">list</text>
-      <g>
-        <rect x="80" y="112" width="60" height="42" rx="3" fill="currentColor" opacity="0.04" stroke="currentColor" stroke-opacity="0.4"/>
-        <text x="110" y="124" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="currentColor" opacity="0.55">[0]</text>
-        <text x="110" y="145" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="14" font-weight="700" fill="currentColor">1</text>
-
-        <rect x="146" y="112" width="60" height="42" rx="3" fill="currentColor" opacity="0.04" stroke="currentColor" stroke-opacity="0.4"/>
-        <text x="176" y="124" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="currentColor" opacity="0.55">[1]</text>
-        <text x="176" y="145" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="14" font-weight="700" fill="currentColor">2</text>
-
-        <rect x="212" y="112" width="60" height="42" rx="3" fill="currentColor" opacity="0.04" stroke="currentColor" stroke-opacity="0.4"/>
-        <text x="242" y="124" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="currentColor" opacity="0.55">[2]</text>
-        <text x="242" y="145" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="14" font-weight="700" fill="currentColor">3</text>
-      </g>
-      <text x="180" y="190" text-anchor="middle" font-family="Pretendard, sans-serif"
-            font-size="11" fill="currentColor" opacity="0.75">변경 가능 — append, [i]=값, .sort()</text>
-
-      <!-- 튜플 -->
-      <text x="540" y="52" text-anchor="middle" font-family="Pretendard, sans-serif"
-            font-size="13" font-weight="700" fill="var(--tuple-text, #5b21b6)">tuple (immutable) 🔒</text>
-      <text x="540" y="72" text-anchor="middle" font-family="JetBrains Mono, monospace"
-            font-size="12" fill="currentColor">(1, 2, 3)</text>
-
-      <rect x="420" y="90" width="240" height="74" rx="6"
-            fill="var(--tuple-bg, #f0e8f5)" opacity="0.5"
-            stroke="var(--tuple-border, #7c3aed)" stroke-width="1.8"/>
-      <text x="428" y="104" font-family="JetBrains Mono, monospace" font-size="9"
-            fill="var(--tuple-text, #5b21b6)" opacity="1" font-weight="700">tuple</text>
-      <g>
-        <rect x="440" y="112" width="60" height="42" rx="3" fill="currentColor" opacity="0.04"
-              stroke="var(--tuple-border, #7c3aed)" stroke-opacity="0.6" stroke-dasharray="2 2"/>
-        <text x="470" y="124" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="currentColor" opacity="0.55">[0]</text>
-        <text x="470" y="145" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="14" font-weight="700" fill="currentColor">1</text>
-
-        <rect x="506" y="112" width="60" height="42" rx="3" fill="currentColor" opacity="0.04"
-              stroke="var(--tuple-border, #7c3aed)" stroke-opacity="0.6" stroke-dasharray="2 2"/>
-        <text x="536" y="124" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="currentColor" opacity="0.55">[1]</text>
-        <text x="536" y="145" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="14" font-weight="700" fill="currentColor">2</text>
-
-        <rect x="572" y="112" width="60" height="42" rx="3" fill="currentColor" opacity="0.04"
-              stroke="var(--tuple-border, #7c3aed)" stroke-opacity="0.6" stroke-dasharray="2 2"/>
-        <text x="602" y="124" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="currentColor" opacity="0.55">[2]</text>
-        <text x="602" y="145" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="14" font-weight="700" fill="currentColor">3</text>
-      </g>
-      <text x="540" y="190" text-anchor="middle" font-family="Pretendard, sans-serif"
-            font-size="11" fill="currentColor" opacity="0.75">슬롯 잠김 — t[i]=값 불가, append 없음</text>
-    </svg>
-    <div class="caption">그림 3.5 — 리스트와 튜플의 차이: 슬롯이 잠겼는지 여부</div>
-  </div>
-
-  <h3>★ 튜플의 진실</h3>
-
-  <p>
+<!-- 리스트 -->
+<text fill="var(--accent)" font-family="Pretendard, sans-serif" font-size="13" font-weight="700" text-anchor="middle" x="180" y="52">list (mutable)</text>
+<text fill="currentColor" font-family="JetBrains Mono, monospace" font-size="12" text-anchor="middle" x="180" y="72">[1, 2, 3]</text>
+<rect fill="currentColor" height="74" opacity="0.06" rx="6" stroke="var(--accent)" stroke-width="1.8" width="240" x="60" y="90"></rect>
+<text fill="currentColor" font-family="JetBrains Mono, monospace" font-size="9" font-weight="600" opacity="0.7" x="68" y="104">list</text>
+<g>
+<rect fill="currentColor" height="42" opacity="0.04" rx="3" stroke="currentColor" stroke-opacity="0.4" width="60" x="80" y="112"></rect>
+<text fill="currentColor" font-family="JetBrains Mono, monospace" font-size="8" opacity="0.55" text-anchor="middle" x="110" y="124">[0]</text>
+<text fill="currentColor" font-family="JetBrains Mono, monospace" font-size="14" font-weight="700" text-anchor="middle" x="110" y="145">1</text>
+<rect fill="currentColor" height="42" opacity="0.04" rx="3" stroke="currentColor" stroke-opacity="0.4" width="60" x="146" y="112"></rect>
+<text fill="currentColor" font-family="JetBrains Mono, monospace" font-size="8" opacity="0.55" text-anchor="middle" x="176" y="124">[1]</text>
+<text fill="currentColor" font-family="JetBrains Mono, monospace" font-size="14" font-weight="700" text-anchor="middle" x="176" y="145">2</text>
+<rect fill="currentColor" height="42" opacity="0.04" rx="3" stroke="currentColor" stroke-opacity="0.4" width="60" x="212" y="112"></rect>
+<text fill="currentColor" font-family="JetBrains Mono, monospace" font-size="8" opacity="0.55" text-anchor="middle" x="242" y="124">[2]</text>
+<text fill="currentColor" font-family="JetBrains Mono, monospace" font-size="14" font-weight="700" text-anchor="middle" x="242" y="145">3</text>
+</g>
+<text fill="currentColor" font-family="Pretendard, sans-serif" font-size="11" opacity="0.75" text-anchor="middle" x="180" y="190">변경 가능 — append, [i]=값, .sort()</text>
+<!-- 튜플 -->
+<text fill="var(--tuple-text, #5b21b6)" font-family="Pretendard, sans-serif" font-size="13" font-weight="700" text-anchor="middle" x="540" y="52">tuple (immutable) 🔒</text>
+<text fill="currentColor" font-family="JetBrains Mono, monospace" font-size="12" text-anchor="middle" x="540" y="72">(1, 2, 3)</text>
+<rect fill="var(--tuple-bg, #f0e8f5)" height="74" opacity="0.5" rx="6" stroke="var(--tuple-border, #7c3aed)" stroke-width="1.8" width="240" x="420" y="90"></rect>
+<text fill="var(--tuple-text, #5b21b6)" font-family="JetBrains Mono, monospace" font-size="9" font-weight="700" opacity="1" x="428" y="104">tuple</text>
+<g>
+<rect fill="currentColor" height="42" opacity="0.04" rx="3" stroke="var(--tuple-border, #7c3aed)" stroke-dasharray="2 2" stroke-opacity="0.6" width="60" x="440" y="112"></rect>
+<text fill="currentColor" font-family="JetBrains Mono, monospace" font-size="8" opacity="0.55" text-anchor="middle" x="470" y="124">[0]</text>
+<text fill="currentColor" font-family="JetBrains Mono, monospace" font-size="14" font-weight="700" text-anchor="middle" x="470" y="145">1</text>
+<rect fill="currentColor" height="42" opacity="0.04" rx="3" stroke="var(--tuple-border, #7c3aed)" stroke-dasharray="2 2" stroke-opacity="0.6" width="60" x="506" y="112"></rect>
+<text fill="currentColor" font-family="JetBrains Mono, monospace" font-size="8" opacity="0.55" text-anchor="middle" x="536" y="124">[1]</text>
+<text fill="currentColor" font-family="JetBrains Mono, monospace" font-size="14" font-weight="700" text-anchor="middle" x="536" y="145">2</text>
+<rect fill="currentColor" height="42" opacity="0.04" rx="3" stroke="var(--tuple-border, #7c3aed)" stroke-dasharray="2 2" stroke-opacity="0.6" width="60" x="572" y="112"></rect>
+<text fill="currentColor" font-family="JetBrains Mono, monospace" font-size="8" opacity="0.55" text-anchor="middle" x="602" y="124">[2]</text>
+<text fill="currentColor" font-family="JetBrains Mono, monospace" font-size="14" font-weight="700" text-anchor="middle" x="602" y="145">3</text>
+</g>
+<text fill="currentColor" font-family="Pretendard, sans-serif" font-size="11" opacity="0.75" text-anchor="middle" x="540" y="190">슬롯 잠김 — t[i]=값 불가, append 없음</text>
+</svg>
+<div class="caption">그림 3.5 — 리스트와 튜플의 차이: 슬롯이 잠겼는지 여부</div>
+</div>
+<h3> 튜플의 진실</h3>
+<p>
     여기가 비전공자뿐 아니라 경력자도 헷갈리는 곳입니다. 한 번에 잡고 갑니다.
   </p>
-
-  <div class="callout">
-    <div class="label">정확한 사실</div>
-    <p>
+<div class="callout">
+<div class="label">정확한 사실</div>
+<p>
       튜플은 <strong>참조 슬롯의 묶음이 잠긴 것</strong>이지,
       참조가 가리키는 객체까지 잠근 게 아닙니다.
       슬롯이 가리키는 객체가 mutable이면 그 객체는 변할 수 있습니다.
     </p>
-  </div>
-
-  <div class="editor-block">
-    <div class="editor-tab-bar">
-      <span class="editor-tab"><span class="py-icon"></span>tuple_truth.py</span>
-    </div>
-    <textarea class="editor-source"># 튜플 안에 리스트가 있을 때
+</div>
+<div class="editor-block">
+<div class="editor-tab-bar">
+<span class="editor-tab"><span class="py-icon"></span>tuple_truth.py</span>
+</div>
+<textarea class="editor-source"># 튜플 안에 리스트가 있을 때
 t = ([1, 2], "안녕", 3)
 print(t)
 print(id(t))         # 이 튜플 객체의 고유 번호
@@ -955,42 +757,37 @@ print(id(t))         # id는 그대로! 같은 튜플 객체
 
 # 결론: 튜플 객체는 안 바뀐 것 같지만 보이는 모양은 달라짐
 </textarea>
-    <div class="run-bar">
-      <span class="left"><span class="file-name">📄 tuple_truth.py</span></span>
-      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
-      <button class="run-btn"><span class="play">▶</span> Run</button>
-    </div>
-  </div>
-  <div class="terminal">
-    <div class="terminal-head">
-      <span class="label">실행 결과</span>
-      <span class="status">대기 중</span>
-    </div>
-    <div class="terminal-body empty"></div>
-  </div>
-
-  <p>
+<div class="run-bar">
+<span class="left"><span class="file-name">📄 tuple_truth.py</span></span>
+<span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+<button class="run-btn"><span class="play">▶</span> Run</button>
+</div>
+</div>
+<div class="terminal">
+<div class="terminal-head">
+<span class="label">실행 결과</span>
+<span class="status">대기 중</span>
+</div>
+<div class="terminal-body empty"></div>
+</div>
+<p>
     지금은 "에러를 잡아서 메시지를 안전하게 출력하는 도구" 정도로 보시면 됩니다.
     여기서 핵심은 <code class="inline">id(t)</code>가 두 번 같다는 것 — <strong>튜플 객체 자체는 안 바뀌었습니다.</strong>
     하지만 보이는 모양은 달라졌죠.
   </p>
-
-  <p>
+<p>
     이걸 메모리 모델로 시각화한 시뮬레이터는 s4에서 볼 수 있습니다.
   </p>
-
-  <h3>다중 할당 — 튜플의 가장 멋진 활용</h3>
-
-  <p>
+<h3>다중 할당 — 튜플의 가장 멋진 활용</h3>
+<p>
     튜플은 <strong>여러 변수를 한 번에 할당</strong>할 때 가장 자연스럽습니다.
     이건 파이썬의 큰 매력 중 하나입니다.
   </p>
-
-  <div class="editor-block">
-    <div class="editor-tab-bar">
-      <span class="editor-tab"><span class="py-icon"></span>tuple_unpack.py</span>
-    </div>
-    <textarea class="editor-source"># 한 줄에 여러 변수 할당
+<div class="editor-block">
+<div class="editor-tab-bar">
+<span class="editor-tab"><span class="py-icon"></span>tuple_unpack.py</span>
+</div>
+<textarea class="editor-source"># 한 줄에 여러 변수 할당
 x, y = 3, 7        # 사실은 (3, 7) 튜플을 (x, y)에 분해
 print(x, y)
 
@@ -1004,151 +801,120 @@ m, n = 1, 99
 m, n = n, m         # 튜플 만들고 분해 — swap 완료
 print(m, n)
 </textarea>
-    <div class="run-bar">
-      <span class="left"><span class="file-name">📄 tuple_unpack.py</span></span>
-      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
-      <button class="run-btn"><span class="play">▶</span> Run</button>
-    </div>
-  </div>
-  <div class="terminal">
-    <div class="terminal-head">
-      <span class="label">실행 결과</span>
-      <span class="status">대기 중</span>
-    </div>
-    <div class="terminal-body empty"></div>
-  </div>
-
-  <p>
-    <code class="inline">m, n = n, m</code>으로 두 변수의 값을 한 줄에 바꿀 수 있습니다.
+<div class="run-bar">
+<span class="left"><span class="file-name">📄 tuple_unpack.py</span></span>
+<span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+<button class="run-btn"><span class="play">▶</span> Run</button>
+</div>
+</div>
+<div class="terminal">
+<div class="terminal-head">
+<span class="label">실행 결과</span>
+<span class="status">대기 중</span>
+</div>
+<div class="terminal-body empty"></div>
+</div>
+<p>
+<code class="inline">m, n = n, m</code>으로 두 변수의 값을 한 줄에 바꿀 수 있습니다.
     오른쪽이 먼저 튜플 <code class="inline">(99, 1)</code>로 평가되고, 왼쪽이 그걸 분해해서 받습니다.
   </p>
-
-  <h3>언제 리스트, 언제 튜플?</h3>
-
-  <ul>
-    <li><strong>나중에 추가/삭제할 데이터</strong> → 리스트 (점수 모음, 장바구니)</li>
-    <li><strong>한 번 정해지고 바뀌면 안 되는 데이터</strong> → 튜플 (좌표, RGB 색, 함수의 여러 반환값)</li>
-  </ul>
-
-  <div class="key-points">
-    <div class="title">이 섹션의 핵심</div>
-    <ul>
-      <li>튜플은 <code class="inline">()</code>로 만듦, 한 번 만들면 슬롯 변경 불가.</li>
-      <li><strong>★ 튜플의 진실</strong>: 슬롯은 잠겨도, 슬롯이 가리키는 mutable 객체는 변할 수 있다.</li>
-      <li>다중 할당 <code class="inline">a, b = ...</code> — swap이나 함수 다중 반환에 유용.</li>
-      <li>변경되어야 하면 리스트, 잠겨도 되면 튜플.</li>
-    </ul>
-  </div>
+<h3>언제 리스트, 언제 튜플?</h3>
+<ul>
+<li><strong>나중에 추가/삭제할 데이터</strong> → 리스트 (점수 모음, 장바구니)</li>
+<li><strong>한 번 정해지고 바뀌면 안 되는 데이터</strong> → 튜플 (좌표, RGB 색, 함수의 여러 반환값)</li>
+</ul>
+<div class="key-points">
+<div class="title">이 섹션의 핵심</div>
+<ul>
+<li>튜플은 <code class="inline">()</code>로 만듦, 한 번 만들면 슬롯 변경 불가.</li>
+<li><strong> 튜플의 진실</strong>: 슬롯은 잠겨도, 슬롯이 가리키는 mutable 객체는 변할 수 있다.</li>
+<li>다중 할당 <code class="inline">a, b = ...</code> — swap이나 함수 다중 반환에 유용.</li>
+<li>변경되어야 하면 리스트, 잠겨도 되면 튜플.</li>
+</ul>
+</div>
 </section>
-
 <!-- ==================== s4: 가변 vs 불변 ==================== -->
-<section class="section" id="s4">
-  <div class="section-num">SECTION 04 · 핵심</div>
-  <h2>가변 vs 불변 — 같은 객체가 바뀌는가?</h2>
+<section class="section" id="s5">
+<div class="section-num">SECTION 05</div>
+<h2>가변 vs 불변 — 같은 객체가 바뀌는가?</h2>
+<h3> append와 +를 "객체 변경"과 "재연결"로 구분</h3>
+<pre><code>a = [1, 2, 3]
+b = a
+a.append(4)
+a = a + [5]</code></pre>
+<p><code class="inline">append</code>는 a와 b가 함께 가리키는 기존 list 객체를 변경합니다. 반면 마지막 줄은 두 단계입니다.</p>
+<pre><code># ① 오른쪽 먼저 평가
+temp = a + [5]   # 새 list 객체 생성
+# 이 순간 a와 b는 아직 기존 list를 가리킴
 
-  <div class="callout">
-    <div class="label">3주차에서 가장 중요한 섹션</div>
-    <p>
+# ② 대입
+a = temp          # a만 새 list로 재연결</code></pre>
+<h3>list의 +=는 +와 같지 않을 수 있습니다</h3>
+<pre><code>a = [1, 2, 3]
+b = a
+a += [4]
+print(a)  # [1,2,3,4]
+print(b)  # [1,2,3,4]</code></pre>
+<p>list는 제자리 덧셈을 지원하므로 <code class="inline">+=</code>가 기존 list를 확장할 수 있습니다. 그래서 항상 <code class="inline">a += x</code>를 내부적으로 <code class="inline">a = a + x</code>라고 동일시하면 안 됩니다.</p>
+<div class="callout">
+<div class="label">3주차에서 가장 중요한 섹션</div>
+<p>
       여기를 잡으면 파이썬의 객체 모델 90%가 풀립니다.
       잘못 이해하면 이후 리스트 복사와 함수 인자에서 같은 실수를 반복하기 쉽습니다.
     </p>
-  </div>
-
-  <h3>두 종류의 객체</h3>
-
-  <p>파이썬의 모든 객체는 두 부류로 나뉩니다:</p>
-
-  <ul>
-    <li><strong>mutable (가변)</strong>: 객체 자체의 내용을 바꿀 수 있음 — <code class="inline">list</code>, <code class="inline">dict</code>, <code class="inline">set</code></li>
-    <li><strong>immutable (불변)</strong>: 한 번 만들면 절대 못 바꿈 — <code class="inline">int</code>, <code class="inline">float</code>, <code class="inline">str</code>, <code class="inline">tuple</code>, <code class="inline">bool</code></li>
-  </ul>
-
-  <h3>핵심 차이 — append vs +</h3>
-
-  <p>
+</div>
+<h3>두 종류의 객체</h3>
+<p>파이썬의 모든 객체는 두 부류로 나뉩니다:</p>
+<ul>
+<li><strong>mutable (가변)</strong>: 객체 자체의 내용을 바꿀 수 있음 — <code class="inline">list</code>, <code class="inline">dict</code>, <code class="inline">set</code></li>
+<li><strong>immutable (불변)</strong>: 한 번 만들면 절대 못 바꿈 — <code class="inline">int</code>, <code class="inline">float</code>, <code class="inline">str</code>, <code class="inline">tuple</code>, <code class="inline">bool</code></li>
+</ul>
+<h3>핵심 차이 — append vs +</h3>
+<p>
     리스트에서 두 가지는 비슷해 보여도 메모리에서 일어나는 일이 완전히 다릅니다.
   </p>
-
-  <div class="figure">
-    <svg viewBox="0 0 720 280" xmlns="http://www.w3.org/2000/svg"
-         aria-label="append vs + 비교">
-      <text x="360" y="22" text-anchor="middle" font-family="Pretendard, sans-serif"
-            font-size="11" font-weight="700" fill="currentColor" opacity="0.85" letter-spacing="2">
+<div class="figure">
+<svg aria-label="append vs + 비교" viewbox="0 0 720 280" xmlns="http://www.w3.org/2000/svg">
+<text fill="currentColor" font-family="Pretendard, sans-serif" font-size="11" font-weight="700" letter-spacing="2" opacity="0.85" text-anchor="middle" x="360" y="22">
         a.append(4) vs a = a + [4]
       </text>
-
-      <!-- 좌측: append -->
-      <text x="180" y="52" text-anchor="middle" font-family="Pretendard, sans-serif"
-            font-size="13" font-weight="700" fill="var(--accent)">a.append(4)</text>
-      <text x="180" y="68" text-anchor="middle" font-family="Pretendard, sans-serif"
-            font-size="11" fill="currentColor" opacity="0.7">객체 자체를 변경 (mutable이라 가능)</text>
-
-      <rect x="60" y="85" width="240" height="100" rx="8"
-            fill="currentColor" opacity="0.04" stroke="currentColor" stroke-opacity="0.4"
-            stroke-dasharray="4 3"/>
-      <text x="180" y="103" text-anchor="middle" font-family="Pretendard, sans-serif"
-            font-size="9" fill="currentColor" opacity="0.65" font-weight="600" letter-spacing="1">PYTHON OBJECTS</text>
-
-      <!-- 같은 list 객체 (변형됨) -->
-      <rect x="100" y="115" width="160" height="50" rx="6"
-            fill="currentColor" opacity="0.06" stroke="var(--accent)" stroke-width="2"/>
-      <text x="106" y="128" font-family="JetBrains Mono, monospace" font-size="9"
-            fill="currentColor" opacity="0.7" font-weight="600">list @0xa1</text>
-      <text x="180" y="152" text-anchor="middle" font-family="JetBrains Mono, monospace"
-            font-size="12" font-weight="700" fill="currentColor">[1, 2, 3, 4]</text>
-
-      <text x="180" y="220" text-anchor="middle" font-family="Pretendard, sans-serif"
-            font-size="11" font-weight="600" fill="currentColor">id(a) 그대로</text>
-      <text x="180" y="240" text-anchor="middle" font-family="Pretendard, sans-serif"
-            font-size="10" fill="currentColor" opacity="0.7">같은 객체 — 같은 객체를 가리키는</text>
-      <text x="180" y="256" text-anchor="middle" font-family="Pretendard, sans-serif"
-            font-size="10" fill="currentColor" opacity="0.7">다른 이름표 b도 영향 받음!</text>
-
-      <!-- 우측: + -->
-      <text x="540" y="52" text-anchor="middle" font-family="Pretendard, sans-serif"
-            font-size="13" font-weight="700" fill="var(--accent)">a = a + [4]</text>
-      <text x="540" y="68" text-anchor="middle" font-family="Pretendard, sans-serif"
-            font-size="11" fill="currentColor" opacity="0.7">새 객체 생성, a 이름표만 옮김</text>
-
-      <rect x="420" y="85" width="240" height="100" rx="8"
-            fill="currentColor" opacity="0.04" stroke="currentColor" stroke-opacity="0.4"
-            stroke-dasharray="4 3"/>
-      <text x="540" y="103" text-anchor="middle" font-family="Pretendard, sans-serif"
-            font-size="9" fill="currentColor" opacity="0.65" font-weight="600" letter-spacing="1">PYTHON OBJECTS</text>
-
-      <!-- 옛 객체 -->
-      <rect x="430" y="115" width="100" height="40" rx="6"
-            fill="currentColor" opacity="0.04" stroke="currentColor" stroke-opacity="0.5"/>
-      <text x="436" y="127" font-family="JetBrains Mono, monospace" font-size="8"
-            fill="currentColor" opacity="0.55" font-weight="600">list @0xa1</text>
-      <text x="480" y="146" text-anchor="middle" font-family="JetBrains Mono, monospace"
-            font-size="10" fill="currentColor" opacity="0.7">[1,2,3]</text>
-
-      <!-- 새 객체 -->
-      <rect x="540" y="115" width="115" height="50" rx="6"
-            fill="currentColor" opacity="0.06" stroke="var(--accent)" stroke-width="2"/>
-      <text x="546" y="128" font-family="JetBrains Mono, monospace" font-size="9"
-            fill="var(--accent)" font-weight="700">list @0xb7 (NEW)</text>
-      <text x="597" y="152" text-anchor="middle" font-family="JetBrains Mono, monospace"
-            font-size="12" font-weight="700" fill="currentColor">[1,2,3,4]</text>
-
-      <text x="540" y="220" text-anchor="middle" font-family="Pretendard, sans-serif"
-            font-size="11" font-weight="600" fill="currentColor">id(a) 달라짐</text>
-      <text x="540" y="240" text-anchor="middle" font-family="Pretendard, sans-serif"
-            font-size="10" fill="currentColor" opacity="0.7">새 객체 — b는 옛 객체 그대로,</text>
-      <text x="540" y="256" text-anchor="middle" font-family="Pretendard, sans-serif"
-            font-size="10" fill="currentColor" opacity="0.7">b는 [1,2,3] 그대로 보임</text>
-    </svg>
-    <div class="caption">그림 3.6 — append는 객체 변경, +는 새 객체 생성</div>
-  </div>
-
-  <h3>코드로 직접 증명</h3>
-
-  <div class="editor-block">
-    <div class="editor-tab-bar">
-      <span class="editor-tab"><span class="py-icon"></span>append_vs_plus.py</span>
-    </div>
-    <textarea class="editor-source">a = [1, 2, 3]
+<!-- 좌측: append -->
+<text fill="var(--accent)" font-family="Pretendard, sans-serif" font-size="13" font-weight="700" text-anchor="middle" x="180" y="52">a.append(4)</text>
+<text fill="currentColor" font-family="Pretendard, sans-serif" font-size="11" opacity="0.7" text-anchor="middle" x="180" y="68">객체 자체를 변경 (mutable이라 가능)</text>
+<rect fill="currentColor" height="100" opacity="0.04" rx="8" stroke="currentColor" stroke-dasharray="4 3" stroke-opacity="0.4" width="240" x="60" y="85"></rect>
+<text fill="currentColor" font-family="Pretendard, sans-serif" font-size="9" font-weight="600" letter-spacing="1" opacity="0.65" text-anchor="middle" x="180" y="103">PYTHON OBJECTS</text>
+<!-- 같은 list 객체 (변형됨) -->
+<rect fill="currentColor" height="50" opacity="0.06" rx="6" stroke="var(--accent)" stroke-width="2" width="160" x="100" y="115"></rect>
+<text fill="currentColor" font-family="JetBrains Mono, monospace" font-size="9" font-weight="600" opacity="0.7" x="106" y="128">list @0xa1</text>
+<text fill="currentColor" font-family="JetBrains Mono, monospace" font-size="12" font-weight="700" text-anchor="middle" x="180" y="152">[1, 2, 3, 4]</text>
+<text fill="currentColor" font-family="Pretendard, sans-serif" font-size="11" font-weight="600" text-anchor="middle" x="180" y="220">id(a) 그대로</text>
+<text fill="currentColor" font-family="Pretendard, sans-serif" font-size="10" opacity="0.7" text-anchor="middle" x="180" y="240">같은 객체 — 같은 객체를 가리키는</text>
+<text fill="currentColor" font-family="Pretendard, sans-serif" font-size="10" opacity="0.7" text-anchor="middle" x="180" y="256">다른 이름표 b도 영향 받음!</text>
+<!-- 우측: + -->
+<text fill="var(--accent)" font-family="Pretendard, sans-serif" font-size="13" font-weight="700" text-anchor="middle" x="540" y="52">a = a + [4]</text>
+<text fill="currentColor" font-family="Pretendard, sans-serif" font-size="11" opacity="0.7" text-anchor="middle" x="540" y="68">새 객체 생성, a 이름표만 옮김</text>
+<rect fill="currentColor" height="100" opacity="0.04" rx="8" stroke="currentColor" stroke-dasharray="4 3" stroke-opacity="0.4" width="240" x="420" y="85"></rect>
+<text fill="currentColor" font-family="Pretendard, sans-serif" font-size="9" font-weight="600" letter-spacing="1" opacity="0.65" text-anchor="middle" x="540" y="103">PYTHON OBJECTS</text>
+<!-- 옛 객체 -->
+<rect fill="currentColor" height="40" opacity="0.04" rx="6" stroke="currentColor" stroke-opacity="0.5" width="100" x="430" y="115"></rect>
+<text fill="currentColor" font-family="JetBrains Mono, monospace" font-size="8" font-weight="600" opacity="0.55" x="436" y="127">list @0xa1</text>
+<text fill="currentColor" font-family="JetBrains Mono, monospace" font-size="10" opacity="0.7" text-anchor="middle" x="480" y="146">[1,2,3]</text>
+<!-- 새 객체 -->
+<rect fill="currentColor" height="50" opacity="0.06" rx="6" stroke="var(--accent)" stroke-width="2" width="115" x="540" y="115"></rect>
+<text fill="var(--accent)" font-family="JetBrains Mono, monospace" font-size="9" font-weight="700" x="546" y="128">list @0xb7 (NEW)</text>
+<text fill="currentColor" font-family="JetBrains Mono, monospace" font-size="12" font-weight="700" text-anchor="middle" x="597" y="152">[1,2,3,4]</text>
+<text fill="currentColor" font-family="Pretendard, sans-serif" font-size="11" font-weight="600" text-anchor="middle" x="540" y="220">id(a) 달라짐</text>
+<text fill="currentColor" font-family="Pretendard, sans-serif" font-size="10" opacity="0.7" text-anchor="middle" x="540" y="240">새 객체 — b는 옛 객체 그대로,</text>
+<text fill="currentColor" font-family="Pretendard, sans-serif" font-size="10" opacity="0.7" text-anchor="middle" x="540" y="256">b는 [1,2,3] 그대로 보임</text>
+</svg>
+<div class="caption">그림 3.6 — append는 객체 변경, +는 새 객체 생성</div>
+</div>
+<h3>코드로 직접 증명</h3>
+<div class="editor-block">
+<div class="editor-tab-bar">
+<span class="editor-tab"><span class="py-icon"></span>append_vs_plus.py</span>
+</div>
+<textarea class="editor-source">a = [1, 2, 3]
 b = a              # 같은 객체에 두 이름표
 print(id(a) == id(b))     # True
 
@@ -1164,48 +930,40 @@ print(a)            # [1, 2, 3, 4, 5]
 print(b)            # [1, 2, 3, 4] — b는 그대로!
 print(id(a) == id(b))     # False (a는 새 객체로 옮김)
 </textarea>
-    <div class="run-bar">
-      <span class="left"><span class="file-name">📄 append_vs_plus.py</span></span>
-      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
-      <button class="run-btn"><span class="play">▶</span> Run</button>
-    </div>
-  </div>
-  <div class="terminal">
-    <div class="terminal-head">
-      <span class="label">실행 결과</span>
-      <span class="status">대기 중</span>
-    </div>
-    <div class="terminal-body empty"></div>
-  </div>
-
-  <h3>시뮬레이터로 끝까지 따라가기</h3>
-
-  <p>
+<div class="run-bar">
+<span class="left"><span class="file-name">📄 append_vs_plus.py</span></span>
+<span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+<button class="run-btn"><span class="play">▶</span> Run</button>
+</div>
+</div>
+<div class="terminal">
+<div class="terminal-head">
+<span class="label">실행 결과</span>
+<span class="status">대기 중</span>
+</div>
+<div class="terminal-body empty"></div>
+</div>
+<h3>시뮬레이터로 끝까지 따라가기</h3>
+<p>
     아래 시뮬레이터에서 <code class="inline">a = [1,2,3]</code>부터 시작해 단계별로 메모리 변화를 따라가보세요.
     마지막 두 단계에는 <strong>튜플의 진실</strong>도 함께 들어 있습니다.
   </p>
-
-  <div style="margin: 24px 0; border-radius: 12px; overflow: hidden;
+<div style="margin: 24px 0; border-radius: 12px; overflow: hidden;
               border: 1px solid var(--border); box-shadow: var(--shadow-md);">
-    <iframe src="simulators/sim-mutable.html" id="sim-mutable-iframe"
-            style="width: 100%; height: 820px; border: 0; display: block;"
-            title="시뮬레이터: 가변 vs 불변"></iframe>
-  </div>
-
-  <h3>왜 문자열 메서드는 원본을 안 바꿨을까?</h3>
-
-  <p>
+<iframe id="sim-mutable-iframe" src="simulators/sim-mutable.html" style="width: 100%; height: 820px; border: 0; display: block;" title="시뮬레이터: 가변 vs 불변"></iframe>
+</div>
+<h3>왜 문자열 메서드는 원본을 안 바꿨을까?</h3>
+<p>
     1주차 s8에서 <code class="inline">"hello".upper()</code>가 원본을 안 바꾸고
     새 문자열을 돌려준다고 했죠? 이제 이유가 풀립니다.
     <strong>문자열은 불변(immutable)</strong>이기 때문입니다.
     기존 문자열의 내용을 직접 바꿀 수 없으므로, 문자열을 변환하는 연산은 변경된 내용의 문자열 결과를 돌려줍니다.
   </p>
-
-  <div class="editor-block">
-    <div class="editor-tab-bar">
-      <span class="editor-tab"><span class="py-icon"></span>str_immutable.py</span>
-    </div>
-    <textarea class="editor-source">s = "hello"
+<div class="editor-block">
+<div class="editor-tab-bar">
+<span class="editor-tab"><span class="py-icon"></span>str_immutable.py</span>
+</div>
+<textarea class="editor-source">s = "hello"
 print(id(s))
 
 s_upper = s.upper()
@@ -1218,55 +976,50 @@ print(id(n))
 n = n + 1               # n이 계산 결과 6을 가리키도록 다시 연결
 print(id(n))            # 다른 id
 </textarea>
-    <div class="run-bar">
-      <span class="left"><span class="file-name">📄 str_immutable.py</span></span>
-      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
-      <button class="run-btn"><span class="play">▶</span> Run</button>
-    </div>
-  </div>
-  <div class="terminal">
-    <div class="terminal-head">
-      <span class="label">실행 결과</span>
-      <span class="status">대기 중</span>
-    </div>
-    <div class="terminal-body empty"></div>
-  </div>
-
-  <div class="key-points">
-    <div class="title">이 섹션의 핵심 (★ 매우 중요)</div>
-    <ul>
-      <li><strong>mutable</strong>: list, dict — 객체 자체 변경 가능 (id 그대로).</li>
-      <li><strong>immutable</strong>: int, float, str, tuple, bool — 만들어진 객체의 값 자체를 바꿀 수 없음.</li>
-      <li><code class="inline">b = a</code>는 객체 복사가 아니다 — 같은 객체에 이름표 추가.</li>
-      <li><code class="inline">.append()</code>는 원본 변경, <code class="inline">+</code>는 새 객체.</li>
-      <li>튜플의 슬롯은 잠겨도 슬롯이 가리키는 mutable 객체는 변할 수 있다.</li>
-    </ul>
-  </div>
+<div class="run-bar">
+<span class="left"><span class="file-name">📄 str_immutable.py</span></span>
+<span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+<button class="run-btn"><span class="play">▶</span> Run</button>
+</div>
+</div>
+<div class="terminal">
+<div class="terminal-head">
+<span class="label">실행 결과</span>
+<span class="status">대기 중</span>
+</div>
+<div class="terminal-body empty"></div>
+</div>
+<div class="key-points">
+<div class="title">이 섹션의 핵심 (매우 중요)</div>
+<ul>
+<li><strong>mutable</strong>: list, dict — 객체 자체 변경 가능 (id 그대로).</li>
+<li><strong>immutable</strong>: int, float, str, tuple, bool — 만들어진 객체의 값 자체를 바꿀 수 없음.</li>
+<li><code class="inline">b = a</code>는 객체 복사가 아니다 — 같은 객체에 이름표 추가.</li>
+<li><code class="inline">.append()</code>는 원본 변경, <code class="inline">+</code>는 새 객체.</li>
+<li>튜플의 슬롯은 잠겨도 슬롯이 가리키는 mutable 객체는 변할 수 있다.</li>
+</ul>
+</div>
 </section>
-
 <!-- ==================== s4b: 집합(set) ==================== -->
-<section class="section" id="s4b">
-  <div class="section-num">SECTION 04-B</div>
-  <h2>집합 set — 중복 없이 모으기</h2>
-
-  <p>
-    <strong>set(집합)</strong>은 여러 값을 모아두되 <strong>중복을 허용하지 않는 mutable 객체</strong>입니다.
+<section class="section" id="s6">
+<div class="section-num">SECTION 06</div>
+<h2>집합 set — 중복 없이 모으기</h2>
+<p>
+<strong>set(집합)</strong>은 여러 값을 모아두되 <strong>중복을 허용하지 않는 mutable 객체</strong>입니다.
     회원 ID의 중복 제거, 이미 처리한 값 기록, 빠른 포함 여부 확인처럼 실무에서도 자주 사용합니다.
   </p>
-
-  <div class="callout info">
-    <div class="label">리스트와 가장 큰 차이</div>
-    <p>
+<div class="callout info">
+<div class="label">리스트와 가장 큰 차이</div>
+<p>
       리스트는 순서와 인덱스가 중요하지만, set은 <strong>중복 없는 값의 모음</strong>에 초점을 둡니다.
       set의 출력 순서에 의존하거나 <code class="inline">items[0]</code>처럼 인덱싱하면 안 됩니다.
     </p>
-  </div>
-
-  <div class="editor-block">
-    <div class="editor-tab-bar">
-      <span class="editor-tab"><span class="py-icon"></span>set_basic.py</span>
-    </div>
-    <textarea class="editor-source">numbers = {1, 2, 2, 3, 3, 3}
+</div>
+<div class="editor-block">
+<div class="editor-tab-bar">
+<span class="editor-tab"><span class="py-icon"></span>set_basic.py</span>
+</div>
+<textarea class="editor-source">numbers = {1, 2, 2, 3, 3, 3}
 print(numbers)           # 중복은 하나만 남음
 
 # 빈 set은 {}가 아니라 set()
@@ -1289,49 +1042,44 @@ print(unique_names)
 a = {1, 2, 3}
 b = {3, 4, 5}
 print(a | b)             # 합집합
-print(a & b)             # 교집합
+print(a &amp; b)             # 교집합
 print(a - b)             # 차집합
 </textarea>
-    <div class="run-bar">
-      <span class="left"><span class="file-name">📄 set_basic.py</span></span>
-      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
-      <button class="run-btn"><span class="play">▶</span> Run</button>
-    </div>
-  </div>
-  <div class="terminal">
-    <div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div>
-    <div class="terminal-body empty"></div>
-  </div>
-
-  <div class="key-points">
-    <div class="title">이 섹션의 핵심</div>
-    <ul>
-      <li><code class="inline">{1, 2, 3}</code>처럼 만들며, 빈 set은 <code class="inline">set()</code>.</li>
-      <li>중복을 자동으로 제거하고 <code class="inline">in</code>으로 포함 여부를 확인하기 좋음.</li>
-      <li><code class="inline">.add()</code>, <code class="inline">.discard()</code>로 값을 추가/제거.</li>
-      <li><code class="inline">|</code> 합집합, <code class="inline">&amp;</code> 교집합, <code class="inline">-</code> 차집합.</li>
-      <li>순서나 인덱스가 필요하면 리스트를 사용.</li>
-    </ul>
-  </div>
+<div class="run-bar">
+<span class="left"><span class="file-name">📄 set_basic.py</span></span>
+<span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+<button class="run-btn"><span class="play">▶</span> Run</button>
+</div>
+</div>
+<div class="terminal">
+<div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div>
+<div class="terminal-body empty"></div>
+</div>
+<div class="key-points">
+<div class="title">이 섹션의 핵심</div>
+<ul>
+<li><code class="inline">{1, 2, 3}</code>처럼 만들며, 빈 set은 <code class="inline">set()</code>.</li>
+<li>중복을 자동으로 제거하고 <code class="inline">in</code>으로 포함 여부를 확인하기 좋음.</li>
+<li><code class="inline">.add()</code>, <code class="inline">.discard()</code>로 값을 추가/제거.</li>
+<li><code class="inline">|</code> 합집합, <code class="inline">&amp;</code> 교집합, <code class="inline">-</code> 차집합.</li>
+<li>순서나 인덱스가 필요하면 리스트를 사용.</li>
+</ul>
+</div>
 </section>
-
 <!-- ==================== s5: 딕셔너리 ==================== -->
-<section class="section" id="s5">
-  <div class="section-num">SECTION 05</div>
-  <h2>딕셔너리 — 키와 값의 쌍</h2>
-
-  <p>
+<section class="section" id="s7">
+<div class="section-num">SECTION 07</div>
+<h2>딕셔너리 — 키와 값의 쌍</h2>
+<p>
     리스트가 "줄 세운 묶음"이라면, 딕셔너리(dict)는 <strong>"이름표가 붙은 묶음"</strong>입니다.
     학생 점수를 0번/1번/2번으로 찾는 게 리스트라면, "홍길동"/"이몽룡"으로 찾는 게 딕셔너리입니다.
   </p>
-
-  <h3>가장 단순한 형태</h3>
-
-  <div class="editor-block">
-    <div class="editor-tab-bar">
-      <span class="editor-tab"><span class="py-icon"></span>dict_basic.py</span>
-    </div>
-    <textarea class="editor-source">student = {
+<h3>가장 단순한 형태</h3>
+<div class="editor-block">
+<div class="editor-tab-bar">
+<span class="editor-tab"><span class="py-icon"></span>dict_basic.py</span>
+</div>
+<textarea class="editor-source">student = {
     "name": "홍길동",
     "age": 20,
     "score": 87.5
@@ -1348,92 +1096,67 @@ print(student["age"])     # 20
 student["age"] = 21
 print(student)
 </textarea>
-    <div class="run-bar">
-      <span class="left"><span class="file-name">📄 dict_basic.py</span></span>
-      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
-      <button class="run-btn"><span class="play">▶</span> Run</button>
-    </div>
-  </div>
-  <div class="terminal">
-    <div class="terminal-head">
-      <span class="label">실행 결과</span>
-      <span class="status">대기 중</span>
-    </div>
-    <div class="terminal-body empty"></div>
-  </div>
-
-  <h3>구조 — 키와 값의 매핑</h3>
-
-  <div class="figure">
-    <svg viewBox="0 0 700 240" xmlns="http://www.w3.org/2000/svg"
-         aria-label="딕셔너리 구조">
-      <text x="350" y="22" text-anchor="middle" font-family="Pretendard, sans-serif"
-            font-size="11" font-weight="700" fill="currentColor" opacity="0.85" letter-spacing="2">
+<div class="run-bar">
+<span class="left"><span class="file-name">📄 dict_basic.py</span></span>
+<span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+<button class="run-btn"><span class="play">▶</span> Run</button>
+</div>
+</div>
+<div class="terminal">
+<div class="terminal-head">
+<span class="label">실행 결과</span>
+<span class="status">대기 중</span>
+</div>
+<div class="terminal-body empty"></div>
+</div>
+<h3>구조 — 키와 값의 매핑</h3>
+<div class="figure">
+<svg aria-label="딕셔너리 구조" viewbox="0 0 700 240" xmlns="http://www.w3.org/2000/svg">
+<text fill="currentColor" font-family="Pretendard, sans-serif" font-size="11" font-weight="700" letter-spacing="2" opacity="0.85" text-anchor="middle" x="350" y="22">
         student = { "name": "홍길동", "age": 20, "score": 87.5 }
       </text>
-
-      <!-- dict 객체 -->
-      <rect x="80" y="60" width="540" height="160" rx="8"
-            fill="currentColor" opacity="0.05" stroke="var(--accent)" stroke-width="1.8"/>
-      <text x="92" y="78" font-family="JetBrains Mono, monospace" font-size="10"
-            fill="currentColor" opacity="0.75" font-weight="700">dict 객체</text>
-
-      <!-- 헤더 -->
-      <text x="180" y="105" text-anchor="middle" font-family="JetBrains Mono, monospace"
-            font-size="10" fill="currentColor" opacity="0.65" font-weight="700">KEY (불변만)</text>
-      <text x="500" y="105" text-anchor="middle" font-family="JetBrains Mono, monospace"
-            font-size="10" fill="currentColor" opacity="0.65" font-weight="700">VALUE (아무거나)</text>
-
-      <!-- 행 1 -->
-      <rect x="100" y="115" width="160" height="28" rx="3" fill="currentColor" opacity="0.06"/>
-      <text x="180" y="133" text-anchor="middle" font-family="JetBrains Mono, monospace"
-            font-size="12" font-weight="700" fill="currentColor">"name"</text>
-      <text x="280" y="132" text-anchor="middle" font-family="JetBrains Mono, monospace"
-            font-size="14" fill="var(--accent)" font-weight="700">→</text>
-      <rect x="300" y="115" width="300" height="28" rx="3" fill="currentColor" opacity="0.06"/>
-      <text x="450" y="133" text-anchor="middle" font-family="JetBrains Mono, monospace"
-            font-size="12" font-weight="700" fill="currentColor">"홍길동"</text>
-
-      <!-- 행 2 -->
-      <rect x="100" y="148" width="160" height="28" rx="3" fill="currentColor" opacity="0.06"/>
-      <text x="180" y="166" text-anchor="middle" font-family="JetBrains Mono, monospace"
-            font-size="12" font-weight="700" fill="currentColor">"age"</text>
-      <text x="280" y="165" text-anchor="middle" font-family="JetBrains Mono, monospace"
-            font-size="14" fill="var(--accent)" font-weight="700">→</text>
-      <rect x="300" y="148" width="300" height="28" rx="3" fill="currentColor" opacity="0.06"/>
-      <text x="450" y="166" text-anchor="middle" font-family="JetBrains Mono, monospace"
-            font-size="12" font-weight="700" fill="currentColor">20</text>
-
-      <!-- 행 3 -->
-      <rect x="100" y="181" width="160" height="28" rx="3" fill="currentColor" opacity="0.06"/>
-      <text x="180" y="199" text-anchor="middle" font-family="JetBrains Mono, monospace"
-            font-size="12" font-weight="700" fill="currentColor">"score"</text>
-      <text x="280" y="198" text-anchor="middle" font-family="JetBrains Mono, monospace"
-            font-size="14" fill="var(--accent)" font-weight="700">→</text>
-      <rect x="300" y="181" width="300" height="28" rx="3" fill="currentColor" opacity="0.06"/>
-      <text x="450" y="199" text-anchor="middle" font-family="JetBrains Mono, monospace"
-            font-size="12" font-weight="700" fill="currentColor">87.5</text>
-    </svg>
-    <div class="caption">그림 3.7 — 딕셔너리: 키 → 값 매핑</div>
-  </div>
-
-  <p>
+<!-- dict 객체 -->
+<rect fill="currentColor" height="160" opacity="0.05" rx="8" stroke="var(--accent)" stroke-width="1.8" width="540" x="80" y="60"></rect>
+<text fill="currentColor" font-family="JetBrains Mono, monospace" font-size="10" font-weight="700" opacity="0.75" x="92" y="78">dict 객체</text>
+<!-- 헤더 -->
+<text fill="currentColor" font-family="JetBrains Mono, monospace" font-size="10" font-weight="700" opacity="0.65" text-anchor="middle" x="180" y="105">KEY (불변만)</text>
+<text fill="currentColor" font-family="JetBrains Mono, monospace" font-size="10" font-weight="700" opacity="0.65" text-anchor="middle" x="500" y="105">VALUE (아무거나)</text>
+<!-- 행 1 -->
+<rect fill="currentColor" height="28" opacity="0.06" rx="3" width="160" x="100" y="115"></rect>
+<text fill="currentColor" font-family="JetBrains Mono, monospace" font-size="12" font-weight="700" text-anchor="middle" x="180" y="133">"name"</text>
+<text fill="var(--accent)" font-family="JetBrains Mono, monospace" font-size="14" font-weight="700" text-anchor="middle" x="280" y="132">→</text>
+<rect fill="currentColor" height="28" opacity="0.06" rx="3" width="300" x="300" y="115"></rect>
+<text fill="currentColor" font-family="JetBrains Mono, monospace" font-size="12" font-weight="700" text-anchor="middle" x="450" y="133">"홍길동"</text>
+<!-- 행 2 -->
+<rect fill="currentColor" height="28" opacity="0.06" rx="3" width="160" x="100" y="148"></rect>
+<text fill="currentColor" font-family="JetBrains Mono, monospace" font-size="12" font-weight="700" text-anchor="middle" x="180" y="166">"age"</text>
+<text fill="var(--accent)" font-family="JetBrains Mono, monospace" font-size="14" font-weight="700" text-anchor="middle" x="280" y="165">→</text>
+<rect fill="currentColor" height="28" opacity="0.06" rx="3" width="300" x="300" y="148"></rect>
+<text fill="currentColor" font-family="JetBrains Mono, monospace" font-size="12" font-weight="700" text-anchor="middle" x="450" y="166">20</text>
+<!-- 행 3 -->
+<rect fill="currentColor" height="28" opacity="0.06" rx="3" width="160" x="100" y="181"></rect>
+<text fill="currentColor" font-family="JetBrains Mono, monospace" font-size="12" font-weight="700" text-anchor="middle" x="180" y="199">"score"</text>
+<text fill="var(--accent)" font-family="JetBrains Mono, monospace" font-size="14" font-weight="700" text-anchor="middle" x="280" y="198">→</text>
+<rect fill="currentColor" height="28" opacity="0.06" rx="3" width="300" x="300" y="181"></rect>
+<text fill="currentColor" font-family="JetBrains Mono, monospace" font-size="12" font-weight="700" text-anchor="middle" x="450" y="199">87.5</text>
+</svg>
+<div class="caption">그림 3.7 — 딕셔너리: 키 → 값 매핑</div>
+</div>
+<p>
     딕셔너리 키(key)는 정확히는 <strong>hashable(해시 가능한) 객체</strong>여야 합니다.
     초보 단계에서는 <strong>문자열과 숫자를 키로 가장 많이 쓴다</strong>고 먼저 기억하세요.
   </p>
-  <p>
+<p>
     조금 더 정확히 말하면 튜플도 안의 모든 요소가 hashable이면 키가 될 수 있지만,
     리스트처럼 변경 가능한 객체는 키로 사용할 수 없습니다.
     값(value)은 어떤 타입이든 가능합니다.
   </p>
-
-  <h3>주요 동작</h3>
-
-  <div class="editor-block">
-    <div class="editor-tab-bar">
-      <span class="editor-tab"><span class="py-icon"></span>dict_ops.py</span>
-    </div>
-    <textarea class="editor-source">prices = {
+<h3>주요 동작</h3>
+<div class="editor-block">
+<div class="editor-tab-bar">
+<span class="editor-tab"><span class="py-icon"></span>dict_ops.py</span>
+</div>
+<textarea class="editor-source">prices = {
     "사과": 1500,
     "바나나": 800,
     "딸기": 5000
@@ -1466,33 +1189,30 @@ print(prices)
 # 길이
 print(len(prices))             # 남은 키 개수
 </textarea>
-    <div class="run-bar">
-      <span class="left"><span class="file-name">📄 dict_ops.py</span></span>
-      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
-      <button class="run-btn"><span class="play">▶</span> Run</button>
-    </div>
-  </div>
-  <div class="terminal">
-    <div class="terminal-head">
-      <span class="label">실행 결과</span>
-      <span class="status">대기 중</span>
-    </div>
-    <div class="terminal-body empty"></div>
-  </div>
-
-  <p>
-    <code class="inline">.get(키)</code>는 키가 없을 때 <code class="inline">None</code>을 돌려줘서
+<div class="run-bar">
+<span class="left"><span class="file-name">📄 dict_ops.py</span></span>
+<span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+<button class="run-btn"><span class="play">▶</span> Run</button>
+</div>
+</div>
+<div class="terminal">
+<div class="terminal-head">
+<span class="label">실행 결과</span>
+<span class="status">대기 중</span>
+</div>
+<div class="terminal-body empty"></div>
+</div>
+<p>
+<code class="inline">.get(키)</code>는 키가 없을 때 <code class="inline">None</code>을 돌려줘서
     안전합니다. 일반 <code class="inline">prices["수박"]</code>은 KeyError(없는 키에 접근했다는 에러)를 냅니다.
     <code class="inline">.get(키, 기본값)</code>으로 "없으면 이 값 사용"도 가능합니다.
   </p>
-
-  <h3>딕셔너리 순회</h3>
-
-  <div class="editor-block">
-    <div class="editor-tab-bar">
-      <span class="editor-tab"><span class="py-icon"></span>dict_for.py</span>
-    </div>
-    <textarea class="editor-source">prices = {"사과": 1500, "바나나": 800, "딸기": 5000}
+<h3>딕셔너리 순회</h3>
+<div class="editor-block">
+<div class="editor-tab-bar">
+<span class="editor-tab"><span class="py-icon"></span>dict_for.py</span>
+</div>
+<textarea class="editor-source">prices = {"사과": 1500, "바나나": 800, "딸기": 5000}
 
 # 키만 순회 (기본)
 for key in prices:
@@ -1516,46 +1236,54 @@ print("---")
 for key, value in prices.items():
     print(f"{key}: {value}원")
 </textarea>
-    <div class="run-bar">
-      <span class="left"><span class="file-name">📄 dict_for.py</span></span>
-      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
-      <button class="run-btn"><span class="play">▶</span> Run</button>
-    </div>
-  </div>
-  <div class="terminal">
-    <div class="terminal-head">
-      <span class="label">실행 결과</span>
-      <span class="status">대기 중</span>
-    </div>
-    <div class="terminal-body empty"></div>
-  </div>
-
-  <div class="key-points">
-    <div class="title">이 섹션의 핵심</div>
-    <ul>
-      <li>딕셔너리는 <code class="inline">{키: 값, ...}</code> 형태, 키로 값을 찾음.</li>
-      <li>키는 <strong>hashable 객체</strong>여야 함. 초보 단계에서는 문자열/숫자를 주로 사용.</li>
-      <li><code class="inline">d[키]</code>로 접근/추가/변경, <code class="inline">del</code>로 제거.</li>
-      <li><code class="inline">.get()</code>은 안전한 접근, <code class="inline">.keys()</code>/<code class="inline">.values()</code>/<code class="inline">.items()</code>로 순회.</li>
-      <li>딕셔너리도 mutable — append와 같은 메모리 모델 적용.</li>
-    </ul>
-  </div>
+<div class="run-bar">
+<span class="left"><span class="file-name">📄 dict_for.py</span></span>
+<span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+<button class="run-btn"><span class="play">▶</span> Run</button>
+</div>
+</div>
+<div class="terminal">
+<div class="terminal-head">
+<span class="label">실행 결과</span>
+<span class="status">대기 중</span>
+</div>
+<div class="terminal-body empty"></div>
+</div>
+<div class="key-points">
+<div class="title">이 섹션의 핵심</div>
+<ul>
+<li>딕셔너리는 <code class="inline">{키: 값, ...}</code> 형태, 키로 값을 찾음.</li>
+<li>키는 <strong>hashable 객체</strong>여야 함. 초보 단계에서는 문자열/숫자를 주로 사용.</li>
+<li><code class="inline">d[키]</code>로 접근/추가/변경, <code class="inline">del</code>로 제거.</li>
+<li><code class="inline">.get()</code>은 안전한 접근, <code class="inline">.keys()</code>/<code class="inline">.values()</code>/<code class="inline">.items()</code>로 순회.</li>
+<li>딕셔너리도 mutable — append와 같은 메모리 모델 적용.</li>
+</ul>
+</div>
 </section>
+<section class="section" id="s8">
+<div class="section-num">SECTION 08</div>
+<h2>컴프리헨션 확장 — list, dict, set</h2>
+<h3>얕은 복사 — 바깥 객체는 새로 만들어도 내부 객체는 공유할 수 있습니다</h3>
+<pre><code>a = [[1, 2], [3, 4]]
+b = a[:]
 
-<section class="section" id="s5b">
-  <div class="section-num">SECTION 05-B</div>
-  <h2>컴프리헨션 확장 — list, dict, set</h2>
+# a ─▶ outer A ─┬─▶ inner X
+#               └─▶ inner Y
+# b ─▶ outer B ─┬─▶ inner X
+#               └─▶ inner Y
 
-  <p>
+b[0].append(99)
+print(a)  # [[1,2,99], [3,4]]</code></pre>
+<p>슬라이싱으로 outer list는 새로 만들었지만 내부 list 참조는 공유합니다. Self Study의 shallow/deep copy에서 더 깊게 다룹니다.</p>
+<p>
     앞에서 리스트 컴프리헨션을 봤습니다. 같은 생각을 딕셔너리와 set에도 사용할 수 있습니다.
     실무 Python 코드에서 자주 보이므로 <strong>먼저 일반 for문으로 이해한 뒤 짧고 읽기 쉬울 때만</strong> 사용하는 습관이 좋습니다.
   </p>
-
-  <div class="editor-block">
-    <div class="editor-tab-bar">
-      <span class="editor-tab"><span class="py-icon"></span>comprehension_types.py</span>
-    </div>
-    <textarea class="editor-source">numbers = [1, 2, 3, 4, 5]
+<div class="editor-block">
+<div class="editor-tab-bar">
+<span class="editor-tab"><span class="py-icon"></span>comprehension_types.py</span>
+</div>
+<textarea class="editor-source">numbers = [1, 2, 3, 4, 5]
 
 # list comprehension — 값들을 리스트로
 squares = [n * n for n in numbers]
@@ -1574,53 +1302,68 @@ words = ["apple", "kiwi", "banana", "pear", "apple"]
 lengths = {len(word) for word in words}
 print(lengths)
 </textarea>
-    <div class="run-bar">
-      <span class="left"><span class="file-name">📄 comprehension_types.py</span></span>
-      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
-      <button class="run-btn"><span class="play">▶</span> Run</button>
-    </div>
-  </div>
-  <div class="terminal">
-    <div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div>
-    <div class="terminal-body empty"></div>
-  </div>
-
-  <div class="callout info">
-    <div class="label">괄호가 ()이면 튜플 컴프리헨션?</div>
-    <p>
+<div class="run-bar">
+<span class="left"><span class="file-name">📄 comprehension_types.py</span></span>
+<span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+<button class="run-btn"><span class="play">▶</span> Run</button>
+</div>
+</div>
+<div class="terminal">
+<div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div>
+<div class="terminal-body empty"></div>
+</div>
+<div class="callout info">
+<div class="label">괄호가 ()이면 튜플 컴프리헨션?</div>
+<p>
       아닙니다. <code class="inline">(n * n for n in numbers)</code>는 <strong>generator expression(제너레이터 표현식)</strong>입니다.
       제너레이터는 나중에 배울 주제이므로 지금은 "튜플 컴프리헨션은 없다" 정도만 기억하면 됩니다.
     </p>
-  </div>
-
-  <div class="key-points">
-    <div class="title">모양으로 구분하기</div>
-    <ul>
-      <li><code class="inline">[표현식 for ...]</code> → list comprehension</li>
-      <li><code class="inline">{키: 값 for ...}</code> → dict comprehension</li>
-      <li><code class="inline">{표현식 for ...}</code> → set comprehension</li>
-      <li><code class="inline">(표현식 for ...)</code> → generator expression (튜플 아님)</li>
-    </ul>
-  </div>
+</div>
+<div class="key-points">
+<div class="title">모양으로 구분하기</div>
+<ul>
+<li><code class="inline">[표현식 for ...]</code> → list comprehension</li>
+<li><code class="inline">{키: 값 for ...}</code> → dict comprehension</li>
+<li><code class="inline">{표현식 for ...}</code> → set comprehension</li>
+<li><code class="inline">(표현식 for ...)</code> → generator expression (튜플 아님)</li>
+</ul>
+</div>
 </section>
-
 <!-- ==================== s6: 함수 def ==================== -->
-<section class="section" id="s6">
-  <div class="section-num">SECTION 06</div>
-  <h2>함수 def — 코드 묶음 만들기</h2>
+<section class="section" id="s9">
+<div class="section-num">SECTION 09</div>
+<h2>함수 def — 코드 묶음 만들기</h2>
+<h3>함수 호출도 "객체 + 새 이름" 모델입니다</h3>
+<pre><code>def change(items):
+    items.append(99)
 
-  <p>
+x = [1, 2]
+change(x)
+
+# 호출 중
+# x ─────┐
+#        ├──▶ 같은 list
+# items ─┘</code></pre>
+<p>인자 x를 평가해 얻은 객체를 매개변수 이름 items도 가리킵니다. 따라서 같은 객체를 mutation하면 바깥에서도 보입니다.</p>
+<pre><code>def rebind(items):
+    items = items + [99]
+
+x = [1,2]
+rebind(x)
+print(x)  # [1,2]</code></pre>
+<p>이번에는 함수 안의 items 이름만 새 객체로 재연결됩니다.</p>
+<h3>print와 return은 서로 다른 일</h3>
+<p>print는 화면에 보여주고, return은 호출한 곳에 객체를 돌려줍니다. 그래서 <code class="inline">result = add(3, 7)</code>에서는 add 호출 표현식의 결과 객체가 result에 연결됩니다. 명시적 return이 없으면 None을 반환합니다.</p>
+<p>
     같은 일을 여러 번 한다면 <strong>함수로 묶어서 이름을 붙입니다</strong>.
     이제 직접 만들 차례입니다.
   </p>
-
-  <h3>가장 단순한 함수</h3>
-
-  <div class="editor-block">
-    <div class="editor-tab-bar">
-      <span class="editor-tab"><span class="py-icon"></span>def_basic.py</span>
-    </div>
-    <textarea class="editor-source">def greet():
+<h3>가장 단순한 함수</h3>
+<div class="editor-block">
+<div class="editor-tab-bar">
+<span class="editor-tab"><span class="py-icon"></span>def_basic.py</span>
+</div>
+<textarea class="editor-source">def greet():
     print("안녕하세요!")
     print("반갑습니다!")
 
@@ -1629,36 +1372,33 @@ greet()
 greet()
 greet()
 </textarea>
-    <div class="run-bar">
-      <span class="left"><span class="file-name">📄 def_basic.py</span></span>
-      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
-      <button class="run-btn"><span class="play">▶</span> Run</button>
-    </div>
-  </div>
-  <div class="terminal">
-    <div class="terminal-head">
-      <span class="label">실행 결과</span>
-      <span class="status">대기 중</span>
-    </div>
-    <div class="terminal-body empty"></div>
-  </div>
-
-  <p>
+<div class="run-bar">
+<span class="left"><span class="file-name">📄 def_basic.py</span></span>
+<span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+<button class="run-btn"><span class="play">▶</span> Run</button>
+</div>
+</div>
+<div class="terminal">
+<div class="terminal-head">
+<span class="label">실행 결과</span>
+<span class="status">대기 중</span>
+</div>
+<div class="terminal-body empty"></div>
+</div>
+<p>
     구조:
   </p>
-  <ul>
-    <li><code class="inline">def 함수이름():</code> — 정의 (콜론 필수)</li>
-    <li>들여쓰기된 블록이 함수의 몸체</li>
-    <li><code class="inline">함수이름()</code> — 호출</li>
-  </ul>
-
-  <h3>매개변수 — 입력 받기</h3>
-
-  <div class="editor-block">
-    <div class="editor-tab-bar">
-      <span class="editor-tab"><span class="py-icon"></span>def_param.py</span>
-    </div>
-    <textarea class="editor-source">def greet(name):
+<ul>
+<li><code class="inline">def 함수이름():</code> — 정의 (콜론 필수)</li>
+<li>들여쓰기된 블록이 함수의 몸체</li>
+<li><code class="inline">함수이름()</code> — 호출</li>
+</ul>
+<h3>매개변수 — 입력 받기</h3>
+<div class="editor-block">
+<div class="editor-tab-bar">
+<span class="editor-tab"><span class="py-icon"></span>def_param.py</span>
+</div>
+<textarea class="editor-source">def greet(name):
     print(f"안녕, {name}님!")
 
 greet("홍길동")
@@ -1672,32 +1412,29 @@ def add(a, b):
 add(3, 7)
 add(100, 200)
 </textarea>
-    <div class="run-bar">
-      <span class="left"><span class="file-name">📄 def_param.py</span></span>
-      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
-      <button class="run-btn"><span class="play">▶</span> Run</button>
-    </div>
-  </div>
-  <div class="terminal">
-    <div class="terminal-head">
-      <span class="label">실행 결과</span>
-      <span class="status">대기 중</span>
-    </div>
-    <div class="terminal-body empty"></div>
-  </div>
-
-  <h3>return — 결과 돌려주기</h3>
-
-  <p>
+<div class="run-bar">
+<span class="left"><span class="file-name">📄 def_param.py</span></span>
+<span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+<button class="run-btn"><span class="play">▶</span> Run</button>
+</div>
+</div>
+<div class="terminal">
+<div class="terminal-head">
+<span class="label">실행 결과</span>
+<span class="status">대기 중</span>
+</div>
+<div class="terminal-body empty"></div>
+</div>
+<h3>return — 결과 돌려주기</h3>
+<p>
     함수가 <strong>값을 만들어 돌려주려면</strong> <code class="inline">return</code>을 씁니다.
     <code class="inline">return</code>이 없으면 자동으로 <code class="inline">None</code>이 반환됩니다.
   </p>
-
-  <div class="editor-block">
-    <div class="editor-tab-bar">
-      <span class="editor-tab"><span class="py-icon"></span>def_return.py</span>
-    </div>
-    <textarea class="editor-source">def add(a, b):
+<div class="editor-block">
+<div class="editor-tab-bar">
+<span class="editor-tab"><span class="py-icon"></span>def_return.py</span>
+</div>
+<textarea class="editor-source">def add(a, b):
     return a + b
 
 result = add(3, 7)
@@ -1711,113 +1448,88 @@ def greet(name):
 x = greet("홍길동")
 print(x)              # None
 </textarea>
-    <div class="run-bar">
-      <span class="left"><span class="file-name">📄 def_return.py</span></span>
-      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
-      <button class="run-btn"><span class="play">▶</span> Run</button>
-    </div>
-  </div>
-  <div class="terminal">
-    <div class="terminal-head">
-      <span class="label">실행 결과</span>
-      <span class="status">대기 중</span>
-    </div>
-    <div class="terminal-body empty"></div>
-  </div>
-
-  <h3>docstring — 함수가 무엇을 하는지 남기는 설명</h3>
+<div class="run-bar">
+<span class="left"><span class="file-name">📄 def_return.py</span></span>
+<span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+<button class="run-btn"><span class="play">▶</span> Run</button>
+</div>
+</div>
+<div class="terminal">
+<div class="terminal-head">
+<span class="label">실행 결과</span>
+<span class="status">대기 중</span>
+</div>
+<div class="terminal-body empty"></div>
+</div>
+<h3>docstring — 함수가 무엇을 하는지 남기는 설명</h3>
 <div class="editor-block">
-  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>docstring.py</span></div>
-  <textarea class="editor-source">def calculate_total(price, count):
+<div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>docstring.py</span></div>
+<textarea class="editor-source">def calculate_total(price, count):
     """가격과 개수를 받아 총액을 계산해 반환한다."""
     return price * count
 
 print(calculate_total(1500, 3))
 print(calculate_total.__doc__)
 </textarea>
-  <div class="run-bar"><span class="left"><span class="file-name">📄 docstring.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+<div class="run-bar"><span class="left"><span class="file-name">📄 docstring.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
 </div>
 <div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div>
-  <p><code class="inline"># 주석</code>은 코드 주변의 설명이고, 함수 바로 아래의 <code class="inline">"""..."""</code>는 그 함수의 공식 설명인 <strong>docstring</strong>으로 사용됩니다. 실무에서는 IDE와 문서화 도구도 이 내용을 활용합니다.</p>
-  <h3>함수 호출 시 메모리에서 일어나는 일</h3>
-
-  <div class="figure">
-    <svg viewBox="0 0 720 280" xmlns="http://www.w3.org/2000/svg"
-         aria-label="함수 호출 시 매개변수와 메모리">
-      <text x="360" y="22" text-anchor="middle" font-family="Pretendard, sans-serif"
-            font-size="11" font-weight="700" fill="currentColor" opacity="0.85" letter-spacing="2">
+<p><code class="inline"># 주석</code>은 코드 주변의 설명이고, 함수 바로 아래의 <code class="inline">"""..."""</code>는 그 함수의 공식 설명인 <strong>docstring</strong>으로 사용됩니다. 실무에서는 IDE와 문서화 도구도 이 내용을 활용합니다.</p>
+<h3>함수 호출 시 메모리에서 일어나는 일</h3>
+<div class="figure">
+<svg aria-label="함수 호출 시 매개변수와 메모리" viewbox="0 0 720 280" xmlns="http://www.w3.org/2000/svg">
+<text fill="currentColor" font-family="Pretendard, sans-serif" font-size="11" font-weight="700" letter-spacing="2" opacity="0.85" text-anchor="middle" x="360" y="22">
         add(3, 7) 호출 시 메모리
       </text>
-
-      <!-- 호출자 영역 -->
-      <text x="180" y="56" text-anchor="middle" font-family="Pretendard, sans-serif"
-            font-size="12" font-weight="700" fill="currentColor">호출자 (바깥)</text>
-      <rect x="40" y="70" width="280" height="180" rx="8"
-            fill="currentColor" opacity="0.04" stroke="currentColor" stroke-opacity="0.4"
-            stroke-dasharray="4 3"/>
-      <g font-family="JetBrains Mono, monospace" font-size="11" fill="currentColor">
-        <text x="60" y="100">x = 3</text>
-        <text x="60" y="125">y = 7</text>
-        <text x="60" y="155" fill="var(--accent)" font-weight="700">result = add(x, y)</text>
-        <text x="60" y="180" opacity="0.6">↓</text>
-        <text x="60" y="205" font-style="italic" opacity="0.65">x, y는 호출 전후 그대로</text>
-      </g>
-
-      <!-- 화살표 호출 -->
-      <defs>
-        <marker id="arr-fn-1" viewBox="0 0 10 10" refX="9" refY="5"
-                markerWidth="6" markerHeight="6" orient="auto">
-          <path d="M0,0 L10,5 L0,10 z" fill="var(--accent)" opacity="0.7"/>
-        </marker>
-      </defs>
-      <line x1="320" y1="155" x2="400" y2="155" stroke="var(--accent)"
-            stroke-width="2" marker-end="url(#arr-fn-1)"/>
-      <text x="360" y="142" text-anchor="middle" font-family="Pretendard, sans-serif"
-            font-size="10" fill="var(--accent)" font-weight="700">값 전달</text>
-      <text x="360" y="172" text-anchor="middle" font-family="Pretendard, sans-serif"
-            font-size="10" fill="var(--accent)" opacity="0.7">3, 7</text>
-
-      <!-- 함수 안 영역 -->
-      <text x="540" y="56" text-anchor="middle" font-family="Pretendard, sans-serif"
-            font-size="12" font-weight="700" fill="currentColor">함수 안 (안쪽)</text>
-      <rect x="400" y="70" width="280" height="180" rx="8"
-            fill="var(--accent)" opacity="0.06"
-            stroke="var(--accent)" stroke-opacity="0.5"
-            stroke-dasharray="4 3"/>
-      <g font-family="JetBrains Mono, monospace" font-size="11" fill="currentColor">
-        <text x="420" y="100" font-weight="700" fill="var(--accent)">def add(a, b):</text>
-        <text x="430" y="125" opacity="0.85">a = 3  ← 새 이름표</text>
-        <text x="430" y="145" opacity="0.85">b = 7  ← 새 이름표</text>
-        <text x="430" y="170">return a + b</text>
-        <text x="420" y="200" opacity="0.65" font-style="italic">함수 끝나면 a, b 사라짐</text>
-      </g>
-
-      <!-- 반환 화살표 (아래쪽) -->
-      <line x1="540" y1="265" x2="200" y2="265" stroke="var(--accent)"
-            stroke-width="2" stroke-dasharray="4 2" marker-end="url(#arr-fn-1)"/>
-      <text x="370" y="272" text-anchor="middle" font-family="Pretendard, sans-serif"
-            font-size="10" fill="var(--accent)" font-weight="700">return 값 ← 호출자로</text>
-    </svg>
-    <div class="caption">그림 3.8 — 함수 호출 시 매개변수는 새 이름표, 끝나면 사라짐</div>
-  </div>
-
-  <p>
-    <strong>매개변수 a, b는 함수 안에서만 살아있는 새 이름표</strong>입니다.
+<!-- 호출자 영역 -->
+<text fill="currentColor" font-family="Pretendard, sans-serif" font-size="12" font-weight="700" text-anchor="middle" x="180" y="56">호출자 (바깥)</text>
+<rect fill="currentColor" height="180" opacity="0.04" rx="8" stroke="currentColor" stroke-dasharray="4 3" stroke-opacity="0.4" width="280" x="40" y="70"></rect>
+<g fill="currentColor" font-family="JetBrains Mono, monospace" font-size="11">
+<text x="60" y="100">x = 3</text>
+<text x="60" y="125">y = 7</text>
+<text fill="var(--accent)" font-weight="700" x="60" y="155">result = add(x, y)</text>
+<text opacity="0.6" x="60" y="180">↓</text>
+<text font-style="italic" opacity="0.65" x="60" y="205">x, y는 호출 전후 그대로</text>
+</g>
+<!-- 화살표 호출 -->
+<defs>
+<marker id="arr-fn-1" markerheight="6" markerwidth="6" orient="auto" refx="9" refy="5" viewbox="0 0 10 10">
+<path d="M0,0 L10,5 L0,10 z" fill="var(--accent)" opacity="0.7"></path>
+</marker>
+</defs>
+<line marker-end="url(#arr-fn-1)" stroke="var(--accent)" stroke-width="2" x1="320" x2="400" y1="155" y2="155"></line>
+<text fill="var(--accent)" font-family="Pretendard, sans-serif" font-size="10" font-weight="700" text-anchor="middle" x="360" y="142">값 전달</text>
+<text fill="var(--accent)" font-family="Pretendard, sans-serif" font-size="10" opacity="0.7" text-anchor="middle" x="360" y="172">3, 7</text>
+<!-- 함수 안 영역 -->
+<text fill="currentColor" font-family="Pretendard, sans-serif" font-size="12" font-weight="700" text-anchor="middle" x="540" y="56">함수 안 (안쪽)</text>
+<rect fill="var(--accent)" height="180" opacity="0.06" rx="8" stroke="var(--accent)" stroke-dasharray="4 3" stroke-opacity="0.5" width="280" x="400" y="70"></rect>
+<g fill="currentColor" font-family="JetBrains Mono, monospace" font-size="11">
+<text fill="var(--accent)" font-weight="700" x="420" y="100">def add(a, b):</text>
+<text opacity="0.85" x="430" y="125">a = 3  ← 새 이름표</text>
+<text opacity="0.85" x="430" y="145">b = 7  ← 새 이름표</text>
+<text x="430" y="170">return a + b</text>
+<text font-style="italic" opacity="0.65" x="420" y="200">함수 끝나면 a, b 사라짐</text>
+</g>
+<!-- 반환 화살표 (아래쪽) -->
+<line marker-end="url(#arr-fn-1)" stroke="var(--accent)" stroke-dasharray="4 2" stroke-width="2" x1="540" x2="200" y1="265" y2="265"></line>
+<text fill="var(--accent)" font-family="Pretendard, sans-serif" font-size="10" font-weight="700" text-anchor="middle" x="370" y="272">return 값 ← 호출자로</text>
+</svg>
+<div class="caption">그림 3.8 — 함수 호출 시 매개변수는 새 이름표, 끝나면 사라짐</div>
+</div>
+<p>
+<strong>매개변수 a, b는 함수 안에서만 살아있는 새 이름표</strong>입니다.
     호출자의 x, y와는 별개입니다. 함수가 끝나면 a, b는 사라집니다.
   </p>
-
-  <h3>함수 안의 변수 — 지역 변수</h3>
-
-  <p>
+<h3>함수 안의 변수 — 지역 변수</h3>
+<p>
     함수 안에서 만든 변수는 보통 <strong>그 함수 안에서만 사용하는 지역 변수(local variable)</strong>입니다.
     함수는 자기 작업 공간을 하나 갖는다고 생각하면 쉽습니다.
   </p>
-
-  <div class="editor-block">
-    <div class="editor-tab-bar">
-      <span class="editor-tab"><span class="py-icon"></span>local_scope.py</span>
-    </div>
-    <textarea class="editor-source">def calculate_price(price, count):
+<div class="editor-block">
+<div class="editor-tab-bar">
+<span class="editor-tab"><span class="py-icon"></span>local_scope.py</span>
+</div>
+<textarea class="editor-source">def calculate_price(price, count):
     total = price * count   # total은 함수 안의 지역 변수
     return total
 
@@ -1826,30 +1538,27 @@ print(result)
 
 # print(total)  # 함수 밖에서는 total을 직접 사용할 수 없어 NameError
 </textarea>
-    <div class="run-bar">
-      <span class="left"><span class="file-name">📄 local_scope.py</span></span>
-      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
-      <button class="run-btn"><span class="play">▶</span> Run</button>
-    </div>
-  </div>
-  <div class="terminal">
-    <div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div>
-    <div class="terminal-body empty"></div>
-  </div>
-
-  <p>
+<div class="run-bar">
+<span class="left"><span class="file-name">📄 local_scope.py</span></span>
+<span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+<button class="run-btn"><span class="play">▶</span> Run</button>
+</div>
+</div>
+<div class="terminal">
+<div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div>
+<div class="terminal-body empty"></div>
+</div>
+<p>
     실무에서는 함수가 바깥 상태를 직접 많이 바꾸게 만들기보다, 필요한 값을 매개변수로 받고 결과를
     <code class="inline">return</code>하는 형태가 코드를 이해하고 테스트하기 쉽습니다.
     <code class="inline">global</code>이라는 문법도 있지만 초보 단계에서는 우선 피하는 습관이 좋습니다.
   </p>
-
-  <h3>여러 값 반환 — 튜플 활용</h3>
-
-  <div class="editor-block">
-    <div class="editor-tab-bar">
-      <span class="editor-tab"><span class="py-icon"></span>def_multi_return.py</span>
-    </div>
-    <textarea class="editor-source">def stats(numbers):
+<h3>여러 값 반환 — 튜플 활용</h3>
+<div class="editor-block">
+<div class="editor-tab-bar">
+<span class="editor-tab"><span class="py-icon"></span>def_multi_return.py</span>
+</div>
+<textarea class="editor-source">def stats(numbers):
     total = sum(numbers)
     avg = total / len(numbers)
     return total, avg     # 사실은 (total, avg) 튜플
@@ -1861,57 +1570,52 @@ total, average = stats(scores)
 print(f"합계: {total}")
 print(f"평균: {average:.1f}")
 </textarea>
-    <div class="run-bar">
-      <span class="left"><span class="file-name">📄 def_multi_return.py</span></span>
-      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
-      <button class="run-btn"><span class="play">▶</span> Run</button>
-    </div>
-  </div>
-  <div class="terminal">
-    <div class="terminal-head">
-      <span class="label">실행 결과</span>
-      <span class="status">대기 중</span>
-    </div>
-    <div class="terminal-body empty"></div>
-  </div>
-
-  <div class="callout info">
-    <div class="label">조심할 함정 — mutable을 함수에 넘기면</div>
-    <p>
+<div class="run-bar">
+<span class="left"><span class="file-name">📄 def_multi_return.py</span></span>
+<span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+<button class="run-btn"><span class="play">▶</span> Run</button>
+</div>
+</div>
+<div class="terminal">
+<div class="terminal-head">
+<span class="label">실행 결과</span>
+<span class="status">대기 중</span>
+</div>
+<div class="terminal-body empty"></div>
+</div>
+<div class="callout info">
+<div class="label">조심할 함정 — mutable을 함수에 넘기면</div>
+<p>
       매개변수는 새 이름표지만, 그 이름표가 가리키는 객체가 mutable이면
       함수 안에서 변경하면 호출자의 객체도 변합니다 (같은 객체이므로!).
       예: <code class="inline">def add_item(lst): lst.append(99)</code>를 호출하면
       바깥의 리스트가 진짜로 변합니다.
     </p>
-  </div>
-
-  <div class="key-points">
-    <div class="title">이 섹션의 핵심</div>
-    <ul>
-      <li><code class="inline">def 함수이름(매개변수):</code> 형태로 정의, 들여쓰기로 본문.</li>
-      <li><code class="inline">return</code>으로 결과 반환. 없으면 None.</li>
-      <li>매개변수는 함수 안의 새 이름표 — 함수 끝나면 사라짐.</li>
-      <li>여러 값 반환은 튜플로 자동 — 다중 할당으로 풀어 받기.</li>
-    </ul>
-  </div>
+</div>
+<div class="key-points">
+<div class="title">이 섹션의 핵심</div>
+<ul>
+<li><code class="inline">def 함수이름(매개변수):</code> 형태로 정의, 들여쓰기로 본문.</li>
+<li><code class="inline">return</code>으로 결과 반환. 없으면 None.</li>
+<li>매개변수는 함수 안의 새 이름표 — 함수 끝나면 사라짐.</li>
+<li>여러 값 반환은 튜플로 자동 — 다중 할당으로 풀어 받기.</li>
+</ul>
+</div>
 </section>
-
 <!-- ==================== s7: 매개변수 / 기본값 / 다중 할당 ==================== -->
-<section class="section" id="s7">
-  <div class="section-num">SECTION 07</div>
-  <h2>매개변수, 기본값, 다중 할당</h2>
-
-  <h3>위치 인자 vs 키워드 인자</h3>
-
-  <p>
+<section class="section" id="s10">
+<div class="section-num">SECTION 10</div>
+<h2>매개변수, 기본값, 다중 할당</h2>
+<div class="callout info"><div class="label">이 장은 Self Study에서 크게 확장됩니다</div><p>positional/keyword/default뿐 아니라 packing/unpacking, <code>*args</code>, <code>**kwargs</code>, 호출에서의 <code>*</code>/<code>**</code>, positional-only(<code>/</code>), keyword-only(<code>*</code>)까지 "인자 매칭"이라는 하나의 원리로 다시 배웁니다.</p></div>
+<h3>위치 인자 vs 키워드 인자</h3>
+<p>
     함수를 호출할 때 인자를 넘기는 두 가지 방법이 있습니다.
   </p>
-
-  <div class="editor-block">
-    <div class="editor-tab-bar">
-      <span class="editor-tab"><span class="py-icon"></span>args.py</span>
-    </div>
-    <textarea class="editor-source">def order(item, count, size):
+<div class="editor-block">
+<div class="editor-tab-bar">
+<span class="editor-tab"><span class="py-icon"></span>args.py</span>
+</div>
+<textarea class="editor-source">def order(item, count, size):
     print(f"{item} {count}개 ({size} 사이즈)")
 
 # 위치 인자 — 순서대로
@@ -1923,31 +1627,28 @@ order(item="라떼", count=1, size="미디엄")
 # 섞어서 (위치 먼저, 키워드 나중)
 order("아메리카노", count=3, size="스몰")
 </textarea>
-    <div class="run-bar">
-      <span class="left"><span class="file-name">📄 args.py</span></span>
-      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
-      <button class="run-btn"><span class="play">▶</span> Run</button>
-    </div>
-  </div>
-  <div class="terminal">
-    <div class="terminal-head">
-      <span class="label">실행 결과</span>
-      <span class="status">대기 중</span>
-    </div>
-    <div class="terminal-body empty"></div>
-  </div>
-
-  <h3>기본값 — 자주 쓰는 값 미리 정해두기</h3>
-
-  <p>
+<div class="run-bar">
+<span class="left"><span class="file-name">📄 args.py</span></span>
+<span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+<button class="run-btn"><span class="play">▶</span> Run</button>
+</div>
+</div>
+<div class="terminal">
+<div class="terminal-head">
+<span class="label">실행 결과</span>
+<span class="status">대기 중</span>
+</div>
+<div class="terminal-body empty"></div>
+</div>
+<h3>기본값 — 자주 쓰는 값 미리 정해두기</h3>
+<p>
     매개변수에 <strong>기본값</strong>을 주면 호출 시 생략할 수 있습니다.
   </p>
-
-  <div class="editor-block">
-    <div class="editor-tab-bar">
-      <span class="editor-tab"><span class="py-icon"></span>defaults.py</span>
-    </div>
-    <textarea class="editor-source">def greet(name, greeting="안녕"):
+<div class="editor-block">
+<div class="editor-tab-bar">
+<span class="editor-tab"><span class="py-icon"></span>defaults.py</span>
+</div>
+<textarea class="editor-source">def greet(name, greeting="안녕"):
     print(f"{greeting}, {name}님!")
 
 greet("홍길동")              # 안녕, 홍길동님!
@@ -1962,70 +1663,61 @@ order("커피")                 # 기본값으로 1개 미디엄
 order("라떼", 2)              # 2개, 미디엄
 order("아메리카노", size="라지")  # 1개, 라지
 </textarea>
-    <div class="run-bar">
-      <span class="left"><span class="file-name">📄 defaults.py</span></span>
-      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
-      <button class="run-btn"><span class="play">▶</span> Run</button>
-    </div>
-  </div>
-  <div class="terminal">
-    <div class="terminal-head">
-      <span class="label">실행 결과</span>
-      <span class="status">대기 중</span>
-    </div>
-    <div class="terminal-body empty"></div>
-  </div>
-
-  <div class="figure">
-    <svg viewBox="0 0 720 200" xmlns="http://www.w3.org/2000/svg"
-         aria-label="매개변수 전달 방식">
-      <text x="360" y="22" text-anchor="middle" font-family="Pretendard, sans-serif"
-            font-size="11" font-weight="700" fill="currentColor" opacity="0.85" letter-spacing="2">
+<div class="run-bar">
+<span class="left"><span class="file-name">📄 defaults.py</span></span>
+<span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+<button class="run-btn"><span class="play">▶</span> Run</button>
+</div>
+</div>
+<div class="terminal">
+<div class="terminal-head">
+<span class="label">실행 결과</span>
+<span class="status">대기 중</span>
+</div>
+<div class="terminal-body empty"></div>
+</div>
+<div class="figure">
+<svg aria-label="매개변수 전달 방식" viewbox="0 0 720 200" xmlns="http://www.w3.org/2000/svg">
+<text fill="currentColor" font-family="Pretendard, sans-serif" font-size="11" font-weight="700" letter-spacing="2" opacity="0.85" text-anchor="middle" x="360" y="22">
         매개변수 전달 — 위치, 키워드, 기본값
       </text>
-
-      <!-- 함수 정의 박스 -->
-      <rect x="60" y="50" width="600" height="56" rx="8"
-            fill="#2b2b2b"/>
-      <text x="80" y="84" font-family="JetBrains Mono, monospace" font-size="14">
-        <tspan fill="#cc7832" font-weight="700">def</tspan>
-        <tspan fill="#a9b7c6"> </tspan>
-        <tspan fill="#ffc66d" font-weight="700">order</tspan>
-        <tspan fill="#a9b7c6">(item, </tspan>
-        <tspan fill="#a9b7c6">count</tspan>
-        <tspan fill="#cc7832">=</tspan>
-        <tspan fill="#6897bb">1</tspan>
-        <tspan fill="#a9b7c6">, size</tspan>
-        <tspan fill="#cc7832">=</tspan>
-        <tspan fill="#6a8759">"미디엄"</tspan>
-        <tspan fill="#a9b7c6">):</tspan>
-      </text>
-
-      <!-- 호출 예시들 -->
-      <text x="60" y="135" font-family="JetBrains Mono, monospace" font-size="12" fill="currentColor">
-        <tspan fill="var(--accent)" font-weight="700">order("커피")</tspan>
-        <tspan opacity="0.7">  → item="커피", count=1, size="미디엄"</tspan>
-      </text>
-      <text x="60" y="158" font-family="JetBrains Mono, monospace" font-size="12" fill="currentColor">
-        <tspan fill="var(--accent)" font-weight="700">order("라떼", 2)</tspan>
-        <tspan opacity="0.7">  → item="라떼", count=2, size="미디엄"</tspan>
-      </text>
-      <text x="60" y="181" font-family="JetBrains Mono, monospace" font-size="12" fill="currentColor">
-        <tspan fill="var(--accent)" font-weight="700">order("아메", size="라지")</tspan>
-        <tspan opacity="0.7">  → item="아메", count=1, size="라지"</tspan>
-      </text>
-    </svg>
-    <div class="caption">그림 3.9 — 매개변수 전달의 세 가지 방식이 한 함수에 공존</div>
-  </div>
-
-  <h3>다중 할당 복습 — 한 줄에 여러 변수</h3>
-
-
-  <div class="editor-block">
-    <div class="editor-tab-bar">
-      <span class="editor-tab"><span class="py-icon"></span>multi_assign.py</span>
-    </div>
-    <textarea class="editor-source"># 한 줄 다중 할당
+<!-- 함수 정의 박스 -->
+<rect fill="#2b2b2b" height="56" rx="8" width="600" x="60" y="50"></rect>
+<text font-family="JetBrains Mono, monospace" font-size="14" x="80" y="84">
+<tspan fill="#cc7832" font-weight="700">def</tspan>
+<tspan fill="#a9b7c6"> </tspan>
+<tspan fill="#ffc66d" font-weight="700">order</tspan>
+<tspan fill="#a9b7c6">(item, </tspan>
+<tspan fill="#a9b7c6">count</tspan>
+<tspan fill="#cc7832">=</tspan>
+<tspan fill="#6897bb">1</tspan>
+<tspan fill="#a9b7c6">, size</tspan>
+<tspan fill="#cc7832">=</tspan>
+<tspan fill="#6a8759">"미디엄"</tspan>
+<tspan fill="#a9b7c6">):</tspan>
+</text>
+<!-- 호출 예시들 -->
+<text fill="currentColor" font-family="JetBrains Mono, monospace" font-size="12" x="60" y="135">
+<tspan fill="var(--accent)" font-weight="700">order("커피")</tspan>
+<tspan opacity="0.7">  → item="커피", count=1, size="미디엄"</tspan>
+</text>
+<text fill="currentColor" font-family="JetBrains Mono, monospace" font-size="12" x="60" y="158">
+<tspan fill="var(--accent)" font-weight="700">order("라떼", 2)</tspan>
+<tspan opacity="0.7">  → item="라떼", count=2, size="미디엄"</tspan>
+</text>
+<text fill="currentColor" font-family="JetBrains Mono, monospace" font-size="12" x="60" y="181">
+<tspan fill="var(--accent)" font-weight="700">order("아메", size="라지")</tspan>
+<tspan opacity="0.7">  → item="아메", count=1, size="라지"</tspan>
+</text>
+</svg>
+<div class="caption">그림 3.9 — 매개변수 전달의 세 가지 방식이 한 함수에 공존</div>
+</div>
+<h3>다중 할당 복습 — 한 줄에 여러 변수</h3>
+<div class="editor-block">
+<div class="editor-tab-bar">
+<span class="editor-tab"><span class="py-icon"></span>multi_assign.py</span>
+</div>
+<textarea class="editor-source"># 한 줄 다중 할당
 a, b, c = 1, 2, 3
 print(a, b, c)
 
@@ -2044,32 +1736,29 @@ print(f"몫: {q}, 나머지: {r}")
 _, only_remainder = divmod_kr(17, 5)
 print(only_remainder)
 </textarea>
-    <div class="run-bar">
-      <span class="left"><span class="file-name">📄 multi_assign.py</span></span>
-      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
-      <button class="run-btn"><span class="play">▶</span> Run</button>
-    </div>
-  </div>
-  <div class="terminal">
-    <div class="terminal-head">
-      <span class="label">실행 결과</span>
-      <span class="status">대기 중</span>
-    </div>
-    <div class="terminal-body empty"></div>
-  </div>
-
-  <h3>확장 언패킹 — *로 나머지 받기</h3>
-
-  <p>
+<div class="run-bar">
+<span class="left"><span class="file-name">📄 multi_assign.py</span></span>
+<span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+<button class="run-btn"><span class="play">▶</span> Run</button>
+</div>
+</div>
+<div class="terminal">
+<div class="terminal-head">
+<span class="label">실행 결과</span>
+<span class="status">대기 중</span>
+</div>
+<div class="terminal-body empty"></div>
+</div>
+<h3>확장 언패킹 — *로 나머지 받기</h3>
+<p>
     값을 여러 변수로 풀어 받을 때 <code class="inline">*</code>를 붙인 변수는 <strong>남은 값들을 리스트로</strong> 받습니다.
     실제 데이터의 "첫 값과 나머지"를 나눌 때 유용합니다.
   </p>
-
-  <div class="editor-block">
-    <div class="editor-tab-bar">
-      <span class="editor-tab"><span class="py-icon"></span>extended_unpack.py</span>
-    </div>
-    <textarea class="editor-source">numbers = [10, 20, 30, 40]
+<div class="editor-block">
+<div class="editor-tab-bar">
+<span class="editor-tab"><span class="py-icon"></span>extended_unpack.py</span>
+</div>
+<textarea class="editor-source">numbers = [10, 20, 30, 40]
 
 first, *rest = numbers
 print(first)   # 10
@@ -2080,99 +1769,89 @@ print(first)
 print(middle)
 print(last)
 </textarea>
-    <div class="run-bar">
-      <span class="left"><span class="file-name">📄 extended_unpack.py</span></span>
-      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
-      <button class="run-btn"><span class="play">▶</span> Run</button>
-    </div>
-  </div>
-  <div class="terminal">
-    <div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div>
-    <div class="terminal-body empty"></div>
-  </div>
-
-  <h3>실무 코드에서 자주 보이는 *args와 **kwargs — 먼저 읽을 줄 알기</h3>
-
-  <p>
+<div class="run-bar">
+<span class="left"><span class="file-name">📄 extended_unpack.py</span></span>
+<span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+<button class="run-btn"><span class="play">▶</span> Run</button>
+</div>
+</div>
+<div class="terminal">
+<div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div>
+<div class="terminal-body empty"></div>
+</div>
+<h3>실무 코드에서 자주 보이는 *args와 **kwargs — 먼저 읽을 줄 알기</h3>
+<p>
     함수가 받을 인자의 개수가 정해져 있지 않을 때 <code class="inline">*args</code>와 <code class="inline">**kwargs</code>를 자주 봅니다.
     지금 당장 복잡하게 사용할 필요는 없고, <strong>*args는 추가 위치 인자들을 튜플로, **kwargs는 추가 키워드 인자들을 딕셔너리로 받는다</strong>고 읽을 수 있으면 충분합니다.
   </p>
-
-  <div class="editor-block">
-    <div class="editor-tab-bar">
-      <span class="editor-tab"><span class="py-icon"></span>var_args.py</span>
-    </div>
-    <textarea class="editor-source">def show_args(*args, **kwargs):
+<div class="editor-block">
+<div class="editor-tab-bar">
+<span class="editor-tab"><span class="py-icon"></span>var_args.py</span>
+</div>
+<textarea class="editor-source">def show_args(*args, **kwargs):
     print("args:", args)
     print("kwargs:", kwargs)
 
 show_args(10, 20, 30, name="홍길동", active=True)
 </textarea>
-    <div class="run-bar">
-      <span class="left"><span class="file-name">📄 var_args.py</span></span>
-      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
-      <button class="run-btn"><span class="play">▶</span> Run</button>
-    </div>
-  </div>
-  <div class="terminal">
-    <div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div>
-    <div class="terminal-body empty"></div>
-  </div>
-
-  <div class="callout info">
-    <div class="label">기본값에 mutable 객체를 두면 안 되는 함정</div>
-    <p>
-      <code class="inline">def f(items=[]):</code>처럼 기본값에 리스트나 딕셔너리를 두면
+<div class="run-bar">
+<span class="left"><span class="file-name">📄 var_args.py</span></span>
+<span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+<button class="run-btn"><span class="play">▶</span> Run</button>
+</div>
+</div>
+<div class="terminal">
+<div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div>
+<div class="terminal-body empty"></div>
+</div>
+<div class="callout info">
+<div class="label">기본값에 mutable 객체를 두면 안 되는 함정</div>
+<p>
+<code class="inline">def f(items=[]):</code>처럼 기본값에 리스트나 딕셔너리를 두면
       예상치 못한 동작이 생길 수 있습니다 (같은 리스트가 호출 간에 공유됨).
       4주차 s01에서 이 문제를 해결합니다. 지금은 <strong>"리스트·딕셔너리·set처럼 바뀔 수 있는 객체를 기본값으로 바로 두지 말자"</strong>고 기억하면 충분합니다.
     </p>
-  </div>
-
-  <div class="key-points">
-    <div class="title">이 섹션의 핵심</div>
-    <ul>
-      <li>위치 인자(순서대로) / 키워드 인자(이름 명시) 둘 다 가능, 섞을 수도 있음.</li>
-      <li>기본값으로 자주 쓰는 값 미리 지정 — <code class="inline">def f(x, y=10):</code>.</li>
-      <li>다중 할당 <code class="inline">a, b, c = 1, 2, 3</code> — 함수 다중 반환과 잘 어울림.</li>
-      <li><code class="inline">first, *rest = values</code>처럼 확장 언패킹 가능.</li>
-      <li><code class="inline">*args</code>는 추가 위치 인자, <code class="inline">**kwargs</code>는 추가 키워드 인자를 모아 받음.</li>
-      <li>기본값에는 mutable 객체 두지 말 것 (4주차에서 다시).</li>
-    </ul>
-  </div>
+</div>
+<div class="key-points">
+<div class="title">이 섹션의 핵심</div>
+<ul>
+<li>위치 인자(순서대로) / 키워드 인자(이름 명시) 둘 다 가능, 섞을 수도 있음.</li>
+<li>기본값으로 자주 쓰는 값 미리 지정 — <code class="inline">def f(x, y=10):</code>.</li>
+<li>다중 할당 <code class="inline">a, b, c = 1, 2, 3</code> — 함수 다중 반환과 잘 어울림.</li>
+<li><code class="inline">first, *rest = values</code>처럼 확장 언패킹 가능.</li>
+<li><code class="inline">*args</code>는 추가 위치 인자, <code class="inline">**kwargs</code>는 추가 키워드 인자를 모아 받음.</li>
+<li>기본값에는 mutable 객체 두지 말 것 (4주차에서 다시).</li>
+</ul>
+</div>
 </section>
-
 <!-- ==================== s8: 종합 실습 3개 ==================== -->
-<section class="section" id="s8">
-  <div class="section-num">SECTION 08 · 종합 실습</div>
-  <h2>3주차 종합 실습 — 데이터 처리 세 가지</h2>
-
-  <p>
+<section class="section" id="s11">
+<div class="section-num">SECTION 11</div>
+<h2>3주차 종합 실습 — 데이터 처리 세 가지</h2>
+<p>
     이번 주차에서 배운 모든 것을 모아 진짜 프로그램 같은 것 셋을 만들어봅니다.
     공통 패턴이 등장합니다 — 데이터를 모은다(리스트/딕셔너리) → 함수로 처리한다 → 결과를 출력한다.
   </p>
-
-  <h3>실습 1 — 학급 점수 통계</h3>
-
-  <p>
+<h3>실습 1 — 학급 점수 통계</h3>
+<p>
     여러 학생의 점수를 받아 평균, 최고, 최저, 합격자 수를 계산합니다.
     함수로 묶어 재사용 가능하게.
   </p>
-
-  <div class="input-stdin">
-    <div class="label">입력값 (미리 적기)</div>
-    <textarea>5
+<div class="input-stdin">
+<div class="label">입력값 (미리 적기)</div>
+<textarea>5
 85
 92
 58
 100
 73</textarea>
-    <div class="hint">학생 수 + 점수들.</div>
-  </div>
-  <div class="editor-block">
-    <div class="editor-tab-bar">
-      <span class="editor-tab"><span class="py-icon"></span>class_stats.py</span>
-    </div>
-    <textarea class="editor-source">def collect_scores(n):
+<div class="hint">학생 수 + 점수들.</div>
+</div>
+<div class="editor-block">
+<div class="editor-tab-bar">
+<span class="editor-tab"><span class="py-icon"></span>class_stats.py</span>
+</div>
+<textarea class="editor-source">def collect_scores(n):
     """n명의 점수를 입력받아 리스트로 반환"""
     scores = []
     for i in range(n):
@@ -2208,36 +1887,32 @@ for key, value in result.items():
 
 print(f"\n정렬: {sorted(scores, reverse=True)}")
 </textarea>
-    <div class="run-bar">
-      <span class="left"><span class="file-name">📄 class_stats.py</span></span>
-      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
-      <button class="run-btn"><span class="play">▶</span> Run</button>
-    </div>
-  </div>
-  <div class="terminal">
-    <div class="terminal-head">
-      <span class="label">실행 결과</span>
-      <span class="status">대기 중</span>
-    </div>
-    <div class="terminal-body empty"></div>
-  </div>
-
-  <p>
-    <code class="inline">isinstance(x, float)</code>는 "x가 float 타입인가?"를 검사하는 함수입니다.
+<div class="run-bar">
+<span class="left"><span class="file-name">📄 class_stats.py</span></span>
+<span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+<button class="run-btn"><span class="play">▶</span> Run</button>
+</div>
+</div>
+<div class="terminal">
+<div class="terminal-head">
+<span class="label">실행 결과</span>
+<span class="status">대기 중</span>
+</div>
+<div class="terminal-body empty"></div>
+</div>
+<p>
+<code class="inline">isinstance(x, float)</code>는 "x가 float 타입인가?"를 검사하는 함수입니다.
   </p>
-
-  <h3>실습 2 — 로또 번호 생성기</h3>
-
-  <p>
+<h3>실습 2 — 로또 번호 생성기</h3>
+<p>
     1~45 중 중복 없이 6개의 숫자를 뽑습니다. <code class="inline">random.sample()</code>이
     바로 이 일을 합니다.
   </p>
-
-  <div class="editor-block">
-    <div class="editor-tab-bar">
-      <span class="editor-tab"><span class="py-icon"></span>lotto.py</span>
-    </div>
-    <textarea class="editor-source">import random
+<div class="editor-block">
+<div class="editor-tab-bar">
+<span class="editor-tab"><span class="py-icon"></span>lotto.py</span>
+</div>
+<textarea class="editor-source">import random
 
 def pick_lotto():
     """로또 번호 6개를 뽑아 정렬해서 반환"""
@@ -2256,43 +1931,40 @@ for i in range(5):
     nums = pick_lotto()
     print_set(nums, f"세트 {i+1}")
 </textarea>
-    <div class="run-bar">
-      <span class="left"><span class="file-name">📄 lotto.py</span></span>
-      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
-      <button class="run-btn"><span class="play">▶</span> Run</button>
-    </div>
-  </div>
-  <div class="terminal">
-    <div class="terminal-head">
-      <span class="label">실행 결과</span>
-      <span class="status">대기 중</span>
-    </div>
-    <div class="terminal-body empty"></div>
-  </div>
-
-  <p>
-    <code class="inline">random.sample(range(1, 46), 6)</code>은 1부터 45까지의 정수 중
+<div class="run-bar">
+<span class="left"><span class="file-name">📄 lotto.py</span></span>
+<span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+<button class="run-btn"><span class="play">▶</span> Run</button>
+</div>
+</div>
+<div class="terminal">
+<div class="terminal-head">
+<span class="label">실행 결과</span>
+<span class="status">대기 중</span>
+</div>
+<div class="terminal-body empty"></div>
+</div>
+<p>
+<code class="inline">random.sample(range(1, 46), 6)</code>은 1부터 45까지의 정수 중
     중복 없이 6개를 뽑아 리스트로 줍니다. <code class="inline">f"{n:2d}"</code>는 "정수를 2자리 너비로 표시"입니다.
     실행할 때마다 다른 번호가 나옵니다.
   </p>
-
-  <div class="callout info">
-    <div class="label">이 한 줄에 대하여</div>
-    <p>
+<div class="callout info">
+<div class="label">이 한 줄에 대하여</div>
+<p>
       위 코드의 <code class="inline">line = " ".join([f"{n:2d}" for n in numbers])</code>에는
       이미 배운 여러 문법이 한 줄에 겹쳐 있습니다. 한 번에 읽기 어렵다면 <strong>안쪽의 리스트 컴프리헨션부터 읽고, 마지막에 join()</strong>을 붙여 생각하세요.
     </p>
-
-    <p style="margin-top: 14px;"><strong>1) 리스트 컴프리헨션 — <code class="inline">[f"{n:2d}" for n in numbers]</code></strong></p>
-    <p>
+<p style="margin-top: 14px;"><strong>1) 리스트 컴프리헨션 — <code class="inline">[f"{n:2d}" for n in numbers]</code></strong></p>
+<p>
       이건 <strong>for 루프로 새 리스트를 만드는 일</strong>을 한 줄로 짧게 쓰는 문법입니다.
       아래 두 코드는 결과가 똑같습니다:
     </p>
-    <div class="editor-block" style="margin-top: 8px;">
-      <div class="editor-tab-bar">
-        <span class="editor-tab"><span class="py-icon"></span>같은_일_두_가지.py</span>
-      </div>
-      <textarea class="editor-source"># 우리가 아는 방법 — for 루프
+<div class="editor-block" style="margin-top: 8px;">
+<div class="editor-tab-bar">
+<span class="editor-tab"><span class="py-icon"></span>같은_일_두_가지.py</span>
+</div>
+<textarea class="editor-source"># 우리가 아는 방법 — for 루프
 parts = []
 for n in [3, 7, 12]:
     parts.append(f"{n:2d}")
@@ -2302,34 +1974,33 @@ print(parts)        # [' 3', ' 7', '12']
 parts = [f"{n:2d}" for n in [3, 7, 12]]
 print(parts)        # 같은 결과
 </textarea>
-      <div class="run-bar">
-        <span class="left"><span class="file-name">📄 같은_일_두_가지.py</span></span>
-        <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
-        <button class="run-btn"><span class="play">▶</span> Run</button>
-      </div>
-    </div>
-    <div class="terminal">
-      <div class="terminal-head">
-        <span class="label">실행 결과</span>
-        <span class="status">대기 중</span>
-      </div>
-      <div class="terminal-body empty"></div>
-    </div>
-    <p>
+<div class="run-bar">
+<span class="left"><span class="file-name">📄 같은_일_두_가지.py</span></span>
+<span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+<button class="run-btn"><span class="play">▶</span> Run</button>
+</div>
+</div>
+<div class="terminal">
+<div class="terminal-head">
+<span class="label">실행 결과</span>
+<span class="status">대기 중</span>
+</div>
+<div class="terminal-body empty"></div>
+</div>
+<p>
       처음엔 어색하지만 익숙해지면 짧고 명확합니다. 어렵게 느껴지면 그냥 for 루프로 쓰셔도 OK —
       파이썬 코드는 둘 다 흔합니다.
     </p>
-
-    <p style="margin-top: 14px;"><strong>2) join — 리스트를 문자열로 합치기</strong></p>
-    <p>
-      <code class="inline">" ".join(리스트)</code>는 리스트의 문자열들을
+<p style="margin-top: 14px;"><strong>2) join — 리스트를 문자열로 합치기</strong></p>
+<p>
+<code class="inline">" ".join(리스트)</code>는 리스트의 문자열들을
       <strong>구분자(여기선 공백)로 이어 붙여 하나의 문자열</strong>로 만듭니다:
     </p>
-    <div class="editor-block" style="margin-top: 8px;">
-      <div class="editor-tab-bar">
-        <span class="editor-tab"><span class="py-icon"></span>join.py</span>
-      </div>
-      <textarea class="editor-source">words = ["사과", "바나나", "딸기"]
+<div class="editor-block" style="margin-top: 8px;">
+<div class="editor-tab-bar">
+<span class="editor-tab"><span class="py-icon"></span>join.py</span>
+</div>
+<textarea class="editor-source">words = ["사과", "바나나", "딸기"]
 
 print(" ".join(words))      # 사과 바나나 딸기
 print(", ".join(words))     # 사과, 바나나, 딸기
@@ -2338,31 +2009,30 @@ print("-".join(words))      # 사과-바나나-딸기
 # 주의: join은 문자열의 메서드 — 리스트가 아닌 구분자에 호출
 # words.join(" ")  ← 이렇게 쓰면 안 됨!
 </textarea>
-      <div class="run-bar">
-        <span class="left"><span class="file-name">📄 join.py</span></span>
-        <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
-        <button class="run-btn"><span class="play">▶</span> Run</button>
-      </div>
-    </div>
-    <div class="terminal">
-      <div class="terminal-head">
-        <span class="label">실행 결과</span>
-        <span class="status">대기 중</span>
-      </div>
-      <div class="terminal-body empty"></div>
-    </div>
-
-    <p style="margin-top: 14px;"><strong>3) split — 그 반대 방향</strong></p>
-    <p>
-      <code class="inline">.split()</code>은 join의 정반대입니다 —
+<div class="run-bar">
+<span class="left"><span class="file-name">📄 join.py</span></span>
+<span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+<button class="run-btn"><span class="play">▶</span> Run</button>
+</div>
+</div>
+<div class="terminal">
+<div class="terminal-head">
+<span class="label">실행 결과</span>
+<span class="status">대기 중</span>
+</div>
+<div class="terminal-body empty"></div>
+</div>
+<p style="margin-top: 14px;"><strong>3) split — 그 반대 방향</strong></p>
+<p>
+<code class="inline">.split()</code>은 join의 정반대입니다 —
       <strong>문자열을 구분자로 잘라 리스트로</strong> 만듭니다.
       실습 3에서 이미 등장했으니 한 자리에서 같이 보세요:
     </p>
-    <div class="editor-block" style="margin-top: 8px;">
-      <div class="editor-tab-bar">
-        <span class="editor-tab"><span class="py-icon"></span>split_join.py</span>
-      </div>
-      <textarea class="editor-source"># split — 문자열 → 리스트
+<div class="editor-block" style="margin-top: 8px;">
+<div class="editor-tab-bar">
+<span class="editor-tab"><span class="py-icon"></span>split_join.py</span>
+</div>
+<textarea class="editor-source"># split — 문자열 → 리스트
 text = "python is great"
 words = text.split()         # 공백 기준
 print(words)                 # ['python', 'is', 'great']
@@ -2376,41 +2046,38 @@ print(fruits)                # ['사과', '바나나', '딸기']
 back = "/".join(fruits)
 print(back)                  # 사과/바나나/딸기
 </textarea>
-      <div class="run-bar">
-        <span class="left"><span class="file-name">📄 split_join.py</span></span>
-        <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
-        <button class="run-btn"><span class="play">▶</span> Run</button>
-      </div>
-    </div>
-    <div class="terminal">
-      <div class="terminal-head">
-        <span class="label">실행 결과</span>
-        <span class="status">대기 중</span>
-      </div>
-      <div class="terminal-body empty"></div>
-    </div>
-    <p style="margin-top: 12px;">
+<div class="run-bar">
+<span class="left"><span class="file-name">📄 split_join.py</span></span>
+<span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+<button class="run-btn"><span class="play">▶</span> Run</button>
+</div>
+</div>
+<div class="terminal">
+<div class="terminal-head">
+<span class="label">실행 결과</span>
+<span class="status">대기 중</span>
+</div>
+<div class="terminal-body empty"></div>
+</div>
+<p style="margin-top: 12px;">
       한 줄로 정리: <strong><code class="inline">split</code>은 문자열 → 리스트, <code class="inline">join</code>은 리스트 → 문자열</strong>.
       양방향 변환의 짝입니다.
     </p>
-  </div>
-
-  <h3>실습 3 — 단어 빈도 카운터</h3>
-
-  <p>
+</div>
+<h3>실습 3 — 단어 빈도 카운터</h3>
+<p>
     문장에서 어떤 단어가 몇 번 나오는지 셉니다. 딕셔너리의 가장 흔한 활용 패턴입니다.
   </p>
-
-  <div class="input-stdin">
-    <div class="label">입력값 (미리 적기)</div>
-    <textarea>python is great python is fun python is powerful</textarea>
-    <div class="hint">한 줄에 단어들을 공백으로 구분.</div>
-  </div>
-  <div class="editor-block">
-    <div class="editor-tab-bar">
-      <span class="editor-tab"><span class="py-icon"></span>word_count.py</span>
-    </div>
-    <textarea class="editor-source">def count_words(text):
+<div class="input-stdin">
+<div class="label">입력값 (미리 적기)</div>
+<textarea>python is great python is fun python is powerful</textarea>
+<div class="hint">한 줄에 단어들을 공백으로 구분.</div>
+</div>
+<div class="editor-block">
+<div class="editor-tab-bar">
+<span class="editor-tab"><span class="py-icon"></span>word_count.py</span>
+</div>
+<textarea class="editor-source">def count_words(text):
     """문장의 각 단어 빈도를 딕셔너리로 반환"""
     words = text.split()       # 공백 기준 분리
     counts = {}
@@ -2444,50 +2111,44 @@ print(f"단어별 빈도: {counts}")
 print()
 print_top(counts, 3)
 </textarea>
-    <div class="run-bar">
-      <span class="left"><span class="file-name">📄 word_count.py</span></span>
-      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
-      <button class="run-btn"><span class="play">▶</span> Run</button>
-    </div>
-  </div>
-  <div class="terminal">
-    <div class="terminal-head">
-      <span class="label">실행 결과</span>
-      <span class="status">대기 중</span>
-    </div>
-    <div class="terminal-body empty"></div>
-  </div>
-
-  <p>
+<div class="run-bar">
+<span class="left"><span class="file-name">📄 word_count.py</span></span>
+<span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+<button class="run-btn"><span class="play">▶</span> Run</button>
+</div>
+</div>
+<div class="terminal">
+<div class="terminal-head">
+<span class="label">실행 결과</span>
+<span class="status">대기 중</span>
+</div>
+<div class="terminal-body empty"></div>
+</div>
+<p>
     핵심 패턴 — "있으면 더하고, 없으면 1로 시작" — 가 딕셔너리 빈도 누적의 정석입니다.
   </p>
-
-  <h3>3주차 마무리</h3>
-
-  <p>
+<h3>3주차 마무리</h3>
+<p>
     축하합니다! 3주차도 완주하셨습니다. 정리하면:
   </p>
-
-  <div class="key-points">
-    <div class="title">3주차에서 익힌 것</div>
-    <ul>
-      <li><strong>리스트</strong>: <code class="inline">[]</code>, 인덱싱, 슬라이싱, append, sort, in, for</li>
-      <li><strong>리스트의 진짜 모습</strong>: 박스 안엔 참조만, 요소는 별개 객체</li>
-      <li><strong>튜플</strong>: <code class="inline">()</code>, 잠긴 슬롯, 다중 할당</li>
-      <li><strong>★ 튜플의 진실</strong>: 슬롯은 잠겼지만 mutable 요소는 변할 수 있음</li>
-      <li><strong>★ 가변 vs 불변</strong>: append vs +, 같은 객체 다른 이름표</li>
-      <li><strong>딕셔너리</strong>: 키-값 매핑, 빈도 누적 패턴</li>
-      <li><strong>함수 def</strong>: 매개변수, return, 다중 반환</li>
-      <li><strong>매개변수의 모든 것</strong>: 위치/키워드/기본값/다중 할당</li>
-    </ul>
-  </div>
-
-  <p>
+<div class="key-points">
+<div class="title">3주차에서 익힌 것</div>
+<ul>
+<li><strong>리스트</strong>: <code class="inline">[]</code>, 인덱싱, 슬라이싱, append, sort, in, for</li>
+<li><strong>리스트의 진짜 모습</strong>: 박스 안엔 참조만, 요소는 별개 객체</li>
+<li><strong>튜플</strong>: <code class="inline">()</code>, 잠긴 슬롯, 다중 할당</li>
+<li><strong> 튜플의 진실</strong>: 슬롯은 잠겼지만 mutable 요소는 변할 수 있음</li>
+<li><strong> 가변 vs 불변</strong>: append vs +, 같은 객체 다른 이름표</li>
+<li><strong>딕셔너리</strong>: 키-값 매핑, 빈도 누적 패턴</li>
+<li><strong>함수 def</strong>: 매개변수, return, 다중 반환</li>
+<li><strong>매개변수의 모든 것</strong>: 위치/키워드/기본값/다중 할당</li>
+</ul>
+</div>
+<p>
     4주차에서는 <strong>None</strong>, 리스트·문자열 심화 도구, 그리고 외부 인터넷에서 데이터를
     가져오는 <strong>API 호출</strong>로 가볍게 마무리합니다.
   </p>
 </section>
-
 <!-- 시뮬레이터 iframe 다크 모드 동기화 -->
 <script>
 (function() {
