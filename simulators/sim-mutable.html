@@ -181,7 +181,7 @@ body {
 
         <text x="380" y="22" text-anchor="middle" font-family="Pretendard, sans-serif"
               font-size="11" font-weight="700" fill="currentColor" letter-spacing="2"
-              opacity="0.85">OBJECTS (HEAP)</text>
+              opacity="0.85">PYTHON OBJECTS</text>
         <rect x="160" y="32" width="420" height="410" rx="8"
               fill="var(--heap-bg)" stroke="var(--heap-border)" stroke-width="1.5"
               stroke-dasharray="4 3" opacity="0.4"/>
@@ -426,7 +426,7 @@ body {
     {
       line: 0,
       title: '1단계 — a = [1, 2, 3]',
-      text: '리스트 객체가 HEAP에 만들어집니다. 안에는 각 요소를 가리키는 참조 슬롯들이 있습니다. a 이름표가 그 list 객체를 가리킵니다.',
+      text: '리스트 자체도 하나의 객체입니다. 개념적으로 리스트는 각 요소 객체를 가리키는 참조들을 순서대로 관리하고, a 이름표가 그 list 객체를 가리킵니다.',
       render: () => {
         // 정수 객체 1, 2, 3
         const o1 = drawSimple({ x: 410, y: 50, type: 'int', value: 1 });
@@ -790,7 +790,7 @@ body {
 
         const items = [
           ['리스트 (mutable)', '.append(), [i]=값 → 객체 자체가 변함'],
-          ['+ 연산', '항상 새 객체 생성 — 원본은 그대로'],
+          ['리스트 + 연산', '두 리스트를 이어 붙인 새 리스트 결과 — 원본 리스트는 그대로'],
           ['튜플 (immutable)', '슬롯 자체는 잠김 — t[i]=다른값 불가능'],
           ['튜플 안의 mutable', '리스트 같은 mutable 요소는 변할 수 있음']
         ];
@@ -861,11 +861,21 @@ body {
   function restart() { stopAuto(); currentStep = 0; render(); }
   function startAuto() {
     if (autoTimer) return;
+    if (currentStep >= STEPS.length - 1) {
+      currentStep = 0;
+      render();
+    }
     document.getElementById('btn-auto').textContent = '⏸ 일시정지';
+    // 클릭 즉시 한 단계 진행하고, 이후 일정 간격으로 계속 진행합니다.
+    next();
+    if (currentStep >= STEPS.length - 1) {
+      document.getElementById('btn-auto').textContent = '▶ 자동재생';
+      return;
+    }
     autoTimer = setInterval(() => {
       if (currentStep < STEPS.length - 1) next();
-      else stopAuto();
-    }, 2800);
+      if (currentStep >= STEPS.length - 1) stopAuto();
+    }, 2400);
   }
   function stopAuto() {
     if (autoTimer) {

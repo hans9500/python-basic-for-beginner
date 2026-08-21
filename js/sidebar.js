@@ -61,11 +61,11 @@
 
   /**
    * 사이드바 섹션 목록 갱신
-   * sections: [{ id: 's0', title: '섹션 제목' }, ...]
-   * weekNumber: 1~4
+   * sections: [{ id: 's0', label: '01', title: '섹션 제목' }, ...]
+   * weekNumber: 1~5, 6은 자습 탭
    */
   function updateSidebar(weekNumber, sections) {
-    weekLabel.textContent = weekNumber + '주차';
+    weekLabel.textContent = weekNumber === 6 ? 'Python 한 단계 더' : weekNumber + '주차';
     sectionCount.textContent = sections.length + '개 섹션';
 
     sectionNav.innerHTML = '';
@@ -73,7 +73,7 @@
       const item = document.createElement('button');
       item.className = 'section-nav-item';
       item.dataset.sectionId = sec.id;
-      item.innerHTML = '<span class="sn-id">' + sec.id + '</span>' +
+      item.innerHTML = '<span class="sn-id">' + (sec.label || sec.id) + '</span>' +
                        '<span class="sn-title">' + sec.title + '</span>';
       item.addEventListener('click', function() {
         scrollToSection(sec.id);
@@ -99,7 +99,8 @@
     // URL hash 갱신 (라우터가 기록할 수 있도록)
     if (history.replaceState) {
       const week = window.appState ? window.appState.currentWeek : 1;
-      history.replaceState(null, '', '#week' + week + '/' + sectionId);
+      const baseHash = week === 6 ? '#selfstudy' : '#week' + week;
+      history.replaceState(null, '', baseHash + '/' + sectionId);
     }
   }
 

@@ -188,7 +188,7 @@ body {
       <text x="90"  y="36" text-anchor="middle" font-family="Pretendard,sans-serif" font-size="11" fill="currentColor" opacity=".55">계산 · 판단</text>
       <text x="280" y="22" text-anchor="middle" font-family="Pretendard,sans-serif" font-size="12" font-weight="700" fill="currentColor" letter-spacing="2" opacity=".85">VARIABLES</text>
       <text x="280" y="36" text-anchor="middle" font-family="Pretendard,sans-serif" font-size="11" fill="currentColor" opacity=".55">변수 (이름표)</text>
-      <text x="500" y="22" text-anchor="middle" font-family="Pretendard,sans-serif" font-size="12" font-weight="700" fill="currentColor" letter-spacing="2" opacity=".85">HEAP</text>
+      <text x="500" y="22" text-anchor="middle" font-family="Pretendard,sans-serif" font-size="12" font-weight="700" fill="currentColor" letter-spacing="2" opacity=".85">PYTHON OBJECTS</text>
       <text x="500" y="36" text-anchor="middle" font-family="Pretendard,sans-serif" font-size="11" fill="currentColor" opacity=".55">객체들이 사는 곳</text>
       <rect x="10"  y="46" width="160" height="445" rx="8" fill="var(--cpu-bg)"   stroke="var(--cpu-border)"   stroke-width="1.5" stroke-dasharray="4 3" opacity=".4"/>
       <rect x="180" y="46" width="200" height="445" rx="8" fill="var(--names-bg)" stroke="var(--names-border)" stroke-width="1.5" stroke-dasharray="4 3" opacity=".45"/>
@@ -317,13 +317,13 @@ function drawObjs(n){
   return arr;
 }
 const STEPS=[
-  {line:-1,title:'시작 — 빈 메모리',text:'아직 아무것도 만들어지지 않았습니다. CPU는 계산·판단, 가운데는 변수(이름표) 영역, 오른쪽 HEAP은 객체들이 사는 곳입니다.',
+  {line:-1,title:'시작 — 빈 메모리',text:'아직 예제에서 사용할 값과 이름이 표시되지 않은 상태입니다. CPU는 계산·판단, 가운데는 변수(이름표), 오른쪽은 Python 객체를 개념적으로 보여주는 영역입니다.',
    fn(){dyn.appendChild(cpu('idle'));}},
-  {line:1,title:'1단계 — 정수 객체 2 생성',text:'오른쪽 식부터 평가합니다. CPU가 HEAP에 정수 객체 2를 만듭니다. 각 객체에는 고유한 주소(id)가 부여됩니다.',
+  {line:1,title:'1단계 — 값 2 평가',text:'오른쪽 식부터 평가합니다. Python은 정수 값 2를 객체로 다룹니다. 그림의 id 값은 실제 주소가 아니라 객체의 identity를 설명하기 위한 예시입니다.',
    fn(){dyn.appendChild(cpu('making',{label:'객체 2 생성'}));drawObjs(1).forEach(o=>dyn.appendChild(o));dyn.appendChild(arrow(172,103,398,103,'var(--cpu-border)'));}},
-  {line:1,title:'2단계 — 정수 객체 3 생성',text:'CPU가 HEAP에 정수 객체 3을 만듭니다. 별개의 객체라 주소도 다릅니다.',
+  {line:1,title:'2단계 — 값 3 평가',text:'다음으로 정수 값 3을 평가합니다. 이 그림은 객체와 이름의 관계를 보여주는 개념도이며, 실제 객체 재사용 여부 같은 구현 세부는 단순화했습니다.',
    fn(){dyn.appendChild(cpu('making',{label:'객체 3 생성'}));drawObjs(2).forEach(o=>dyn.appendChild(o));dyn.appendChild(arrow(172,103,398,233,'var(--cpu-border)'));}},
-  {line:1,title:'3단계 — CPU가 2+3 계산, 객체 5 생성',text:'CPU가 두 객체의 값을 읽어 더합니다. 결과 5는 새 객체로 HEAP에 만들어집니다. 2와 3 객체는 그대로 남아있습니다.',
+  {line:1,title:'3단계 — CPU가 2+3 계산',text:'두 값을 더해 결과 5를 얻습니다. 숫자는 불변이므로 2와 3의 값을 직접 바꾸는 연산은 아닙니다.',
    fn(){
      dyn.appendChild(cpu('calc'));drawObjs(3).forEach(o=>dyn.appendChild(o));
      dyn.appendChild(arrow(398,103,170,225,'var(--heap-border)'));
@@ -345,9 +345,9 @@ const STEPS=[
      dyn.appendChild(arrow(315,345,398,363,'var(--accent)'));
      dyn.appendChild(out(193,430,130,'5'));
    }},
-  {line:3,title:'6단계 — id(x) 는 객체의 고유 번호',text:'id(x)는 x가 가리키는 객체의 메모리 주소를 알려줍니다. 같은 객체면 항상 같은 번호가 나옵니다.',
+  {line:3,title:'6단계 — id(x) 는 객체의 식별값',text:'id(x)는 x가 가리키는 객체의 identity를 정수로 표현한 값을 돌려줍니다. 같은 객체를 가리키는 동안에는 같은 id가 나옵니다. CPython에서는 메모리 주소와 관련되지만 Python 언어가 주소 자체를 보장하지는 않습니다.',
    fn(){
-     dyn.appendChild(cpu('read',{label:'id(x)',detail:'주소 반환'}));drawObjs(3).forEach(o=>dyn.appendChild(o));
+     dyn.appendChild(cpu('read',{label:'id(x)',detail:'식별값 반환'}));drawObjs(3).forEach(o=>dyn.appendChild(o));
      dyn.appendChild(tag(POS.tag.x,POS.tag.y,'x'));
      dyn.appendChild(arrow(315,345,398,363,'var(--accent)'));
      dyn.appendChild(out(183,430,350,'140288751120'));
@@ -385,8 +385,18 @@ function prev(){if(cur>0){cur--;render();}}
 function restart(){stopAuto();cur=0;render();}
 function startAuto(){
   if(timer)return;
+  if(cur>=STEPS.length-1){cur=0;render();}
   document.getElementById('btn-auto').textContent='⏸ 일시정지';
-  timer=setInterval(()=>{if(cur<STEPS.length-1)next();else stopAuto();},2200);
+  // 클릭 즉시 한 단계 진행하고, 이후 일정 간격으로 계속 진행합니다.
+  next();
+  if(cur>=STEPS.length-1){
+    document.getElementById('btn-auto').textContent='▶ 자동재생';
+    return;
+  }
+  timer=setInterval(()=>{
+    if(cur<STEPS.length-1)next();
+    if(cur>=STEPS.length-1)stopAuto();
+  },2200);
 }
 function stopAuto(){
   if(timer){clearInterval(timer);timer=null;document.getElementById('btn-auto').textContent='▶ 자동재생';}

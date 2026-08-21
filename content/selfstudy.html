@@ -1,0 +1,1095 @@
+<div class="week-hero"><div class="eyebrow">SELF STUDY · OPTIONAL</div><h1>Python 한 단계 더</h1><p>1~5주차를 끝낸 뒤 다시 돌아오는 <strong>두 번째 교재</strong>입니다. 문법을 한 번 보고 넘어가기보다, 서로 다른 상황의 예제를 반복하며 “언제 왜 쓰는가”를 익히는 것이 목표입니다.</p></div>
+
+<section class="section" id="ss0"><div class="section-num">SELF STUDY 00</div><h2>이 탭은 어떻게 공부하나요?</h2><div class="callout info"><strong>예제 수보다 중요한 것은 예제의 이유입니다.</strong><br>각 예제에는 해결하려는 문제가 있습니다. 숫자만 바꾼 복제 예제는 피하고, 문자열·사용자·주문·로그·파일·작은 프로그램처럼 상황을 바꿔 같은 개념을 다시 사용합니다.</div><ul><li><strong>★</strong> 본 과정 직후 익히기 좋은 내용</li><li><strong>★★</strong> 실무 코드에서 자주 만나는 내용</li><li><strong>★★★</strong> 처음 어렵게 느껴져도 정상인 내용</li></ul><div class="key-points"><div class="title">추천 학습법</div><ul><li>먼저 설명과 그림으로 전체 모양을 잡습니다.</li><li>첫 예제는 그대로 실행합니다.</li><li>다음 예제부터는 Run 전에 결과를 예상합니다.</li><li>실무형 예제에서는 “왜 이 문법을 썼는지”를 생각합니다.</li><li>마지막 직접 해보기는 정답을 보기 전에 수정해봅니다.</li></ul></div></section>
+
+<section class="section" id="ss1"><div class="section-num">SELF STUDY 01 · ★</div><h2>문자열 가공 — split()과 join()을 실제 데이터에 쓰기</h2><p><code class="inline">split()</code>은 하나의 문자열을 나누고, <code class="inline">join()</code>은 여러 문자열을 다시 연결합니다. CSV 비슷한 입력, 로그, 태그, 경로처럼 <strong>문자열을 구조화된 값으로 바꿨다가 다시 표현할 때</strong> 자주 사용합니다.</p><div class="study-diagram"><svg viewBox="0 0 760 190" role="img" aria-label="문자열 정리 파이프라인"><defs><marker id="a1" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="currentColor"/></marker></defs><g class="svg-box"><rect x="20" y="55" width="140" height="70" rx="12"/><text x="90" y="82">원본 문자열</text><text x="90" y="105">kim, lee, park</text></g><g class="svg-box"><rect x="220" y="55" width="120" height="70" rx="12"/><text x="280" y="82">split()</text><text x="280" y="105">조각내기</text></g><g class="svg-box"><rect x="400" y="55" width="140" height="70" rx="12"/><text x="470" y="82">strip/upper</text><text x="470" y="105">각 조각 정리</text></g><g class="svg-box"><rect x="600" y="55" width="140" height="70" rx="12"/><text x="670" y="82">join()</text><text x="670" y="105">다시 연결</text></g><path class="svg-arrow" d="M160 90 H215" marker-end="url(#a1)"/><path class="svg-arrow" d="M340 90 H395" marker-end="url(#a1)"/><path class="svg-arrow" d="M540 90 H595" marker-end="url(#a1)"/></svg></div><p class="study-note">쉼표로 받은 이름 목록을 화면 표시용으로 정리합니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>clean_names.py</span></div>
+  <textarea class="editor-source">raw = &quot;  kim, lee, park, choi  &quot;
+names = [name.strip().title() for name in raw.split(&quot;,&quot;)]
+print(names)
+print(&quot; | &quot;.join(names))
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 clean_names.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">로그 한 줄에서 필요한 필드를 꺼내는 상황입니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>parse_access_log.py</span></div>
+  <textarea class="editor-source">line = &quot;2026-08-21 | INFO | user=kim | login success&quot;
+parts = [part.strip() for part in line.split(&quot;|&quot;)]
+date, level, user, message = parts
+print(&quot;날짜:&quot;, date)
+print(&quot;레벨:&quot;, level)
+print(&quot;사용자:&quot;, user.split(&quot;=&quot;)[1])
+print(&quot;메시지:&quot;, message)
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 parse_access_log.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">태그 문자열을 정리하고 중복을 제거한 뒤 다시 표시합니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>normalize_tags.py</span></div>
+  <textarea class="editor-source">raw_tags = &quot;python, beginner, python, api, beginner&quot;
+tags = [tag.strip() for tag in raw_tags.split(&quot;,&quot;)]
+unique_tags = sorted(set(tags))
+print(unique_tags)
+print(&quot;#&quot; + &quot; #&quot;.join(unique_tags))
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 normalize_tags.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">간단한 경로 문자열을 분해합니다. 실제 프로젝트에서는 pathlib도 함께 사용합니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>path_parts.py</span></div>
+  <textarea class="editor-source">path = &quot;logs/2026/08/application.log&quot;
+parts = path.split(&quot;/&quot;)
+print(&quot;파일:&quot;, parts[-1])
+print(&quot;상위 경로:&quot;, &quot;/&quot;.join(parts[:-1]))
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 path_parts.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">여러 문자열을 CSV 한 줄처럼 만들었다가 다시 나눠봅니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>make_csv_line.py</span></div>
+  <textarea class="editor-source">student = [&quot;Kim&quot;, &quot;Python&quot;, &quot;95&quot;]
+line = &quot;,&quot;.join(student)
+print(line)
+print(line.split(&quot;,&quot;))
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 make_csv_line.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><details class="study-exercise"><summary>직접 해보기 — 서버 목록 정리</summary><div class="study-exercise-body"><p><code>" api-01 , web-02,api-03 "</code>을 <code>["API-01", "WEB-02", "API-03"]</code>로 만들고, 마지막에는 <code>API-01 → WEB-02 → API-03</code>으로 출력해보세요.</p><details><summary>해설 보기</summary><pre class="code-static"><code>raw = " api-01 , web-02,api-03 "
+servers = [s.strip().upper() for s in raw.split(",")]
+print(servers)
+print(" → ".join(servers))</code></pre></details></div></details></section>
+
+<section class="section" id="ss2"><div class="section-num">SELF STUDY 02 · ★★</div><h2>map(), filter(), reduce() — 변환·선택·누적을 구분하기</h2><p>세 도구는 목적이 다릅니다. <strong>map은 변환, filter는 선택, reduce는 누적</strong>입니다. Python에서는 comprehension이나 전용 함수가 더 읽기 좋은 경우도 많으므로, 사용법뿐 아니라 선택 기준까지 봅니다.</p><div class="study-diagram"><svg viewBox="0 0 780 300" role="img" aria-label="map filter reduce 비교"><defs><marker id="a2" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="currentColor"/></marker></defs><text class="svg-title" x="20" y="35">같은 데이터라도 목적이 다릅니다</text><text x="25" y="85">map</text><text x="25" y="155">filter</text><text x="25" y="225">reduce</text><g class="svg-box"><rect x="110" y="55" width="140" height="45" rx="10"/><text x="180" y="83">[1, 2, 3]</text></g><g class="svg-box"><rect x="350" y="55" width="150" height="45" rx="10"/><text x="425" y="83">각 값 × 10</text></g><g class="svg-box"><rect x="600" y="55" width="150" height="45" rx="10"/><text x="675" y="83">[10,20,30]</text></g><path class="svg-arrow" d="M250 78 H345" marker-end="url(#a2)"/><path class="svg-arrow" d="M500 78 H595" marker-end="url(#a2)"/><g class="svg-box"><rect x="110" y="125" width="140" height="45" rx="10"/><text x="180" y="153">[1, 2, 3, 4]</text></g><g class="svg-box"><rect x="350" y="125" width="150" height="45" rx="10"/><text x="425" y="153">짝수인가?</text></g><g class="svg-box"><rect x="600" y="125" width="150" height="45" rx="10"/><text x="675" y="153">[2, 4]</text></g><path class="svg-arrow" d="M250 148 H345" marker-end="url(#a2)"/><path class="svg-arrow" d="M500 148 H595" marker-end="url(#a2)"/><g class="svg-box"><rect x="110" y="195" width="140" height="45" rx="10"/><text x="180" y="223">[10,20,30]</text></g><g class="svg-box"><rect x="350" y="195" width="150" height="45" rx="10"/><text x="425" y="223">하나씩 누적</text></g><g class="svg-box"><rect x="600" y="195" width="150" height="45" rx="10"/><text x="675" y="223">60</text></g><path class="svg-arrow" d="M250 218 H345" marker-end="url(#a2)"/><path class="svg-arrow" d="M500 218 H595" marker-end="url(#a2)"/></svg></div><h3>map() — 같은 변환을 여러 값에 적용</h3><p class="study-note">상품 가격 전체에 같은 할인 규칙을 적용합니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>map_discount.py</span></div>
+  <textarea class="editor-source">prices = [12000, 8500, 23000, 5000]
+def apply_discount(price):
+    return int(price * 0.9)
+
+print(list(map(apply_discount, prices)))
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 map_discount.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">dict 목록에서 화면에 필요한 이름 필드만 추출합니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>map_names.py</span></div>
+  <textarea class="editor-source">users = [
+    {&quot;name&quot;: &quot;Kim&quot;, &quot;age&quot;: 30},
+    {&quot;name&quot;: &quot;Lee&quot;, &quot;age&quot;: 25},
+    {&quot;name&quot;: &quot;Park&quot;, &quot;age&quot;: 40},
+]
+names = list(map(lambda user: user[&quot;name&quot;], users))
+print(names)
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 map_names.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">설정 파일 등에서 문자열로 읽은 숫자를 정수로 변환하는 상황입니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>map_parse_ports.py</span></div>
+  <textarea class="editor-source">raw_ports = [&quot;80&quot;, &quot;443&quot;, &quot;8080&quot;]
+ports = list(map(int, raw_ports))
+print(ports)
+print(sum(ports))
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 map_parse_ports.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">같은 일을 map과 comprehension으로 작성해 읽기 쉬운 쪽을 비교합니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>map_vs_comp.py</span></div>
+  <textarea class="editor-source">prices = [1000, 2500, 4000]
+with_map = list(map(lambda price: price + 500, prices))
+with_comp = [price + 500 for price in prices]
+print(with_map)
+print(with_comp)
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 map_vs_comp.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><h3>filter() — 조건에 맞는 데이터만 남기기</h3><p class="study-note">비활성 계정을 제외하고 활성 사용자만 처리합니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>filter_active_users.py</span></div>
+  <textarea class="editor-source">users = [
+    {&quot;name&quot;: &quot;Kim&quot;, &quot;active&quot;: True},
+    {&quot;name&quot;: &quot;Lee&quot;, &quot;active&quot;: False},
+    {&quot;name&quot;: &quot;Park&quot;, &quot;active&quot;: True},
+]
+active_users = list(filter(lambda user: user[&quot;active&quot;], users))
+for user in active_users:
+    print(user[&quot;name&quot;])
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 filter_active_users.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">로그 중 오류 줄만 골라내는 예제입니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>filter_errors.py</span></div>
+  <textarea class="editor-source">logs = [
+    &quot;INFO server started&quot;,
+    &quot;ERROR database timeout&quot;,
+    &quot;WARN memory high&quot;,
+    &quot;ERROR payment failed&quot;,
+]
+errors = list(filter(lambda line: line.startswith(&quot;ERROR&quot;), logs))
+print(&quot;\n&quot;.join(errors))
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 filter_errors.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">빈 입력을 제거할 때 bool을 filter 함수로 전달할 수도 있습니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>filter_nonempty.py</span></div>
+  <textarea class="editor-source">values = [&quot;kim&quot;, &quot;&quot;, &quot;lee&quot;, &quot;   &quot;, &quot;park&quot;]
+cleaned = [value.strip() for value in values]
+nonempty = list(filter(bool, cleaned))
+print(nonempty)
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 filter_nonempty.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">filter와 조건 comprehension의 표현 차이를 비교합니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>filter_vs_comp.py</span></div>
+  <textarea class="editor-source">scores = [55, 72, 88, 43, 91]
+with_filter = list(filter(lambda score: score &gt;= 60, scores))
+with_comp = [score for score in scores if score &gt;= 60]
+print(with_filter)
+print(with_comp)
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 filter_vs_comp.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><h3>reduce() — 이전 결과와 다음 값을 계속 합치기</h3><p class="study-note">누적 곱처럼 이전 결과가 다음 계산의 입력이 되는 모습을 봅니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>reduce_product.py</span></div>
+  <textarea class="editor-source">from functools import reduce
+quantities = [2, 3, 4]
+product = reduce(lambda acc, n: acc * n, quantities)
+print(product)
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 reduce_product.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">주문 금액을 누적할 수 있지만, 이 경우에는 sum()이 더 읽기 좋다는 것도 함께 확인합니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>reduce_order_total.py</span></div>
+  <textarea class="editor-source">from functools import reduce
+orders = [
+    {&quot;item&quot;: &quot;Keyboard&quot;, &quot;price&quot;: 89000},
+    {&quot;item&quot;: &quot;Mouse&quot;, &quot;price&quot;: 45000},
+    {&quot;item&quot;: &quot;Cable&quot;, &quot;price&quot;: 12000},
+]
+total = reduce(lambda acc, order: acc + order[&quot;price&quot;], orders, 0)
+print(total)
+print(sum(order[&quot;price&quot;] for order in orders))
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 reduce_order_total.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">단순 합계가 아니라 누적 상태가 dict인 경우를 봅니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>reduce_merge_counts.py</span></div>
+  <textarea class="editor-source">from functools import reduce
+records = [
+    {&quot;ok&quot;: 3, &quot;error&quot;: 1},
+    {&quot;ok&quot;: 5, &quot;error&quot;: 0},
+    {&quot;ok&quot;: 2, &quot;error&quot;: 2},
+]
+def merge(acc, record):
+    return {
+        &quot;ok&quot;: acc[&quot;ok&quot;] + record[&quot;ok&quot;],
+        &quot;error&quot;: acc[&quot;error&quot;] + record[&quot;error&quot;],
+    }
+result = reduce(merge, records, {&quot;ok&quot;: 0, &quot;error&quot;: 0})
+print(result)
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 reduce_merge_counts.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">filter → map → sum 파이프라인과 comprehension을 실제 주문 데이터로 비교합니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>pipeline_orders.py</span></div>
+  <textarea class="editor-source">orders = [
+    {&quot;id&quot;: 1, &quot;price&quot;: 12000, &quot;paid&quot;: True},
+    {&quot;id&quot;: 2, &quot;price&quot;: 7000, &quot;paid&quot;: False},
+    {&quot;id&quot;: 3, &quot;price&quot;: 20000, &quot;paid&quot;: True},
+]
+paid = filter(lambda order: order[&quot;paid&quot;], orders)
+prices = map(lambda order: order[&quot;price&quot;], paid)
+print(sum(prices))
+
+# 같은 목적을 comprehension으로 표현
+print(sum(order[&quot;price&quot;] for order in orders if order[&quot;paid&quot;]))
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 pipeline_orders.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><div class="callout info"><strong>실무 판단</strong><br><code>map/filter/reduce</code>를 많이 썼다고 Python다운 코드가 되는 것은 아닙니다. 짧고 명확한 comprehension이나 <code>sum/max/min/join</code> 같은 전용 함수가 더 읽기 좋다면 그쪽을 선택하세요.</div><details class="study-exercise"><summary>직접 해보기 — 주문 데이터 세 가지 스타일</summary><div class="study-exercise-body"><p>결제 완료된 주문 중 10,000원 이상인 주문의 가격에 10% 할인을 적용하고 총액을 구해보세요. ① for문 ② comprehension ③ filter/map 조합으로 각각 작성해보세요.</p></div></details></section>
+
+<section class="section" id="ss3"><div class="section-num">SELF STUDY 03 · ★★</div><h2>자주 쓰는 내장 함수와 컨테이너 도구</h2><p>실무 코드는 작은 도구들을 조합해서 읽기 쉽게 만드는 경우가 많습니다. 여기서는 계산·검사·dict/list/set 갱신을 서로 다른 상황에서 반복합니다.</p><p class="study-note">금액이나 측정값을 표시할 때 abs/round를 사용합니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>round_invoice.py</span></div>
+  <textarea class="editor-source">amounts = [1234.567, 890.123, -20.5]
+for amount in amounts:
+    print(&quot;원본:&quot;, amount, &quot;절댓값:&quot;, abs(amount), &quot;반올림:&quot;, round(amount, 2))
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 round_invoice.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">원본 순서를 바꾸지 않고 역순으로 읽습니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>reversed_history.py</span></div>
+  <textarea class="editor-source">history = [&quot;login&quot;, &quot;search&quot;, &quot;order&quot;, &quot;logout&quot;]
+print(&quot;최근 작업부터&quot;)
+for action in reversed(history):
+    print(action)
+print(&quot;원본:&quot;, history)
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 reversed_history.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">외부에서 받은 값의 종류에 따라 처리 방법을 바꾸는 예입니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>isinstance_payload.py</span></div>
+  <textarea class="editor-source">payloads = [&quot;hello&quot;, 100, {&quot;name&quot;: &quot;Kim&quot;}, [1, 2]]
+for value in payloads:
+    if isinstance(value, str):
+        print(&quot;문자열:&quot;, value.upper())
+    elif isinstance(value, dict):
+        print(&quot;딕셔너리 키:&quot;, list(value.keys()))
+    else:
+        print(&quot;다른 타입:&quot;, type(value).__name__)
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 isinstance_payload.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">간단한 입력 형태를 확인합니다. 복잡한 검증은 별도 로직이 필요합니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>validate_code.py</span></div>
+  <textarea class="editor-source">samples = [&quot;1234&quot;, &quot;Python&quot;, &quot;abc123&quot;, &quot;hello!&quot;]
+for text in samples:
+    print(text, &quot;digit=&quot;, text.isdigit(), &quot;alpha=&quot;, text.isalpha(), &quot;alnum=&quot;, text.isalnum())
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 validate_code.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">사용자 설정을 갱신하고 기본값을 채우고 필요 없는 키를 제거합니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>dict_update_profile.py</span></div>
+  <textarea class="editor-source">profile = {&quot;name&quot;: &quot;Kim&quot;, &quot;city&quot;: &quot;Seoul&quot;}
+profile.update({&quot;city&quot;: &quot;Busan&quot;, &quot;language&quot;: &quot;Python&quot;})
+timezone = profile.setdefault(&quot;timezone&quot;, &quot;Asia/Seoul&quot;)
+removed = profile.pop(&quot;language&quot;)
+print(profile)
+print(timezone, removed)
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 dict_update_profile.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">권한·태그처럼 중복 없는 집합을 비교합니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>set_permissions.py</span></div>
+  <textarea class="editor-source">user_permissions = {&quot;read&quot;, &quot;write&quot;}
+admin_permissions = {&quot;read&quot;, &quot;write&quot;, &quot;delete&quot;, &quot;manage&quot;}
+print(&quot;공통:&quot;, user_permissions &amp; admin_permissions)
+print(&quot;관리자에게만:&quot;, admin_permissions - user_permissions)
+print(&quot;합친 권한:&quot;, user_permissions | {&quot;export&quot;})
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 set_permissions.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">리스트를 간단한 작업 대기열처럼 조작해봅니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>list_queue_tools.py</span></div>
+  <textarea class="editor-source">jobs = [&quot;backup&quot;, &quot;report&quot;]
+jobs.insert(1, &quot;cleanup&quot;)
+jobs.extend([&quot;sync&quot;, &quot;notify&quot;])
+print(&quot;대기:&quot;, jobs)
+finished = jobs.pop(0)
+print(&quot;완료:&quot;, finished)
+print(&quot;남은 작업:&quot;, jobs)
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 list_queue_tools.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">원본 설정을 보존하면서 복사본만 바꾸는 상황입니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>copy_settings.py</span></div>
+  <textarea class="editor-source">default_settings = {&quot;theme&quot;: &quot;light&quot;, &quot;lang&quot;: &quot;ko&quot;}
+user_settings = default_settings.copy()
+user_settings[&quot;theme&quot;] = &quot;dark&quot;
+print(&quot;기본:&quot;, default_settings)
+print(&quot;사용자:&quot;, user_settings)
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 copy_settings.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div></section>
+
+<section class="section" id="ss4"><div class="section-num">SELF STUDY 04 · ★★</div><h2>예외 처리 심화 — 실패를 숨기지 말고 의미 있게 다루기</h2><p>예외 처리는 “오류가 안 보이게 하기”가 아니라, <strong>예상 가능한 실패를 프로그램의 흐름으로 표현</strong>하는 도구입니다.</p><div class="study-diagram"><svg viewBox="0 0 760 230" role="img" aria-label="예외 처리 흐름"><defs><marker id="a3" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="currentColor"/></marker></defs><g class="svg-box"><rect x="30" y="80" width="130" height="60" rx="10"/><text x="95" y="115">try</text></g><g class="svg-box"><rect x="250" y="30" width="150" height="60" rx="10"/><text x="325" y="65">except</text></g><g class="svg-box"><rect x="250" y="140" width="150" height="60" rx="10"/><text x="325" y="175">else</text></g><g class="svg-box"><rect x="540" y="80" width="160" height="60" rx="10"/><text x="620" y="115">finally</text></g><path class="svg-arrow" d="M160 100 C200 90 210 60 245 60" marker-end="url(#a3)"/><path class="svg-arrow" d="M160 120 C200 130 210 170 245 170" marker-end="url(#a3)"/><path class="svg-arrow" d="M400 60 C470 60 470 100 535 100" marker-end="url(#a3)"/><path class="svg-arrow" d="M400 170 C470 170 470 120 535 120" marker-end="url(#a3)"/><text x="180" y="58">오류 발생</text><text x="180" y="178">오류 없음</text></svg></div><p class="study-note">함수 내부에서 유효하지 않은 값을 발견하면 raise로 호출자에게 알립니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>raise_age.py</span></div>
+  <textarea class="editor-source">def validate_age(age):
+    if age &lt; 0:
+        raise ValueError(&quot;나이는 0 이상이어야 합니다.&quot;)
+    return age
+
+for age in [20, -1]:
+    try:
+        print(&quot;나이:&quot;, validate_age(age))
+    except ValueError as e:
+        print(&quot;입력 오류:&quot;, e)
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 raise_age.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">except는 실패, else는 try가 정상 완료됐을 때의 흐름을 분리합니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>parse_config.py</span></div>
+  <textarea class="editor-source">values = [&quot;8080&quot;, &quot;abc&quot;, &quot;443&quot;]
+for text in values:
+    try:
+        port = int(text)
+    except ValueError:
+        print(text, &quot;→ 포트 번호가 아님&quot;)
+    else:
+        print(text, &quot;→ 정상 포트&quot;, port)
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 parse_config.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">성공과 실패에 관계없이 정리 작업이 필요한 경우 finally를 사용합니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>finally_connection.py</span></div>
+  <textarea class="editor-source">def use_resource(should_fail):
+    print(&quot;리소스 열기&quot;)
+    try:
+        if should_fail:
+            raise RuntimeError(&quot;작업 실패&quot;)
+        print(&quot;작업 성공&quot;)
+    except RuntimeError as e:
+        print(&quot;처리:&quot;, e)
+    finally:
+        print(&quot;리소스 정리&quot;)
+
+use_resource(False)
+print(&quot;---&quot;)
+use_resource(True)
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 finally_connection.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">도메인 의미가 분명한 예외 이름을 만들 수도 있습니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>custom_exception.py</span></div>
+  <textarea class="editor-source">class InvalidScoreError(Exception):
+    pass
+
+def validate_score(score):
+    if not 0 &lt;= score &lt;= 100:
+        raise InvalidScoreError(f&quot;잘못된 점수: {score}&quot;)
+    return score
+
+try:
+    validate_score(120)
+except InvalidScoreError as e:
+    print(&quot;점수 검증 실패:&quot;, e)
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 custom_exception.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">낮은 수준의 오류에 더 이해하기 쉬운 맥락을 덧붙이는 예입니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>exception_chaining.py</span></div>
+  <textarea class="editor-source">def parse_user_id(text):
+    try:
+        return int(text)
+    except ValueError as e:
+        raise ValueError(f&quot;사용자 ID 형식 오류: {text}&quot;) from e
+
+try:
+    parse_user_id(&quot;A-10&quot;)
+except ValueError as e:
+    print(e)
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 exception_chaining.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">assert는 사용자 입력 검증보다 개발 중 내부 가정 확인에 적합합니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>assert_internal_rule.py</span></div>
+  <textarea class="editor-source">def calculate_average(total, count):
+    assert count &gt; 0, &quot;count는 내부 로직상 0보다 커야 합니다&quot;
+    return total / count
+
+print(calculate_average(270, 3))
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 assert_internal_rule.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><div class="callout warn"><strong>주의</strong><br><code>except Exception: pass</code>처럼 모든 오류를 조용히 삼키면 원인을 찾기 어려워집니다. 처리할 수 있는 예외만 구체적으로 잡는 습관이 좋습니다.</div></section>
+
+<section class="section" id="ss5"><div class="section-num">SELF STUDY 05 · ★★~★★★</div><h2>함수도 객체다 — 전달·반환·Closure로 이어가기</h2><p>Decorator와 callback을 이해하려면 먼저 <strong>함수를 값처럼 변수에 넣고, 다른 함수에 전달하고, 함수에서 반환할 수 있다</strong>는 사실에 익숙해져야 합니다.</p><div class="study-diagram"><svg viewBox="0 0 760 250" role="img" aria-label="closure가 바깥 값을 기억하는 구조"><defs><marker id="a7" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="currentColor"/></marker></defs><g class="svg-box"><rect x="35" y="75" width="190" height="90" rx="12"/><text x="130" y="105">make_multiplier(1.1)</text><text x="130" y="135">rate = 1.1</text></g><g class="svg-box"><rect x="305" y="55" width="210" height="130" rx="14"/><text x="410" y="88">내부 함수 multiply</text><text x="410" y="120">rate를 기억</text><text x="410" y="150">value × rate</text></g><g class="svg-box"><rect x="595" y="75" width="130" height="90" rx="12"/><text x="660" y="105">apply_vat</text><text x="660" y="135">재사용</text></g><path class="svg-arrow" d="M225 120 H300" marker-end="url(#a7)"/><path class="svg-arrow" d="M515 120 H590" marker-end="url(#a7)"/><text x="380" y="220">바깥 함수가 끝난 뒤에도 필요한 값을 내부 함수가 참조</text></svg></div><p class="study-note">함수 이름도 객체를 가리키는 이름표라는 Week 1의 모델과 연결됩니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>function_variable.py</span></div>
+  <textarea class="editor-source">def greet(name):
+    return f&quot;안녕하세요, {name}&quot;
+
+message_maker = greet
+print(message_maker(&quot;Kim&quot;))
+print(message_maker is greet)
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 function_variable.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">처리 방법 자체를 함수 인자로 전달하면 process_users를 재사용할 수 있습니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>function_argument.py</span></div>
+  <textarea class="editor-source">def format_name(name):
+    return name.strip().title()
+
+def process_users(users, formatter):
+    return [formatter(user) for user in users]
+
+raw_users = [&quot; kim &quot;, &quot;LEE&quot;, &quot; park&quot;]
+print(process_users(raw_users, format_name))
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 function_argument.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">상황에 따라 계산 전략 함수를 바꿔 전달합니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>choose_strategy.py</span></div>
+  <textarea class="editor-source">def add_tax(price):
+    return int(price * 1.1)
+
+def no_tax(price):
+    return price
+
+def calculate(price, strategy):
+    return strategy(price)
+
+print(calculate(10000, add_tax))
+print(calculate(10000, no_tax))
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 choose_strategy.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">함수에서 다른 함수를 반환할 수도 있습니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>return_function.py</span></div>
+  <textarea class="editor-source">def get_formatter(style):
+    if style == &quot;upper&quot;:
+        return str.upper
+    return str.title
+
+formatter = get_formatter(&quot;upper&quot;)
+print(formatter(&quot;hello python&quot;))
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 return_function.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">바깥 함수 실행이 끝난 뒤에도 내부 함수가 rate를 기억합니다. 이것이 closure의 핵심입니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>closure_multiplier.py</span></div>
+  <textarea class="editor-source">def make_multiplier(rate):
+    def multiply(value):
+        return value * rate
+    return multiply
+
+apply_vat = make_multiplier(1.1)
+apply_discount = make_multiplier(0.9)
+print(int(apply_vat(10000)))
+print(int(apply_discount(10000)))
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 closure_multiplier.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">closure가 상태를 기억하는 예입니다. nonlocal은 바깥 함수의 지역 변수를 다시 연결할 때 사용합니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>closure_counter.py</span></div>
+  <textarea class="editor-source">def make_counter():
+    count = 0
+    def increase():
+        nonlocal count
+        count += 1
+        return count
+    return increase
+
+api_calls = make_counter()
+print(api_calls())
+print(api_calls())
+print(api_calls())
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 closure_counter.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div></section>
+
+<section class="section" id="ss6"><div class="section-num">SELF STUDY 06 · ★★★</div><h2>Decorator — 공통 동작을 함수 바깥에서 감싸기</h2><p>Decorator는 원래 함수의 핵심 로직을 건드리지 않고 로그·권한 검사·시간 측정 같은 <strong>공통 관심사</strong>를 앞뒤에 덧붙일 때 유용합니다. 먼저 <code>@</code> 없이 같은 구조를 만든 뒤 문법을 줄여봅니다.</p><div class="study-diagram"><svg viewBox="0 0 760 250" role="img" aria-label="데코레이터 구조"><defs><marker id="a4" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="currentColor"/></marker></defs><g class="svg-box"><rect x="30" y="90" width="150" height="65" rx="10"/><text x="105" y="118">원래 함수</text><text x="105" y="140">show_page()</text></g><g class="svg-box"><rect x="280" y="35" width="200" height="175" rx="14"/><text x="380" y="68">decorator / wrapper</text><text x="380" y="103">① 공통 작업 전</text><text x="380" y="133">② 원래 함수 실행</text><text x="380" y="163">③ 공통 작업 후</text></g><g class="svg-box"><rect x="580" y="90" width="150" height="65" rx="10"/><text x="655" y="118">감싸진 함수</text><text x="655" y="140">호출</text></g><path class="svg-arrow" d="M180 122 H275" marker-end="url(#a4)"/><path class="svg-arrow" d="M480 122 H575" marker-end="url(#a4)"/></svg></div><p class="study-note">@ 문법 없이 “함수를 받아 감싼 함수를 반환”하는 구조를 먼저 봅니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>manual_wrapper.py</span></div>
+  <textarea class="editor-source">def say_hello():
+    print(&quot;안녕하세요&quot;)
+
+def trace(func):
+    def wrapper():
+        print(&quot;[START]&quot;)
+        func()
+        print(&quot;[END]&quot;)
+    return wrapper
+
+traced_hello = trace(say_hello)
+traced_hello()
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 manual_wrapper.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">@trace는 say_hello = trace(say_hello)와 같은 핵심 아이디어를 짧게 표현합니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>decorator_syntax.py</span></div>
+  <textarea class="editor-source">def trace(func):
+    def wrapper():
+        print(&quot;[START]&quot;)
+        func()
+        print(&quot;[END]&quot;)
+    return wrapper
+
+@trace
+def say_hello():
+    print(&quot;안녕하세요&quot;)
+
+say_hello()
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 decorator_syntax.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">실제 decorator는 원래 함수의 인자를 전달해야 하므로 *args/**kwargs를 자주 사용합니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>decorator_args.py</span></div>
+  <textarea class="editor-source">def log_call(func):
+    def wrapper(*args, **kwargs):
+        print(f&quot;호출: {func.__name__}&quot;)
+        return func(*args, **kwargs)
+    return wrapper
+
+@log_call
+def add(a, b):
+    return a + b
+
+print(add(10, 20))
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 decorator_args.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">웹 프레임워크에서 흔히 볼 수 있는 “함수 실행 전 권한 검사”의 축소 예입니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>login_required.py</span></div>
+  <textarea class="editor-source">def login_required(func):
+    def wrapper(user):
+        if not user[&quot;logged_in&quot;]:
+            print(&quot;로그인이 필요합니다.&quot;)
+            return None
+        return func(user)
+    return wrapper
+
+@login_required
+def show_mypage(user):
+    return f&quot;{user[&#x27;name&#x27;]}님의 마이페이지&quot;
+
+print(show_mypage({&quot;name&quot;: &quot;Kim&quot;, &quot;logged_in&quot;: True}))
+print(show_mypage({&quot;name&quot;: &quot;Lee&quot;, &quot;logged_in&quot;: False}))
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 login_required.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">일시적 실패를 재시도하는 공통 로직을 함수 밖으로 뺀 예입니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>retry_decorator.py</span></div>
+  <textarea class="editor-source">def retry_once(func):
+    def wrapper():
+        try:
+            return func()
+        except RuntimeError:
+            print(&quot;첫 시도 실패 → 한 번 재시도&quot;)
+            return func()
+    return wrapper
+
+attempts = 0
+@retry_once
+def unstable_job():
+    global attempts
+    attempts += 1
+    if attempts == 1:
+        raise RuntimeError(&quot;temporary&quot;)
+    return &quot;성공&quot;
+
+print(unstable_job())
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 retry_decorator.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">decorator 자체가 설정값을 받을 수도 있습니다. 함수가 한 겹 더 생기는 이유를 천천히 추적하세요.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>decorator_parameter.py</span></div>
+  <textarea class="editor-source">def repeat(times):
+    def decorator(func):
+        def wrapper(*args, **kwargs):
+            result = None
+            for _ in range(times):
+                result = func(*args, **kwargs)
+            return result
+        return wrapper
+    return decorator
+
+@repeat(3)
+def notify(message):
+    print(message)
+
+notify(&quot;상태 확인&quot;)
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 decorator_parameter.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">functools.wraps는 감싼 뒤에도 원래 함수의 이름과 문서 같은 메타데이터를 유지하는 데 도움을 줍니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>wraps_example.py</span></div>
+  <textarea class="editor-source">from functools import wraps
+
+def trace(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        return func(*args, **kwargs)
+    return wrapper
+
+@trace
+def calculate_total(price, count):
+    &quot;&quot;&quot;총 금액을 계산합니다.&quot;&quot;&quot;
+    return price * count
+
+print(calculate_total.__name__)
+print(calculate_total.__doc__)
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 wraps_example.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><details class="study-exercise"><summary>직접 해보기 — 실행 전 입력 검사 decorator</summary><div class="study-exercise-body"><p>음수 금액이면 함수를 실행하지 않고 안내를 출력하는 <code>@positive_amount</code> decorator를 만들어 보세요. 정상 금액일 때만 원래 결제 함수가 실행되게 합니다.</p></div></details></section>
+
+<section class="section" id="ss7"><div class="section-num">SELF STUDY 07 · ★★★</div><h2>Iterable · Iterator · Generator — 값을 하나씩 꺼내는 흐름</h2><p><code>for</code>문 뒤에서는 “다음 값을 하나씩 꺼내는” 규칙이 동작합니다. Generator는 그 규칙을 이용해 필요한 시점에 값을 하나씩 만들어 전달하는 편리한 방법입니다.</p><div class="study-diagram"><svg viewBox="0 0 780 280" role="img" aria-label="generator yield 흐름"><defs><marker id="a5" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="currentColor"/></marker></defs><g class="svg-box"><rect x="30" y="100" width="130" height="60" rx="10"/><text x="95" y="135">next()</text></g><g class="svg-box"><rect x="260" y="35" width="240" height="210" rx="14"/><text x="380" y="70">generator 함수</text><text x="380" y="110">실행하다가</text><text x="380" y="145">yield 값</text><text x="380" y="180">여기서 잠시 멈춤</text><text x="380" y="215">다음 호출 때 이어서</text></g><g class="svg-box"><rect x="610" y="100" width="140" height="60" rx="10"/><text x="680" y="127">값 하나</text><text x="680" y="148">전달</text></g><path class="svg-arrow" d="M160 130 H255" marker-end="url(#a5)"/><path class="svg-arrow" d="M500 130 H605" marker-end="url(#a5)"/><path class="svg-arrow" d="M680 165 C680 250 95 250 95 165" marker-end="url(#a5)"/><text x="340" y="268">다음 값이 필요하면 다시 next()</text></svg></div><p class="study-note">for문이 자동으로 하던 값을 하나씩 꺼내는 작업을 직접 해봅니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>iterator_manual.py</span></div>
+  <textarea class="editor-source">servers = [&quot;api-01&quot;, &quot;api-02&quot;, &quot;web-01&quot;]
+it = iter(servers)
+print(next(it))
+print(next(it))
+print(next(it))
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 iterator_manual.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">iterator가 끝났음을 StopIteration으로 알리는 모습을 직접 확인합니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>iterator_stop.py</span></div>
+  <textarea class="editor-source">items = [&quot;A&quot;, &quot;B&quot;]
+it = iter(items)
+while True:
+    try:
+        print(next(it))
+    except StopIteration:
+        print(&quot;더 이상 값이 없습니다.&quot;)
+        break
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 iterator_stop.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">가장 작은 generator 함수입니다. yield를 만날 때마다 값 하나를 전달합니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>generator_simple.py</span></div>
+  <textarea class="editor-source">def ticket_numbers():
+    yield 101
+    yield 102
+    yield 103
+
+for number in ticket_numbers():
+    print(&quot;대기번호&quot;, number)
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 generator_simple.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">반복문 속 yield로 원하는 만큼 값을 만들어 냅니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>generator_range.py</span></div>
+  <textarea class="editor-source">def count_up_to(limit):
+    number = 1
+    while number &lt;= limit:
+        yield number
+        number += 1
+
+for number in count_up_to(5):
+    print(number)
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 generator_range.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">로그 전체를 새 리스트로 만들지 않고 오류 줄을 하나씩 전달하는 형태입니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>generator_log_filter.py</span></div>
+  <textarea class="editor-source">def error_lines(lines):
+    for line in lines:
+        if line.startswith(&quot;ERROR&quot;):
+            yield line
+
+logs = [
+    &quot;INFO started&quot;,
+    &quot;ERROR timeout&quot;,
+    &quot;WARN memory&quot;,
+    &quot;ERROR disk full&quot;,
+]
+for line in error_lines(logs):
+    print(line)
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 generator_log_filter.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">괄호 comprehension 모양은 tuple이 아니라 generator expression입니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>generator_expression.py</span></div>
+  <textarea class="editor-source">orders = [12000, 5000, 18000, 9000]
+large_orders = (price for price in orders if price &gt;= 10000)
+print(next(large_orders))
+print(next(large_orders))
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 generator_expression.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">generator는 한 번 끝까지 소비한 뒤 같은 객체를 다시 처음부터 쓰는 리스트와 다릅니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>generator_consumed.py</span></div>
+  <textarea class="editor-source">numbers = (n * n for n in range(4))
+print(list(numbers))
+print(list(numbers))  # 이미 끝난 같은 generator
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 generator_consumed.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">yield from은 다른 iterable의 값을 차례로 전달할 때 사용할 수 있습니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>yield_from.py</span></div>
+  <textarea class="editor-source">def service_names():
+    api = [&quot;api-01&quot;, &quot;api-02&quot;]
+    web = [&quot;web-01&quot;, &quot;web-02&quot;]
+    yield from api
+    yield from web
+
+print(list(service_names()))
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 yield_from.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div></section>
+
+<section class="section" id="ss8"><div class="section-num">SELF STUDY 08 · ★★~★★★</div><h2>Class와 객체 — 상태와 동작을 한 단위로 묶기</h2><p>Class는 단순히 “새 문법”이 아니라, 서로 관련된 <strong>상태(attribute)와 동작(method)</strong>을 객체로 묶는 방법입니다. 작은 예제에서 시작해 계좌·주문처럼 상태가 변하는 예제로 확장합니다.</p><div class="study-diagram"><svg viewBox="0 0 780 300" role="img" aria-label="클래스와 인스턴스"><defs><marker id="a6" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="currentColor"/></marker></defs><g class="svg-box"><rect x="260" y="25" width="260" height="105" rx="14"/><text x="390" y="58">class BankAccount</text><text x="390" y="86">balance 상태</text><text x="390" y="110">deposit / withdraw 동작</text></g><g class="svg-box"><rect x="70" y="200" width="230" height="70" rx="12"/><text x="185" y="228">account_a</text><text x="185" y="250">balance = 10000</text></g><g class="svg-box"><rect x="480" y="200" width="230" height="70" rx="12"/><text x="595" y="228">account_b</text><text x="595" y="250">balance = 50000</text></g><path class="svg-arrow" d="M330 130 L230 195" marker-end="url(#a6)"/><path class="svg-arrow" d="M450 130 L550 195" marker-end="url(#a6)"/><text x="335" y="170">같은 설계로</text></svg></div><p class="study-note">가장 작은 class와 instance입니다. 먼저 “내가 정의한 타입의 객체”라는 느낌만 잡습니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>class_user.py</span></div>
+  <textarea class="editor-source">class User:
+    pass
+
+user = User()
+user.name = &quot;Kim&quot;
+user.active = True
+print(user.name, user.active)
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 class_user.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">__init__에서 instance의 초기 상태를 정합니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>class_init.py</span></div>
+  <textarea class="editor-source">class User:
+    def __init__(self, name, active=True):
+        self.name = name
+        self.active = active
+
+kim = User(&quot;Kim&quot;)
+lee = User(&quot;Lee&quot;, False)
+print(kim.name, kim.active)
+print(lee.name, lee.active)
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 class_init.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">method가 같은 객체의 상태를 변경합니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>class_method.py</span></div>
+  <textarea class="editor-source">class Counter:
+    def __init__(self):
+        self.value = 0
+
+    def increase(self):
+        self.value += 1
+
+counter = Counter()
+counter.increase()
+counter.increase()
+print(counter.value)
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 class_method.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">g.greet(...)를 호출할 때 현재 instance가 self로 전달된다는 것을 id로 확인합니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>self_explained.py</span></div>
+  <textarea class="editor-source">class Greeter:
+    def greet(self, name):
+        print(&quot;self id:&quot;, id(self))
+        print(f&quot;안녕하세요, {name}&quot;)
+
+g = Greeter()
+print(&quot;g id:&quot;, id(g))
+g.greet(&quot;Kim&quot;)
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 self_explained.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">상태와 규칙이 함께 있는 대상은 class의 필요성이 더 잘 보입니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>bank_account.py</span></div>
+  <textarea class="editor-source">class BankAccount:
+    def __init__(self, owner, balance=0):
+        self.owner = owner
+        self.balance = balance
+
+    def deposit(self, amount):
+        if amount &lt;= 0:
+            raise ValueError(&quot;입금액은 0보다 커야 합니다.&quot;)
+        self.balance += amount
+
+    def withdraw(self, amount):
+        if amount &gt; self.balance:
+            return False
+        self.balance -= amount
+        return True
+
+account = BankAccount(&quot;Kim&quot;, 10000)
+account.deposit(5000)
+print(account.withdraw(12000))
+print(account.balance)
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 bank_account.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">모든 instance가 공유하는 class attribute와 각 instance별 attribute를 비교합니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>class_attribute.py</span></div>
+  <textarea class="editor-source">class Server:
+    environment = &quot;production&quot;  # class attribute
+
+    def __init__(self, name):
+        self.name = name          # instance attribute
+
+a = Server(&quot;api-01&quot;)
+b = Server(&quot;api-02&quot;)
+print(a.environment, a.name)
+print(b.environment, b.name)
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 class_attribute.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">같은 send 인터페이스를 서로 다른 방식으로 구현하는 override 예입니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>inheritance_vehicle.py</span></div>
+  <textarea class="editor-source">class Notification:
+    def send(self, message):
+        print(&quot;기본 알림:&quot;, message)
+
+class EmailNotification(Notification):
+    def send(self, message):
+        print(&quot;EMAIL:&quot;, message)
+
+class SmsNotification(Notification):
+    def send(self, message):
+        print(&quot;SMS:&quot;, message)
+
+for channel in [EmailNotification(), SmsNotification()]:
+    channel.send(&quot;배포 완료&quot;)
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 inheritance_vehicle.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">자식 class가 부모의 초기화 로직을 재사용할 때 super()를 만날 수 있습니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>super_example.py</span></div>
+  <textarea class="editor-source">class Employee:
+    def __init__(self, name):
+        self.name = name
+
+class Developer(Employee):
+    def __init__(self, name, language):
+        super().__init__(name)
+        self.language = language
+
+dev = Developer(&quot;Kim&quot;, &quot;Python&quot;)
+print(dev.name, dev.language)
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 super_example.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">상속 관계에서는 isinstance가 특히 유용합니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>isinstance_class.py</span></div>
+  <textarea class="editor-source">class Animal:
+    pass
+class Dog(Animal):
+    pass
+
+dog = Dog()
+print(isinstance(dog, Dog))
+print(isinstance(dog, Animal))
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 isinstance_class.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">여러 필드와 계산 규칙을 하나의 주문 객체로 묶은 작은 도메인 모델입니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>order_model.py</span></div>
+  <textarea class="editor-source">class Order:
+    def __init__(self, order_id, items):
+        self.order_id = order_id
+        self.items = items
+
+    def total(self):
+        return sum(item[&quot;price&quot;] * item[&quot;qty&quot;] for item in self.items)
+
+order = Order(1001, [
+    {&quot;name&quot;: &quot;Keyboard&quot;, &quot;price&quot;: 89000, &quot;qty&quot;: 1},
+    {&quot;name&quot;: &quot;Cable&quot;, &quot;price&quot;: 12000, &quot;qty&quot;: 2},
+])
+print(&quot;주문&quot;, order.order_id)
+print(&quot;총액&quot;, order.total())
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 order_model.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div></section>
+
+<section class="section" id="ss9"><div class="section-num">SELF STUDY 09 · ★★</div><h2>Type Hint — 사람이 읽기 쉽고 도구가 검사하기 좋은 코드</h2><p>타입 힌트는 Python 실행이 모든 타입을 강제하게 만드는 장치가 아닙니다. 함수가 무엇을 기대하고 무엇을 돌려주는지 표현해 IDE·리뷰·정적 분석을 돕습니다.</p><p class="study-note">기본 매개변수와 반환 타입부터 시작합니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>type_hint_basic.py</span></div>
+  <textarea class="editor-source">def greet(name: str) -&gt; str:
+    return f&quot;안녕하세요, {name}&quot;
+
+print(greet(&quot;Kim&quot;))
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 type_hint_basic.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">컨테이너 안의 요소 타입도 표현할 수 있습니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>type_hint_collections.py</span></div>
+  <textarea class="editor-source">def average(scores: list[int]) -&gt; float:
+    return sum(scores) / len(scores)
+
+print(average([80, 90, 100]))
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 type_hint_collections.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">결과가 없을 수 있음을 | None으로 표현합니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>type_hint_optional.py</span></div>
+  <textarea class="editor-source">def find_user(user_id: int) -&gt; dict[str, str] | None:
+    if user_id == 1:
+        return {&quot;name&quot;: &quot;Kim&quot;}
+    return None
+
+print(find_user(1))
+print(find_user(99))
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 type_hint_optional.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">복잡한 타입 표현에 이름을 붙이면 읽기 쉬워질 수 있습니다. 더 큰 프로젝트에서는 dataclass나 TypedDict도 만나게 됩니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>type_hint_alias.py</span></div>
+  <textarea class="editor-source">User = dict[str, str]
+
+def display_user(user: User) -&gt; str:
+    return f&quot;{user[&#x27;name&#x27;]} ({user[&#x27;role&#x27;]})&quot;
+
+print(display_user({&quot;name&quot;: &quot;Kim&quot;, &quot;role&quot;: &quot;admin&quot;}))
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 type_hint_alias.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div></section>
+
+<section class="section" id="ss10"><div class="section-num">SELF STUDY 10 · ★★</div><h2>Python 프로젝트 시작하기 — module, package, pip, venv</h2><p>브라우저 실습을 넘어 실제 프로젝트를 만들면 “코드를 여러 파일로 나누기”와 “프로젝트마다 라이브러리 환경을 분리하기”가 중요해집니다.</p><div class="study-diagram"><svg viewBox="0 0 760 260" role="img" aria-label="Python 프로젝트와 가상환경"><g class="svg-box"><rect x="25" y="35" width="230" height="185" rx="14"/><text x="140" y="65">project A</text><text x="140" y="100">main.py / utils.py</text><text x="140" y="135">.venv</text><text x="140" y="170">requests 2.x</text></g><g class="svg-box"><rect x="505" y="35" width="230" height="185" rx="14"/><text x="620" y="65">project B</text><text x="620" y="100">app.py / models.py</text><text x="620" y="135">.venv</text><text x="620" y="170">다른 패키지 조합</text></g><text x="380" y="115" text-anchor="middle">서로 독립된 환경</text><text x="380" y="145" text-anchor="middle">충돌 감소</text></svg></div><h3>module — Python 파일 하나를 가져다 쓰기</h3><pre class="code-static"><code># utils.py
+def greet(name):
+    return f"안녕하세요, {name}"
+
+# main.py
+from utils import greet
+print(greet("Kim"))</code></pre><p class="study-note">현재 브라우저에서도 표준 라이브러리 module을 import해 사용할 수 있습니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>module_builtin_demo.py</span></div>
+  <textarea class="editor-source">import math
+from statistics import mean
+
+values = [10, 20, 35]
+print(math.ceil(3.14))
+print(mean(values))
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 module_builtin_demo.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">긴 module 이름이나 관례적인 이름을 alias로 사용할 수도 있습니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>module_alias.py</span></div>
+  <textarea class="editor-source">import json as json_module
+
+data = {&quot;name&quot;: &quot;Kim&quot;, &quot;active&quot;: True}
+text = json_module.dumps(data, ensure_ascii=False)
+print(text)
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 module_alias.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><h3>package — 여러 module을 묶은 구조</h3><pre class="code-static"><code>shop/
+├─ main.py
+└─ shop/
+   ├─ __init__.py
+   ├─ orders.py
+   └─ users.py</code></pre><h3>venv와 pip — 프로젝트 환경 분리</h3><pre class="code-static"><code># 프로젝트 폴더에서
+python -m venv .venv
+
+# Windows PowerShell 활성화 예
+.\.venv\Scripts\Activate.ps1
+
+# 패키지 설치
+python -m pip install requests
+
+# 설치 확인
+python -m pip list
+
+# 전통적인 의존성 목록 저장
+python -m pip freeze &gt; requirements.txt</code></pre><div class="callout info"><strong>왜 <code>python -m pip</code>?</strong><br>현재 사용 중인 Python 인터프리터에 연결된 pip를 명시적으로 실행하기 쉬운 형태입니다. 실제 팀 프로젝트에서는 <code>pyproject.toml</code> 기반 도구도 자주 사용합니다.</div></section>
+
+<section class="section" id="ss11"><div class="section-num">SELF STUDY 11 · ★★~★★★</div><h2>현대 Python 코드에서 만날 문법</h2><p>여기서는 지금 당장 모두 쓰기보다, 기존 코드에서 봤을 때 의미를 알아보는 것이 목표입니다.</p><p class="study-note">단순 값 분기부터 match/case 모양에 익숙해집니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>match_command.py</span></div>
+  <textarea class="editor-source">command = &quot;deploy&quot;
+match command:
+    case &quot;start&quot;:
+        print(&quot;서비스 시작&quot;)
+    case &quot;stop&quot;:
+        print(&quot;서비스 중지&quot;)
+    case &quot;deploy&quot;:
+        print(&quot;새 버전 배포&quot;)
+    case _:
+        print(&quot;알 수 없는 명령&quot;)
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 match_command.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">structural pattern matching은 값뿐 아니라 구조를 분해하며 검사할 수 있습니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>match_structure.py</span></div>
+  <textarea class="editor-source">event = {&quot;type&quot;: &quot;user&quot;, &quot;action&quot;: &quot;login&quot;, &quot;name&quot;: &quot;Kim&quot;}
+match event:
+    case {&quot;type&quot;: &quot;user&quot;, &quot;action&quot;: &quot;login&quot;, &quot;name&quot;: name}:
+        print(name, &quot;로그인&quot;)
+    case {&quot;type&quot;: &quot;user&quot;, &quot;action&quot;: &quot;logout&quot;, &quot;name&quot;: name}:
+        print(name, &quot;로그아웃&quot;)
+    case _:
+        print(&quot;다른 이벤트&quot;)
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 match_structure.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">:=는 계산한 값을 이름에 연결하면서 같은 표현식에서 바로 사용합니다. 과용하지 않는 것이 좋습니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>walrus_read.py</span></div>
+  <textarea class="editor-source">messages = [&quot;ok&quot;, &quot;warning: memory high&quot;, &quot;error: database timeout&quot;]
+for message in messages:
+    if (length := len(message)) &gt; 15:
+        print(length, message)
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 walrus_read.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">with 뒤에서 동작하는 context manager를 contextlib로 아주 작게 만들어봅니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>contextmanager_demo.py</span></div>
+  <textarea class="editor-source">from contextlib import contextmanager
+
+@contextmanager
+def managed_job(name):
+    print(name, &quot;시작&quot;)
+    try:
+        yield
+    finally:
+        print(name, &quot;정리&quot;)
+
+with managed_job(&quot;backup&quot;):
+    print(&quot;백업 작업 중&quot;)
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 contextmanager_demo.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div><p class="study-note">Pyodide에서는 top-level await를 사용할 수 있어 async/await의 모양을 작게 확인할 수 있습니다. 내부 원리는 별도 큰 주제입니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>async_shape.py</span></div>
+  <textarea class="editor-source">import asyncio
+
+async def fetch_like_task(name, delay):
+    await asyncio.sleep(delay)
+    return f&quot;{name} 완료&quot;
+
+async def main():
+    result = await fetch_like_task(&quot;작업&quot;, 0.01)
+    print(result)
+
+await main()
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 async_shape.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div></section>
+
+<section class="section" id="ss12"><div class="section-num">SELF STUDY 12</div><h2>다음 공부는 문법 목록보다 작은 프로젝트로</h2><div class="concept-grid"><div class="concept-card"><strong>Backend / Web</strong><p>FastAPI, Django, HTTP, Database, 인증, 테스트</p></div><div class="concept-card"><strong>Data</strong><p>NumPy, pandas, Jupyter, SQL, 시각화</p></div><div class="concept-card"><strong>AI</strong><p>API 활용, 데이터 전처리, 모델 SDK, RAG/Agent</p></div><div class="concept-card"><strong>Automation</strong><p>파일, Excel, 웹 요청, 스케줄링, 업무 자동화</p></div></div><div class="callout info"><strong>추천</strong><br>예를 들어 “로그 분석기”, “CSV 정리 도구”, “간단한 REST API”, “파일 이름 일괄 변경기”처럼 작지만 끝까지 완성할 수 있는 프로젝트를 하나 선택하세요. 필요한 문법이 생길 때 이 자습 탭과 공식 문서를 다시 찾는 방식이 가장 오래 남습니다.</div></section>

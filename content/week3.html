@@ -183,9 +183,9 @@ print(type(mixed))     # 같은 list
     <strong>핵심 사실</strong> 세 가지를 짚어둡시다:
   </p>
   <ul>
-    <li>리스트 객체는 HEAP에 있는 <strong>하나의 박스</strong>입니다.</li>
-    <li>그 박스 안에는 <strong>요소 객체를 가리키는 참조</strong>들이 줄지어 있습니다 — 값이 직접 들어있는 게 아닙니다.</li>
-    <li>각 요소는 <strong>별개의 객체</strong>이고 HEAP의 다른 자리에 살고 있습니다.</li>
+    <li>리스트 자체도 <strong>하나의 객체</strong>입니다.</li>
+    <li>개념적으로 리스트는 <strong>각 요소 객체를 가리키는 참조들의 순서</strong>를 관리한다고 이해하면 좋습니다.</li>
+    <li>각 요소 역시 Python 객체이며, 여러 위치가 같은 객체를 가리킬 수도 있습니다.</li>
   </ul>
 
   <h3>변수와 함께 보면</h3>
@@ -212,12 +212,12 @@ print(type(mixed))     # 같은 list
       <text x="80" y="129" text-anchor="middle" font-family="JetBrains Mono, monospace"
             font-size="13" font-weight="700" fill="currentColor">nums</text>
 
-      <!-- HEAP -->
+      <!-- Python 객체 영역 -->
       <rect x="160" y="50" width="540" height="140" rx="8"
             fill="currentColor" opacity="0.04" stroke="currentColor" stroke-opacity="0.4"
             stroke-width="1" stroke-dasharray="4 3"/>
       <text x="430" y="68" text-anchor="middle" font-family="Pretendard, sans-serif"
-            font-size="9" fill="currentColor" opacity="0.65" font-weight="600" letter-spacing="1">OBJECTS (HEAP)</text>
+            font-size="9" fill="currentColor" opacity="0.65" font-weight="600" letter-spacing="1">PYTHON OBJECTS</text>
 
       <!-- list 객체 -->
       <rect x="190" y="100" width="160" height="56" rx="6"
@@ -400,6 +400,29 @@ print(len(cart))     # 3
     <div class="terminal-body empty"></div>
   </div>
 
+  <h3>실무에서 자주 쓰는 리스트 메서드 — append 다음 단계</h3>
+  <p><code class="inline">append()</code> 하나만 알아도 시작할 수 있지만, 실제 코드에서는 다음 메서드도 자주 만납니다. 지금 모두 외우기보다 <strong>추가·삭제·복사</strong> 세 묶음으로 기억하세요.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>list_methods.py</span></div>
+  <textarea class="editor-source">items = ["사과", "우유"]
+
+items.append("빵")                 # 값 하나를 끝에 추가
+items.extend(["커피", "물"])       # 여러 값을 펼쳐서 추가
+items.insert(1, "바나나")           # 원하는 위치에 삽입
+print(items)
+
+items.remove("우유")                # 값으로 삭제
+last = items.pop()                   # 마지막 값을 꺼내면서 삭제
+print("꺼낸 값:", last)
+print(items)
+
+copied = items.copy()               # 새로운 리스트(얕은 복사)
+print(copied)
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 list_methods.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div>
+  <div class="callout info"><strong>append와 extend 차이</strong><br><code class="inline">append([3, 4])</code>는 리스트 자체를 한 요소로 넣고, <code class="inline">extend([3, 4])</code>는 3과 4를 각각 추가합니다. <code class="inline">remove()</code>는 값을 찾아 지우고, <code class="inline">pop()</code>은 값을 꺼내면서 지웁니다.</div>
   <div class="key-points">
     <div class="title">이 섹션의 핵심</div>
     <ul>
@@ -568,6 +591,24 @@ print(scores)           # 이제 원본도 정렬됨
     같은 정렬이지만 sorted는 새 리스트를 만들고, sort는 원본을 직접 변경합니다.
   </p>
 
+  <h3>sort()와 sorted() — 원본을 바꾸는가?</h3>
+  <p>둘 다 정렬하지만 동작 방식은 다릅니다. 이 차이는 앞에서 배운 <strong>가변(mutable)</strong> 개념과 연결됩니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>sort_vs_sorted.py</span></div>
+  <textarea class="editor-source">numbers = [3, 1, 2]
+
+new_numbers = sorted(numbers)
+print("원본:", numbers)
+print("sorted 결과:", new_numbers)
+
+result = numbers.sort()
+print("sort 후 원본:", numbers)
+print("sort 반환값:", result)
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 sort_vs_sorted.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div>
+  <div class="key-points"><div class="title">한 줄 정리</div><ul><li><code class="inline">sorted(iterable)</code> → 정렬된 <strong>새 리스트를 반환</strong></li><li><code class="inline">list.sort()</code> → <strong>원본 리스트 자체를 변경</strong>하고 반환값은 <code class="inline">None</code></li></ul></div>
   <h3>in 연산자 — 안에 있나?</h3>
 
   <p>
@@ -619,7 +660,7 @@ print("Z" in "python")       # False
 # 합계 직접 구하기
 total = 0
 for s in scores:
-    total = total + s
+    total += s
 print(f"합계: {total}")
 
 # 60점 미만 찾기
@@ -630,7 +671,8 @@ for s in scores:
         print(f"통과: {s}")
 
 # 인덱스도 같이 — enumerate
-for i, s in enumerate(scores):
+# 실제 학생 번호처럼 1부터 시작하고 싶으면 start=1
+for i, s in enumerate(scores, start=1):
     print(f"{i}번 학생: {s}점")
 </textarea>
     <div class="run-bar">
@@ -648,9 +690,59 @@ for i, s in enumerate(scores):
   </div>
 
   <p>
-    <code class="inline">enumerate()</code>는 "인덱스와 값을 같이" 받고 싶을 때 쓰는 도구입니다.
-    번호와 값이 동시에 필요한 경우가 흔하니 알아두면 유용합니다.
+    <code class="inline">enumerate()</code>는 "번호와 값을 같이" 받고 싶을 때 쓰는 도구입니다.
+    기본 번호는 0부터 시작하지만 <code class="inline">start=1</code>처럼 시작 번호를 정할 수 있습니다.
+    실무에서도 <code class="inline">range(len(...))</code>로 인덱스를 직접 만드는 대신 자주 사용합니다.
   </p>
+
+  <h3>any()와 all() — 하나라도? 전부?</h3>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>any_all.py</span></div>
+  <textarea class="editor-source">checks = [True, True, False]
+
+print(any(checks))   # 하나라도 True면 True
+print(all(checks))   # 모두 True여야 True
+
+scores = [80, 90, 55]
+print(any(score &gt;= 90 for score in scores))
+print(all(score &gt;= 50 for score in scores))
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 any_all.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div>
+  <p><code class="inline">any()</code>와 <code class="inline">all()</code>은 여러 조건 결과를 한 번에 검사할 때 유용합니다. 마지막 두 줄의 괄호 표현은 뒤에서 다시 소개할 <strong>generator expression</strong>과 같은 계열이며, 자습 탭에서 더 자세히 설명합니다.</p>
+  <h3>두 묶음을 나란히 순회 — zip()</h3>
+
+  <p>
+    이름 목록과 점수 목록처럼 <strong>두 개 이상의 반복 가능한 대상을 같은 위치끼리 묶어</strong> 처리할 때
+    <code class="inline">zip()</code>을 사용합니다. 인덱스를 직접 계산할 필요가 없어 코드가 읽기 쉬워집니다.
+  </p>
+
+  <div class="editor-block">
+    <div class="editor-tab-bar">
+      <span class="editor-tab"><span class="py-icon"></span>zip_basic.py</span>
+    </div>
+    <textarea class="editor-source">names = ["철수", "영희", "민수"]
+scores = [85, 92, 78]
+
+for name, score in zip(names, scores):
+    print(f"{name}: {score}점")
+
+# 길이가 다르면 가장 짧은 쪽까지만 묶입니다.
+a = [1, 2, 3]
+b = ["A", "B"]
+print(list(zip(a, b)))   # [(1, 'A'), (2, 'B')]
+</textarea>
+    <div class="run-bar">
+      <span class="left"><span class="file-name">📄 zip_basic.py</span></span>
+      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+      <button class="run-btn"><span class="play">▶</span> Run</button>
+    </div>
+  </div>
+  <div class="terminal">
+    <div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div>
+    <div class="terminal-body empty"></div>
+  </div>
 
   <div class="key-points">
     <div class="title">이 섹션의 핵심</div>
@@ -659,12 +751,16 @@ for i, s in enumerate(scores):
       <li><code class="inline">sum, max, min, len, sorted</code> — 새 값/리스트 반환.</li>
       <li><code class="inline">.sort()</code>는 원본 변경, <code class="inline">sorted()</code>는 새 리스트.</li>
       <li><code class="inline">in</code> 연산자로 포함 여부 검사.</li>
-      <li><code class="inline">for x in 리스트:</code>로 순회, <code class="inline">enumerate</code>로 인덱스 동반.</li>
+      <li><code class="inline">for x in 리스트:</code>로 순회, <code class="inline">enumerate()</code>로 번호 동반.</li>
+      <li><code class="inline">zip()</code>으로 여러 반복 대상을 같은 위치끼리 묶어 순회.</li>
     </ul>
   </div>
 </section>
 
-  <h3>참고 — 한 줄로 쓰는 리스트 만들기 (컴프리헨션)</h3>
+<section class="section" id="s2b">
+  <div class="section-num">SECTION 02-B · 참고</div>
+  <h2>한 줄로 리스트 만들기 — 컴프리헨션 맛보기</h2>
+
 
   <p>
     for 루프로 리스트를 만드는 패턴이 워낙 자주 쓰이다 보니,
@@ -712,6 +808,7 @@ print(evens)     # [2, 4, 6, 8, 10]
     지금은 "이런 게 있구나, AI 코드에서 보면 이 의미다"를 아는 것으로 충분합니다.
   </p>
 
+</section>
 
 <!-- ==================== s3: 튜플 ==================== -->
 <section class="section" id="s3">
@@ -945,13 +1042,13 @@ print(m, n)
 <!-- ==================== s4: 가변 vs 불변 ==================== -->
 <section class="section" id="s4">
   <div class="section-num">SECTION 04 · 핵심</div>
-  <h2>가변 vs 불변 — 메모리 모델 깊이</h2>
+  <h2>가변 vs 불변 — 같은 객체가 바뀌는가?</h2>
 
   <div class="callout">
     <div class="label">3주차에서 가장 중요한 섹션</div>
     <p>
       여기를 잡으면 파이썬의 객체 모델 90%가 풀립니다.
-      잘못 잡으면 평생 헷갈리는 버그를 만듭니다.
+      잘못 이해하면 이후 리스트 복사와 함수 인자에서 같은 실수를 반복하기 쉽습니다.
     </p>
   </div>
 
@@ -988,7 +1085,7 @@ print(m, n)
             fill="currentColor" opacity="0.04" stroke="currentColor" stroke-opacity="0.4"
             stroke-dasharray="4 3"/>
       <text x="180" y="103" text-anchor="middle" font-family="Pretendard, sans-serif"
-            font-size="9" fill="currentColor" opacity="0.65" font-weight="600" letter-spacing="1">HEAP</text>
+            font-size="9" fill="currentColor" opacity="0.65" font-weight="600" letter-spacing="1">PYTHON OBJECTS</text>
 
       <!-- 같은 list 객체 (변형됨) -->
       <rect x="100" y="115" width="160" height="50" rx="6"
@@ -1015,7 +1112,7 @@ print(m, n)
             fill="currentColor" opacity="0.04" stroke="currentColor" stroke-opacity="0.4"
             stroke-dasharray="4 3"/>
       <text x="540" y="103" text-anchor="middle" font-family="Pretendard, sans-serif"
-            font-size="9" fill="currentColor" opacity="0.65" font-weight="600" letter-spacing="1">HEAP</text>
+            font-size="9" fill="currentColor" opacity="0.65" font-weight="600" letter-spacing="1">PYTHON OBJECTS</text>
 
       <!-- 옛 객체 -->
       <rect x="430" y="115" width="100" height="40" rx="6"
@@ -1098,8 +1195,8 @@ print(id(a) == id(b))     # False (a는 새 객체로 옮김)
   <p>
     1주차 s8에서 <code class="inline">"hello".upper()</code>가 원본을 안 바꾸고
     새 문자열을 돌려준다고 했죠? 이제 이유가 풀립니다.
-    <strong>문자열은 불변(immutable)</strong>이기 때문입니다 — 바꿀 수가 없으니
-    무조건 새 객체를 만들어 돌려주는 것입니다.
+    <strong>문자열은 불변(immutable)</strong>이기 때문입니다.
+    기존 문자열의 내용을 직접 바꿀 수 없으므로, 문자열을 변환하는 연산은 변경된 내용의 문자열 결과를 돌려줍니다.
   </p>
 
   <div class="editor-block">
@@ -1110,13 +1207,13 @@ print(id(a) == id(b))     # False (a는 새 객체로 옮김)
 print(id(s))
 
 s_upper = s.upper()
-print(id(s_upper))      # s와 다른 id (새 객체)
+print(id(s_upper))      # 이 예에서는 s와 다른 문자열 결과
 print(s)                # "hello" — 원본 그대로
 
 # 정수도 불변
 n = 5
 print(id(n))
-n = n + 1               # 새 정수 객체 6 만들고 n이 옮겨감
+n = n + 1               # n이 계산 결과 6을 가리키도록 다시 연결
 print(id(n))            # 다른 id
 </textarea>
     <div class="run-bar">
@@ -1137,10 +1234,81 @@ print(id(n))            # 다른 id
     <div class="title">이 섹션의 핵심 (★ 매우 중요)</div>
     <ul>
       <li><strong>mutable</strong>: list, dict — 객체 자체 변경 가능 (id 그대로).</li>
-      <li><strong>immutable</strong>: int, float, str, tuple, bool — 절대 변경 불가, 새 객체만 생성.</li>
+      <li><strong>immutable</strong>: int, float, str, tuple, bool — 만들어진 객체의 값 자체를 바꿀 수 없음.</li>
       <li><code class="inline">b = a</code>는 객체 복사가 아니다 — 같은 객체에 이름표 추가.</li>
       <li><code class="inline">.append()</code>는 원본 변경, <code class="inline">+</code>는 새 객체.</li>
       <li>튜플의 슬롯은 잠겨도 슬롯이 가리키는 mutable 객체는 변할 수 있다.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ==================== s4b: 집합(set) ==================== -->
+<section class="section" id="s4b">
+  <div class="section-num">SECTION 04-B</div>
+  <h2>집합 set — 중복 없이 모으기</h2>
+
+  <p>
+    <strong>set(집합)</strong>은 여러 값을 모아두되 <strong>중복을 허용하지 않는 mutable 객체</strong>입니다.
+    회원 ID의 중복 제거, 이미 처리한 값 기록, 빠른 포함 여부 확인처럼 실무에서도 자주 사용합니다.
+  </p>
+
+  <div class="callout info">
+    <div class="label">리스트와 가장 큰 차이</div>
+    <p>
+      리스트는 순서와 인덱스가 중요하지만, set은 <strong>중복 없는 값의 모음</strong>에 초점을 둡니다.
+      set의 출력 순서에 의존하거나 <code class="inline">items[0]</code>처럼 인덱싱하면 안 됩니다.
+    </p>
+  </div>
+
+  <div class="editor-block">
+    <div class="editor-tab-bar">
+      <span class="editor-tab"><span class="py-icon"></span>set_basic.py</span>
+    </div>
+    <textarea class="editor-source">numbers = {1, 2, 2, 3, 3, 3}
+print(numbers)           # 중복은 하나만 남음
+
+# 빈 set은 {}가 아니라 set()
+empty = set()
+
+# 추가 / 제거
+numbers.add(4)
+numbers.discard(2)       # 없어도 에러가 나지 않음
+print(numbers)
+
+# 포함 여부
+print(3 in numbers)      # True
+
+# 리스트의 중복 제거
+names = ["철수", "영희", "철수", "민수"]
+unique_names = set(names)
+print(unique_names)
+
+# 집합 연산
+a = {1, 2, 3}
+b = {3, 4, 5}
+print(a | b)             # 합집합
+print(a & b)             # 교집합
+print(a - b)             # 차집합
+</textarea>
+    <div class="run-bar">
+      <span class="left"><span class="file-name">📄 set_basic.py</span></span>
+      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+      <button class="run-btn"><span class="play">▶</span> Run</button>
+    </div>
+  </div>
+  <div class="terminal">
+    <div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div>
+    <div class="terminal-body empty"></div>
+  </div>
+
+  <div class="key-points">
+    <div class="title">이 섹션의 핵심</div>
+    <ul>
+      <li><code class="inline">{1, 2, 3}</code>처럼 만들며, 빈 set은 <code class="inline">set()</code>.</li>
+      <li>중복을 자동으로 제거하고 <code class="inline">in</code>으로 포함 여부를 확인하기 좋음.</li>
+      <li><code class="inline">.add()</code>, <code class="inline">.discard()</code>로 값을 추가/제거.</li>
+      <li><code class="inline">|</code> 합집합, <code class="inline">&amp;</code> 교집합, <code class="inline">-</code> 차집합.</li>
+      <li>순서나 인덱스가 필요하면 리스트를 사용.</li>
     </ul>
   </div>
 </section>
@@ -1248,8 +1416,13 @@ print(student)
   </div>
 
   <p>
-    키(key)는 <strong>불변 객체만</strong> 가능합니다 — 문자열, 숫자, 튜플 등.
-    리스트는 키로 못 씁니다 (mutable이라). 값(value)은 어떤 타입이든 OK.
+    딕셔너리 키(key)는 정확히는 <strong>hashable(해시 가능한) 객체</strong>여야 합니다.
+    초보 단계에서는 <strong>문자열과 숫자를 키로 가장 많이 쓴다</strong>고 먼저 기억하세요.
+  </p>
+  <p>
+    조금 더 정확히 말하면 튜플도 안의 모든 요소가 hashable이면 키가 될 수 있지만,
+    리스트처럼 변경 가능한 객체는 키로 사용할 수 없습니다.
+    값(value)은 어떤 타입이든 가능합니다.
   </p>
 
   <h3>주요 동작</h3>
@@ -1325,6 +1498,12 @@ for key in prices:
 
 print("---")
 
+# 키만 명시적으로 가져오기
+for key in prices.keys():
+    print(key)
+
+print("---")
+
 # 값만 순회
 for value in prices.values():
     print(value)
@@ -1353,10 +1532,72 @@ for key, value in prices.items():
     <div class="title">이 섹션의 핵심</div>
     <ul>
       <li>딕셔너리는 <code class="inline">{키: 값, ...}</code> 형태, 키로 값을 찾음.</li>
-      <li>키는 <strong>불변 객체만</strong> (str, 숫자, 튜플 OK / list 안 됨).</li>
+      <li>키는 <strong>hashable 객체</strong>여야 함. 초보 단계에서는 문자열/숫자를 주로 사용.</li>
       <li><code class="inline">d[키]</code>로 접근/추가/변경, <code class="inline">del</code>로 제거.</li>
-      <li><code class="inline">.get()</code>은 안전한 접근, <code class="inline">.items()</code>로 키-값 동시 순회.</li>
+      <li><code class="inline">.get()</code>은 안전한 접근, <code class="inline">.keys()</code>/<code class="inline">.values()</code>/<code class="inline">.items()</code>로 순회.</li>
       <li>딕셔너리도 mutable — append와 같은 메모리 모델 적용.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="section" id="s5b">
+  <div class="section-num">SECTION 05-B</div>
+  <h2>컴프리헨션 확장 — list, dict, set</h2>
+
+  <p>
+    앞에서 리스트 컴프리헨션을 봤습니다. 같은 생각을 딕셔너리와 set에도 사용할 수 있습니다.
+    실무 Python 코드에서 자주 보이므로 <strong>먼저 일반 for문으로 이해한 뒤 짧고 읽기 쉬울 때만</strong> 사용하는 습관이 좋습니다.
+  </p>
+
+  <div class="editor-block">
+    <div class="editor-tab-bar">
+      <span class="editor-tab"><span class="py-icon"></span>comprehension_types.py</span>
+    </div>
+    <textarea class="editor-source">numbers = [1, 2, 3, 4, 5]
+
+# list comprehension — 값들을 리스트로
+squares = [n * n for n in numbers]
+print(squares)
+
+# 조건을 붙인 list comprehension
+even_squares = [n * n for n in numbers if n % 2 == 0]
+print(even_squares)
+
+# dict comprehension — 키: 값 형태로
+square_map = {n: n * n for n in numbers}
+print(square_map)
+
+# set comprehension — 중복 없는 값의 모음으로
+words = ["apple", "kiwi", "banana", "pear", "apple"]
+lengths = {len(word) for word in words}
+print(lengths)
+</textarea>
+    <div class="run-bar">
+      <span class="left"><span class="file-name">📄 comprehension_types.py</span></span>
+      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+      <button class="run-btn"><span class="play">▶</span> Run</button>
+    </div>
+  </div>
+  <div class="terminal">
+    <div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div>
+    <div class="terminal-body empty"></div>
+  </div>
+
+  <div class="callout info">
+    <div class="label">괄호가 ()이면 튜플 컴프리헨션?</div>
+    <p>
+      아닙니다. <code class="inline">(n * n for n in numbers)</code>는 <strong>generator expression(제너레이터 표현식)</strong>입니다.
+      제너레이터는 나중에 배울 주제이므로 지금은 "튜플 컴프리헨션은 없다" 정도만 기억하면 됩니다.
+    </p>
+  </div>
+
+  <div class="key-points">
+    <div class="title">모양으로 구분하기</div>
+    <ul>
+      <li><code class="inline">[표현식 for ...]</code> → list comprehension</li>
+      <li><code class="inline">{키: 값 for ...}</code> → dict comprehension</li>
+      <li><code class="inline">{표현식 for ...}</code> → set comprehension</li>
+      <li><code class="inline">(표현식 for ...)</code> → generator expression (튜플 아님)</li>
     </ul>
   </div>
 </section>
@@ -1482,6 +1723,20 @@ print(x)              # None
     <div class="terminal-body empty"></div>
   </div>
 
+  <h3>docstring — 함수가 무엇을 하는지 남기는 설명</h3>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>docstring.py</span></div>
+  <textarea class="editor-source">def calculate_total(price, count):
+    """가격과 개수를 받아 총액을 계산해 반환한다."""
+    return price * count
+
+print(calculate_total(1500, 3))
+print(calculate_total.__doc__)
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 docstring.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div>
+  <p><code class="inline"># 주석</code>은 코드 주변의 설명이고, 함수 바로 아래의 <code class="inline">"""..."""</code>는 그 함수의 공식 설명인 <strong>docstring</strong>으로 사용됩니다. 실무에서는 IDE와 문서화 도구도 이 내용을 활용합니다.</p>
   <h3>함수 호출 시 메모리에서 일어나는 일</h3>
 
   <div class="figure">
@@ -1547,6 +1802,43 @@ print(x)              # None
   <p>
     <strong>매개변수 a, b는 함수 안에서만 살아있는 새 이름표</strong>입니다.
     호출자의 x, y와는 별개입니다. 함수가 끝나면 a, b는 사라집니다.
+  </p>
+
+  <h3>함수 안의 변수 — 지역 변수</h3>
+
+  <p>
+    함수 안에서 만든 변수는 보통 <strong>그 함수 안에서만 사용하는 지역 변수(local variable)</strong>입니다.
+    함수는 자기 작업 공간을 하나 갖는다고 생각하면 쉽습니다.
+  </p>
+
+  <div class="editor-block">
+    <div class="editor-tab-bar">
+      <span class="editor-tab"><span class="py-icon"></span>local_scope.py</span>
+    </div>
+    <textarea class="editor-source">def calculate_price(price, count):
+    total = price * count   # total은 함수 안의 지역 변수
+    return total
+
+result = calculate_price(1500, 3)
+print(result)
+
+# print(total)  # 함수 밖에서는 total을 직접 사용할 수 없어 NameError
+</textarea>
+    <div class="run-bar">
+      <span class="left"><span class="file-name">📄 local_scope.py</span></span>
+      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+      <button class="run-btn"><span class="play">▶</span> Run</button>
+    </div>
+  </div>
+  <div class="terminal">
+    <div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div>
+    <div class="terminal-body empty"></div>
+  </div>
+
+  <p>
+    실무에서는 함수가 바깥 상태를 직접 많이 바꾸게 만들기보다, 필요한 값을 매개변수로 받고 결과를
+    <code class="inline">return</code>하는 형태가 코드를 이해하고 테스트하기 쉽습니다.
+    <code class="inline">global</code>이라는 문법도 있지만 초보 단계에서는 우선 피하는 습관이 좋습니다.
   </p>
 
   <h3>여러 값 반환 — 튜플 활용</h3>
@@ -1764,13 +2056,73 @@ print(only_remainder)
     <div class="terminal-body empty"></div>
   </div>
 
+  <h3>확장 언패킹 — *로 나머지 받기</h3>
+
+  <p>
+    값을 여러 변수로 풀어 받을 때 <code class="inline">*</code>를 붙인 변수는 <strong>남은 값들을 리스트로</strong> 받습니다.
+    실제 데이터의 "첫 값과 나머지"를 나눌 때 유용합니다.
+  </p>
+
+  <div class="editor-block">
+    <div class="editor-tab-bar">
+      <span class="editor-tab"><span class="py-icon"></span>extended_unpack.py</span>
+    </div>
+    <textarea class="editor-source">numbers = [10, 20, 30, 40]
+
+first, *rest = numbers
+print(first)   # 10
+print(rest)    # [20, 30, 40]
+
+first, *middle, last = numbers
+print(first)
+print(middle)
+print(last)
+</textarea>
+    <div class="run-bar">
+      <span class="left"><span class="file-name">📄 extended_unpack.py</span></span>
+      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+      <button class="run-btn"><span class="play">▶</span> Run</button>
+    </div>
+  </div>
+  <div class="terminal">
+    <div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div>
+    <div class="terminal-body empty"></div>
+  </div>
+
+  <h3>실무 코드에서 자주 보이는 *args와 **kwargs — 먼저 읽을 줄 알기</h3>
+
+  <p>
+    함수가 받을 인자의 개수가 정해져 있지 않을 때 <code class="inline">*args</code>와 <code class="inline">**kwargs</code>를 자주 봅니다.
+    지금 당장 복잡하게 사용할 필요는 없고, <strong>*args는 추가 위치 인자들을 튜플로, **kwargs는 추가 키워드 인자들을 딕셔너리로 받는다</strong>고 읽을 수 있으면 충분합니다.
+  </p>
+
+  <div class="editor-block">
+    <div class="editor-tab-bar">
+      <span class="editor-tab"><span class="py-icon"></span>var_args.py</span>
+    </div>
+    <textarea class="editor-source">def show_args(*args, **kwargs):
+    print("args:", args)
+    print("kwargs:", kwargs)
+
+show_args(10, 20, 30, name="홍길동", active=True)
+</textarea>
+    <div class="run-bar">
+      <span class="left"><span class="file-name">📄 var_args.py</span></span>
+      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+      <button class="run-btn"><span class="play">▶</span> Run</button>
+    </div>
+  </div>
+  <div class="terminal">
+    <div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div>
+    <div class="terminal-body empty"></div>
+  </div>
+
   <div class="callout info">
     <div class="label">기본값에 mutable 객체를 두면 안 되는 함정</div>
     <p>
       <code class="inline">def f(items=[]):</code>처럼 기본값에 리스트나 딕셔너리를 두면
       예상치 못한 동작이 생길 수 있습니다 (같은 리스트가 호출 간에 공유됨).
-      4주차 s01에서 다루며, 지금은 <strong>"기본값에는 None이나 숫자/문자열만 두자"</strong>라고
-      기억하시면 됩니다.
+      4주차 s01에서 이 문제를 해결합니다. 지금은 <strong>"리스트·딕셔너리·set처럼 바뀔 수 있는 객체를 기본값으로 바로 두지 말자"</strong>고 기억하면 충분합니다.
     </p>
   </div>
 
@@ -1780,6 +2132,8 @@ print(only_remainder)
       <li>위치 인자(순서대로) / 키워드 인자(이름 명시) 둘 다 가능, 섞을 수도 있음.</li>
       <li>기본값으로 자주 쓰는 값 미리 지정 — <code class="inline">def f(x, y=10):</code>.</li>
       <li>다중 할당 <code class="inline">a, b, c = 1, 2, 3</code> — 함수 다중 반환과 잘 어울림.</li>
+      <li><code class="inline">first, *rest = values</code>처럼 확장 언패킹 가능.</li>
+      <li><code class="inline">*args</code>는 추가 위치 인자, <code class="inline">**kwargs</code>는 추가 키워드 인자를 모아 받음.</li>
       <li>기본값에는 mutable 객체 두지 말 것 (4주차에서 다시).</li>
     </ul>
   </div>
@@ -1923,9 +2277,8 @@ for i in range(5):
   <div class="callout info">
     <div class="label">이 한 줄에 대하여</div>
     <p>
-      위 코드의 <code class="inline">line = " ".join([f"{n:2d}" for n in numbers])</code> 한 줄에는
-      세 가지 새로운 것이 있습니다. 지금 깊이 알 필요는 없고, "이런 게 있구나" 정도만
-      알아두시면 됩니다.
+      위 코드의 <code class="inline">line = " ".join([f"{n:2d}" for n in numbers])</code>에는
+      이미 배운 여러 문법이 한 줄에 겹쳐 있습니다. 한 번에 읽기 어렵다면 <strong>안쪽의 리스트 컴프리헨션부터 읽고, 마지막에 join()</strong>을 붙여 생각하세요.
     </p>
 
     <p style="margin-top: 14px;"><strong>1) 리스트 컴프리헨션 — <code class="inline">[f"{n:2d}" for n in numbers]</code></strong></p>

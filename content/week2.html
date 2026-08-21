@@ -120,7 +120,7 @@ print(f"{city}에 사시는군요!")
   <p>
     1주차에서 본 객체 모델로 생각하면 명확합니다 —
     <code class="inline">input()</code>은 사용자가 친 글자들을 모아 <strong>문자열 객체</strong>를
-    HEAP에 만들고, 우리는 그 객체에 변수 이름표를 붙입니다.
+    메모리에서 문자열 객체로 다루고, 우리는 그 객체에 변수 이름표를 붙인다고 생각하면 됩니다.
     숫자 같아 보이는 글자도 글자입니다.
   </p>
 
@@ -170,13 +170,13 @@ print(f"{city}에 사시는군요!")
       <line x1="418" y1="100" x2="478" y2="100" stroke="var(--accent)" stroke-width="1.8"
             opacity="0.85" marker-end="url(#arr-2-1)"/>
 
-      <!-- HEAP에 만들어진 문자열 객체 -->
+      <!-- 문자열 객체 개념도 -->
       <g transform="translate(484, 65)">
         <rect width="170" height="80" rx="6"
               fill="currentColor" opacity="0.06"
               stroke="var(--heap-border, #3b6ea8)" stroke-width="1.8"/>
         <text x="10" y="16" font-family="JetBrains Mono, monospace" font-size="9"
-              fill="currentColor" opacity="0.7" font-weight="600">str 객체 (HEAP)</text>
+              fill="currentColor" opacity="0.7" font-weight="600">str 객체</text>
         <text x="85" y="48" text-anchor="middle" font-family="JetBrains Mono, monospace"
               font-size="20" font-weight="700" fill="currentColor">"30"</text>
         <text x="85" y="68" text-anchor="middle" font-family="Pretendard, sans-serif"
@@ -251,8 +251,8 @@ print(len(age))     # 글자 수
   <h3>그래서 무엇이 문제인가?</h3>
 
   <p>
-    "30"이라는 문자열에는 <strong>덧셈을 할 수 없습니다.</strong> 정확히는,
-    문자열에 정수를 더하려고 하면 파이썬은 에러를 냅니다.
+    문자열도 <code class="inline">+</code>로 다른 문자열과 이어붙일 수 있지만, <strong>문자열과 정수를 바로 더할 수는 없습니다.</strong>
+    아래처럼 문자열에 정수를 더하려고 하면 파이썬은 에러를 냅니다.
     한 번 직접 만나봅시다.
   </p>
 
@@ -310,35 +310,34 @@ print(age + 1)   # TypeError: can only concatenate str (not "int") to str
   <h2>형 변환 — int(), float(), str()</h2>
 
   <p>
-    <strong>형 변환(type conversion)</strong>은 한 객체의 값을 가지고 다른 타입의 새 객체를
-    만드는 일입니다. 1주차에서 본 객체 모델로 다시 강조합니다 —
-    <strong>원래 객체를 바꾸는 게 아니라, 새 객체를 만드는 것</strong>입니다.
+    <strong>형 변환(type conversion)</strong>은 어떤 값을 다른 타입의 형태로 해석하거나 표현한 결과를 얻는 일입니다.
+    1주차의 객체 모델로 보면 <strong>원래 객체 자체를 직접 바꾸는 동작이 아니라</strong>, 변환된 타입의 결과를 얻는다고 이해하면 됩니다.
   </p>
 
   <h3>세 가지 변환 함수</h3>
 
   <ul>
-    <li><code class="inline">int(x)</code> — x를 정수 객체로 변환</li>
-    <li><code class="inline">float(x)</code> — x를 실수 객체로 변환</li>
-    <li><code class="inline">str(x)</code> — x를 문자열 객체로 변환</li>
+    <li><code class="inline">int(x)</code> — x를 정수 형태의 결과로 변환</li>
+    <li><code class="inline">float(x)</code> — x를 실수 형태의 결과로 변환</li>
+    <li><code class="inline">str(x)</code> — x를 문자열 형태의 결과로 변환</li>
   </ul>
 
   <div class="figure">
     <svg viewBox="0 0 720 260" xmlns="http://www.w3.org/2000/svg" role="img"
-         aria-label="형 변환은 새 객체를 만든다 — 원본은 그대로">
+         aria-label="형 변환은 원본을 직접 바꾸지 않고 다른 타입의 결과를 얻는다">
       <text x="360" y="22" text-anchor="middle" font-family="Pretendard, sans-serif"
             font-size="11" font-weight="700" fill="currentColor" opacity="0.85" letter-spacing="2">
         int("30") 호출 시 메모리 변화
       </text>
 
-      <!-- 변경 전: HEAP에 "30" 문자열만 존재 -->
+      <!-- 변경 전: "30" 문자열 객체 -->
       <text x="180" y="56" text-anchor="middle" font-family="Pretendard, sans-serif"
             font-size="11" font-weight="600" fill="currentColor" opacity="0.7">호출 전</text>
       <rect x="50" y="68" width="260" height="160" rx="8"
             fill="currentColor" opacity="0.04" stroke="currentColor" stroke-opacity="0.4"
             stroke-width="1" stroke-dasharray="4 3"/>
       <text x="180" y="86" text-anchor="middle" font-family="Pretendard, sans-serif"
-            font-size="9" fill="currentColor" opacity="0.65" letter-spacing="1.5" font-weight="600">HEAP</text>
+            font-size="9" fill="currentColor" opacity="0.65" letter-spacing="1.5" font-weight="600">OBJECTS</text>
 
       <!-- str 객체 "30" -->
       <g transform="translate(115, 110)">
@@ -371,7 +370,7 @@ print(age + 1)   # TypeError: can only concatenate str (not "int") to str
             fill="currentColor" opacity="0.04" stroke="currentColor" stroke-opacity="0.4"
             stroke-width="1" stroke-dasharray="4 3"/>
       <text x="540" y="86" text-anchor="middle" font-family="Pretendard, sans-serif"
-            font-size="9" fill="currentColor" opacity="0.65" letter-spacing="1.5" font-weight="600">HEAP</text>
+            font-size="9" fill="currentColor" opacity="0.65" letter-spacing="1.5" font-weight="600">OBJECTS</text>
 
       <!-- str "30" 그대로 -->
       <g transform="translate(425, 110)">
@@ -401,7 +400,7 @@ print(age + 1)   # TypeError: can only concatenate str (not "int") to str
         원본은 그대로, int 객체가 추가됨
       </text>
     </svg>
-    <div class="caption">그림 2.2 — 형 변환은 원본을 바꾸지 않고 새 객체를 만든다</div>
+    <div class="caption">그림 2.2 — 형 변환은 원본을 직접 바꾸지 않고 다른 타입의 결과를 얻는다</div>
   </div>
 
   <h3>실제로 써보기</h3>
@@ -593,7 +592,7 @@ print(f"나이: {age}")
     <div class="title">이 섹션의 핵심</div>
     <ul>
       <li><code class="inline">int()</code>, <code class="inline">float()</code>, <code class="inline">str()</code>로 타입을 변환한다.</li>
-      <li>변환은 <strong>새 객체를 만든다</strong> — 원본 객체는 그대로.</li>
+      <li>형 변환은 <strong>원본 객체 자체를 직접 바꾸지 않고</strong> 다른 타입의 결과를 얻는다.</li>
       <li><code class="inline">int(input("..."))</code> 패턴이 가장 흔하다.</li>
       <li>변환 불가능한 글자(<code class="inline">int("abc")</code>)는 <code class="inline">ValueError</code>.</li>
     </ul>
@@ -607,7 +606,7 @@ print(f"나이: {age}")
 
   <p>
     s2에서 <code class="inline">int("스무살")</code>은 <code class="inline">ValueError</code>를 낸다고 했죠.
-    사용자가 잘못된 값을 입력할 때마다 프로그램이 죽으면 쓰기 어렵습니다.
+    사용자가 잘못된 값을 입력할 때마다 프로그램이 오류로 중단되면 쓰기 어렵습니다.
     <code class="inline">try/except</code>는 에러가 났을 때 프로그램이 멈추지 않고
     미리 정해둔 방식으로 처리하게 해줍니다.
   </p>
@@ -619,6 +618,11 @@ print(f"나이: {age}")
     <code class="inline">except</code> 블록 안에 "에러 났을 때 할 일"을 씁니다.
   </p>
 
+  <div class="input-stdin">
+    <div class="label">입력값 (미리 적기)</div>
+    <textarea>스무살</textarea>
+    <div class="hint">일부러 숫자가 아닌 값을 넣어 ValueError 처리 흐름을 확인합니다.</div>
+  </div>
   <div class="editor-block">
     <div class="editor-tab-bar">
       <span class="editor-tab"><span class="py-icon"></span>try_basic.py</span>
@@ -647,89 +651,34 @@ print("프로그램 계속 실행됩니다.")
 
   <p>
     입력칸에 <code class="inline">스무살</code>을 넣고 실행해보세요.
-    에러가 나도 프로그램이 죽지 않고 안내 메시지를 출력한 뒤 계속 실행됩니다.
+    에러가 나도 프로그램 전체가 즉시 중단되지 않고, 안내 메시지를 출력한 뒤 다음 흐름을 이어갈 수 있습니다.
   </p>
 
-  <h3>여러 에러 종류 처리하기</h3>
+  <h3>지금은 ValueError 하나만 익히면 충분합니다</h3>
 
   <p>
-    <code class="inline">except</code>를 여러 개 쓰면 에러 종류에 따라 다르게 처리할 수 있습니다.
+    <code class="inline">except</code>는 에러 종류에 따라 여러 개 둘 수도 있습니다.
+    하지만 아직 배우지 않은 리스트·딕셔너리까지 한꺼번에 끌어오면 흐름이 복잡해집니다.
+    2주차에서는 사용자의 숫자 입력에서 가장 자주 만나는
+    <code class="inline">ValueError</code> 하나를 확실히 처리하는 데 집중합니다.
   </p>
 
-  <div class="editor-block">
-    <div class="editor-tab-bar">
-      <span class="editor-tab"><span class="py-icon"></span>try_multi.py</span>
-    </div>
-    <textarea class="editor-source">numbers = [10, 20, 30]
-
-try:
-    idx = int(input("몇 번째 숫자? (0~2): "))
-    print(f"결과: {numbers[idx]}")
-except ValueError:
-    print("숫자를 입력해주세요.")
-except IndexError:
-    print("0~2 범위를 벗어났습니다.")
-</textarea>
-    <div class="run-bar">
-      <span class="left"><span class="file-name">📄 try_multi.py</span></span>
-      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
-      <button class="run-btn"><span class="play">▶</span> Run</button>
-    </div>
-  </div>
-  <div class="terminal">
-    <div class="terminal-head">
-      <span class="label">실행 결과</span>
-      <span class="status">대기 중</span>
-    </div>
-    <div class="terminal-body empty"></div>
-  </div>
-
-  <p>
-    <code class="inline">IndexError</code>는 리스트 범위를 벗어난 인덱스에 접근했을 때 나는 에러입니다.
-    입력칸에 <code class="inline">abc</code>도 넣어보고, <code class="inline">99</code>도 넣어보세요.
-  </p>
-
-  <h3>실전 패턴 — while로 올바른 입력 받을 때까지 반복</h3>
-
-  <p>
-    try/except와 while을 합치면 "올바른 값이 들어올 때까지 계속 묻는" 프로그램을 만들 수 있습니다.
-    실제 프로그램에서 가장 자주 쓰는 패턴입니다.
-  </p>
-
-  <div class="editor-block">
-    <div class="editor-tab-bar">
-      <span class="editor-tab"><span class="py-icon"></span>try_loop.py</span>
-    </div>
-    <textarea class="editor-source">while True:
-    try:
-        age = int(input("나이를 입력하세요: "))
-        break    # 성공하면 반복 종료
-    except ValueError:
-        print("숫자만 입력해주세요. 다시 시도합니다.")
-
-print(f"입력된 나이: {age}")
-</textarea>
-    <div class="run-bar">
-      <span class="left"><span class="file-name">📄 try_loop.py</span></span>
-      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
-      <button class="run-btn"><span class="play">▶</span> Run</button>
-    </div>
-  </div>
-  <div class="terminal">
-    <div class="terminal-head">
-      <span class="label">실행 결과</span>
-      <span class="status">대기 중</span>
-    </div>
-    <div class="terminal-body empty"></div>
+  <div class="callout info">
+    <div class="label">조금 뒤에 다시 연결합니다</div>
+    <p>
+      <code class="inline">while</code>과 <code class="inline">break</code>를 배운 뒤에는
+      <code class="inline">try/except</code>를 합쳐 "올바른 값을 입력할 때까지 계속 묻기" 패턴을 다시 만들어봅니다.
+      여러 종류의 예외를 나누어 처리하는 방법은 리스트와 딕셔너리를 배운 뒤 예제로 확장하면 더 이해하기 쉽습니다.
+    </p>
   </div>
 
   <div class="key-points">
     <div class="title">이 섹션의 핵심</div>
     <ul>
       <li><code class="inline">try:</code> 블록에 시도할 코드, <code class="inline">except 에러종류:</code> 블록에 처리할 코드.</li>
-      <li>에러가 나도 프로그램이 멈추지 않고 계속 실행된다.</li>
-      <li>자주 쓰는 에러: <code class="inline">ValueError</code>(잘못된 형식), <code class="inline">IndexError</code>(범위 초과), <code class="inline">KeyError</code>(없는 키).</li>
-      <li><code class="inline">while True + try/except + break</code> — 올바른 입력 받을 때까지 반복하는 정석 패턴.</li>
+      <li>예상한 에러를 처리하면 프로그램이 그 자리에서 비정상 종료되지 않고 다음 흐름으로 이어질 수 있다.</li>
+      <li>지금은 숫자 변환에서 자주 만나는 <code class="inline">ValueError</code>부터 확실히 익힌다.</li>
+      <li>모든 코드를 무조건 <code class="inline">try</code>로 감싸지 말고, <strong>실패할 수 있고 처리 방법을 알고 있는 부분</strong>을 감싼다.</li>
     </ul>
   </div>
 </section>
@@ -786,6 +735,46 @@ print(type(b))    # &lt;class 'bool'&gt;
       <code class="inline">True</code>와 <code class="inline">False</code>는 <strong>맨 앞이 대문자</strong>입니다.
       <code class="inline">true</code>나 <code class="inline">TRUE</code>는 다른 언어 문법이고,
       파이썬에서는 에러입니다.
+    </p>
+  </div>
+
+  <h3>조건문에서 값 자체를 검사하기 — truthy / falsy 맛보기</h3>
+
+  <p>
+    실무 Python에서는 비교식을 쓰지 않고 값 자체를 <code class="inline">if</code> 조건에 넣는 코드도 자주 만납니다.
+    Python은 조건을 판단할 때 어떤 값을 True처럼, 어떤 값을 False처럼 취급합니다.
+    지금은 대표적인 예만 보고, 자세한 규칙은 자료구조를 배운 뒤 다시 연결하면 됩니다.
+  </p>
+
+  <div class="editor-block">
+    <div class="editor-tab-bar">
+      <span class="editor-tab"><span class="py-icon"></span>truthy_falsy.py</span>
+    </div>
+    <textarea class="editor-source">print(bool(1))      # True
+print(bool(0))      # False
+print(bool("hello")) # True
+print(bool(""))      # False
+</textarea>
+    <div class="run-bar">
+      <span class="left"><span class="file-name">📄 truthy_falsy.py</span></span>
+      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+      <button class="run-btn"><span class="play">▶</span> Run</button>
+    </div>
+  </div>
+  <div class="terminal">
+    <div class="terminal-head">
+      <span class="label">실행 결과</span>
+      <span class="status">대기 중</span>
+    </div>
+    <div class="terminal-body empty"></div>
+  </div>
+
+  <div class="callout info">
+    <div class="label">지금 외울 것은 두 가지</div>
+    <p>
+      숫자 <code class="inline">0</code>과 빈 문자열 <code class="inline">""</code>은 False처럼 취급됩니다.
+      반대로 0이 아닌 숫자와 내용이 있는 문자열은 보통 True처럼 취급됩니다.
+      리스트·딕셔너리의 빈 값 규칙은 3주차에서 다시 확인합니다.
     </p>
   </div>
 
@@ -1058,7 +1047,7 @@ print("프로그램 끝")
 
   <p>
     파이썬에서는 <strong>들여쓰기가 코드 블록을 결정합니다.</strong>
-    중괄호 <code class="inline">{}</code>가 없습니다. 4칸 공백(또는 탭)으로 일관되게 들여쓰면 됩니다.
+    중괄호 <code class="inline">{}</code>가 없습니다. Python에서는 보통 <strong>공백 4칸</strong>을 사용합니다. 탭과 공백을 섞지 않는 것이 중요합니다.
   </p>
 
   <div class="figure">
@@ -1121,7 +1110,7 @@ print("프로그램 끝")
   <p>핵심 규칙 세 가지:</p>
   <ul>
     <li><strong>조건 끝에 콜론(<code class="inline">:</code>) 필수</strong> — 빠뜨리면 SyntaxError (문법 오류. 파이썬이 코드를 읽다가 규칙에 맞지 않는 부분을 만났다는 뜻)</li>
-    <li><strong>다음 줄부터 들여쓰기</strong> — 4칸 권장 (탭도 가능, 일관성 유지)</li>
+    <li><strong>다음 줄부터 들여쓰기</strong> — 공백 4칸 권장, 탭과 공백을 섞지 않기</li>
     <li><strong>같은 들여쓰기 = 같은 블록</strong> — 들여쓰기를 풀면 if 블록을 벗어남</li>
   </ul>
 
@@ -1369,11 +1358,12 @@ print(f"{score}점은 {grade} 등급입니다.")
 <!-- ==================== s5: for 와 range ==================== -->
 <section class="section" id="s5">
   <div class="section-num">SECTION 05</div>
-  <h2>for 와 range — 정해진 횟수만큼 반복</h2>
+  <h2>for 와 range — 값을 하나씩 꺼내 반복하기</h2>
 
   <p>
-    같은 일을 여러 번 해야 할 때 — 1부터 100까지 더하기, 학생 30명 점수 합산 —
-    복사 붙여넣기로는 못 합니다. <code class="inline">for</code>가 답입니다.
+    같은 일을 여러 번 해야 할 때 — 1부터 100까지 더하기, 문자열의 글자를 하나씩 보기 —
+    복사 붙여넣기로는 못 합니다. <code class="inline">for</code>는 <strong>반복할 수 있는 대상에서 값을 하나씩 꺼내</strong> 같은 코드를 실행합니다.
+    그중 <code class="inline">range()</code>는 정해진 횟수나 숫자 범위를 반복할 때 자주 사용합니다.
   </p>
 
   <h3>가장 단순한 형태</h3>
@@ -1515,6 +1505,15 @@ print(f"{score}점은 {grade} 등급입니다.")
     </p>
   </div>
 
+  <div class="callout info">
+    <div class="label">거꾸로도 가능합니다</div>
+    <p>
+      <code class="inline">step</code>에 음수를 주면 감소하면서 반복합니다.
+      예를 들어 <code class="inline">range(5, 0, -1)</code>은 5, 4, 3, 2, 1을 만듭니다.
+      끝값 0은 여기서도 포함되지 않습니다.
+    </p>
+  </div>
+
   <h3>시뮬레이터 — i 이름표가 어떻게 움직이는가</h3>
 
   <p>
@@ -1539,7 +1538,7 @@ print(f"{score}점은 {grade} 등급입니다.")
     <textarea class="editor-source"># 1부터 100까지 합
 total = 0
 for i in range(1, 101):    # 1, 2, 3, ..., 100
-    total = total + i
+    total += i
 
 print(f"1~100 합계: {total}")
 </textarea>
@@ -1558,9 +1557,51 @@ print(f"1~100 합계: {total}")
   </div>
 
   <p>
-    <code class="inline">total = total + i</code> 패턴이 핵심입니다.
+    처음 풀어쓰면 <code class="inline">total = total + i</code>입니다.
     "지금 total이 가리키던 값에 i를 더해서, 그 새 값을 다시 total이 가리키게 한다"는 의미입니다.
+    Python에서는 이 패턴을 실무에서 매우 자주 <code class="inline">total += i</code>처럼 줄여 씁니다.
   </p>
+
+  <h3>복합 대입 연산자 — +=, -=, *=, /=</h3>
+
+  <p>
+    자기 자신의 현재 값을 이용해 다시 대입할 때 쓰는 짧은 표기입니다.
+    먼저 긴 형태의 뜻을 이해한 뒤 짧은 형태를 사용하면 됩니다.
+  </p>
+
+  <div class="editor-block">
+    <div class="editor-tab-bar">
+      <span class="editor-tab"><span class="py-icon"></span>augmented_assignment.py</span>
+    </div>
+    <textarea class="editor-source">count = 10
+count += 1      # count = count + 1
+print(count)
+
+price = 1000
+price *= 3      # price = price * 3
+print(price)
+</textarea>
+    <div class="run-bar">
+      <span class="left"><span class="file-name">📄 augmented_assignment.py</span></span>
+      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+      <button class="run-btn"><span class="play">▶</span> Run</button>
+    </div>
+  </div>
+  <div class="terminal">
+    <div class="terminal-head">
+      <span class="label">실행 결과</span>
+      <span class="status">대기 중</span>
+    </div>
+    <div class="terminal-body empty"></div>
+  </div>
+
+  <div class="callout info">
+    <div class="label">실무에서 매우 자주 봅니다</div>
+    <p>
+      특히 반복문에서 카운트나 합계를 누적할 때 <code class="inline">+=</code>가 자주 등장합니다.
+      <code class="inline">-=</code>, <code class="inline">*=</code>, <code class="inline">/=</code>도 같은 원리입니다.
+    </p>
+  </div>
 
   <h3>구구단 출력</h3>
 
@@ -1624,11 +1665,11 @@ for ch in name:
   <div class="key-points">
     <div class="title">이 섹션의 핵심</div>
     <ul>
-      <li><code class="inline">for 변수 in 반복가능객체:</code> 형태.</li>
+      <li><code class="inline">for 변수 in 반복할_대상:</code> 형태 — range, 문자열, 나중에 배울 리스트 등에서 값을 하나씩 꺼낸다.</li>
       <li><code class="inline">range(stop)</code>은 0부터 stop-1까지 — <strong>stop 미포함</strong>.</li>
       <li><code class="inline">range(start, stop)</code>, <code class="inline">range(start, stop, step)</code>도 가능.</li>
-      <li>i는 <strong>매 반복마다 새 객체로 옮겨가는 이름표</strong> — 1주차 모델 그대로.</li>
-      <li>누적 패턴: <code class="inline">total = total + i</code>.</li>
+      <li>i는 <strong>매 반복마다 이번에 꺼낸 값을 가리키도록 다시 연결되는 이름표</strong> — 1주차 모델 그대로.</li>
+      <li>누적 패턴: <code class="inline">total = total + i</code>를 이해한 뒤 실무에서는 주로 <code class="inline">total += i</code>를 사용.</li>
     </ul>
   </div>
 </section>
@@ -1639,9 +1680,10 @@ for ch in name:
   <h2>while — 조건이 참인 동안 반복</h2>
 
   <p>
-    <code class="inline">for</code>는 "정해진 횟수"의 반복이고,
-    <code class="inline">while</code>은 "조건이 참인 동안" 반복입니다.
-    "사용자가 그만이라고 할 때까지", "정답을 맞힐 때까지" 같은 경우에 씁니다.
+    <code class="inline">for</code>는 <strong>반복할 대상의 값을 하나씩 꺼낼 때</strong> 잘 어울리고,
+    <code class="inline">while</code>은 <strong>조건이 참인 동안</strong> 반복할 때 잘 어울립니다.
+    횟수가 정해진 반복은 <code class="inline">for + range()</code>가 특히 편하고,
+    "사용자가 그만이라고 할 때까지", "정답을 맞힐 때까지"처럼 끝나는 시점을 조건으로 판단할 때는 <code class="inline">while</code>이 자연스럽습니다.
   </p>
 
   <h3>가장 단순한 while</h3>
@@ -1653,7 +1695,7 @@ for ch in name:
     <textarea class="editor-source">count = 0
 while count &lt; 5:
     print(f"count = {count}")
-    count = count + 1
+    count += 1
 
 print("끝")
 </textarea>
@@ -1722,7 +1764,7 @@ while True:
     s = input("숫자 (종료: q): ")
     if s == "q":
         break
-    total = total + int(s)
+    total += int(s)
     print(f"  → 누적: {total}")
 
 print(f"최종 합: {total}")
@@ -1741,18 +1783,65 @@ print(f"최종 합: {total}")
     <div class="terminal-body empty"></div>
   </div>
 
+  <h3>실전 연결 — 올바른 입력을 받을 때까지 반복</h3>
+
+  <p>
+    이제 앞에서 배운 <code class="inline">try/except</code>와
+    방금 배운 <code class="inline">while True</code>, <code class="inline">break</code>를 합칠 수 있습니다.
+    사용자의 입력을 받는 프로그램에서 매우 자주 쓰는 패턴입니다.
+  </p>
+
+  <div class="input-stdin">
+    <div class="label">입력값 (미리 적기)</div>
+    <textarea>스무살
+20</textarea>
+    <div class="hint">첫 번째 입력은 실패하고, 두 번째 입력에서 성공합니다.</div>
+  </div>
+  <div class="editor-block">
+    <div class="editor-tab-bar">
+      <span class="editor-tab"><span class="py-icon"></span>try_loop.py</span>
+    </div>
+    <textarea class="editor-source">while True:
+    try:
+        age = int(input("나이를 입력하세요: "))
+        break    # 변환에 성공하면 반복 종료
+    except ValueError:
+        print("숫자만 입력해주세요. 다시 시도합니다.")
+
+print(f"입력된 나이: {age}")
+</textarea>
+    <div class="run-bar">
+      <span class="left"><span class="file-name">📄 try_loop.py</span></span>
+      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+      <button class="run-btn"><span class="play">▶</span> Run</button>
+    </div>
+  </div>
+  <div class="terminal">
+    <div class="terminal-head">
+      <span class="label">실행 결과</span>
+      <span class="status">대기 중</span>
+    </div>
+    <div class="terminal-body empty"></div>
+  </div>
+
+  <p>
+    실행 흐름은 간단합니다. 변환에 실패하면 <code class="inline">except</code>에서 안내하고 다시 반복합니다.
+    변환에 성공하면 <code class="inline">break</code>가 실행되어 반복을 끝냅니다.
+  </p>
+
   <h3>for vs while — 언제 무엇을?</h3>
 
   <ul>
-    <li><strong>횟수가 정해져 있다</strong> → <code class="inline">for</code></li>
-    <li><strong>몇 번 돌지 모른다, 조건으로 멈춘다</strong> → <code class="inline">while</code></li>
+    <li><strong>range, 문자열, 나중에 배울 리스트처럼 반복할 대상이 있다</strong> → <code class="inline">for</code></li>
+    <li><strong>조건이 참인 동안 계속하고, 언제 끝날지 조건으로 판단한다</strong> → <code class="inline">while</code></li>
   </ul>
 
   <p>예시:</p>
   <ul>
-    <li>"학생 30명 점수 합산" → 횟수 정해짐 → for</li>
-    <li>"정답 맞힐 때까지 묻기" → 횟수 모름 → while</li>
-    <li>"파일 끝까지 읽기" → 끝이 어딘지 미리 모름 → while</li>
+    <li>"학생 30명 점수 합산" → 학생들을 하나씩 처리 → for</li>
+    <li>"문자열의 각 글자 확인" → 글자를 하나씩 처리 → for</li>
+    <li>"정답 맞힐 때까지 묻기" → 끝나는 조건을 검사 → while</li>
+    <li>"사용자가 q를 입력할 때까지 계속" → 끝나는 조건을 검사 → while</li>
   </ul>
 
   <div class="key-points">
@@ -1761,7 +1850,8 @@ print(f"최종 합: {total}")
       <li><code class="inline">while 조건:</code> — 조건이 True인 동안 반복.</li>
       <li>조건을 False로 만들 코드가 안에 반드시 있어야 — 안 그러면 무한 루프.</li>
       <li><code class="inline">while True:</code> + <code class="inline">break</code> — 의도적 무한 + 빠져나오기 패턴.</li>
-      <li>횟수 정해짐 → for, 조건으로 끝 → while.</li>
+      <li><code class="inline">try/except</code>와 합치면 잘못된 입력을 다시 받는 실전 패턴을 만들 수 있다.</li>
+      <li>반복할 대상의 값을 하나씩 처리 → for, 조건이 참인 동안 계속 → while.</li>
     </ul>
   </div>
 </section>
@@ -1955,8 +2045,8 @@ for i in range(1, 11):
   <h3>실습 1 — 숫자 맞추기 게임</h3>
 
   <p>
-    컴퓨터가 1~50 중 무작위 숫자를 정합니다. 사용자가 시도할 때마다 더 큼/작음 힌트를 줍니다.
-    여기서 <code class="inline">random</code> 모듈을 처음 만납니다 —
+    컴퓨터가 1~50 중 숫자를 정하고 사용자가 시도할 때마다 더 큼/작음 힌트를 줍니다. 이 강의의 기본 입력값으로도 반드시 끝까지 실행되도록 <code class="inline">random.seed(81)</code>로 난수 순서를 고정해두었습니다.
+    <code class="inline">random.seed(81)</code> 줄을 지우면 실행할 때마다 정답이 달라집니다. 여기서 <code class="inline">random</code> 모듈을 처음 만납니다 —
     "다른 사람이 만든 도구"를 가져다 쓰는 첫 경험입니다.
   </p>
 
@@ -1984,7 +2074,9 @@ for i in range(1, 11):
     </div>
     <textarea class="editor-source">import random
 
-# 컴퓨터가 1~50 중 하나 선택
+# 수업 예제는 기본 입력으로도 끝까지 실행되도록 결과를 고정합니다.
+# 아래 seed 줄을 지우면 실행할 때마다 정답이 달라집니다.
+random.seed(81)
 answer = random.randint(1, 50)
 tries = 0
 
@@ -1993,7 +2085,7 @@ print("-" * 30)
 
 while True:
     guess = int(input("내 추측: "))
-    tries = tries + 1
+    tries += 1
 
     if guess == answer:
         print(f"정답! {tries}번 만에 맞췄어요 🎉")
@@ -2156,7 +2248,7 @@ while True:
     <div class="title">2주차에서 익힌 것</div>
     <ul>
       <li><code class="inline">input()</code>으로 사용자에게 입력받기 — 결과는 항상 문자열</li>
-      <li><code class="inline">int()</code>, <code class="inline">float()</code>, <code class="inline">str()</code>로 형 변환 — 새 객체 생성</li>
+      <li><code class="inline">int()</code>, <code class="inline">float()</code>, <code class="inline">str()</code>로 형 변환 — 원본을 직접 바꾸지 않고 다른 타입의 결과 얻기</li>
       <li>비교 연산자 (<code class="inline">==</code>, <code class="inline">!=</code>, <code class="inline">&lt;</code>, <code class="inline">&gt;</code>...)와 결과 bool</li>
       <li>논리 연산자 <code class="inline">and</code>, <code class="inline">or</code>, <code class="inline">not</code></li>
       <li><code class="inline">if</code>/<code class="inline">elif</code>/<code class="inline">else</code> — 조건 분기, 들여쓰기 블록</li>
@@ -2164,7 +2256,7 @@ while True:
       <li><code class="inline">while</code> — 조건 반복, 무한 루프 주의</li>
       <li><code class="inline">break</code>(반복 종료) / <code class="inline">continue</code>(이번만 건너뜀)</li>
       <li><code class="inline">try/except</code> — 에러가 나도 프로그램이 멈추지 않고 계속 실행</li>
-      <li>i 이름표가 매 반복마다 새 객체로 옮겨감 (1주차 모델 일관)</li>
+      <li>i 이름표가 매 반복마다 이번 값을 가리키도록 다시 연결됨 (1주차 모델 일관)</li>
     </ul>
   </div>
 

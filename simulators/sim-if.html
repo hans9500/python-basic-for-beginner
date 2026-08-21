@@ -250,6 +250,7 @@ body {
     <button class="btn btn-icon" id="btn-restart" title="처음부터">⟲</button>
     <button class="btn btn-icon" id="btn-prev" title="이전">←</button>
     <button class="btn btn-primary" id="btn-next">다음 →</button>
+    <button class="btn" id="btn-auto">▶ 자동재생</button>
     <span class="kbd-hint">← / → / R</span>
     <div class="dots" id="dots"></div>
   </div>
@@ -402,6 +403,7 @@ body {
   // ============== 상태 ==============
   let currentStep = 0;
   let score = 75;
+  let autoTimer = null;
 
   function evaluate() {
     // 조건 평가 결과: 어느 가지로 가는가?
@@ -723,24 +725,53 @@ body {
 
   function next() { if (currentStep < STEPS.length - 1) { currentStep++; render(); } }
   function prev() { if (currentStep > 0) { currentStep--; render(); } }
-  function restart() { currentStep = 0; render(); }
+  function restart() { stopAuto(); currentStep = 0; render(); }
+  function startAuto() {
+    if (autoTimer) return;
+    if (currentStep >= STEPS.length - 1) {
+      currentStep = 0;
+      render();
+    }
+    document.getElementById('btn-auto').textContent = '⏸ 일시정지';
+    // 클릭 즉시 한 단계 진행하고, 이후 일정 간격으로 계속 진행합니다.
+    next();
+    if (currentStep >= STEPS.length - 1) {
+      document.getElementById('btn-auto').textContent = '▶ 자동재생';
+      return;
+    }
+    autoTimer = setInterval(() => {
+      if (currentStep < STEPS.length - 1) next();
+      if (currentStep >= STEPS.length - 1) stopAuto();
+    }, 2200);
+  }
+  function stopAuto() {
+    if (autoTimer) {
+      clearInterval(autoTimer);
+      autoTimer = null;
+    }
+    document.getElementById('btn-auto').textContent = '▶ 자동재생';
+  }
 
   // 슬라이더
   const slider = document.getElementById('score-slider');
   const scoreValue = document.getElementById('score-value');
   slider.addEventListener('input', () => {
+    stopAuto();
     score = parseInt(slider.value);
     scoreValue.textContent = score;
     render();
   });
 
-  document.getElementById('btn-next').addEventListener('click', next);
-  document.getElementById('btn-prev').addEventListener('click', prev);
+  document.getElementById('btn-next').addEventListener('click', () => { stopAuto(); next(); });
+  document.getElementById('btn-prev').addEventListener('click', () => { stopAuto(); prev(); });
   document.getElementById('btn-restart').addEventListener('click', restart);
+  document.getElementById('btn-auto').addEventListener('click', () => {
+    if (autoTimer) stopAuto(); else startAuto();
+  });
 
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowRight') { next(); e.preventDefault(); }
-    else if (e.key === 'ArrowLeft') { prev(); e.preventDefault(); }
+    if (e.key === 'ArrowRight') { stopAuto(); next(); e.preventDefault(); }
+    else if (e.key === 'ArrowLeft') { stopAuto(); prev(); e.preventDefault(); }
     else if (e.key === 'r' || e.key === 'R') { restart(); e.preventDefault(); }
   });
 

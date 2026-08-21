@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>시뮬레이터 — 배달의민족 주문 흐름</title>
+<title>시뮬레이터 — 배달앱 주문 흐름 예시</title>
 <style>
 :root {
   --bg: #ffffff;
@@ -312,8 +312,8 @@ body {
 <div class="sim-wrapper">
   <!-- 헤더 -->
   <div class="sim-head">
-    <h2>배달의민족 주문 흐름 시뮬레이터</h2>
-    <p class="desc">우아한형제들 공개 자료 + 일반 IT 산업 패턴 기반</p>
+    <h2>배달앱 주문 흐름 교육용 시뮬레이터</h2>
+    <p class="desc">공개 기술 자료와 일반적인 IT 아키텍처 패턴을 바탕으로 만든 학습용 예시 · 실제 현재 내부 구조와는 다를 수 있습니다.</p>
   </div>
 
   <!-- ⭐ 버튼 컨트롤 바 — 헤더 바로 아래 (절대 고정!) -->
@@ -321,7 +321,7 @@ body {
     <button class="sim-btn" id="btn-restart" title="처음부터">⟲</button>
     <button class="sim-btn" id="btn-prev">◀ 이전</button>
     <button class="sim-btn sim-btn-primary" id="btn-next">다음 ▶</button>
-    <button class="sim-btn" id="btn-auto">▶ 자동</button>
+    <button class="sim-btn" id="btn-auto">▶ 자동재생</button>
     <span class="sim-step-indicator" id="step-num">STEP 0 / 10</span>
     <div class="sim-dots" id="dots">
       <span class="sim-dot active"></span>
@@ -341,7 +341,7 @@ body {
   <!-- 다이어그램 (viewBox 700×420 — 짧게) -->
   <div class="sim-diagram">
     <svg viewBox="0 0 700 420" xmlns="http://www.w3.org/2000/svg" role="img"
-         aria-label="배달의민족 주문 흐름 다이어그램">
+         aria-label="배달앱 주문 흐름 교육용 다이어그램">
       <defs>
         <marker id="arr-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto">
           <path d="M0,0 L10,5 L0,10 z" fill="var(--node-user)"/>
@@ -519,7 +519,7 @@ const STEPS = [
   },
   {
     title: '2단계 — 모바일 앱이 백엔드 서버에 주문 요청',
-    desc: '앱이 인터넷을 통해 우아한형제들 백엔드 서버에 "이 사용자가 이런 주문을 했어요" 메시지를 보냅니다 (4주차 API 호출).',
+    desc: '앱이 인터넷을 통해 백엔드 API에 주문 요청을 보냅니다. 4주차에서 배운 API 요청의 실무 버전이라고 생각하면 됩니다.',
     activeNodes: ['frontend', 'backend'],
     flows: ['flow-2'],
     tags: [{ type: 'fact', label: 'HTTPS POST' }, { type: 'fact', label: 'Java / Spring Boot' }],
@@ -532,7 +532,7 @@ const STEPS = [
     flows: ['flow-3'],
     tags: [{ type: 'guess', label: '토큰 인증' }],
     source: '',
-    speculation: '배민이 정확히 어떤 인증 방식을 쓰는지는 공개되지 않았습니다. 한국 대형 IT 서비스 대부분이 JWT 같은 토큰 방식을 씀.'
+    speculation: '실제 서비스의 인증 방식은 공개되지 않은 경우가 많습니다. 세션, 자체 토큰, OAuth 계열 등 여러 방식이 가능하므로 여기서는 단순히 인증 정보를 검사한다고 이해하세요.'
   },
   {
     title: '4단계 — 데이터베이스에서 사용자·메뉴 정보 꺼내기',
@@ -553,7 +553,7 @@ const STEPS = [
   },
   {
     title: '6단계 — 주문 정보를 데이터베이스에 저장',
-    desc: '결제 성공하면 백엔드가 "누가 / 어디에 / 무엇을 / 얼마에" 같은 모든 정보를 DB에 영구 보관합니다.',
+    desc: '결제 성공 뒤 백엔드는 주문 처리에 필요한 정보를 DB 등에 저장합니다. 어떤 정보를 얼마나 오래 보관하는지는 서비스 설계와 정책에 따라 달라집니다.',
     activeNodes: ['backend', 'db'],
     flows: ['flow-6'],
     tags: [{ type: 'fact', label: 'AWS Aurora MySQL' }],
@@ -561,7 +561,7 @@ const STEPS = [
   },
   {
     title: '7단계 — Kafka에 "신규 주문" 이벤트 발행 ★',
-    desc: '백엔드가 매장·라이더·푸시에 직접 알리지 않고, Kafka에 "주문 들어왔어!" 메시지 한 번만 던지면 끝. 한쪽이 멈춰도 영향 없어요.',
+    desc: '백엔드가 주문 이벤트를 메시징 시스템에 발행하면 필요한 소비자들이 각자의 처리를 수행하도록 설계할 수 있습니다. 직접 호출보다 결합도를 낮출 수 있지만 장애가 완전히 서로 무관해지는 것은 아닙니다.',
     activeNodes: ['backend', 'kafka'],
     flows: ['flow-7'],
     tags: [{ type: 'fact', label: 'Apache Kafka' }, { type: 'fact', label: '이벤트 기반' }],
@@ -569,16 +569,16 @@ const STEPS = [
   },
   {
     title: '8단계 — 매장 시스템이 주문 메시지를 받음',
-    desc: '가게 매장 시스템이 Kafka에서 신규 주문 메시지를 받아 주문서로 출력합니다. 사장님이 음식 만들기 시작.',
+    desc: '교육용 예에서는 매장 쪽 시스템이 신규 주문 이벤트를 전달받아 주문을 표시한다고 가정합니다. 실제 전달 경로와 매장 시스템 내부 구현은 서비스마다 다릅니다.',
     activeNodes: ['kafka', 'store'],
     flows: ['flow-8'],
     tags: [{ type: 'fact', label: 'Kafka Consumer' }, { type: 'guess', label: '매장 POS' }],
     source: '',
-    speculation: 'Kafka에서 메시지를 가져가는 부분은 사실이지만, 매장 시스템 내부 구조는 공개되지 않았습니다. 일반적으로 매장 POS와 연동.'
+    speculation: '메시징 기술 사용 여부와 매장 전달 방식은 공개 자료의 범위와 시점에 따라 다를 수 있습니다. 여기서는 이벤트가 매장 시스템까지 전달된다는 흐름만 학습합니다.'
   },
   {
     title: '9단계 — 라이더 매칭 시스템이 작동',
-    desc: '같은 Kafka 메시지를 받아 "근처 라이더 누구지?", "예상 도착 시간 짧은 순" 같은 계산을 해서 적절한 라이더에게 배달 요청.',
+    desc: '교육용 예에서는 배달 관련 시스템이 주문 이벤트를 받아 배달 가능 조건을 계산하고 라이더 배정 절차를 시작한다고 가정합니다.',
     activeNodes: ['kafka', 'rider'],
     flows: ['flow-9'],
     tags: [{ type: 'fact', label: '배민배달 자체 매칭' }],
@@ -591,7 +591,7 @@ const STEPS = [
     flows: ['flow-10a', 'flow-10b'],
     tags: [{ type: 'guess', label: 'FCM (Android)' }, { type: 'guess', label: 'APNs (iOS)' }],
     source: '',
-    speculation: '배민이 정확히 어떤 푸시 시스템을 쓰는지는 공개되지 않았으나, 한국 대부분 모바일 앱은 안드로이드는 FCM, iOS는 APNs를 쓰는 게 표준.'
+    speculation: '실제 서비스의 푸시 구현은 공개되지 않을 수 있습니다. 일반적인 모바일 원격 푸시는 Android 생태계의 FCM, Apple 생태계의 APNs 같은 전달 서비스를 이용합니다.'
   }
 ];
 
@@ -679,23 +679,46 @@ function applyStep(idx) {
 }
 
 btnNext.addEventListener('click', () => {
+  stopAuto();
   if (currentStep < STEPS.length - 1) { currentStep++; applyStep(currentStep); }
 });
 btnPrev.addEventListener('click', () => {
+  stopAuto();
   if (currentStep > 0) { currentStep--; applyStep(currentStep); }
 });
 btnRestart.addEventListener('click', () => {
   stopAuto(); currentStep = 0; applyStep(currentStep);
 });
 function stopAuto() {
-  if (autoTimer) { clearInterval(autoTimer); autoTimer = null; btnAuto.textContent = '▶ 자동'; }
+  if (autoTimer) {
+    clearInterval(autoTimer);
+    autoTimer = null;
+  }
+  btnAuto.textContent = '▶ 자동재생';
 }
 function startAuto() {
-  btnAuto.textContent = '⏸ 정지';
+  if (autoTimer) return;
+  if (currentStep >= STEPS.length - 1) {
+    currentStep = 0;
+    applyStep(currentStep);
+  }
+  btnAuto.textContent = '⏸ 일시정지';
+  // 클릭 즉시 한 단계 진행하고, 이후 설명을 읽을 시간을 둡니다.
+  if (currentStep < STEPS.length - 1) {
+    currentStep++;
+    applyStep(currentStep);
+  }
+  if (currentStep >= STEPS.length - 1) {
+    btnAuto.textContent = '▶ 자동재생';
+    return;
+  }
   autoTimer = setInterval(() => {
-    if (currentStep < STEPS.length - 1) { currentStep++; applyStep(currentStep); }
-    else { stopAuto(); }
-  }, 4500);
+    if (currentStep < STEPS.length - 1) {
+      currentStep++;
+      applyStep(currentStep);
+    }
+    if (currentStep >= STEPS.length - 1) stopAuto();
+  }, 2800);
 }
 btnAuto.addEventListener('click', () => {
   if (autoTimer) stopAuto(); else startAuto();

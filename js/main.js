@@ -59,13 +59,13 @@
 
   /** content/weekN.html을 fetch해서 main에 주입 */
   async function loadWeek(weekNumber) {
-    const url = 'content/week' + weekNumber + '.html';
+    const url = weekNumber === 6 ? 'content/selfstudy.html' : 'content/week' + weekNumber + '.html';
 
     // 로딩 상태 표시
     content.style.opacity = '0.4';
     content.innerHTML = '<div class="loading-screen">' +
                         '<div class="loading-spinner"></div>' +
-                        '<p class="loading-text">' + weekNumber + '주차 불러오는 중…</p>' +
+                        '<p class="loading-text">' + (weekNumber === 6 ? 'Python 한 단계 더' : weekNumber + '주차') + ' 불러오는 중…</p>' +
                         '</div>';
 
     try {
@@ -112,14 +112,15 @@
         hint = '<br><br>이 페이지는 더블클릭(file://)으로 열 수 없습니다.<br>' +
                'GitHub Pages 같은 웹서버에서 열어주세요.';
       } else if (errMsg.indexOf('404') >= 0) {
-        hint = '<br><br><code>content/week' + weekNumber + '.html</code> 파일이 ' +
+        const missingFile = weekNumber === 6 ? 'content/selfstudy.html' : 'content/week' + weekNumber + '.html';
+        hint = '<br><br><code>' + missingFile + '</code> 파일이 ' +
                '저장소에 업로드되었는지 확인하세요.';
       } else {
         hint = '<br><br>F12 → Console 탭에서 자세한 에러를 확인할 수 있습니다.';
       }
       content.innerHTML = '<div class="loading-screen">' +
                           '<p class="loading-text" style="color:#c1440e">' +
-                          weekNumber + '주차를 불러오지 못했습니다.<br>' +
+                          (weekNumber === 6 ? 'Python 한 단계 더' : weekNumber + '주차') + '를 불러오지 못했습니다.<br>' +
                           '<small style="font-family:monospace">' + escapeHtml(errMsg) + '</small>' +
                           hint +
                           '</p></div>';
@@ -128,16 +129,19 @@
     }
   }
 
-  /** content 안에서 모든 .section 요소 → [{id, title}, ...] 추출 */
+  /** content 안에서 모든 .section 요소 → [{id, label, title}, ...] 추출 */
   function extractSections(root) {
     const result = [];
     root.querySelectorAll('.section').forEach(function(sec) {
       const id = sec.id;
       if (!id) return;
       const titleEl = sec.querySelector('h2');
+      const labelEl = sec.querySelector('.section-num');
       const title = titleEl ? titleEl.textContent.trim() : id;
-      // section-num 같은 prefix 제거 (h2 안에 별도 .section-num은 없으므로 그대로 사용)
-      result.push({ id: id, title: title });
+      let label = labelEl ? labelEl.textContent.trim() : id;
+      // 사이드바에는 내부 id(s4b, ss7)가 아니라 사람이 읽는 섹션 번호를 표시한다.
+      label = label.replace(/^SECTION\s+/i, '').replace(/^SELF\s+STUDY\s+/i, 'SELF ');
+      result.push({ id: id, label: label, title: title });
     });
     return result;
   }
@@ -164,13 +168,16 @@
   /** hash 파싱 → { week, section } */
   function parseHash() {
     const h = window.location.hash.replace(/^#/, '');
-    const m = h.match(/^week(\d)(?:\/(.+))?$/);
+
+    // 자습 탭은 "주차"가 아니므로 별도 주소를 사용합니다.
+    const self = h.match(/^selfstudy(?:\/(.+))?$/);
+    if (self) return { week: 6, section: self[1] || null };
+
+    const m = h.match(/^week([1-5])(?:\/(.+))?$/);
     if (!m) return { week: 1, section: null };
-    const week = parseInt(m[1], 10);
-    const section = m[2] || null;
     return {
-      week: (week >= 1 && week <= 4) ? week : 1,
-      section: section
+      week: parseInt(m[1], 10),
+      section: m[2] || null
     };
   }
 
@@ -191,7 +198,7 @@
       window.scrollTo({ top: 0, behavior: 'auto' });
     }
     // hash 동기화
-    let newHash = '#week' + weekNumber;
+    let newHash = weekNumber === 6 ? '#selfstudy' : '#week' + weekNumber;
     if (sectionId) newHash += '/' + sectionId;
     if (window.location.hash !== newHash) {
       history.replaceState(null, '', newHash);

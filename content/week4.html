@@ -64,12 +64,12 @@
       <text x="100" y="175" text-anchor="middle" font-family="JetBrains Mono, monospace"
             font-size="13" font-weight="700" fill="currentColor">c = None</text>
 
-      <!-- HEAP -->
+      <!-- Python 객체 영역 -->
       <rect x="240" y="50" width="440" height="150" rx="8"
             fill="currentColor" opacity="0.04" stroke="currentColor" stroke-opacity="0.4"
             stroke-width="1" stroke-dasharray="4 3"/>
       <text x="460" y="68" text-anchor="middle" font-family="Pretendard, sans-serif"
-            font-size="9" fill="currentColor" opacity="0.65" font-weight="600" letter-spacing="1">HEAP — 단 하나만 존재</text>
+            font-size="9" fill="currentColor" opacity="0.65" font-weight="600" letter-spacing="1">PYTHON OBJECTS — None은 singleton</text>
 
       <!-- None 객체 -->
       <rect x="440" y="100" width="120" height="60" rx="8"
@@ -669,7 +669,7 @@ for i in range(4):
       <li><code class="inline">.lower() / .upper()</code> — 대소문자 변환.</li>
       <li><code class="inline">.find()</code> — 첫 위치, 없으면 -1. <code class="inline">in</code>은 True/False만.</li>
       <li><code class="inline">.startswith() / .endswith()</code> — 시작/끝 검사.</li>
-      <li>모든 문자열 메서드는 <strong>새 문자열 반환</strong> — 원본은 불변.</li>
+      <li>문자열은 <strong>불변</strong>이라 메서드가 원본 문자열의 내용을 직접 바꾸지 않는다. 변환 메서드는 새 문자열 결과를 돌려주고, <code class="inline">.find()</code>나 <code class="inline">.startswith()</code>처럼 숫자·참/거짓을 돌려주는 메서드도 있다.</li>
     </ul>
   </div>
 </section>
@@ -680,10 +680,16 @@ for i in range(4):
   <h2>파일 읽기 / 쓰기 — with 문</h2>
 
   <p>
-    1주차에서 "엑셀 자동화"를 이야기했는데, 정작 파일을 다루는 내용이 없었습니다.
-    파이썬에서 파일을 읽고 쓰는 건 <code class="inline">open()</code>과
-    <code class="inline">with</code> 문 두 가지만 알면 됩니다.
+    지금까지 만든 변수와 리스트는 프로그램이 끝나면 사라집니다.
+    <strong>파일은 데이터를 프로그램 밖에 남겨 두는 가장 기본적인 방법</strong>입니다.
+    파이썬에서는 <code class="inline">open()</code>으로 파일을 열고,
+    <code class="inline">with</code>를 사용해 안전하게 읽고 씁니다.
   </p>
+
+  <div class="callout info">
+    <div class="label">먼저 그림으로 — 프로그램 안과 밖</div>
+    <p><code class="inline">변수/리스트 → 실행 중인 메모리</code>, <code class="inline">파일 → 실행이 끝난 뒤에도 남길 수 있는 저장 데이터</code>라고 생각하면 됩니다. Week 1에서 배운 RAM과 저장장치가 여기서 다시 연결됩니다.</p>
+  </div>
 
   <h3>with 문 — 파일을 안전하게 열고 닫기</h3>
 
@@ -701,10 +707,8 @@ for i in range(4):
     </div>
     <textarea class="editor-source"># 파일 쓰기 — "w" 모드 (write)
 with open("hello.txt", "w", encoding="utf-8") as f:
-    f.write("안녕하세요
-")
-    f.write("파이썬 파일 쓰기 테스트입니다.
-")
+    f.write("안녕하세요\n")
+    f.write("파이썬 파일 쓰기 테스트입니다.\n")
 
 print("파일 저장 완료")
 </textarea>
@@ -730,12 +734,9 @@ print("파일 저장 완료")
     </div>
     <textarea class="editor-source"># 먼저 파일 만들기
 with open("scores.txt", "w", encoding="utf-8") as f:
-    f.write("홍길동 85
-")
-    f.write("이몽룡 92
-")
-    f.write("성춘향 78
-")
+    f.write("홍길동 85\n")
+    f.write("이몽룡 92\n")
+    f.write("성춘향 78\n")
 
 # 파일 읽기 — "r" 모드 (read)
 with open("scores.txt", "r", encoding="utf-8") as f:
@@ -763,6 +764,102 @@ with open("scores.txt", "r", encoding="utf-8") as f:
     </div>
     <div class="terminal-body empty"></div>
   </div>
+
+  <h3>import — 다른 모듈의 도구 가져오기</h3>
+
+  <p>
+    아래 CSV 예제에서는 <code class="inline">import csv</code>가 처음 눈에 띄게 등장합니다.
+    <strong>모듈(module)</strong>은 관련 기능을 모아 둔 파이썬 코드 단위이고,
+    <code class="inline">import</code>는 그 안의 기능을 현재 코드에서 쓰게 가져오는 문법입니다.
+  </p>
+
+  <pre class="code-static"><code>import csv
+import json
+from pathlib import Path</code></pre>
+
+  <p>
+    <code class="inline">csv</code>, <code class="inline">json</code>, <code class="inline">pathlib</code>는 파이썬을 설치하면 함께 제공되는 <strong>표준 라이브러리</strong>입니다.
+    반대로 <code class="inline">openpyxl</code>처럼 따로 설치해야 하는 것은 외부 패키지입니다.
+    모듈·패키지 구조는 마지막 학습 지도에서 다시 연결합니다.
+  </p>
+
+  <h3>파일이 없을 때 — 2주차 try/except 다시 쓰기</h3>
+
+  <div class="editor-block">
+    <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>file_exception.py</span></div>
+    <textarea class="editor-source">try:
+    with open("missing.txt", "r", encoding="utf-8") as f:
+        print(f.read())
+except FileNotFoundError:
+    print("파일이 없습니다. 파일 이름과 경로를 확인하세요.")
+</textarea>
+    <div class="run-bar">
+      <span class="left"><span class="file-name">📄 file_exception.py</span></span>
+      <span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span>
+      <button class="run-btn"><span class="play">▶</span> Run</button>
+    </div>
+  </div>
+  <div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div>
+
+  <p>
+    2주차에서 배운 <code class="inline">try/except</code>가 실제로 이렇게 쓰입니다.
+    실무 코드는 정상 상황뿐 아니라 <strong>파일이 없거나 입력이 잘못된 상황</strong>도 함께 생각합니다.
+  </p>
+
+  <h3>raise — 문제가 있음을 직접 알리기</h3>
+  <p>2주차에서는 발생한 예외를 <code class="inline">except</code>로 처리했습니다. 반대로 프로그램이 잘못된 값을 발견했을 때는 <code class="inline">raise</code>로 예외를 직접 발생시킬 수 있습니다.</p>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>raise_example.py</span></div>
+  <textarea class="editor-source">def set_age(age):
+    if age &lt; 0:
+        raise ValueError("나이는 0 이상이어야 합니다.")
+    return age
+
+try:
+    print(set_age(-1))
+except ValueError as e:
+    print("오류:", e)
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 raise_example.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div>
+  <div class="callout info"><strong>읽는 법</strong><br><code class="inline">except</code> = 발생한 문제를 처리하기 / <code class="inline">raise</code> = 지금 상황이 문제라고 직접 알리기</div>
+
+  <h3>try / except / else / finally — 전체 모양 한 번 보기</h3>
+<div class="editor-block">
+  <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>try_full_shape.py</span></div>
+  <textarea class="editor-source">text = "42"
+
+try:
+    number = int(text)
+except ValueError:
+    print("숫자로 바꿀 수 없습니다.")
+else:
+    print("변환 성공:", number)
+finally:
+    print("성공하든 실패하든 마지막에 실행됩니다.")
+</textarea>
+  <div class="run-bar"><span class="left"><span class="file-name">📄 try_full_shape.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+</div>
+<div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div>
+  <p><code class="inline">else</code>는 예외가 없었을 때, <code class="inline">finally</code>는 성공·실패와 관계없이 마지막에 실행됩니다. 파일은 이런 정리 작업을 직접 작성하기보다 보통 <code class="inline">with</code>를 사용하는 편이 간단하고 안전합니다.</p>
+  <h3>pathlib — 파일 경로를 객체처럼 다루기</h3>
+  <p>
+    <code class="inline">open("data/scores.txt")</code>처럼 문자열 경로를 써도 충분합니다.
+    다만 실무에서는 <code class="inline">pathlib.Path</code>도 자주 만납니다. 지금은 "경로를 다루는 전용 객체"라고만 이해하면 됩니다.
+  </p>
+  <div class="editor-block">
+    <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>pathlib_basic.py</span></div>
+    <textarea class="editor-source">from pathlib import Path
+
+path = Path("scores.txt")
+print(path.name)      # 파일 이름
+print(path.suffix)    # 확장자
+print(path.exists())  # 존재 여부
+</textarea>
+    <div class="run-bar"><span class="left"><span class="file-name">📄 pathlib_basic.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+  </div>
+  <div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div>
 
   <h3>CSV 파일 — 엑셀과 파이썬의 연결고리</h3>
 
@@ -808,7 +905,8 @@ with open("students.csv", "r", encoding="utf-8") as f:
 
   <div class="callout info">
     <div class="label">💡 이 강의 환경에서 파일 실행 시 주의</div>
-    <p>브라우저 안에서 Python이 실행되므로, 코드로 만든 파일은 실행이 끝나면 사라집니다. 실제 내 컴퓨터에 저장되지 않습니다. 파일 I/O 코드는 로컬 Python 환경(VS Code 등)에서 실행할 때 진짜 파일이 만들어집니다.</p>
+    <p>브라우저 실습에서 만든 파일은 <strong>내 컴퓨터의 실제 디스크에 저장되는 파일이 아닙니다.</strong></p>
+    <p>같은 페이지와 Python 실행 환경이 유지되는 동안에는 남아 있을 수 있지만, 새로고침이나 실행 환경 초기화 후에는 사라질 수 있습니다. 로컬 Python 환경(VS Code 등)에서 같은 코드를 실행하면 지정한 경로에 실제 파일이 만들어집니다.</p>
   </div>
 
   <p>
@@ -835,7 +933,7 @@ with open("students.csv", "r", encoding="utf-8") as f:
   <h2>JSON과 실시간 API</h2>
 
   <p>
-    4주 동안 배운 모든 것이 만나는 곳입니다. 이번 섹션이 끝나면 여러분의 코드는
+    Week 1~4에서 배운 문법이 실제 데이터와 연결되는 곳입니다. 이번 섹션에서는 코드가
     실제 인터넷의 서버와 통신해서 진짜 데이터를 가져올 수 있게 됩니다.
   </p>
 
@@ -892,6 +990,36 @@ print(f"평균: {sum(data['scores']) / len(data['scores'])}")
     이름이 헷갈릴 수 있는데 <strong>"loads = load string"</strong>, <strong>"dumps = dump string"</strong>으로 외우시면 됩니다.
   </p>
 
+  <h3>JSON 문자열과 JSON 파일은 함수 이름이 다릅니다</h3>
+  <p>실무에서 자주 헷갈리는 네 함수를 한 번에 정리해 둡니다.</p>
+  <ul>
+    <li><code class="inline">json.loads()</code> — JSON <strong>문자열</strong> → Python 객체</li>
+    <li><code class="inline">json.dumps()</code> — Python 객체 → JSON <strong>문자열</strong></li>
+    <li><code class="inline">json.load()</code> — JSON <strong>파일</strong> → Python 객체</li>
+    <li><code class="inline">json.dump()</code> — Python 객체 → JSON <strong>파일</strong></li>
+  </ul>
+
+  <div class="editor-block">
+    <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>json_file.py</span></div>
+    <textarea class="editor-source">import json
+
+student = {"name": "홍길동", "score": 92}
+
+# Python 객체 → JSON 파일
+with open("student.json", "w", encoding="utf-8") as f:
+    json.dump(student, f, ensure_ascii=False, indent=2)
+
+# JSON 파일 → Python 객체
+with open("student.json", "r", encoding="utf-8") as f:
+    loaded = json.load(f)
+
+print(loaded)
+print(loaded["name"])
+</textarea>
+    <div class="run-bar"><span class="left"><span class="file-name">📄 json_file.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+  </div>
+  <div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div>
+
 
   <h3>API 키 — 보통의 API는 인증이 필요하다</h3>
 
@@ -910,7 +1038,7 @@ print(f"평균: {sum(data['scores']) / len(data['scores'])}")
     <div class="label">⚠️ API 키를 코드에 직접 넣으면 안 됩니다</div>
     <p>
       코드를 GitHub 같은 곳에 올리면 키가 전 세계에 공개됩니다.
-      누군가 그 키로 API를 마구 호출하면 요금이 나오거나 계정이 정지됩니다.
+      노출된 키가 악용되면 예상하지 못한 요금이 발생하거나 계정·서비스 사용에 문제가 생길 수 있습니다.
       키는 별도 파일(<code class="inline">.env</code>)에 보관하고 코드에서는 불러오는 방식을 씁니다.
       AI에게 코드를 만들어달라고 할 때 "API 키를 코드에 하드코딩하지 말고 환경변수로 처리해줘"라고 요청하세요.
     </p>
@@ -966,14 +1094,14 @@ temps = data["daily"]["temperature_2m_max"]
 rains = data["daily"]["precipitation_probability_max"]
 
 print("=== 5일 예보 ===")
-for i in range(len(days)):
-    if rains[i] &gt;= 50:
+for day, temp, rain in zip(days, temps, rains):
+    if rain &gt;= 50:
         comment = "☔ 우산 필수"
-    elif rains[i] &gt;= 20:
+    elif rain &gt;= 20:
         comment = "🌂 우산 챙기세요"
     else:
         comment = "☀️ 좋음"
-    print(f"{days[i]}: {temps[i]}°C ({rains[i]}%) {comment}")
+    print(f"{day}: {temp}°C ({rain}%) {comment}")
 
 # 통계
 avg = sum(temps) / len(temps)
@@ -1013,7 +1141,7 @@ print(f"\n주간 평균 최고기온: {avg:.1f}°C")
       "기다린다"고 알려줍니다.
     </p>
     <p>
-      <strong>지금은 "이런 표시가 있구나" 정도만 알아두시면 됩니다.</strong>
+      <strong>지금 목표는 내부 동작을 이해하는 것이 아니라, 실제 코드에서 <code class="inline">await</code>를 보고 "시간이 걸릴 수 있는 비동기 작업을 기다리는구나"라고 읽을 수 있는 것입니다.</strong>
       자세한 건 다음 단계 학습에서 만나게 됩니다.
     </p>
   </div>
@@ -1111,7 +1239,7 @@ response = await pyfetch(url)        # 응답 받기
 data = await response.json()         # JSON을 딕셔너리로
 
 # 이제부터는 평범한 딕셔너리 다루기
-print("=== 서울 현재 날씨 (실시간) ===")
+print("=== 서울 현재 날씨 (API 응답) ===")
 print(f"기온: {data['current']['temperature_2m']}°C")
 print(f"습도: {data['current']['relative_humidity_2m']}%")
 
@@ -1155,7 +1283,7 @@ cities = [
     ("강릉", 37.75, 128.88),
 ]
 
-print("=== 전국 현재 기온 ===\n")
+print("=== 전국 현재 기온 (API 응답) ===\n")
 
 results = []
 for name, lat, lng in cities:
@@ -1251,16 +1379,16 @@ print(get_temp_lambda(data))  # 22.5
   <h2>여기까지가 기초 — 앞으로 만나게 될 것들</h2>
 
   <p>
-    수고하셨습니다. 4주 동안 여러분이 익힌 것을 정리하면:
+    여기까지 오면 Week 1~4의 Python 기초 과정이 끝납니다. 지금까지 익힌 것을 정리하면:
   </p>
 
   <div class="key-points">
-    <div class="title">4주 동안 익힌 것</div>
+    <div class="title">Week 1~4에서 익힌 것</div>
     <ul>
       <li><strong>1주차</strong>: 객체와 변수, 첫 코드, print, 문자열, f-string</li>
       <li><strong>2주차</strong>: input, 형 변환, 비교/논리, if/elif/else, for, while, break/continue</li>
       <li><strong>3주차</strong>: 리스트/튜플/딕셔너리, 가변/불변, 함수 def, 매개변수</li>
-      <li><strong>4주차</strong>: None, 정렬/문자열 도구, 파일 읽기/쓰기, JSON, 실시간 API, 프롬프트 엔지니어링</li>
+      <li><strong>Week 4</strong>: None, 정렬/문자열 도구, 파일/CSV, import와 모듈, JSON, API, lambda, 타입 힌트, 실무 코드 읽기</li>
     </ul>
   </div>
 
@@ -1273,6 +1401,36 @@ print(get_temp_lambda(data))  # 22.5
     <li>Claude / ChatGPT가 짜준 코드를 <strong>읽고 이해하고 고칠 수 있음</strong></li>
     <li>다음 단계로 가기 위한 단단한 토대</li>
   </ul>
+
+  <h3>실무 코드에서 자주 보이는 두 가지 모양</h3>
+
+  <h4>타입 힌트 — 사람과 도구에게 의도를 알려주기</h4>
+  <div class="editor-block">
+    <div class="editor-tab-bar"><span class="editor-tab"><span class="py-icon"></span>type_hint.py</span></div>
+    <textarea class="editor-source">def greet(name: str) -&gt; str:
+    return f"안녕하세요, {name}"
+
+print(greet("홍길동"))
+</textarea>
+    <div class="run-bar"><span class="left"><span class="file-name">📄 type_hint.py</span></span><span class="kbd-hint"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></span><button class="run-btn"><span class="play">▶</span> Run</button></div>
+  </div>
+  <div class="terminal"><div class="terminal-head"><span class="label">실행 결과</span><span class="status">대기 중</span></div><div class="terminal-body empty"></div></div>
+  <p>
+    <code class="inline">name: str</code>은 "문자열을 기대한다", <code class="inline">-&gt; str</code>은 "문자열을 반환할 예정"이라는 <strong>힌트</strong>입니다.
+    이것만으로 Python이 다른 타입을 무조건 막는 것은 아닙니다. 실무에서는 IDE, 코드 리뷰, 정적 검사 도구가 코드를 이해하는 데 큰 도움을 줍니다.
+  </p>
+
+  <h4><code class="inline">if __name__ == "__main__"</code> — 직접 실행할 때만 시작하기</h4>
+  <pre class="code-static"><code>def main():
+    print("프로그램 시작")
+
+if __name__ == "__main__":
+    main()</code></pre>
+  <p>
+    실제 <code class="inline">.py</code> 파일에서 매우 자주 보는 관용 패턴입니다.
+    지금은 <strong>"이 파일을 직접 실행했을 때 main()을 실행하는 시작점"</strong> 정도로 읽으면 충분합니다.
+    나중에 모듈과 <code class="inline">import</code>를 깊게 공부하면 왜 필요한지 자연스럽게 이해됩니다.
+  </p>
 
   <h3>다음에 만나게 될 것들 — 지금 몰라도 괜찮습니다</h3>
 
@@ -1361,7 +1519,7 @@ print(get_temp_lambda(data))  # 22.5
   </p>
 
   <ul>
-    <li><strong>클래스 / OOP</strong> — "데이터와 그 데이터를 다루는 동작을 한 묶음으로". 큰 프로그램에서 필수.</li>
+    <li><strong>클래스 / OOP</strong> — 데이터와 동작을 객체로 묶어 설계하는 방법. 규모가 커질수록 자주 만납니다.</li>
     <li><strong>데코레이터</strong> — 함수 위에 <code class="inline">@something</code>으로 기능 덧붙이기. 웹 프레임워크에서 자주 등장.</li>
     <li><strong>람다</strong> — 이름 없는 한 줄 함수. <code class="inline">lambda x: x*2</code>. 4주차 s4의 multi_city.py에서 살짝 봤어요.</li>
     <li><strong>컴프리헨션 (깊이)</strong> — 3주차 로또에서 살짝 본 그것. <code class="inline">if</code> 필터, 중첩, 딕셔너리 컴프리헨션까지.</li>
@@ -1374,6 +1532,54 @@ print(get_temp_lambda(data))  # 22.5
     <li><strong>가상환경 / pip</strong> — 프로젝트마다 분리된 라이브러리 관리.</li>
   </ul>
 
+  <h3>지금은 모양과 목적만 기억할 두 문법</h3>
+
+  <div class="callout info">
+    <div class="label">이 부분의 목표</div>
+    <p><strong>직접 작성하는 것이 목표가 아닙니다.</strong> 실제 코드에서 모양을 알아보고, 필요해졌을 때 자습 탭으로 돌아갈 수 있으면 충분합니다.</p>
+  </div>
+
+  <h4>Decorator — <code class="inline">@something</code></h4>
+  <pre class="code-static"><code>@login_required
+def my_page():
+    ...</code></pre>
+  <p><strong>기존 함수에 기능을 덧붙이는 패턴</strong>입니다. 웹 프레임워크·테스트·로깅 코드에서 자주 보입니다. 자세한 동작은 <a href="#selfstudy/ss6">Python 한 단계 더 → Decorator</a>에서 함수 객체와 closure부터 순서대로 이어갑니다.</p>
+
+  <h4>Generator — <code class="inline">yield</code></h4>
+  <pre class="code-static"><code>def count_up_to(n):
+    i = 1
+    while i &lt;= n:
+        yield i
+        i += 1</code></pre>
+  <p><strong>값을 필요할 때 하나씩 만들어 내보내는 방식</strong>입니다. 지금은 <code class="inline">yield</code>라는 모양과 목적만 기억하세요. <a href="#selfstudy/ss7">Python 한 단계 더 → Iterator · Generator</a>에서 <code class="inline">iter()</code>, <code class="inline">next()</code>부터 다시 배웁니다.</p>
+
+  <h3>Python 프로젝트를 시작할 때 만나는 네 단어</h3>
+  <div class="concept-grid">
+    <div class="concept-card"><strong>module</strong><p>재사용할 Python 코드가 들어 있는 하나의 <code class="inline">.py</code> 파일이라고 생각하면 됩니다.</p></div>
+    <div class="concept-card"><strong>package</strong><p>관련된 여러 module을 묶어 관리하는 단위입니다.</p></div>
+    <div class="concept-card"><strong>pip</strong><p>외부 Python package를 설치하는 도구입니다.</p></div>
+    <div class="concept-card"><strong>venv</strong><p>프로젝트마다 설치 패키지를 분리하기 위한 가상환경입니다.</p></div>
+  </div>
+  <pre class="code-static"><code>python -m venv .venv
+python -m pip install requests
+python -m pip list</code></pre>
+  <p>위 명령은 지금 브라우저 실습창에서 실행하는 것이 아니라, 나중에 자신의 PC에서 Python 프로젝트를 시작할 때 다시 찾아볼 <strong>참고 지도</strong>입니다. 실제 활성화 명령은 운영체제마다 다르므로 자습 탭에서 이어서 설명합니다.</p>
+
+  <h3>이 강의 다음의 자습 로드맵</h3>
+  <ol>
+    <li><strong>모듈 / 패키지 / pip / venv</strong> — 코드를 여러 파일로 나누고 외부 라이브러리를 설치하는 법</li>
+    <li><strong>클래스 / OOP</strong> — 객체를 직접 설계하는 법</li>
+    <li><strong>타입 힌트 심화</strong> — list/dict 타입, Optional, Union, type checker</li>
+    <li><strong>iterator / generator</strong> — 반복과 메모리 효율의 내부 원리</li>
+    <li><strong>decorator / closure</strong> — 함수를 감싸고 재사용하는 패턴</li>
+    <li><strong>async / await</strong> — 네트워크·API 작업을 효율적으로 기다리는 방법</li>
+    <li><strong>관심 분야의 라이브러리</strong> — pandas, FastAPI, 자동화, AI 등으로 작은 프로젝트 만들기</li>
+  </ol>
+  <p>
+    중요한 것은 어려운 문법을 지금 외우는 것이 아닙니다.
+    <strong>실제 코드에서 낯선 문법을 만났을 때 이름을 알아보고, 무엇을 검색해야 하는지 아는 상태</strong>가 이번 기초 과정의 마지막 목표입니다.
+  </p>
+
   <h3>그리고 그 너머 — 분야별 라이브러리</h3>
 
   <p>
@@ -1382,7 +1588,7 @@ print(get_temp_lambda(data))  # 22.5
   </p>
 
   <ul>
-    <li><strong>데이터 분석</strong> — pandas, numpy (엑셀의 끝판왕)</li>
+    <li><strong>데이터 분석</strong> — pandas, NumPy (표·수치 데이터를 다루는 대표 도구)</li>
     <li><strong>웹 개발</strong> — Django, Flask, FastAPI (웹사이트와 API 만들기)</li>
     <li><strong>자동화</strong> — selenium, beautifulsoup (웹 데이터 수집), schedule (예약 실행)</li>
     <li><strong>머신러닝/AI</strong> — scikit-learn, PyTorch, TensorFlow</li>
@@ -1397,7 +1603,7 @@ print(get_temp_lambda(data))  # 22.5
   <h3>AI에게 잘 시키는 법 — 프롬프트 엔지니어링 기초</h3>
 
   <p>
-    4주 동안 파이썬을 배운 이유는 결국 "AI와 잘 협력하기 위해서"였습니다.
+    Week 1~4에서 파이썬 기초를 배운 이유 중 하나는 AI가 만든 코드를 읽고 검증하며 더 잘 협력하기 위해서였습니다.
     그 협력의 반은 파이썬이고, 나머지 반은 <strong>AI에게 어떻게 말하느냐</strong>입니다.
     AI에게 지시를 잘 쓰는 것을 <strong>프롬프트 엔지니어링</strong>이라고 합니다.
   </p>
@@ -1454,7 +1660,7 @@ print(get_temp_lambda(data))  # 22.5
   <h4>AI 코드를 받은 뒤 검증하는 법</h4>
 
   <p>
-    4주 동안 배운 것이 여기서 쓰입니다.
+    Week 1~4에서 배운 기초가 여기서 쓰입니다.
   </p>
 
   <ul>
@@ -1484,7 +1690,7 @@ print(get_temp_lambda(data))  # 22.5
     <li><strong>AI에게 정확히 시킬 수 있습니다</strong> — 변수, 함수, 리스트, 딕셔너리 같은 단어로 명확한 지시.</li>
     <li><strong>AI의 답을 검증할 수 있습니다</strong> — 코드를 읽고 "이게 맞나?" 판단 가능.</li>
     <li><strong>AI가 못 하는 일을 알아챌 수 있습니다</strong> — 실행 환경의 제약, 보안 정책 같은 현실적 한계를 코드 수준에서 이해.</li>
-    <li><strong>자동화의 가치를 압니다</strong> — 한 번 짜두면 평생 작동하는 코드의 힘.</li>
+    <li><strong>자동화의 가치를 압니다</strong> — 반복 작업을 코드로 줄이고 다시 사용할 수 있습니다.</li>
   </ul>
 
   <p>

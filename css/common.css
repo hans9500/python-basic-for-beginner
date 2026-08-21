@@ -505,3 +505,16 @@ body { min-height: 100vh; }
   .topbar-inner { padding: 0 12px; gap: 8px; }
   .tab { padding: 6px 10px; font-size: 12px; }
 }
+
+/* Self Study learning diagrams and exercises */
+.study-diagram { margin: 1.1rem 0 1.4rem; padding: .75rem; border: 1px solid var(--border, #d8dee4); border-radius: 12px; overflow-x: auto; background: rgba(127,127,127,.035); }
+.study-diagram svg { display: block; width: 100%; min-width: 560px; height: auto; color: currentColor; }
+.study-diagram .svg-box rect { fill: transparent; stroke: currentColor; stroke-width: 1.4; opacity: .8; }
+.study-diagram text { fill: currentColor; font-size: 15px; text-anchor: middle; dominant-baseline: middle; }
+.study-diagram .svg-title { font-size: 17px; font-weight: 700; text-anchor: start; }
+.study-diagram .svg-arrow { fill: none; stroke: currentColor; stroke-width: 1.5; opacity: .7; }
+.study-note { margin-top: 1rem; font-weight: 600; }
+.study-exercise { margin: 1.25rem 0; border: 1px solid var(--border, #d8dee4); border-radius: 10px; overflow: hidden; }
+.study-exercise > summary { cursor: pointer; padding: .9rem 1rem; font-weight: 700; }
+.study-exercise-body { padding: 0 1rem 1rem; }
+.study-exercise details { margin-top: .75rem; }
