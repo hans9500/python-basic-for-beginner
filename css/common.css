@@ -518,3 +518,82 @@ body { min-height: 100vh; }
 .study-exercise > summary { cursor: pointer; padding: .9rem 1rem; font-weight: 700; }
 .study-exercise-body { padding: 0 1rem 1rem; }
 .study-exercise details { margin-top: .75rem; }
+
+/* ============================================================
+   SELF STUDY — 예제/실행결과 시각적 그룹 개선
+   실행 결과 다음의 설명이 이전 예제에 붙어 보이지 않도록,
+   새 예제의 시작을 명확히 구분한다.
+   ============================================================ */
+
+/* 각 예제의 설명은 아래 편집기에 속하는 '예제 헤더'처럼 보이게 한다. */
+.section[id^="ss"] .study-note {
+  position: relative;
+  margin: 34px 0 10px;
+  padding: 14px 16px 14px 58px;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: 8px;
+  background: var(--bg-soft);
+  color: var(--text);
+  font-weight: 600;
+  line-height: 1.65;
+}
+
+.section[id^="ss"] .study-note::before {
+  content: '예제';
+  position: absolute;
+  left: 14px;
+  top: 14px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  line-height: 1.7;
+  font-weight: 700;
+  letter-spacing: .08em;
+  color: var(--accent);
+}
+
+/* 설명 바로 아래의 코드는 같은 예제 묶음이므로 간격을 줄인다. */
+.section[id^="ss"] .study-note + .input-stdin,
+.section[id^="ss"] .study-note + .editor-block {
+  margin-top: 0;
+}
+
+/* 실행 결과가 끝난 뒤 다음 예제가 시작된다는 것을 명확히 표시. */
+.section[id^="ss"] .terminal + .study-note {
+  margin-top: 44px;
+  padding-top: 14px;
+}
+
+/* map → filter → reduce 같은 소주제 전환은 예제 전환보다 더 크게 구분한다. */
+.section[id^="ss"] .terminal + h3,
+.section[id^="ss"] .terminal + h4 {
+  margin-top: 60px;
+  padding-top: 30px;
+  border-top: 1px solid var(--border);
+}
+
+/* 소제목 바로 아래 예제 설명은 소제목과 자연스럽게 이어지게 한다. */
+.section[id^="ss"] h3 + .study-note,
+.section[id^="ss"] h4 + .study-note {
+  margin-top: 16px;
+}
+
+/* 한 예제가 끝난 뒤 연습/정리 블록이 바로 붙어 보이지 않게 한다. */
+.section[id^="ss"] .terminal + .study-exercise,
+.section[id^="ss"] .terminal + .callout,
+.section[id^="ss"] .terminal + .key-points {
+  margin-top: 36px;
+}
+
+/* 모바일에서는 왼쪽 여백을 조금 줄인다. */
+@media (max-width: 640px) {
+  .section[id^="ss"] .study-note {
+    padding-left: 50px;
+    margin-top: 30px;
+  }
+  .section[id^="ss"] .terminal + h3,
+  .section[id^="ss"] .terminal + h4 {
+    margin-top: 48px;
+    padding-top: 24px;
+  }
+}
