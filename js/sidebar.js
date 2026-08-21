@@ -62,10 +62,10 @@
   /**
    * 사이드바 섹션 목록 갱신
    * sections: [{ id: 's0', label: '01', title: '섹션 제목' }, ...]
-   * weekNumber: 1~5, 6은 자습 탭
+   * weekNumber: 1~5, 6은 자습 탭, 7은 종합 프로젝트
    */
   function updateSidebar(weekNumber, sections) {
-    weekLabel.textContent = weekNumber === 6 ? 'Python 한 단계 더' : weekNumber + '주차';
+    weekLabel.textContent = weekNumber === 6 ? 'Python 한 단계 더' : weekNumber === 7 ? '종합 프로젝트' : weekNumber + '주차';
     sectionCount.textContent = sections.length + '개 섹션';
 
     sectionNav.innerHTML = '';
@@ -106,7 +106,7 @@
     // URL hash 갱신 (라우터가 기록할 수 있도록)
     if (history.replaceState) {
       const week = window.appState ? window.appState.currentWeek : 1;
-      const baseHash = week === 6 ? '#selfstudy' : '#week' + week;
+      const baseHash = week === 6 ? '#selfstudy' : week === 7 ? '#project' : '#week' + week;
       history.replaceState(null, '', baseHash + '/' + sectionId);
     }
   }

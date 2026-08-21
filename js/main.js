@@ -59,13 +59,15 @@
 
   /** content/weekN.html을 fetch해서 main에 주입 */
   async function loadWeek(weekNumber) {
-    const url = weekNumber === 6 ? 'content/selfstudy.html' : 'content/week' + weekNumber + '.html';
+    const url = weekNumber === 6 ? 'content/selfstudy.html' :
+                weekNumber === 7 ? 'content/project.html' :
+                'content/week' + weekNumber + '.html';
 
     // 로딩 상태 표시
     content.style.opacity = '0.4';
     content.innerHTML = '<div class="loading-screen">' +
                         '<div class="loading-spinner"></div>' +
-                        '<p class="loading-text">' + (weekNumber === 6 ? 'Python 한 단계 더' : weekNumber + '주차') + ' 불러오는 중…</p>' +
+                        '<p class="loading-text">' + (weekNumber === 6 ? 'Python 한 단계 더' : weekNumber === 7 ? '종합 프로젝트' : weekNumber + '주차') + ' 불러오는 중…</p>' +
                         '</div>';
 
     try {
@@ -90,7 +92,11 @@
           // 같은 .editor-block 다음(또는 가까운)의 .terminal 찾기
           const terminal = findTerminalFor(ent.block);
           if (terminal) {
-            window.PyRunner.bindRunButton(ent.block, terminal, ent.cm);
+            if (ent.block.dataset.runner === 'pygame' && window.PygameRunner) {
+              window.PygameRunner.bind(ent.block, terminal, ent.cm);
+            } else {
+              window.PyRunner.bindRunButton(ent.block, terminal, ent.cm);
+            }
           }
         });
       }
@@ -112,7 +118,7 @@
         hint = '<br><br>이 페이지는 더블클릭(file://)으로 열 수 없습니다.<br>' +
                'GitHub Pages 같은 웹서버에서 열어주세요.';
       } else if (errMsg.indexOf('404') >= 0) {
-        const missingFile = weekNumber === 6 ? 'content/selfstudy.html' : 'content/week' + weekNumber + '.html';
+        const missingFile = weekNumber === 6 ? 'content/selfstudy.html' : weekNumber === 7 ? 'content/project.html' : 'content/week' + weekNumber + '.html';
         hint = '<br><br><code>' + missingFile + '</code> 파일이 ' +
                '저장소에 업로드되었는지 확인하세요.';
       } else {
@@ -120,7 +126,7 @@
       }
       content.innerHTML = '<div class="loading-screen">' +
                           '<p class="loading-text" style="color:#c1440e">' +
-                          (weekNumber === 6 ? 'Python 한 단계 더' : weekNumber + '주차') + '를 불러오지 못했습니다.<br>' +
+                          (weekNumber === 6 ? 'Python 한 단계 더' : weekNumber === 7 ? '종합 프로젝트' : weekNumber + '주차') + '를 불러오지 못했습니다.<br>' +
                           '<small style="font-family:monospace">' + escapeHtml(errMsg) + '</small>' +
                           hint +
                           '</p></div>';
@@ -175,6 +181,9 @@
     const self = h.match(/^selfstudy(?:\/(.+))?$/);
     if (self) return { week: 6, section: self[1] || null };
 
+    const project = h.match(/^project(?:\/(.+))?$/);
+    if (project) return { week: 7, section: project[1] || null };
+
     const m = h.match(/^week([1-5])(?:\/(.+))?$/);
     if (!m) return { week: 1, section: null };
     return {
@@ -185,6 +194,12 @@
 
   /** 특정 주차+섹션으로 이동 */
   async function navigateTo(weekNumber, sectionId) {
+    // 게임 탭을 떠날 때 Canvas가 사라지기 전에 실행 중인 게임 루프를 먼저 종료한다.
+    if (window.appState.currentWeek === 7 && weekNumber !== 7 &&
+        window.PygameRunner && window.PygameRunner.isRunning()) {
+      await window.PygameRunner.stopAndWait();
+    }
+
     if (window.appState.currentWeek !== weekNumber) {
       await loadWeek(weekNumber);
     } else {
@@ -200,7 +215,7 @@
       window.scrollTo({ top: 0, behavior: 'auto' });
     }
     // hash 동기화
-    let newHash = weekNumber === 6 ? '#selfstudy' : '#week' + weekNumber;
+    let newHash = weekNumber === 6 ? '#selfstudy' : weekNumber === 7 ? '#project' : '#week' + weekNumber;
     if (sectionId) newHash += '/' + sectionId;
     if (window.location.hash !== newHash) {
       history.replaceState(null, '', newHash);

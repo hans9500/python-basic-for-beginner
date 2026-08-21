@@ -1,12 +1,12 @@
 # AI 활용을 위한 프로그래밍 기초 with 파이썬
 
-파이썬 초보자를 위한 1~4주차 기초 과정, `실무 IT 산업` 탭, 그리고 선택형 자습 탭 `Python 한 단계 더`로 구성된 학습 자료입니다. 브라우저에서 바로 실행되는 파이썬 환경(Pyodide)과 PyCharm 스타일 코드 에디터를 제공합니다.
+파이썬 초보자를 위한 1~4주차 기초 과정, `실무 IT 산업`, 선택형 자습 탭 `Python 한 단계 더`, 그리고 Pygame 기반 `종합 프로젝트`로 구성된 학습 자료입니다. 브라우저에서 바로 실행되는 파이썬 환경(Pyodide)과 PyCharm 스타일 코드 에디터를 제공합니다.
 
 ## 로컬에서 실행하기
 
 > **중요:** `index.html`을 더블클릭해서 `file://` 주소로 열면 강의 내용을 불러올 수 없습니다.
 
-이 프로젝트의 `index.html`은 JavaScript `fetch()`를 사용해 `content/week1.html` ~ `content/week5.html` 및 `content/selfstudy.html`을 불러옵니다. 브라우저는 보안상의 이유로 `file://` 페이지에서 이런 로컬 파일 요청을 제한하므로, **간단한 로컬 웹 서버를 실행한 뒤 `http://localhost`로 접속해야 합니다.**
+이 프로젝트의 `index.html`은 JavaScript `fetch()`를 사용해 `content/week1.html` ~ `content/week5.html`, `content/selfstudy.html`, `content/project.html`을 불러옵니다. 브라우저는 보안상의 이유로 `file://` 페이지에서 이런 로컬 파일 요청을 제한하므로, **간단한 로컬 웹 서버를 실행한 뒤 `http://localhost`로 접속해야 합니다.**
 
 ### Windows에서 가장 간단한 실행 방법
 
@@ -55,7 +55,8 @@ index.html
    ├─ fetch("content/week3.html")
    ├─ fetch("content/week4.html")
    ├─ fetch("content/week5.html")
-   └─ fetch("content/selfstudy.html")
+   ├─ fetch("content/selfstudy.html")
+   └─ fetch("content/project.html")
 ```
 
 `file://`로 연 페이지에서는 브라우저의 보안 정책 때문에 위 파일들을 `fetch()`로 읽어오지 못할 수 있습니다. 로컬 HTTP 서버를 사용하면 같은 웹사이트의 리소스로 처리되어 정상적으로 로딩됩니다.
@@ -82,19 +83,22 @@ python-basic-for-beginner/
 │   ├── sidebar.css         사이드바 동작 (push/overlay)
 │   ├── editor.css          CodeMirror PyCharm 테마
 │   ├── terminal.css        미니멀 출력창
-│   └── simulator.css       시뮬레이터 공통 스타일
+│   ├── simulator.css       시뮬레이터 공통 스타일
+│   └── game.css            Pygame 종합 프로젝트 화면
 ├── js/
 │   ├── main.js             탭 전환, hash 라우팅, 콘텐츠 fetch
 │   ├── sidebar.js          사이드바 토글, 섹션 네비게이션
 │   ├── editor.js           CodeMirror 초기화
-│   └── pyodide-runner.js   Pyodide 로드 + 코드 실행
+│   ├── pyodide-runner.js   Pyodide 로드 + 코드 실행
+│   └── pygame-runner.js    pygame-ce 로드 + Canvas 게임 실행
 ├── content/
 │   ├── week1.html          1주차 콘텐츠
 │   ├── week2.html          2주차 콘텐츠
 │   ├── week3.html          3주차 콘텐츠
 │   ├── week4.html          4주차 콘텐츠
 │   ├── week5.html          실무 IT 산업의 큰 그림
-│   └── selfstudy.html      선택형 자습 — Python 한 단계 더
+│   ├── selfstudy.html      선택형 자습 — Python 한 단계 더
+│   └── project.html        종합 프로젝트 — 공 피하기 게임
 ├── simulators/
 │   ├── sim-variable.html   시뮬레이터 ① 변수와 객체 (1주차 s5)
 │   ├── sim-if.html         시뮬레이터 ② if 분기 (2주차 s4)
@@ -114,6 +118,13 @@ python-basic-for-beginner/
 - 파이썬 설치 불필요 (브라우저 안에서 진짜 파이썬이 돌아감)
 - 첫 접속 시 파이썬 환경 다운로드(약 10MB)에 잠깐 시간 걸림
 
+
+
+## 종합 프로젝트 — 공 피하기 게임
+
+`#project` 탭에서는 Pyodide의 `pygame-ce` 지원과 HTML Canvas를 이용해 브라우저에서 직접 공 피하기 게임을 실행합니다. 첫 실행 시 `pygame-ce` 패키지를 추가로 다운로드하므로 인터넷 연결과 약간의 준비 시간이 필요합니다.
+
+이 프로젝트는 Pygame API 자체를 많이 외우는 것이 목적이 아니라, 변수 → `if` → `while` → list/dict → 함수 → 충돌 판정으로 이어지는 기존 Python 개념이 실제 프로그램 안에서 어떻게 연결되는지 확인하는 종합 실습입니다. 브라우저에서는 화면 갱신을 위해 게임 루프가 `async`/`await` 형태로 작성되어 있으며, 데스크톱 Pygame의 일반적인 루프와는 실행 환경 차이가 있습니다.
 
 
 ## 추가 자습 탭
